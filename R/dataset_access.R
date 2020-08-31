@@ -35,7 +35,7 @@ dataset_access_function <- function(version=NULL, path=NULL) {
 ##   2. the file to download (plant_lookup.csv)
 ##   3. the function to read the file, given a filename (read_csv)
 dataset_info <- function(path) {
-  datastorr::github_release_info("FabriceSamonte/datastorrtest",
+  datastorr::github_release_info("traitecoevo/apcnames",
                                  filename=NULL,
                                  read=unpack_zip,
                                  path=path)
@@ -98,17 +98,41 @@ get_version_details <- function(path=NULL, version=NULL) {
   }
 #  if (numeric_version(version) >= numeric_version("0.0.1")) {
     info$filenames <- c("APC-taxon-2020-05-14-1332.csv", "APNI-names-2020-05-14-1341.csv")
-    info$read <- c(readr::read_csv, readr::read_csv)
+    info$read <- c(
+      #APC
+      function(x) readr::read_csv(x, col_types = 
+                                    cols(
+                                      .default = col_character(),
+                                      proParte = col_logical(),
+                                      taxonRankSortOrder = col_double(),
+                                      created = col_datetime(format = ""),
+                                      modified = col_datetime(format = "")
+                                      )),
+      #APNI
+      function(x) readr::read_csv(x, col_types = 
+                                    cols(
+                                      .default = col_character(),
+                                      autonym = col_logical(),
+                                      hybrid = col_logical(),
+                                      cultivar = col_logical(),
+                                      formula = col_logical(),
+                                      scientific = col_logical(),
+                                      nomInval = col_logical(),
+                                      nomIlleg = col_logical(),
+                                      namePublishedInYear = col_double(),
+                                      taxonRankSortOrder = col_double(),
+                                      created = col_datetime(format = ""),
+                                      modified = col_datetime(format = "")
+                                    ))
+        )
     info 
 #  }
 }
-
 
 dataset_release <- function(description, path=NULL, ...) {
   local_version <- desc_version()
   if(local_version %in% dataset_versions(local=FALSE)) 
     stop(paste0("Version ", local_version, " already exists. Update version field in DESCRIPTION before calling."))
-  
   datastorr::github_release_create(get_version_details(path, local_version),
                                    description=description, ...)
 }

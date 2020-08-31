@@ -1,5 +1,10 @@
 # unpack.R 
 
+unpack_zip <- function(...) {
+  files <- utils::unzip(...)
+  files
+}
+
 unpack <- function(read_function, filename) {
   out <- tryCatch(
     {
