@@ -1,16 +1,15 @@
-Package: versioned_dataset_template
-Title: Title for your dataset package
-Version: 0.0.1
-Date: 2017-04-21
-Description: Description of your dataset and what it's going to be used for
+Package: datastorrtest
+Title: datastorrtest
+Version: 2.1.2
+Date: 2019-10-31
+Description: description
 Depends:
     R (>= 3.1.0)
 License: MIT + file LICENSE
 LazyData: true
-Authors@R: as.person(c("your name here <your email here> [aut, cre]","Your collaborator's name <her email here> [aut]"))
-Maintainer: your name here <your email address>
 Imports:
-    datastorr (>= 0.0.3)
+    datastorr (>= 0.0.3),
+    readxl
 Suggests:
     testthat
-RoxygenNote: 5.0.1
+RoxygenNote: 7.0.2
