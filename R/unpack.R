@@ -1,26 +1,5 @@
 # unpack.R 
 
-read_csv <- function(...) {
-  read.csv(..., stringsAsFactors=FALSE)
-}
-
-read_spreadsheet <- function(...) {
-  readxl::read_xls(...)
-}
-
-read_raster <- function(...) {
-  raster::raster(...)
-}
-
-unpack_zip <- function(...) {
-  files <- unzip(...)
-  files
-}
-
-read_shp <- function(...) {
-  
-}
-
 unpack <- function(read_function, filename) {
   out <- tryCatch(
     {

@@ -1,15 +1,25 @@
-Package: datastorrtest
-Title: datastorrtest
-Version: 2.1.2
-Date: 2019-10-31
-Description: description
+Package: apcnames
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Daniel",
+           family = "Falster",
+           role = c("aut", "cre"),
+           email = "daniel.falster@unsw.edu.au",
+           comment = c(ORCID = "0002-9814-092X"))
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+Encoding: UTF-8
+Language: en
+LazyData: true
 Depends:
     R (>= 3.1.0)
-License: MIT + file LICENSE
-LazyData: true
 Imports:
     datastorr (>= 0.0.3),
-    readxl
+    readr,
+    tibble
+Remotes:
+    traitecoevo/datastorr
 Suggests:
     testthat
 RoxygenNote: 7.0.2
