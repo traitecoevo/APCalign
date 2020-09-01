@@ -1,10 +1,18 @@
 
-devtools::load_all()
+library(tidyverse)
+remotes::install_github("traitecoevo/apcnames")
+library(apcnames)
 
-x <- read_csv('/Users/dfalster/Dropbox/tmp/austraits.build_Will_NSW/data/Ruby_ausplots/data.csv')$taxon_name
+# Check datastorr can retrieve APC data
+# On first run will download and store the data locally
+tmp <- dataset_access_function("0.0.0.9000")
 
-metadata_check_taxa(x[1:1000]) -> y
+# Now check names. Load some example data
+original_names <- read_csv(system.file("extdata", "species.csv", package = "apcnames"))
 
-update_taxonomy(y$aligned_name) -> z
+# first we aligne the names against APC and APNI
+data_aligned_names <- align_taxa(original_names$name)
 
-y %>% left_join(by="aligned_name", z)
+# Now get updated taxonomy for all aligned names
+data_taxon_list <- update_taxonomy(data_aligned_names$aligned_name)
+

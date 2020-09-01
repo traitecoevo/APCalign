@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+taxon_list.csv
+taxonomic_updates.csv

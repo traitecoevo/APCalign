@@ -1,6 +1,6 @@
 
 
-#' Title
+#' Default version of data to use
 #'
 #' @return
 #' @export
@@ -21,14 +21,17 @@ default_version <- function() {
 #' @export
 #'
 #' @examples
-metadata_check_taxa <- function(original_name,
-                                output = "taxonomic_updates.csv",
-                                max_distance_abs = 3,
-                                max_distance_rel = 0.2,
-                                ver = default_version()) {
-  cat("Checking alignments of ", length(original_name), "taxa\n")
+align_taxa <- function(original_name,
+                       output = "taxonomic_updates.csv",
+                       max_distance_abs = 3,
+                       max_distance_rel = 0.2,
+                       ver = default_version()) {
   
-  if (file.exists(output))
+  message("Checking alignments of ", length(original_name), " taxa\n")
+  
+  if (file.exists(output)) {
+    message("  - reading existing data from ", output)
+    
     taxa_raw <-
       readr::read_csv(
         output,
@@ -38,6 +41,9 @@ metadata_check_taxa <- function(original_name,
           .default = col_character()
         )
       )
+  
+    # TODO: check taxa_ raw has correct columns
+  }
   else
     taxa_raw <-
       tibble(
@@ -45,12 +51,11 @@ metadata_check_taxa <- function(original_name,
         cleaned_name = character(0L),
         aligned_name = character(0L),
         source = character(0L),
-        known = logical(0),
-        checked = logical(0)
+        known = logical(0L),
+        checked = logical(0L)
       )
-  # TODO: check taxa has correct columns
   
-  # expand list
+  # create list, will have two elements: tocheck, checked
   taxa <- list()
   
   taxa[["tocheck"]] <-
@@ -80,20 +85,16 @@ metadata_check_taxa <- function(original_name,
     )
   
   if (all(taxa$tocheck$checked)) {
-    message(crayon::red("All taxa are already checked\n"))
+    message("  - all taxa are already checked, yay!")
     return(invisible(taxa$tocheck))
-    
   }
   
   # check unknown taxa
-  cat(crayon::red(sum(taxa$tocheck$known, na.rm = T)), " names already matched; ")
-  cat(crayon::red(sum(
-    taxa$tocheck$checked &
-      !taxa$tocheck$known, na.rm = T
-  )), " names checked but without a match; ")
-  cat(crayon::red(sum(!taxa$tocheck$checked)), " taxa  yet to be checked\n")
+  message("  -> ", crayon::blue(sum(taxa$tocheck$known, na.rm = T)), " names already matched; ", 
+          crayon::blue(sum(taxa$tocheck$checked & !taxa$tocheck$known, na.rm = T)), " names checked but without a match; ",
+          crayon::blue(sum(!taxa$tocheck$checked)), " taxa  yet to be checked")
   
-  rebalance <- function(data) {
+  redistribute <- function(data) {
     data[["checked"]] <- rbind(data[["checked"]],
                                data[["tocheck"]] %>% filter(checked))
     
@@ -101,7 +102,7 @@ metadata_check_taxa <- function(original_name,
     data
   }
   
-  taxa <- rebalance(taxa)
+  taxa <- redistribute(taxa)
   
   # Not checking anything ending in `sp.`
   # Todo: Note, genus in APC?
@@ -109,62 +110,57 @@ metadata_check_taxa <- function(original_name,
     mutate(checked = ifelse(!checked &
                               grepl("sp\\.$", cleaned_name), TRUE, checked))
   
-  taxa <- rebalance(taxa)
+  taxa <- redistribute(taxa)
   
-  cat("  -> checking for extact matches for ",
-      nrow(taxa$tocheck),
-      " species\n")
+  message("  -> checking for extact matches for ", nrow(taxa$tocheck), " species")
   
   resources <- load_taxonomic_resources(ver = ver)
   
   for (v in c("APC list (accepted)", "APC list (known names)", "APNI names"))  {
+    
     # Compare to canonical name
-    i <-
-      match(taxa$tocheck$original_name, resources[[v]]$canonicalName)
+    i <- match(taxa$tocheck$original_name, resources[[v]]$canonicalName)
     taxa$tocheck$aligned_name <- resources[[v]]$canonicalName[i]
     taxa$tocheck$source[!is.na(i)] <- v
     taxa$tocheck$checked <- !is.na(i)
     
-    taxa <- rebalance(taxa)
+    taxa <- redistribute(taxa)
     
     # Compare to stripped canonical name
-    i <-
-      match(taxa$tocheck$stripped_name,
-            resources[[v]]$stripped_canonical)
+    i <- match(taxa$tocheck$stripped_name, resources[[v]]$stripped_canonical)
     taxa$tocheck$aligned_name <- resources[[v]]$canonicalName[i]
     taxa$tocheck$source[!is.na(i)] <- v
     taxa$tocheck$checked <- !is.na(i)
-    taxa <- rebalance(taxa)
+    
+    taxa <- redistribute(taxa)
     
     # Compare to scientific name
-    i <-
-      match(taxa$tocheck$original_name, resources[[v]]$scientificName)
+    i <- match(taxa$tocheck$original_name, resources[[v]]$scientificName)
     taxa$tocheck$aligned_name <- resources[[v]]$canonicalName[i]
     taxa$tocheck$source[!is.na(i)] <- v
     taxa$tocheck$checked <- !is.na(i)
-    taxa <- rebalance(taxa)
+    taxa <- redistribute(taxa)
     
     # Compare to stripped scientific name
-    i <-
-      match(taxa$tocheck$stripped_name,
-            resources[[v]]$stripped_scientific)
+    i <-match(taxa$tocheck$stripped_name, resources[[v]]$stripped_scientific)
+    
     taxa$tocheck$aligned_name <- resources[[v]]$canonicalName[i]
     taxa$tocheck$source[!is.na(i)] <- v
     taxa$tocheck$checked <- !is.na(i)
-    taxa <- rebalance(taxa)
+    taxa <- redistribute(taxa)
   }
   
   # For any remaining species, look for distance based estimates
-  cat("  -> checking for fuzzzy matches for ",
-      nrow(taxa$tocheck),
-      " species\n")
+  message("  -> checking for fuzzzy matches for ", nrow(taxa$tocheck), " taxa")
   
   for (i in seq_len(nrow(taxa$tocheck))) {
+    
     stripped_name <- taxa$tocheck$stripped_name[i]
     taxa$tocheck$checked[i] <- TRUE
     
     cat("\t", i, "\t", taxa$tocheck$original_name[i])
     for (v in c("APC list (accepted)", "APC list (known names)", "APNI names"))  {
+      
       distance_c <-
         adist(stripped_name, resources[[v]]$stripped_canonical, fixed = TRUE)[1, ]
       min_dist_abs_c <-  min(distance_c)
@@ -206,22 +202,17 @@ metadata_check_taxa <- function(original_name,
     }
     
     if (is.na(taxa$tocheck$aligned_name[i]))
-      cat(crayon::red("\tnot found\n"))
+      cat(crayon::blue("\tnot found\n"))
     else
-      cat(
-        crayon::green("\tfound:\t"),
-        taxa$tocheck$aligned_name[i],
-        "\tin ",
-        taxa$tocheck$source[i],
-        "\n"
-      )
-    
+      cat(crayon::green("\tfound:\t"), taxa$tocheck$aligned_name[i],
+        "\t", taxa$tocheck$source[i], "\n")
   }
   
   taxa_out <- bind_rows(taxa) %>%
     mutate(known = !is.na(aligned_name))
   
   write_csv(taxa_out, output)
+  message("  - output saved in file: ", output)
   invisible(taxa_out)
 }
 
@@ -329,12 +320,12 @@ update_taxonomy <- function(aligned_names,
       ccAttributionIRI
     )
   
-  taxa1 <-
+  taxa_APC <-
     taxa_out %>% filter(!is.na(taxonIDClean)) %>%
     distinct()
   
   # Now check against APNI for any species not found in APC
-  taxa2 <-
+  taxa_APNI <-
     taxa_out %>% filter(is.na(canonicalName))  %>%
     select(aligned_name) %>%
     left_join(
@@ -356,15 +347,16 @@ update_taxonomy <- function(aligned_names,
       canonicalName = ifelse(is.na(taxonIDClean), NA, aligned_name),
       taxonomicStatusClean = ifelse(is.na(taxonIDClean), "unknown", "unplaced"),
       taxonomicStatus = taxonomicStatusClean
-    )
+    ) %>%
+    filter(!is.na(taxonIDClean))
   
   taxa_out <-
-    bind_rows(taxa1,
-              taxa2 %>% filter(!is.na(taxonIDClean))) %>%
+    bind_rows(taxa_APC,
+              taxa_APNI) %>%
     arrange(aligned_name)
   
   write_csv(taxa_out, output)
-  
+  message("  - output saved in file: ", output)
   invisible(taxa_out)
 }
 
