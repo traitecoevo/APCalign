@@ -13,13 +13,14 @@ Encoding: UTF-8
 Language: en
 LazyData: true
 Depends:
-    R (>= 3.1.0),
-    dplyr,
-    stringr
+    R (>= 3.1.0)
 Imports:
     datastorr (>= 0.0.3),
     readr,
+    forcats,
     tibble,
+    dplyr,
+    stringr,
     crayon,
     magrittr
 Remotes:

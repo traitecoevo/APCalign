@@ -35,10 +35,10 @@ align_taxa <- function(original_name,
     taxa_raw <-
       readr::read_csv(
         output,
-        col_types = cols(
-          checked = col_logical(),
-          known = col_logical(),
-          .default = col_character()
+        col_types = readr::cols(
+          checked = readr::col_logical(),
+          known = readr::col_logical(),
+          .default = readr::col_character()
         )
       )
   
@@ -46,7 +46,7 @@ align_taxa <- function(original_name,
   }
   else
     taxa_raw <-
-      tibble(
+      tibble::tibble(
         original_name = character(0L),
         cleaned_name = character(0L),
         aligned_name = character(0L),
@@ -59,9 +59,9 @@ align_taxa <- function(original_name,
   taxa <- list()
   
   taxa[["tocheck"]] <-
-    bind_rows(
+    dplyr::bind_rows(
       taxa_raw,
-      tibble(
+      tibble::tibble(
         original_name = subset(original_name,!original_name %in% taxa_raw$original_name) %>% unique(),
         cleaned_name = NA_character_,
         stripped_name = NA_character_,
@@ -71,7 +71,7 @@ align_taxa <- function(original_name,
         known = FALSE
       )
     ) %>%
-    mutate(
+    dplyr::mutate(
       cleaned_name = ifelse(
         is.na(cleaned_name),
         standardise_names(original_name),
@@ -95,10 +95,10 @@ align_taxa <- function(original_name,
           crayon::blue(sum(!taxa$tocheck$checked)), " taxa  yet to be checked")
   
   redistribute <- function(data) {
-    data[["checked"]] <- rbind(data[["checked"]],
-                               data[["tocheck"]] %>% filter(checked))
+    data[["checked"]] <- dplyr::bind_rows(data[["checked"]],
+                               data[["tocheck"]] %>% dplyr::filter(checked))
     
-    data[["tocheck"]] <- data[["tocheck"]] %>% filter(!checked)
+    data[["tocheck"]] <- data[["tocheck"]] %>% dplyr::filter(!checked)
     data
   }
   
@@ -107,7 +107,7 @@ align_taxa <- function(original_name,
   # Not checking anything ending in `sp.`
   # Todo: Note, genus in APC?
   taxa$tocheck <- taxa$tocheck %>%
-    mutate(checked = ifelse(!checked &
+    dplyr::mutate(checked = ifelse(!checked &
                               grepl("sp\\.$", cleaned_name), TRUE, checked))
   
   taxa <- redistribute(taxa)
@@ -151,7 +151,7 @@ align_taxa <- function(original_name,
   }
   
   # For any remaining species, look for distance based estimates
-  message("  -> checking for fuzzzy matches for ", nrow(taxa$tocheck), " taxa")
+  message("  -> checking for fuzzy matches for ", nrow(taxa$tocheck), " taxa")
   
   for (i in seq_len(nrow(taxa$tocheck))) {
     
@@ -162,9 +162,9 @@ align_taxa <- function(original_name,
     for (v in c("APC list (accepted)", "APC list (known names)", "APNI names"))  {
       
       distance_c <-
-        adist(stripped_name, resources[[v]]$stripped_canonical, fixed = TRUE)[1, ]
+        utils::adist(stripped_name, resources[[v]]$stripped_canonical, fixed = TRUE)[1, ]
       min_dist_abs_c <-  min(distance_c)
-      min_dist_per_c <-  min(distance_c) / str_length(stripped_name)
+      min_dist_per_c <-  min(distance_c) / stringr::str_length(stripped_name)
       j <- which(distance_c == min_dist_abs_c)
       
       if (## Within allowable number of characters (absolute)
@@ -181,9 +181,9 @@ align_taxa <- function(original_name,
       #Todo: suggestions when no match
       
       distance_s <-
-        adist(stripped_name, resources[[v]]$stripped_scientific, fixed = TRUE)[1, ]
+        utils::adist(stripped_name, resources[[v]]$stripped_scientific, fixed = TRUE)[1, ]
       min_dist_abs_s <-  min(distance_s)
-      min_dist_per_s <-  min(distance_s) / str_length(stripped_name)
+      min_dist_per_s <-  min(distance_s) / stringr::str_length(stripped_name)
       j <- which(distance_s == min_dist_abs_s)
       
       if (## Within allowable number of characters (absolute)
@@ -208,10 +208,10 @@ align_taxa <- function(original_name,
         "\t", taxa$tocheck$source[i], "\n")
   }
   
-  taxa_out <- bind_rows(taxa) %>%
-    mutate(known = !is.na(aligned_name))
+  taxa_out <- dplyr::bind_rows(taxa) %>%
+    dplyr::mutate(known = !is.na(aligned_name))
   
-  write_csv(taxa_out, output)
+  readr::write_csv(taxa_out, output)
   message("  - output saved in file: ", output)
   invisible(taxa_out)
 }
@@ -251,29 +251,29 @@ update_taxonomy <- function(aligned_names,
       "doubtful pro parte misapplied"
     )
   
-  resources <- load_taxonomic_resources(ver = version)
+  resources <- load_taxonomic_resources(ver = ver)
   
   taxa_out <-
-    tibble(aligned_name = aligned_names) %>%
+    tibble::tibble(aligned_name = aligned_names) %>%
     # match names against names in APC list
-    left_join(
+    dplyr::left_join(
       by = "aligned_name",
-      resources$APC %>% filter(!grepl("sp\\.$", canonicalName)) %>%
-        select(
+      resources$APC %>% dplyr::filter(!grepl("sp\\.$", canonicalName)) %>%
+        dplyr::select(
           aligned_name = canonicalName,
           taxonIDClean = taxonID,
           taxonomicStatusClean = taxonomicStatus,
           acceptedNameUsageID
         )
     ) %>%
-    distinct() %>%
-    mutate(source = ifelse(!is.na(taxonIDClean), "APC", NA)) %>%
+    dplyr::distinct() %>%
+    dplyr::mutate(source = ifelse(!is.na(taxonIDClean), "APC", NA)) %>%
     # Now find accepted names for each name in the list (sometimes they are the same)
-    left_join(
+    dplyr::left_join(
       by = "acceptedNameUsageID",
       resources$APC %>%
-        filter(taxonomicStatus == "accepted") %>%
-        select(
+        dplyr::filter(taxonomicStatus == "accepted") %>%
+        dplyr::select(
           acceptedNameUsageID,
           canonicalName,
           taxonomicStatus,
@@ -286,25 +286,23 @@ update_taxonomy <- function(aligned_names,
     ) %>%
     # Some species have multiple matches. We will prefer the accepted usage, but record others if they exists
     # To do this we define the order we want variables to sort by,m with accepted at the top
-    mutate(my_order =  forcats::fct_relevel(
-      taxonomicStatusClean,
-      subset(preferrred_oder, preferrred_oder %in%  taxonomicStatusClean)
-    )) %>%
-    arrange(aligned_name, my_order) %>%
+    dplyr::mutate(
+      my_order =  forcats::fct_relevel( taxonomicStatusClean, subset(preferrred_oder, preferrred_oder %in%  taxonomicStatusClean))
+      ) %>%
+    dplyr::arrange(aligned_name, my_order) %>%
     # For each species, keep the first record (accepted if present) and
     # record any alternative status to indicate where there was ambiguity
-    group_by(aligned_name) %>%
-    mutate(
+    dplyr::group_by(aligned_name) %>%
+    dplyr::mutate(
       alternativeTaxonomicStatusClean = ifelse(
         taxonomicStatusClean[1] == "accepted",
-        taxonomicStatusClean %>% unique() %>%  subset(. , . != "accepted") %>% paste0(collapse = " | ") %>% na_if(""),
+        taxonomicStatusClean %>% unique() %>%  subset(. , . != "accepted") %>% paste0(collapse = " | ") %>% dplyr::na_if(""),
         NA
       )
     ) %>%
-    slice(1) %>%
-    ungroup() %>%
-    select(-my_order) %>%
-    select(
+    dplyr::slice(1) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(
       aligned_name,
       source,
       taxonIDClean,
@@ -321,41 +319,44 @@ update_taxonomy <- function(aligned_names,
     )
   
   taxa_APC <-
-    taxa_out %>% filter(!is.na(taxonIDClean)) %>%
-    distinct()
+    taxa_out %>% dplyr::filter(!is.na(taxonIDClean)) %>%
+    dplyr::distinct()
   
   # Now check against APNI for any species not found in APC
   taxa_APNI <-
-    taxa_out %>% filter(is.na(canonicalName))  %>%
-    select(aligned_name) %>%
-    left_join(
+    taxa_out %>% 
+    dplyr::filter(is.na(canonicalName))  %>%
+    dplyr::select(aligned_name) %>%
+    dplyr::left_join(
       by = "aligned_name",
-      resources$APNI %>% filter(nameElement != "sp.") %>% select(
+      resources$APNI %>% dplyr::filter(nameElement != "sp.") %>% 
+      dplyr::select(
         aligned_name = canonicalName,
         taxonIDClean = scientificNameID,
         family,
         taxonRank
       )
-    ) %>% group_by(aligned_name) %>%
-    mutate(
-      taxonIDClean = paste(taxonIDClean, collapse = " ") %>% na_if("NA"),
-      family = ifelse(n_distinct(family) > 1, NA, family[1])
+    ) %>% 
+    dplyr::group_by(aligned_name) %>%
+    dplyr::mutate(
+      taxonIDClean = paste(taxonIDClean, collapse = " ") %>% dplyr::na_if("NA"),
+      family = ifelse(dplyr::n_distinct(family) > 1, NA, family[1])
     ) %>%
-    ungroup() %>%
-    mutate(
+    dplyr::ungroup() %>%
+    dplyr::mutate(
       source = ifelse(is.na(taxonIDClean), NA, "APNI"),
       canonicalName = ifelse(is.na(taxonIDClean), NA, aligned_name),
       taxonomicStatusClean = ifelse(is.na(taxonIDClean), "unknown", "unplaced"),
       taxonomicStatus = taxonomicStatusClean
     ) %>%
-    filter(!is.na(taxonIDClean))
+    dplyr::filter(!is.na(taxonIDClean))
   
   taxa_out <-
-    bind_rows(taxa_APC,
+    dplyr::bind_rows(taxa_APC,
               taxa_APNI) %>%
-    arrange(aligned_name)
+    dplyr::arrange(aligned_name)
   
-  write_csv(taxa_out, output)
+  readr::write_csv(taxa_out, output)
   message("  - output saved in file: ", output)
   invisible(taxa_out)
 }
@@ -382,32 +383,33 @@ load_taxonomic_resources <-
       names(taxonomic_resources) <- c("APC", "APNI")
       
       taxonomic_resources[["genera_accepted"]] <-
-        taxonomic_resources$APC %>% filter(taxonRank %in% c('Genus'), taxonomicStatus == "accepted")
+        taxonomic_resources$APC %>% dplyr::filter(taxonRank %in% c('Genus'), taxonomicStatus == "accepted")
       
       APC_tmp <-
         taxonomic_resources$APC %>%
-        filter(taxonRank %in% c('Series', 'Subspecies', 'Species', 'Forma', 'Varietas')) %>%
-        select(canonicalName, scientificName, taxonomicStatus, ID = taxonID) %>%
-        mutate(
+        dplyr::filter(taxonRank %in% c('Series', 'Subspecies', 'Species', 'Forma', 'Varietas')) %>%
+        dplyr::select(canonicalName, scientificName, taxonomicStatus, ID = taxonID) %>%
+        dplyr::mutate(
           stripped_canonical = strip_names(canonicalName),
           stripped_scientific = strip_names(scientificName)
         ) %>%
-        distinct()
+        dplyr::distinct()
       
       taxonomic_resources[["APC list (accepted)"]] <-
-        APC_tmp %>% filter(taxonomicStatus == "accepted")
+        APC_tmp %>% dplyr::filter(taxonomicStatus == "accepted")
       taxonomic_resources[["APC list (known names)"]] <-
-        APC_tmp %>% filter(taxonomicStatus != "accepted")
+        APC_tmp %>% dplyr::filter(taxonomicStatus != "accepted")
       
       taxonomic_resources[["APNI names"]] <-
-        taxonomic_resources$APNI %>% filter(nameElement != "sp.") %>%
-        select(canonicalName, scientificName, ID = scientificNameID) %>%
-        mutate(
+        taxonomic_resources$APNI %>% dplyr::filter(nameElement != "sp.") %>%
+        dplyr::select(canonicalName, scientificName, ID = scientificNameID) %>%
+        dplyr::mutate(
           taxonomicStatus = "unplaced",
           stripped_canonical = strip_names(canonicalName),
           stripped_scientific = strip_names(scientificName)
         ) %>%
-        distinct() %>% arrange(canonicalName)
+        dplyr::distinct() %>% 
+        dplyr::arrange(canonicalName)
       
       assign("taxonomic_resources", taxonomic_resources, envir = .GlobalEnv)
     }
@@ -426,11 +428,11 @@ load_taxonomic_resources <-
 #' @examples
 strip_names <- function(taxon_names) {
   taxon_names %>%
-    str_remove_all(" subsp\\.") %>% str_remove_all(" aff\\.")  %>%
-    str_remove_all(" var\\.") %>% str_remove_all(" ser\\.") %>% str_remove_all(" f\\.") %>%
-    str_remove_all(" s\\.l\\.") %>% str_remove_all(" s\\.s\\.") %>%
-    str_replace_all("[-._()?]", " ") %>%
-    str_squish() %>%
+    stringr::str_remove_all(" subsp\\.") %>% stringr::str_remove_all(" aff\\.")  %>%
+    stringr::str_remove_all(" var\\.") %>% stringr::str_remove_all(" ser\\.") %>% stringr::str_remove_all(" f\\.") %>%
+    stringr::str_remove_all(" s\\.l\\.") %>% stringr::str_remove_all(" s\\.s\\.") %>%
+    stringr::str_replace_all("[-._()?]", " ") %>%
+    stringr::str_squish() %>%
     tolower()
 }
 
@@ -488,5 +490,5 @@ standardise_names <- function(taxon_names) {
     f("\\ss\\.s\\.(\\s|$)", "\\1") %>%
     
     ## clean white space
-    str_squish()
+    stringr::str_squish()
 }

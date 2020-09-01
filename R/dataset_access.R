@@ -101,28 +101,28 @@ get_version_details <- function(path=NULL, version=NULL) {
     info$read <- c(
       #APC
       function(x) readr::read_csv(x, col_types = 
-                                    cols(
-                                      .default = col_character(),
-                                      proParte = col_logical(),
-                                      taxonRankSortOrder = col_double(),
-                                      created = col_datetime(format = ""),
-                                      modified = col_datetime(format = "")
+                                    readr::cols(
+                                      .default = readr::col_character(),
+                                      proParte = readr::col_logical(),
+                                      taxonRankSortOrder = readr::col_double(),
+                                      created = readr::col_datetime(format = ""),
+                                      modified = readr::col_datetime(format = "")
                                       )),
       #APNI
       function(x) readr::read_csv(x, col_types = 
-                                    cols(
-                                      .default = col_character(),
-                                      autonym = col_logical(),
-                                      hybrid = col_logical(),
-                                      cultivar = col_logical(),
-                                      formula = col_logical(),
-                                      scientific = col_logical(),
-                                      nomInval = col_logical(),
-                                      nomIlleg = col_logical(),
-                                      namePublishedInYear = col_double(),
-                                      taxonRankSortOrder = col_double(),
-                                      created = col_datetime(format = ""),
-                                      modified = col_datetime(format = "")
+                                    readr::cols(
+                                      .default = readr::col_character(),
+                                      autonym = readr::col_logical(),
+                                      hybrid = readr::col_logical(),
+                                      cultivar = readr::col_logical(),
+                                      formula = readr::col_logical(),
+                                      scientific = readr::col_logical(),
+                                      nomInval = readr::col_logical(),
+                                      nomIlleg = readr::col_logical(),
+                                      namePublishedInYear = readr::col_double(),
+                                      taxonRankSortOrder = readr::col_double(),
+                                      created = readr::col_datetime(format = ""),
+                                      modified = readr::col_datetime(format = "")
                                     ))
         )
     info 
