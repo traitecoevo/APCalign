@@ -13,11 +13,15 @@ Encoding: UTF-8
 Language: en
 LazyData: true
 Depends:
-    R (>= 3.1.0)
+    R (>= 3.1.0),
+    dplyr,
+    stringr
 Imports:
     datastorr (>= 0.0.3),
     readr,
-    tibble
+    tibble,
+    crayon,
+    magrittr
 Remotes:
     traitecoevo/datastorr
 Suggests:
