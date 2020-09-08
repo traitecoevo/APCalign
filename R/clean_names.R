@@ -10,26 +10,30 @@ default_version <- function() {
   "0.0.0.9000"
 }
 
-#' Checks all taxa within against our list of known species
-#' If not found, and update=TRUE, checks the unknown species against
+
+#' Find taxonomic alignments for a list of names
 #'
-#' @param dataset_id
-#' @param update
-#' @param typos
-#' @param diffchar
+#' Use APC & APNI to find taxonomic alignments for a list of names
+#' 
+#' @param original_name list of names to query
+#' @param output (optional) name of file to save results
+#' @param max_distance_abs 
+#' @param max_distance_rel 
+#' @param ver 
 #'
+#' @return
 #' @export
 #'
 #' @examples
 align_taxa <- function(original_name,
-                       output = "taxonomic_updates.csv",
+                       output = NULL,
                        max_distance_abs = 3,
                        max_distance_rel = 0.2,
                        ver = default_version()) {
   
   message("Checking alignments of ", length(original_name), " taxa\n")
   
-  if (file.exists(output)) {
+  if (!is.null(output) && file.exists(output)) {
     message("  - reading existing data from ", output)
     
     taxa_raw <-
@@ -211,16 +215,18 @@ align_taxa <- function(original_name,
   taxa_out <- dplyr::bind_rows(taxa) %>%
     dplyr::mutate(known = !is.na(aligned_name))
   
-  readr::write_csv(taxa_out, output)
-  message("  - output saved in file: ", output)
-  invisible(taxa_out)
+  if (!is.null(output)) {
+    readr::write_csv(taxa_out, output)
+    message("  - output saved in file: ", output)
+  }
+  taxa_out
 }
 
 
-#' Title
+#' Use APC & APNI to update taxonomy, replacing synonyms to current taxa where relevant
 #'
 #' @param aligned_names
-#' @param output
+#' @param output (optional) Name of file where results are saved
 #' @param ver
 #'
 #' @return
@@ -228,7 +234,7 @@ align_taxa <- function(original_name,
 #'
 #' @examples
 update_taxonomy <- function(aligned_names,
-                            output = "taxon_list.csv",
+                            output = NULL,
                             ver = default_version()) {
   preferrred_oder <-
     c(
@@ -356,9 +362,11 @@ update_taxonomy <- function(aligned_names,
               taxa_APNI) %>%
     dplyr::arrange(aligned_name)
   
-  readr::write_csv(taxa_out, output)
-  message("  - output saved in file: ", output)
-  invisible(taxa_out)
+  if (!is.null(output)) {
+    readr::write_csv(taxa_out, output)
+    message("  - output saved in file: ", output)
+  }
+  taxa_out
 }
 
 #' Title

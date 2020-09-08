@@ -2,7 +2,7 @@
 % Please edit documentation in R/clean_names.R
 \name{update_taxonomy}
 \alias{update_taxonomy}
-\title{Title}
+\title{Use APC & APNI to update taxonomy, replacing synonyms to current taxa where relevant}
 \usage{
 update_taxonomy(
   aligned_names,
@@ -11,11 +11,13 @@ update_taxonomy(
 )
 }
 \arguments{
+\item{output}{(optional) Name of file where results are saved}
+
 \item{ver}{}
 }
 \value{
 
 }
 \description{
-Title
+Use APC & APNI to update taxonomy, replacing synonyms to current taxa where relevant
 }

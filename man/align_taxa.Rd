@@ -2,21 +2,30 @@
 % Please edit documentation in R/clean_names.R
 \name{align_taxa}
 \alias{align_taxa}
-\title{Checks all taxa within against our list of known species
-If not found, and update=TRUE, checks the unknown species against}
+\title{Find taxonomic alignments for a list of names}
 \usage{
 align_taxa(
   original_name,
-  output = "taxonomic_updates.csv",
+  output = NULL,
   max_distance_abs = 3,
   max_distance_rel = 0.2,
   ver = default_version()
 )
 }
 \arguments{
-\item{diffchar}{}
+\item{original_name}{list of names to query}
+
+\item{output}{(optional) name of file to save results}
+
+\item{max_distance_abs}{}
+
+\item{max_distance_rel}{}
+
+\item{ver}{}
+}
+\value{
+
 }
 \description{
-Checks all taxa within against our list of known species
-If not found, and update=TRUE, checks the unknown species against
+Use APC & APNI to find taxonomic alignments for a list of names
 }
