@@ -360,7 +360,8 @@ update_taxonomy <- function(aligned_names,
   taxa_out <-
     dplyr::bind_rows(taxa_APC,
               taxa_APNI) %>%
-    dplyr::arrange(aligned_name)
+    dplyr::arrange(aligned_name) %>%
+    dplyr::distinct()
   
   if (!is.null(output)) {
     readr::write_csv(taxa_out, output)
