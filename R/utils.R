@@ -46,17 +46,6 @@ desc_version <- function() {
   dcf$Version
 }
 
-local_package_version <- function() {
-  max(unique(lookaside_table$version))
-}
-
-append_lookaside_entry <- function(lookaside_table, version, filename, read) {
-  rbind(lookaside_table,
-        tibble::tibble(version = version,
-                       filename = filename, 
-                       unpack_function = deparse(read)))
-}
-
 generate_version <-  function(path) {
   local_versions <- dataset_versions(local = TRUE, path)
   if(identical(character(0), local_versions)) 
@@ -70,11 +59,4 @@ major_version_change <- function(curr_package_version, requested_version) {
   req_major_version_num <- as.numeric(regmatches(requested_version,regexpr("^\\d",requested_version)))
   
   ifelse(req_major_version_num > curr_major_version_num, TRUE, FALSE)
-}
-
-adjust_dataset_info_fields <- function(versioned_package_info, version) {
-  version_metadata <- lookaside_table[lookaside_table$version == version ,]
-  versioned_package_info$filenames <- c(unique(version_metadata$filename))
-  versioned_package_info$read <- lapply(versioned_package_info$filenames, function(x) { eval(parse(text=version_metadata[version_metadata$filename == x ,]$unpack_function)) } )
-  versioned_package_info
 }
