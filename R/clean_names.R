@@ -17,6 +17,7 @@ default_version <- function() {
 #' 
 #' @param original_name list of names to query
 #' @param output (optional) name of file to save results
+#' @param fuzzy_matching option to turn off fuzzy matching
 #' @param max_distance_abs 
 #' @param max_distance_rel 
 #' @param ver 
@@ -27,6 +28,7 @@ default_version <- function() {
 #' @examples
 align_taxa <- function(original_name,
                        output = NULL,
+                       fuzzy_matching = TRUE,
                        max_distance_abs = 3,
                        max_distance_rel = 0.2,
                        ver = default_version()) {
@@ -96,7 +98,7 @@ align_taxa <- function(original_name,
   # check unknown taxa
   message("  -> ", crayon::blue(sum(taxa$tocheck$known, na.rm = T)), " names already matched; ", 
           crayon::blue(sum(taxa$tocheck$checked & !taxa$tocheck$known, na.rm = T)), " names checked but without a match; ",
-          crayon::blue(sum(!taxa$tocheck$checked)), " taxa  yet to be checked")
+          crayon::blue(sum(!taxa$tocheck$checked)), " taxa yet to be checked")
   
   redistribute <- function(data) {
     data[["checked"]] <- dplyr::bind_rows(data[["checked"]],
@@ -116,7 +118,7 @@ align_taxa <- function(original_name,
   
   taxa <- redistribute(taxa)
   
-  message("  -> checking for extact matches for ", nrow(taxa$tocheck), " species")
+  message("  -> checking for exact matches for ", nrow(taxa$tocheck), " species")
   
   resources <- load_taxonomic_resources(ver = ver)
   
@@ -154,55 +156,57 @@ align_taxa <- function(original_name,
     taxa <- redistribute(taxa)
   }
   
-  # For any remaining species, look for distance based estimates
-  message("  -> checking for fuzzy matches for ", nrow(taxa$tocheck), " taxa")
-  
-  for (i in seq_len(nrow(taxa$tocheck))) {
+  if (fuzzy_matching = TRUE){
+    # For any remaining species, look for distance based estimates
+    message("  -> checking for fuzzy matches for ", nrow(taxa$tocheck), " taxa")
     
-    stripped_name <- taxa$tocheck$stripped_name[i]
-    taxa$tocheck$checked[i] <- TRUE
-    
-    cat("\t", i, "\t", taxa$tocheck$original_name[i])
-    for (v in c("APC list (accepted)", "APC list (known names)", "APNI names"))  {
+    for (i in seq_len(nrow(taxa$tocheck))) {
       
-      distance_c <-
-        utils::adist(stripped_name, resources[[v]]$stripped_canonical, fixed = TRUE)[1, ]
-      min_dist_abs_c <-  min(distance_c)
-      min_dist_per_c <-  min(distance_c) / stringr::str_length(stripped_name)
-      j <- which(distance_c == min_dist_abs_c)
+      stripped_name <- taxa$tocheck$stripped_name[i]
+      taxa$tocheck$checked[i] <- TRUE
       
-      if (## Within allowable number of characters (absolute)
-        min_dist_abs_c <= max_distance_abs &
-        ## Within allowable number of characters (relative)
-        min_dist_per_c <= max_distance_rel &
-        ## Is a unique solution
-        length(j) == 1) {
-        taxa$tocheck$aligned_name[i] <- resources[[v]]$canonicalName[j]
-        taxa$tocheck$source[i] <- v
-        break
+      cat("\t", i, "\t", taxa$tocheck$original_name[i])
+      for (v in c("APC list (accepted)", "APC list (known names)", "APNI names"))  {
+        
+        distance_c <-
+          utils::adist(stripped_name, resources[[v]]$stripped_canonical, fixed = TRUE)[1, ]
+        min_dist_abs_c <-  min(distance_c)
+        min_dist_per_c <-  min(distance_c) / stringr::str_length(stripped_name)
+        j <- which(distance_c == min_dist_abs_c)
+        
+        if (## Within allowable number of characters (absolute)
+          min_dist_abs_c <= max_distance_abs &
+          ## Within allowable number of characters (relative)
+          min_dist_per_c <= max_distance_rel &
+          ## Is a unique solution
+          length(j) == 1) {
+          taxa$tocheck$aligned_name[i] <- resources[[v]]$canonicalName[j]
+          taxa$tocheck$source[i] <- v
+          break
+          
+        }
+        #Todo: suggestions when no match
+        
+        distance_s <-
+          utils::adist(stripped_name, resources[[v]]$stripped_scientific, fixed = TRUE)[1, ]
+        min_dist_abs_s <-  min(distance_s)
+        min_dist_per_s <-  min(distance_s) / stringr::str_length(stripped_name)
+        j <- which(distance_s == min_dist_abs_s)
+        
+        if (## Within allowable number of characters (absolute)
+          min_dist_abs_s <= max_distance_abs &
+          ## Within allowable number of characters (relative)
+          min_dist_per_s <= max_distance_rel &
+          ## Is a unique solution
+          length(j) == 1) {
+          taxa$tocheck$aligned_name[i] <- resources[[v]]$canonicalName[j]
+          taxa$tocheck$source[i] <- v
+          break
+          
+        }
+        #Todo: suggestions when no match
         
       }
-      #Todo: suggestions when no match
-      
-      distance_s <-
-        utils::adist(stripped_name, resources[[v]]$stripped_scientific, fixed = TRUE)[1, ]
-      min_dist_abs_s <-  min(distance_s)
-      min_dist_per_s <-  min(distance_s) / stringr::str_length(stripped_name)
-      j <- which(distance_s == min_dist_abs_s)
-      
-      if (## Within allowable number of characters (absolute)
-        min_dist_abs_s <= max_distance_abs &
-        ## Within allowable number of characters (relative)
-        min_dist_per_s <= max_distance_rel &
-        ## Is a unique solution
-        length(j) == 1) {
-        taxa$tocheck$aligned_name[i] <- resources[[v]]$canonicalName[j]
-        taxa$tocheck$source[i] <- v
-        break
-        
-      }
-      #Todo: suggestions when no match
-      
     }
     
     if (is.na(taxa$tocheck$aligned_name[i]))
@@ -236,7 +240,7 @@ align_taxa <- function(original_name,
 update_taxonomy <- function(aligned_names,
                             output = NULL,
                             ver = default_version()) {
-  preferrred_oder <-
+  preferred_order <-
     c(
       "accepted",
       "taxonomic synonym",
@@ -293,7 +297,7 @@ update_taxonomy <- function(aligned_names,
     # Some species have multiple matches. We will prefer the accepted usage, but record others if they exists
     # To do this we define the order we want variables to sort by,m with accepted at the top
     dplyr::mutate(
-      my_order =  forcats::fct_relevel( taxonomicStatusClean, subset(preferrred_oder, preferrred_oder %in%  taxonomicStatusClean))
+      my_order =  forcats::fct_relevel( taxonomicStatusClean, subset(preferred_order, preferred_order %in%  taxonomicStatusClean))
       ) %>%
     dplyr::arrange(aligned_name, my_order) %>%
     # For each species, keep the first record (accepted if present) and
@@ -460,7 +464,7 @@ standardise_names <- function(taxon_names) {
   }
   
   taxon_names %>%
-    ## Weird formattring
+    ## Weird formatting
     f("[\\n\\t]", " ") %>%
     
     ## Capitalise first letter
