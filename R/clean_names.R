@@ -156,7 +156,7 @@ align_taxa <- function(original_name,
     taxa <- redistribute(taxa)
   }
   
-  if (fuzzy_matching = TRUE){
+  if (fuzzy_matching == TRUE){
     # For any remaining species, look for distance based estimates
     message("  -> checking for fuzzy matches for ", nrow(taxa$tocheck), " taxa")
     
