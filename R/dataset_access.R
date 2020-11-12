@@ -41,26 +41,6 @@ dataset_info <- function(path) {
                                  path=path)
 }
 
-versioned_dataset_info <- function(path, version=NULL) {
-  
-  versioned_package_info <- dataset_info(path)
-  if(is.null(version)) {
-    ## gets latest remote version if no local version exists,
-    ## otherwise it fetches latest local version 
-    version <- generate_version(path)
-  }
-  if(!(version %in% dataset_versions(local=FALSE))) {
-    stop(paste0("Version ", version, " does not exist."))
-  }
-  if(version < local_package_version()) {
-    versioned_package_info <- adjust_dataset_info_fields(versioned_package_info, version)
-  } else if(version > local_package_version()) {
-    if(major_version_change(local_package_version(), version))
-      warning(paste0("Warning"))
-  }
-  versioned_package_info
-}
-
 dataset_get <- function(version=NULL, path=NULL) {
   datastorr::github_release_get(get_version_details(path, version), version)
 }
@@ -84,6 +64,7 @@ dataset_version_current <- function(local=TRUE, path=NULL) {
 
 ##' @export
 ##' @rdname fungal_traits
+##' 
 dataset_del <- function(version, path=NULL) {
   datastorr::github_release_del(dataset_info(path), version)
 }
@@ -95,9 +76,10 @@ get_version_details <- function(path=NULL, version=NULL) {
   ## otherwise it fetches latest local version 
   if(is.null(version)) {
     version <- generate_version(path)
+    print(version)
   }
 #  if (numeric_version(version) >= numeric_version("0.0.1")) {
-    info$filenames <- c("APC-taxon-2020-05-14-1332.csv", "APNI-names-2020-05-14-1341.csv")
+    info$filenames <- c("APC", "APNI")
     info$read <- c(
       #APC
       function(x) readr::read_csv(x, col_types = 
