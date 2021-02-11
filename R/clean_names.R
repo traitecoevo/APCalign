@@ -324,6 +324,7 @@ update_taxonomy <- function(aligned_names,
       taxonRank,
       taxonomicStatus,
       family,
+      subclass,
       taxonDistribution,
       ccAttributionIRI
     )
