@@ -1,4 +1,4 @@
-Package: apcnames
+Package: ausflora
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
@@ -27,4 +27,4 @@ Remotes:
     traitecoevo/datastorr
 Suggests:
     testthat
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1

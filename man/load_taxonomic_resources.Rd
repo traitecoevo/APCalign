@@ -9,9 +9,6 @@ load_taxonomic_resources(ver = default_version(), reload = FALSE)
 \arguments{
 \item{reload}{}
 }
-\value{
-
-}
 \description{
 Title
 }
