@@ -23,9 +23,6 @@ align_taxa(
 
 \item{ver}{}
 }
-\value{
-
-}
 \description{
 Use APC & APNI to find taxonomic alignments for a list of names
 }

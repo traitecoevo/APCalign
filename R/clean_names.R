@@ -388,7 +388,7 @@ load_taxonomic_resources <-
       message(crayon::red(
         "loading object `taxonomic_resources` into global environment"
       ))
-      taxonomic_resources <- apcnames::dataset_access_function(ver)
+      taxonomic_resources <- ausflora::dataset_access_function(ver)
       names(taxonomic_resources) <- c("APC", "APNI")
       
       taxonomic_resources[["genera_accepted"]] <-

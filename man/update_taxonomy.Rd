@@ -4,19 +4,12 @@
 \alias{update_taxonomy}
 \title{Use APC & APNI to update taxonomy, replacing synonyms to current taxa where relevant}
 \usage{
-update_taxonomy(
-  aligned_names,
-  output = "taxon_list.csv",
-  ver = default_version()
-)
+update_taxonomy(aligned_names, output = NULL, ver = default_version())
 }
 \arguments{
 \item{output}{(optional) Name of file where results are saved}
 
 \item{ver}{}
-}
-\value{
-
 }
 \description{
 Use APC & APNI to update taxonomy, replacing synonyms to current taxa where relevant
