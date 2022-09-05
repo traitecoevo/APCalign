@@ -363,11 +363,20 @@ update_taxonomy <- function(aligned_names,
     ) %>%
     dplyr::filter(!is.na(taxonIDClean))
   
-  taxa_out <-
-    dplyr::bind_rows(taxa_APC,
-              taxa_APNI) %>%
-    dplyr::arrange(aligned_name) %>%
-    dplyr::distinct()
+  # if matches in APC and APNI, combine these and return
+  if (nrow(taxa_APNI) > 0){
+    taxa_out <-
+      dplyr::bind_rows(taxa_APC,
+                       taxa_APNI) %>%
+      dplyr::arrange(aligned_name) %>%
+      dplyr::distinct()
+  }
+  # if matches only in APC, just return this
+  else {
+    taxa_out <- taxa_APC %>%
+      dplyr::arrange(aligned_name) %>%
+      dplyr::distinct()
+  }
   
   if (!is.null(output)) {
     readr::write_csv(taxa_out, output)
