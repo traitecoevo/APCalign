@@ -60,7 +60,7 @@ species_list
 `align_taxa` will try match the species names in our list to those listed in the APC. You can specify a file path and file name using the argument `output` to save this aligned data
 
 ```{r align}
-aligned_data <- align_taxa(species_list$name, output = "ignore/taxonomic_updates.csv")
+aligned_data <- align_taxa(species_list$name, output = "taxonomic_updates.csv")
 
 aligned_data
 ```

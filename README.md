@@ -116,9 +116,9 @@ listed in the APC. You can specify a file path and file name using the
 argument `output` to save this aligned data
 
 ``` r
-aligned_data <- align_taxa(species_list$name, output = "ignore/taxonomic_updates.csv")
+aligned_data <- align_taxa(species_list$name, output = "taxonomic_updates.csv")
 #> Checking alignments of 199 taxa
-#>   - reading existing data from ignore/taxonomic_updates.csv
+#>   - reading existing data from taxonomic_updates.csv
 #>   - all taxa are already checked, yay!
 
 aligned_data
