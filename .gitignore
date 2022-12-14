@@ -4,4 +4,5 @@
 .Ruserdata
 taxon_list.csv
 taxonomic_updates.csv
+.DS_Store
 ignore/
