@@ -6,9 +6,6 @@
 \usage{
 default_version()
 }
-\value{
-
-}
 \description{
 Default version of data to use
 }

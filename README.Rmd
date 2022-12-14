@@ -1,0 +1,76 @@
+---
+output: github_document
+editor_options: 
+  chunk_output_type: console
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+
+library(ausflora)
+```
+
+<!-- badges: start -->
+[![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+<!-- badges: end -->
+
+# ausflora <img src="inst/figures/ausflora_hex2.png" align="right" width="120"/>
+
+A  R package for aligning and updating taxonomic names from the [Australian Plant Census (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy)
+
+## Installation 
+
+`ausflora` relies on another R package `datastorr`, both of which are currently available from  [GitHub](https://github.com/traitecoevo/ausflora) only. You can install both these packages with:
+
+```{r install, eval= FALSE}
+# install.packages("remotes")
+remotes::install_github("traitecoevo/datastorr")
+remotes::install_github("traitecoevo/ausflora")
+
+library(ausflora)
+```
+
+## A quick demo
+
+First, we will retrieve the current [release of APC names](https://github.com/traitecoevo/ausflora/releases/tag/0.0.0.9000). The `dataset_access_function` saves the download in a local, temporary folder.
+
+```{r retrieve}
+tmp <- dataset_access_function("0.0.0.9000")
+
+tmp
+```
+
+Now we will load a toy plant species list and try align it with the APC species names. 
+
+```{r toy names, message=FALSE}
+#remotes::install_packages("readr")
+species_list <- readr::read_csv(system.file("extdata", "species.csv", package = "ausflora"))
+
+species_list
+```
+
+### Align away! 
+`align_taxa` will try match the species names in our list to those listed in the APC. You can specify a file path and file name using the argument `output` to save this aligned data
+
+```{r align}
+aligned_data <- align_taxa(species_list$name, output = "taxonomic_updates.csv")
+
+aligned_data
+```
+
+### Update taxonomic names
+Once alignment is complete we can update our species names, replacing synonyms to current APC names. Note that this function drops the observations where names cannot be aligned. Again, this updated species list can be saved using the `output` argument.
+
+```{r}
+aligned_species_list <- update_taxonomy(aligned_data$aligned_name)
+```
+
+
+

@@ -35,7 +35,7 @@ dataset_access_function <- function(version=NULL, path=NULL) {
 ##   2. the file to download (plant_lookup.csv)
 ##   3. the function to read the file, given a filename (read_csv)
 dataset_info <- function(path) {
-  datastorr::github_release_info("traitecoevo/apcnames",
+  datastorr::github_release_info("traitecoevo/ausflora",
                                  filename=NULL,
                                  read=unpack_zip,
                                  path=path)

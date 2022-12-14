@@ -1,7 +1,7 @@
 
 library(tidyverse)
-#remotes::install_github("traitecoevo/apcnames")
-library(apcnames)
+#remotes::install_github("traitecoevo/ausflora")
+library(ausflora)
 #devtools::load_all()
 
 # Check datastorr can retrieve APC data
@@ -9,7 +9,7 @@ library(apcnames)
 tmp <- dataset_access_function("0.0.0.9000")
 
 # Now check names. Load some example data
-original_names <- readr::read_csv(system.file("extdata", "species.csv", package = "apcnames"))
+original_names <- readr::read_csv(system.file("extdata", "species.csv", package = "ausflora"))
 
 # first we align the names against APC and APNI
 data_aligned_names <- align_taxa(original_names$name)

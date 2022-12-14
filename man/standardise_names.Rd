@@ -9,9 +9,6 @@ standardise_names(taxon_names)
 \arguments{
 \item{taxon_names}{}
 }
-\value{
-
-}
 \description{
 Title
 }
