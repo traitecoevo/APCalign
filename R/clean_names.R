@@ -47,7 +47,7 @@ align_taxa <- function(original_name,
           .default = readr::col_character()
         )
       )
-  
+    
     # TODO: check taxa_ raw has correct columns
   }
   else
@@ -102,7 +102,7 @@ align_taxa <- function(original_name,
   
   redistribute <- function(data) {
     data[["checked"]] <- dplyr::bind_rows(data[["checked"]],
-                               data[["tocheck"]] %>% dplyr::filter(checked))
+                                          data[["tocheck"]] %>% dplyr::filter(checked))
     
     data[["tocheck"]] <- data[["tocheck"]] %>% dplyr::filter(!checked)
     data
@@ -114,7 +114,7 @@ align_taxa <- function(original_name,
   # Todo: Note, genus in APC?
   taxa$tocheck <- taxa$tocheck %>%
     dplyr::mutate(checked = ifelse(!checked &
-                              grepl("sp\\.$", cleaned_name), TRUE, checked))
+                                     grepl("sp\\.$", cleaned_name), TRUE, checked))
   
   taxa <- redistribute(taxa)
   
@@ -208,12 +208,14 @@ align_taxa <- function(original_name,
         
       }
     }
-    
-    if (is.na(taxa$tocheck$aligned_name[i]))
-      cat(crayon::blue("\tnot found\n"))
-    else
-      cat(crayon::green("\tfound:\t"), taxa$tocheck$aligned_name[i],
-        "\t", taxa$tocheck$source[i], "\n")
+    if (length(taxa$tocheck$aligned_name[i])==0) cat("nothing to fix") 
+        else{ 
+          if(is.na(taxa$tocheck$aligned_name[i])) cat(crayon::blue("\tnot found\n"))
+          else{
+            cat(crayon::green("\tfound:\t"), taxa$tocheck$aligned_name[i],
+                         "\t", taxa$tocheck$source[i], "\n")
+          }
+        }
   }
   
   taxa_out <- dplyr::bind_rows(taxa) %>%
@@ -299,7 +301,7 @@ update_taxonomy <- function(aligned_names,
     # To do this we define the order we want variables to sort by,m with accepted at the top
     dplyr::mutate(
       my_order =  forcats::fct_relevel( taxonomicStatusClean, subset(preferred_order, preferred_order %in%  taxonomicStatusClean))
-      ) %>%
+    ) %>%
     dplyr::arrange(aligned_name, my_order) %>%
     # For each species, keep the first record (accepted if present) and
     # record any alternative status to indicate where there was ambiguity
@@ -342,12 +344,12 @@ update_taxonomy <- function(aligned_names,
     dplyr::left_join(
       by = "aligned_name",
       resources$APNI %>% dplyr::filter(nameElement != "sp.") %>% 
-      dplyr::select(
-        aligned_name = canonicalName,
-        taxonIDClean = scientificNameID,
-        family,
-        taxonRank
-      )
+        dplyr::select(
+          aligned_name = canonicalName,
+          taxonIDClean = scientificNameID,
+          family,
+          taxonRank
+        )
     ) %>% 
     dplyr::group_by(aligned_name) %>%
     dplyr::mutate(
