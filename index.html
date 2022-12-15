@@ -101,7 +101,6 @@
 <span><span class="co">#&gt; #   taxonConceptID &lt;chr&gt;, nameAccordingTo &lt;chr&gt;, nameAccordingToID &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   taxonRemarks &lt;chr&gt;, taxonDistribution &lt;chr&gt;, higherClassification &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   firstHybridParentName &lt;chr&gt;, firstHybridParentNameID &lt;chr&gt;, …</span></span>
-<span><span class="co">#&gt; # ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $APNI</span></span>
 <span><span class="co">#&gt; # A tibble: 154,302 × 42</span></span>
@@ -123,8 +122,7 @@
 <span><span class="co">#&gt; #   namePublishedIn &lt;chr&gt;, namePublishedInYear &lt;dbl&gt;, nameInstanceType &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   originalNameUsage &lt;chr&gt;, originalNameUsageID &lt;chr&gt;, typeCitation &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   kingdom &lt;chr&gt;, family &lt;chr&gt;, genericName &lt;chr&gt;, specificEpithet &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   infraspecificEpithet &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonRankSortOrder &lt;dbl&gt;, …</span></span>
-<span><span class="co">#&gt; # ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names</span></span></code></pre></div>
+<span><span class="co">#&gt; #   infraspecificEpithet &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonRankSortOrder &lt;dbl&gt;, …</span></span></code></pre></div>
 <p>Now we will load a toy plant species list and try align it with the APC species names.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#remotes::install_packages("readr")</span></span>
@@ -144,8 +142,7 @@
 <span><span class="co">#&gt;  8 Acacia hemsleyi            </span></span>
 <span><span class="co">#&gt;  9 Eriachne obtusa            </span></span>
 <span><span class="co">#&gt; 10 Corchorus sidoides         </span></span>
-<span><span class="co">#&gt; # … with 189 more rows</span></span>
-<span><span class="co">#&gt; # ℹ Use `print(n = ...)` to see more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # … with 189 more rows</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="align-away">Align away!<a class="anchor" aria-label="anchor" href="#align-away"></a>
 </h3>
@@ -171,8 +168,7 @@
 <span><span class="co">#&gt;  9 Pultenaea sp.                 Pultenaea… &lt;NA&gt;    &lt;NA&gt;   FALSE TRUE    pulten…</span></span>
 <span><span class="co">#&gt; 10 Eucalyptus tectifica          Eucalyptu… Eucaly… APC l… TRUE  TRUE    eucaly…</span></span>
 <span><span class="co">#&gt; # … with 189 more rows, and abbreviated variable names ¹​cleaned_name,</span></span>
-<span><span class="co">#&gt; #   ²​aligned_name, ³​stripped_name</span></span>
-<span><span class="co">#&gt; # ℹ Use `print(n = ...)` to see more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; #   ²​aligned_name, ³​stripped_name</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="update-taxonomic-names">Update taxonomic names<a class="anchor" aria-label="anchor" href="#update-taxonomic-names"></a>
@@ -216,6 +212,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg"></a></li>
+<li><a href="https://github.com/traitecoevo/ausflora/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/traitecoevo/ausflora/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
