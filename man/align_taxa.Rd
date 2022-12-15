@@ -7,6 +7,7 @@
 align_taxa(
   original_name,
   output = NULL,
+  fuzzy_matching = TRUE,
   max_distance_abs = 3,
   max_distance_rel = 0.2,
   ver = default_version()
@@ -17,11 +18,13 @@ align_taxa(
 
 \item{output}{(optional) name of file to save results}
 
-\item{max_distance_abs}{}
+\item{fuzzy_matching}{option to turn off fuzzy matching}
 
-\item{max_distance_rel}{}
+\item{max_distance_abs}{absolute distance in substitution space}
 
-\item{ver}{}
+\item{max_distance_rel}{relative distance in substitution space}
+
+\item{ver}{version number for flora resource}
 }
 \description{
 Use APC & APNI to find taxonomic alignments for a list of names

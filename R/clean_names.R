@@ -18,9 +18,9 @@ default_version <- function() {
 #' @param original_name list of names to query
 #' @param output (optional) name of file to save results
 #' @param fuzzy_matching option to turn off fuzzy matching
-#' @param max_distance_abs 
-#' @param max_distance_rel 
-#' @param ver 
+#' @param max_distance_abs absolute distance in substitution space
+#' @param max_distance_rel relative distance in substitution space
+#' @param ver version number for flora resource
 #'
 #' @return
 #' @export
