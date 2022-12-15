@@ -3,6 +3,7 @@
 <!-- badges: start -->
 
 [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![R-CMD-check](https://github.com/traitecoevo/ausflora/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/traitecoevo/ausflora/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 # ausflora <img src="inst/figures/ausflora_hex2.png" align="right" width="120"/>
@@ -58,7 +59,6 @@ tmp
 #> #   taxonConceptID <chr>, nameAccordingTo <chr>, nameAccordingToID <chr>,
 #> #   taxonRemarks <chr>, taxonDistribution <chr>, higherClassification <chr>,
 #> #   firstHybridParentName <chr>, firstHybridParentNameID <chr>, …
-#> # ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names
 #> 
 #> $APNI
 #> # A tibble: 154,302 × 42
@@ -81,7 +81,6 @@ tmp
 #> #   originalNameUsage <chr>, originalNameUsageID <chr>, typeCitation <chr>,
 #> #   kingdom <chr>, family <chr>, genericName <chr>, specificEpithet <chr>,
 #> #   infraspecificEpithet <chr>, taxonRank <chr>, taxonRankSortOrder <dbl>, …
-#> # ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names
 ```
 
 Now we will load a toy plant species list and try align it with the APC
@@ -106,7 +105,6 @@ species_list
 #>  9 Eriachne obtusa            
 #> 10 Corchorus sidoides         
 #> # … with 189 more rows
-#> # ℹ Use `print(n = ...)` to see more rows
 ```
 
 ### Align away!
@@ -137,7 +135,6 @@ aligned_data
 #> 10 Eucalyptus tectifica          Eucalyptu… Eucaly… APC l… TRUE  TRUE    eucaly…
 #> # … with 189 more rows, and abbreviated variable names ¹​cleaned_name,
 #> #   ²​aligned_name, ³​stripped_name
-#> # ℹ Use `print(n = ...)` to see more rows
 ```
 
 ### Update taxonomic names
