@@ -2,6 +2,7 @@
 
 export("%>%")
 export(align_taxa)
+export(create_lookup)
 export(dataset_access_function)
 export(dataset_del)
 export(dataset_version_current)
@@ -12,4 +13,3 @@ export(standardise_names)
 export(strip_names)
 export(update_taxonomy)
 importFrom(magrittr,"%>%")
-

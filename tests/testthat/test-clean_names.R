@@ -23,3 +23,8 @@ test_that("update_taxonomy() works",{
   expect_equal(nrow(update_taxonomy(aligned_names=c("Dryandra preissii","Banksia acuminata")
                                )),2)
 })
+
+test_that("update_taxonomy() works",{
+  expect_equal(nrow(create_lookup(c("Dryandra preissii","Banksia acuminata")
+  )),2)
+})
