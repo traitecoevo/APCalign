@@ -2,10 +2,22 @@
 % Please edit documentation in R/clean_names.R
 \name{default_version}
 \alias{default_version}
-\title{Default version of data to use}
+\title{Get the default version for stable data}
 \usage{
 default_version()
 }
+\value{
+A character string representing the default version for stable data.
+}
 \description{
-Default version of data to use
+This function returns the default version for stable data, which is used when no
+version is specified. The default version is "0.0.1.9000".
+}
+\examples{
+default_version()
+
+
+}
+\seealso{
+align_taxa
 }

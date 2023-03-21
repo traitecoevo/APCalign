@@ -2,13 +2,38 @@
 % Please edit documentation in R/clean_names.R
 \name{load_taxonomic_resources}
 \alias{load_taxonomic_resources}
-\title{Title}
+\title{Load taxonomic resources}
 \usage{
 load_taxonomic_resources(ver = default_version(), reload = FALSE)
 }
 \arguments{
-\item{reload}{}
+\item{ver}{The version number of the dataset to use. Defaults to the default version.}
+
+\item{reload}{A logical indicating whether to reload the dataset from the data source. Defaults to FALSE.}
+}
+\value{
+The taxonomic resources data loaded into the global environment.
 }
 \description{
-Title
+Loads taxonomic resources into the global environment. This function accesses taxonomic data from a dataset using the provided version number or the default version. The loaded data contains two lists: APC and APNI, which contain taxonomic information about plant species in Australia. The function creates several data frames by filtering and selecting data from the loaded lists.
+}
+\examples{
+load_taxonomic_resources()
+
+load_taxonomic_resources("v2.0")
+
+load_taxonomic_resources(reload = TRUE)
+
+load_taxonomic_resources("v2.1", reload = TRUE)
+
+load_taxonomic_resources("v1.5")
+
+load_taxonomic_resources(reload = FALSE)
+
+load_taxonomic_resources(default_version())
+
+load_taxonomic_resources(reload = FALSE, ver = "v2.2")
+
+load_taxonomic_resources(ver = "v1.1")
+
 }

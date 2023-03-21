@@ -2,31 +2,39 @@
 % Please edit documentation in R/dataset_access.R
 \name{dataset_access_function}
 \alias{dataset_access_function}
-\title{dataset access}
+\title{Access Australian Plant Census Dataset}
 \usage{
-dataset_access_function(version = NULL, path = NULL)
+dataset_access_function(version = NULL, path = NULL, type = "stable")
 }
 \arguments{
-\item{version}{Version number.  The default will load the most
-recent version on your computer or the most recent version known
-to the package if you have never downloaded the data before.
-With \code{plant_lookup_del}, specifying \code{version=NULL}
-will delete \emph{all} data sets.}
+\item{version}{Version number. The default is NULL, which will load the most recent
+version of the dataset on your computer or the most recent version known
+to the package if you have never downloaded the data before. With 
+`plant_lookup_del`, specifying `version=NULL` will delete \emph{all} data sets.}
 
-\item{path}{Path to store the data at. If not given,
-\code{datastorr} will use \code{rappdirs} to find the best place
-to put persistent application data on your system.  You can
-delete the persistent data at any time by running
-\code{mydata_del(NULL)} (or \code{mydata_del(NULL, path)} if you
-use a different path).}
+\item{path}{Path to store the data at. If not given, `datastorr` will use `rappdirs`
+to find the best place to put persistent application data on your system. You can
+delete the persistent data at any time by running `mydata_del(NULL)` (or 
+`mydata_del(NULL, path)` if you use a different path).}
+
+\item{type}{Type of dataset to access. The default is "stable", which loads the 
+dataset from a github archived file. If set to "current", the dataset will be loaded from 
+a URL which is the cutting edge version, but this may change at any time without notice.}
 }
 \description{
-dataset access
+This function provides access to the Australian Plant Census dataset containing information
+about various species. The dataset can be loaded from a github for a stable file or from a URL for the most cutting-edge, but not stable version.
 }
 \examples{
-#
-# see the format of the resource
-#
-#
-#
+# Load the most recent version of the dataset from a local file
+dataset_access_function()
+
+# Load a specific version of the dataset from a local file
+dataset_access_function(version = 1.0, path = "/path/to/dataset")
+
+# Load the current version of the dataset from a URL
+dataset_access_function(type = "current")
+
+# Delete all versions of the dataset
+dataset_access_function(version = NULL, path = NULL)
 }

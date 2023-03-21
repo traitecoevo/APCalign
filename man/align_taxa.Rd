@@ -14,18 +14,35 @@ align_taxa(
 )
 }
 \arguments{
-\item{original_name}{list of names to query}
+\item{original_name}{A list of names to query for taxonomic alignments.}
 
-\item{output}{(optional) name of file to save results}
+\item{output}{(optional) The name of the file to save the results to.}
 
-\item{fuzzy_matching}{option to turn off fuzzy matching}
+\item{fuzzy_matching}{An option to turn off fuzzy matching.}
 
-\item{max_distance_abs}{absolute distance in substitution space}
+\item{max_distance_abs}{The absolute distance in substitution space.}
 
-\item{max_distance_rel}{relative distance in substitution space}
+\item{max_distance_rel}{The relative distance in substitution space.}
 
-\item{ver}{version number for flora resource}
+\item{ver}{The version number for the flora resource.}
+}
+\value{
+A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
 }
 \description{
-Use APC & APNI to find taxonomic alignments for a list of names
+This function uses APC & APNI to find taxonomic alignments for a list of names.
 }
+\examples{
+align_taxa(c("Poa annua", "Abies alba"), output = "taxa_alignments.csv")
+
+}
+\seealso{
+\code{\link{default_version}} for the default value of the \code{ver} parameter.
+}
+\concept{taxonomic alignment functions}
+\keyword{APC,}
+\keyword{APNI,}
+\keyword{alignments,}
+\keyword{flora}
+\keyword{resource}
+\keyword{taxonomic}

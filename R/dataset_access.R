@@ -1,32 +1,41 @@
 
-##' 
+##' Access Australian Plant Census Dataset
 ##'
+##' This function provides access to the Australian Plant Census dataset containing information
+##' about various species. The dataset can be loaded from a github for a stable file or from a URL for the most cutting-edge, but not stable version.
 ##'
-##' @title dataset access 
-##'
-##' @param version Version number.  The default will load the most
-##'   recent version on your computer or the most recent version known
-##'   to the package if you have never downloaded the data before.
-##'   With \code{plant_lookup_del}, specifying \code{version=NULL}
-##'   will delete \emph{all} data sets.
-##'
-##' @param path Path to store the data at. If not given,
-##'   \code{datastorr} will use \code{rappdirs} to find the best place
-##'   to put persistent application data on your system.  You can
-##'   delete the persistent data at any time by running
-##'   \code{mydata_del(NULL)} (or \code{mydata_del(NULL, path)} if you
-##'   use a different path).
-##'
+##' @param version Version number. The default is NULL, which will load the most recent
+##'   version of the dataset on your computer or the most recent version known
+##'   to the package if you have never downloaded the data before. With 
+##'   `plant_lookup_del`, specifying `version=NULL` will delete \emph{all} data sets.
+##' @param path Path to store the data at. If not given, `datastorr` will use `rappdirs`
+##'   to find the best place to put persistent application data on your system. You can
+##'   delete the persistent data at any time by running `mydata_del(NULL)` (or 
+##'   `mydata_del(NULL, path)` if you use a different path).
+##' @param type Type of dataset to access. The default is "stable", which loads the 
+##'   dataset from a github archived file. If set to "current", the dataset will be loaded from 
+##'   a URL which is the cutting edge version, but this may change at any time without notice.
 ##' @export
 ##' @examples
-##' #
-##' # see the format of the resource
-##' #
-##' #
-##' #
+##' # Load the most recent version of the dataset from a local file
+##' dataset_access_function()
+##'
+##' # Load a specific version of the dataset from a local file
+##' dataset_access_function(version = 1.0, path = "/path/to/dataset")
+##'
+##' # Load the current version of the dataset from a URL
+##' dataset_access_function(type = "current")
+##'
+##' # Delete all versions of the dataset
+##' dataset_access_function(version = NULL, path = NULL)
 
-dataset_access_function <- function(version=NULL, path=NULL) {
-  dataset_get(version, path)
+dataset_access_function <- function(version=NULL, path=NULL, type="stable") {
+  if(type=="stable"){
+    return(dataset_get(version, path))
+  }
+  if(type=="current"){
+    return(readr::read_csv("https://biodiversity.org.au/nsl/services/export/taxonCsv"))
+  }
 }
 
 ## This one is the important part; it defines the three core bits of
@@ -41,33 +50,65 @@ dataset_info <- function(path) {
                                  path=path)
 }
 
+
 dataset_get <- function(version=NULL, path=NULL) {
   datastorr::github_release_get(get_version_details(path, version), version)
 }
 
+##' Get Available Versions of the Australian Plant Census and Australian Plant Names Index Datasets
+##'
+##' This function returns a list of available versions of the Australian Plant Census
+##' and Australian Plant Names Index datasets. The versions can be either local or
+##' from the Github repository.
+##'
+##' @param local Logical indicating if local or Github versions should be polled.
+##'   The default is TRUE, which means that only local versions will be checked.
+##'   If set to FALSE, the function will check for the most recent Github version
+##'   if there are no local versions available. Note that local versions take precedence
+##'   over Github versions if there are conflicts.
+##' @param path Path to store the data at.
 ##' @export
-##' @rdname fungal_traits
-##' @param local Logical indicating if local or github versions should
-##'   be polled.  With any luck, \code{local=FALSE} is a superset of
-##'   \code{local=TRUE}.  For \code{mydata_version_current}, if
-##'   \code{TRUE}, but there are no local versions, then we do check
-##'   for the most recent github version.
-dataset_versions <- function(local=TRUE, path=NULL) {
+##' @examples
+##' # Get available local versions of the Australian Plant Census and Australian Plant Names Index datasets
+##' dataset_versions()
+##'
+##' # Get available Github versions of the Australian Plant Census and Australian Plant Names Index datasets
+##' dataset_versions(local = FALSE)
+##'
+##' # Get available versions of the Australian Plant Census and Australian Plant Names Index datasets stored at a specific path
+##' dataset_versions(path = "/path/to/dataset")
+dataset_versions <- function(local = TRUE, path = NULL) {
   datastorr::github_release_versions(dataset_info(path), local)
 }
 
+
 ##' @export
-##' @rdname fungal_traits
+##' @rdname dataset_versions
 dataset_version_current <- function(local=TRUE, path=NULL) {
   datastorr::github_release_version_current(dataset_info(path), local)
 }
 
-##' @export
-##' @rdname fungal_traits
-##' 
+#' Delete a dataset release from GitHub
+#'
+#' This function deletes a dataset release from GitHub, using the datastorr package.
+#' 
+#' @param version The version number of the dataset release to delete.
+#' @param path (optional) The path to the dataset in the datastorr registry. Defaults to NULL.
+#'
+#' @export
+#' @rdname dataset_del
+#'
+#' @examples
+#' dataset_del("v1.0")
+#'
+#' @return NULL
+#'
+#' @importFrom datastorr github_release_del
+#' 
 dataset_del <- function(version, path=NULL) {
   datastorr::github_release_del(dataset_info(path), version)
 }
+
 
 get_version_details <- function(path=NULL, version=NULL) {
   info <- dataset_info(path)

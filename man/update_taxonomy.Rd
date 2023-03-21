@@ -2,15 +2,49 @@
 % Please edit documentation in R/clean_names.R
 \name{update_taxonomy}
 \alias{update_taxonomy}
-\title{Use APC & APNI to update taxonomy, replacing synonyms to current taxa where relevant}
+\title{Use APC and APNI to update taxonomy, replacing synonyms to current taxa where relevant}
 \usage{
 update_taxonomy(aligned_names, output = NULL, ver = default_version())
 }
 \arguments{
-\item{output}{(optional) Name of file where results are saved}
+\item{aligned_names}{A character vector of plant names to update. These names must be in the format of the
+scientific name, with genus and species, and may contain additional qualifiers such as subspecies or varieties.
+The names are case insensitive.}
 
-\item{ver}{}
+\item{output}{(optional) Name of the file where results are saved. The default is NULL and no file is created.
+If specified, the output will be saved in a CSV file with the given name.}
+
+\item{ver}{The version of the taxonomic resources to use. Default is set to the latest version available at
+the time of running the function.}
+}
+\value{
+A tibble with updated taxonomy for the specified plant names. The tibble contains the following columns:
+\itemize{
+  \item \code{aligned_name}: the input plant name.
+  \item \code{source}: the source of the updated taxonomic information (APC or APNI).
+  \item \code{taxonIDClean}: the unique identifier for the updated taxon.
+  \item \code{taxonomicStatusClean}: the taxonomic status of the updated taxon.
+  \item \code{alternativeTaxonomicStatusClean}: the alternative taxonomic status for the input name, if any.
+  \item \code{acceptedNameUsageID}: the unique identifier for the accepted name of the input name.
+  \item \code{canonicalName}: the accepted scientific name for the input name.
+  \item \code{scientificNameAuthorship}: the authorship information for the accepted name.
+  \item \code{taxonRank}: the taxonomic rank of the accepted name.
+  \item \code{taxonomicStatus}: the taxonomic status of the accepted name.
+  \item \code{family}: the family of the accepted name.
+  \item \code{subclass}: the subclass of the accepted name.
+  \item \code{taxonDistribution}: the distribution of the accepted name.
+  \item \code{ccAttributionIRI}: the Creative Commons Attribution International Rights URI of the accepted name.
+}
 }
 \description{
-Use APC & APNI to update taxonomy, replacing synonyms to current taxa where relevant
+This function uses the Australia's Virtual Herbarium's taxonomic resources, specifically the Australian Plant
+Census (APC) and the Australian Plant Name Index (APNI), to update taxonomy of plant species, replacing any synonyms
+to their current accepted name.
+}
+\examples{
+# Update taxonomy for two plant names and print the result
+update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"))
+
+# Update taxonomy for two plant names and save the result to a CSV file
+update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"), "updated_taxonomy.csv")
 }

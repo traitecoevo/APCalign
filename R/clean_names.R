@@ -1,32 +1,54 @@
-
-
-
-#' Default version of data to use
+#' Get the default version for stable data
 #'
-#' @return
+#' This function returns the default version for stable data, which is used when no
+#' version is specified. The default version is "0.0.1.9000".
+#'
+#' @return A character string representing the default version for stable data.
 #' @export
 #'
 #' @examples
+#' default_version()
+#'
+#'
+#' @seealso 
+#' align_taxa
+#'
+#' 
 default_version <- function() {
-  "0.0.0.9000"
+  "0.0.1.9000"
 }
+
 
 
 #' Find taxonomic alignments for a list of names
 #'
-#' Use APC & APNI to find taxonomic alignments for a list of names
+#' This function uses APC & APNI to find taxonomic alignments for a list of names.
 #'
-#' @param original_name list of names to query
-#' @param output (optional) name of file to save results
-#' @param fuzzy_matching option to turn off fuzzy matching
-#' @param max_distance_abs absolute distance in substitution space
-#' @param max_distance_rel relative distance in substitution space
-#' @param ver version number for flora resource
+#' @param original_name A list of names to query for taxonomic alignments.
+#' @param output (optional) The name of the file to save the results to.
+#' @param fuzzy_matching An option to turn off fuzzy matching.
+#' @param max_distance_abs The absolute distance in substitution space.
+#' @param max_distance_rel The relative distance in substitution space.
+#' @param ver The version number for the flora resource.
 #'
-#' @return
+#' @return A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
 #' @export
 #'
 #' @examples
+#' align_taxa(c("Poa annua", "Abies alba"), output = "taxa_alignments.csv")
+#'
+#' @importFrom readr read_csv cols col_logical col_character
+#' @importFrom tibble tibble
+#'
+#' @keywords taxonomic alignments, APC, APNI, flora resource
+#'
+#' @seealso
+#' \code{\link{default_version}} for the default value of the \code{ver} parameter.
+#'
+#' @family taxonomic alignment functions
+#'
+#' @rdname align_taxa
+#'
 align_taxa <- function(original_name,
                        output = NULL,
                        fuzzy_matching = TRUE,
@@ -259,16 +281,48 @@ align_taxa <- function(original_name,
 }
 
 
-#' Use APC & APNI to update taxonomy, replacing synonyms to current taxa where relevant
+#' Use APC and APNI to update taxonomy, replacing synonyms to current taxa where relevant
 #'
-#' @param aligned_names
-#' @param output (optional) Name of file where results are saved
-#' @param ver
+#' This function uses the Australia's Virtual Herbarium's taxonomic resources, specifically the Australian Plant
+#' Census (APC) and the Australian Plant Name Index (APNI), to update taxonomy of plant species, replacing any synonyms
+#' to their current accepted name. 
 #'
-#' @return
+#' @param aligned_names A character vector of plant names to update. These names must be in the format of the
+#' scientific name, with genus and species, and may contain additional qualifiers such as subspecies or varieties.
+#' The names are case insensitive.
+#'
+#' @param output (optional) Name of the file where results are saved. The default is NULL and no file is created.
+#' If specified, the output will be saved in a CSV file with the given name.
+#'
+#' @param ver The version of the taxonomic resources to use. Default is set to the latest version available at
+#' the time of running the function.
+#'
+#' @return A tibble with updated taxonomy for the specified plant names. The tibble contains the following columns:
+#' \itemize{
+#'   \item \code{aligned_name}: the input plant name.
+#'   \item \code{source}: the source of the updated taxonomic information (APC or APNI).
+#'   \item \code{taxonIDClean}: the unique identifier for the updated taxon.
+#'   \item \code{taxonomicStatusClean}: the taxonomic status of the updated taxon.
+#'   \item \code{alternativeTaxonomicStatusClean}: the alternative taxonomic status for the input name, if any.
+#'   \item \code{acceptedNameUsageID}: the unique identifier for the accepted name of the input name.
+#'   \item \code{canonicalName}: the accepted scientific name for the input name.
+#'   \item \code{scientificNameAuthorship}: the authorship information for the accepted name.
+#'   \item \code{taxonRank}: the taxonomic rank of the accepted name.
+#'   \item \code{taxonomicStatus}: the taxonomic status of the accepted name.
+#'   \item \code{family}: the family of the accepted name.
+#'   \item \code{subclass}: the subclass of the accepted name.
+#'   \item \code{taxonDistribution}: the distribution of the accepted name.
+#'   \item \code{ccAttributionIRI}: the Creative Commons Attribution International Rights URI of the accepted name.
+#' }
+#' 
 #' @export
 #'
 #' @examples
+#' # Update taxonomy for two plant names and print the result
+#' update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"))
+#'
+#' # Update taxonomy for two plant names and save the result to a CSV file
+#' update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"), "updated_taxonomy.csv")
 update_taxonomy <- function(aligned_names,
                             output = NULL,
                             ver = default_version()) {
@@ -418,15 +472,37 @@ update_taxonomy <- function(aligned_names,
   taxa_out
 }
 
-#' Title
+#' Load taxonomic resources
 #'
-#' @param ver
-#' @param reload
+#' Loads taxonomic resources into the global environment. This function accesses taxonomic data from a dataset using the provided version number or the default version. The loaded data contains two lists: APC and APNI, which contain taxonomic information about plant species in Australia. The function creates several data frames by filtering and selecting data from the loaded lists.
 #'
-#' @return
+#' @param ver The version number of the dataset to use. Defaults to the default version.
+#' @param reload A logical indicating whether to reload the dataset from the data source. Defaults to FALSE.
+#'
+#' @return The taxonomic resources data loaded into the global environment.
 #' @export
 #'
 #' @examples
+#' load_taxonomic_resources()
+#'
+#' load_taxonomic_resources("v2.0")
+#'
+#' load_taxonomic_resources(reload = TRUE)
+#'
+#' load_taxonomic_resources("v2.1", reload = TRUE)
+#'
+#' load_taxonomic_resources("v1.5")
+#'
+#' load_taxonomic_resources(reload = FALSE)
+#'
+#' load_taxonomic_resources(default_version())
+#'
+#' load_taxonomic_resources(reload = FALSE, ver = "v2.2")
+#'
+#' load_taxonomic_resources(ver = "v1.1")
+#' 
+#' @importFrom dplyr filter select mutate distinct arrange
+#' @importFrom crayon red
 
 load_taxonomic_resources <-
   function(ver = default_version(), reload = FALSE) {
@@ -436,7 +512,7 @@ load_taxonomic_resources <-
       message(crayon::red(
         "loading object `taxonomic_resources` into global environment"
       ))
-      taxonomic_resources <- ausflora::dataset_access_function(ver)
+      taxonomic_resources <- dataset_access_function(ver)
       names(taxonomic_resources) <- c("APC", "APNI")
       
       taxonomic_resources[["genera_accepted"]] <-
@@ -475,14 +551,23 @@ load_taxonomic_resources <-
   }
 
 
-#' Title
+#' Strip taxonomic names of subtaxa designations and special characters
 #'
-#' @param taxon_names a vector of names to strip
+#' Given a vector of taxonomic names, this function removes subtaxa designations (e.g., "subsp."), 
+#' special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The resulting vector
+#' of names is also converted to lowercase. 
 #'
-#' @return a vector of stripped names
+#' @param taxon_names A character vector of taxonomic names to be stripped.
+#'
+#' @return A character vector of stripped taxonomic names, with subtaxa designations, special
+#' characters, and extra whitespace removed, and all letters converted to lowercase.
+#'
 #' @export
 #'
 #' @examples
+#' strip_names(c("Abies lasiocarpa subsp. lasiocarpa", "Quercus kelloggii", "Pinus contorta var. latifolia"))
+#'
+  
 strip_names <- function(taxon_names) {
   taxon_names %>%
     stringr::str_remove_all(" subsp\\.") %>% stringr::str_remove_all(" aff\\.")  %>%
@@ -494,14 +579,19 @@ strip_names <- function(taxon_names) {
 }
 
 
-#' Title
+#' Standardise Taxon Names
 #'
-#' @param taxon_names
+#' This function standardises taxon names by performing a series of text substitutions to remove common inconsistencies in taxonomic nomenclature. The function takes a character vector of taxon names as input and returns a character vector of standardised taxon names as output.
 #'
-#' @return
+#' @param taxon_names A character vector of taxon names that need to be standardised.
+#'
+#' @return A character vector of standardised taxon names.
+#'
 #' @export
 #'
 #' @examples
+#' standardise_names(c("Abies alba Mill.", "Quercus suber", "Eucalyptus sp.", "Agave americana var. marginata"))
+#'
 standardise_names <- function(taxon_names) {
   f <- function(x, find, replace) {
     gsub(find, replace, x, perl = TRUE)
@@ -555,23 +645,23 @@ standardise_names <- function(taxon_names) {
 #'
 #' This function takes a list of Australian plant species that needs to be reconciled with current taxonomy and generates a lookup table to help fix the taxonomy. The lookup table contains the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #'
+#' 
 #' @param species_list A list of Australian plant species that needs to be reconciled with current taxonomy.
 #' @param fuzzy_matching A logical value indicating whether fuzzy matching should be used to align the species names. Default is \code{FALSE}.
-#' @param ver The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
+#' @param version The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @export
 #' @examples
-#' create_lookup(c("Eucalyptus regnans", "Acacia melanoxylon", "Banksia integrifolia","Not a species"))
+#' create_taxonomic_update_lookup(c("Eucalyptus regnans", "Acacia melanoxylon", "Banksia integrifolia","Not a species"))
 #'
-create_lookup <-
+create_taxonomic_update_lookup <-
   function(species_list,
            fuzzy_matching = FALSE,
-           ver = "0.0.1.9000") {
-    tmp <- dataset_access_function(ver = ver)
-    
+           version = "0.0.1.9000") {
+    tmp <- dataset_access_function(ver = version)
     aligned_data <-
       unique(species_list) %>%
-      align_taxa(fuzzy_matching = fuzzy_matching, ver = ver)
+      align_taxa(fuzzy_matching = fuzzy_matching, ver = version)
     
     aligned_species_list_tmp <-
       aligned_data$aligned_name %>% update_taxonomy()
@@ -586,3 +676,5 @@ create_lookup <-
     
     return(aligned_species_list)
   }
+
+
