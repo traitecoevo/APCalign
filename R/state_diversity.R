@@ -113,7 +113,7 @@ create_species_state_origin_matrix <-
 #'
 #' @param state A character string indicating the Australian state or territory to calculate the diversity for. Default is "NSW". Possible values are "NSW", "NT", "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI", "MDI", "CoI", "CSI", and "AR".
 #' @param type_of_data A character string indicating the type of data to use for the calculation. Default is "stable". Possible values are "stable" and "current".
-#' @param ver A character string indicating the version of the data to use for the calculation. Default is "0.0.1.9000".
+#' @param ver A character string indicating the version of the data to use for the calculation in the case of "stable" source. Default is "0.0.1.9000".
 #'
 #' @return A tibble of diversity counts for the specified state or territory, including native, introduced, and more complicated species origins.
 #' The tibble has three columns: "origin" indicating the origin of the species, "state" indicating the Australian state or territory, and "num_species" indicating the number of species for that origin and state.
@@ -143,7 +143,7 @@ state_diversity_counts <- function(state = c(
     "AR",
     "CaI"
   ),
-  type_of_data = c("stable", "current"),
+  type_of_data = "stable",
   ver = "0.0.1.9000") {
     test <-
       create_species_state_origin_matrix(ver = ver, type_of_data = type_of_data)

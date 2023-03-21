@@ -7,7 +7,7 @@
 state_diversity_counts(
   state = c("NSW", "NT", "Qld", "WA", "ChI", "NSW", "SA", "Vic", "Tas", "ACT", "NI",
     "LHI", "MI", "HI", "MDI", "CoI", "CSI", "AR", "CaI"),
-  type_of_data = c("stable", "current"),
+  type_of_data = "stable",
   ver = "0.0.1.9000"
 )
 }
@@ -16,7 +16,7 @@ state_diversity_counts(
 
 \item{type_of_data}{A character string indicating the type of data to use for the calculation. Default is "stable". Possible values are "stable" and "current".}
 
-\item{ver}{A character string indicating the version of the data to use for the calculation. Default is "0.0.1.9000".}
+\item{ver}{A character string indicating the version of the data to use for the calculation in the case of "stable" source. Default is "0.0.1.9000".}
 }
 \value{
 A tibble of diversity counts for the specified state or territory, including native, introduced, and more complicated species origins.
