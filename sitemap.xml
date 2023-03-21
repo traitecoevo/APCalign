@@ -16,10 +16,19 @@
     <loc>/reference/align_taxa.html</loc>
   </url>
   <url>
-    <loc>/reference/create_lookup.html</loc>
+    <loc>/reference/create_species_state_origin_matrix.html</loc>
+  </url>
+  <url>
+    <loc>/reference/create_taxonomic_update_lookup.html</loc>
   </url>
   <url>
     <loc>/reference/dataset_access_function.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dataset_del.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dataset_versions.html</loc>
   </url>
   <url>
     <loc>/reference/default_version.html</loc>
@@ -35,6 +44,9 @@
   </url>
   <url>
     <loc>/reference/standardise_names.html</loc>
+  </url>
+  <url>
+    <loc>/reference/state_diversity_counts.html</loc>
   </url>
   <url>
     <loc>/reference/strip_names.html</loc>
