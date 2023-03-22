@@ -21,15 +21,9 @@
 create_species_state_origin_matrix <-
   function(type_of_data = "stable", ver = "0.0.1.9000") {
     apc <- dataset_access_function(ver = ver, type = type_of_data)
-    if (type_of_data == "current") {
-      apc_species <-
-        dplyr::filter(apc, taxonRank == "Species" &
-                        taxonomicStatus == "accepted")
-    } else{
       apc_species <-
         dplyr::filter(apc$APC,
                       taxonRank == "Species" & taxonomicStatus == "accepted")
-    }
     #seperate the states
     sep_state_data <-
       stringr::str_split(unique(apc_species$taxonDistribution), ",")
@@ -148,8 +142,8 @@ state_diversity_counts <- function(state = c(
     test <-
       create_species_state_origin_matrix(ver = ver, type_of_data = type_of_data)
     test2 <- test[test[[state]] != "not present", ]
-    state_table<-table(test2[[state]])
-    return(tibble(origin=names(state_table),state=state,num_species=state_table))
+    state_table <- table(test2[[state]])
+    return(tibble(origin=names(state_table), state=state, num_species=state_table))
   }
 
 

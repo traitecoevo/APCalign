@@ -34,7 +34,32 @@ dataset_access_function <- function(version=NULL, path=NULL, type="stable") {
     return(dataset_get(version, path))
   }
   if(type=="current"){
-    return(readr::read_csv("https://biodiversity.org.au/nsl/services/export/taxonCsv"))
+    APC <- readr::read_csv("https://biodiversity.org.au/nsl/services/export/taxonCsv",
+                           col_types = 
+                             readr::cols(
+                               .default = readr::col_character(),
+                               proParte = readr::col_logical(),
+                               taxonRankSortOrder = readr::col_double(),
+                               created = readr::col_datetime(format = ""),
+                               modified = readr::col_datetime(format = "")))
+    APNI <- readr::read_csv("https://biodiversity.org.au/nsl/services/export/namesCsv",
+                            col_types = 
+                              readr::cols(
+                                .default = readr::col_character(),
+                                autonym = readr::col_logical(),
+                                hybrid = readr::col_logical(),
+                                cultivar = readr::col_logical(),
+                                formula = readr::col_logical(),
+                                scientific = readr::col_logical(),
+                                nomInval = readr::col_logical(),
+                                nomIlleg = readr::col_logical(),
+                                namePublishedInYear = readr::col_double(),
+                                taxonRankSortOrder = readr::col_double(),
+                                created = readr::col_datetime(format = ""),
+                                modified = readr::col_datetime(format = "")))
+    current_list<-list(APC,APNI)  
+    names(current_list)<-c("APC", "APNI")
+    return(current_list)                      
   }
 }
 
