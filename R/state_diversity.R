@@ -148,5 +148,14 @@ state_diversity_counts <- function(state = c(
 
 
 
+get_apc_genus_family_lookup< - function(type_of_data = "stable", ver = "0.0.1.9000"){
+  apc <- dataset_access_function(ver = ver, type = type_of_data)
+  apc_s<-filter(apc$APC,
+                taxonRank == "Species")
+  tibble(genus=word(apc_s$scientificName,1,1),family=apc_s$family) %>%
+    distinct() -> lu
+  return(lu)
+  }
+
 
 
