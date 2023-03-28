@@ -147,8 +147,13 @@ state_diversity_counts <- function(state = c(
   }
 
 
-
-get_apc_genus_family_lookup< - function(type_of_data = "stable", ver = "0.0.1.9000"){
+#' Genus-Family Lookup
+#'
+#' This function returns a genus family lookup from a stable or live version of the APC.
+#'
+#' @examples
+#' get_apc_genus_family_lookup()
+get_apc_genus_family_lookup <- function(type_of_data = "stable", ver = "0.0.1.9000"){
   apc <- dataset_access_function(ver = ver, type = type_of_data)
   apc_s<-filter(apc$APC,
                 taxonRank == "Species")
