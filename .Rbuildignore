@@ -4,3 +4,6 @@
 ignore/
 .github
 .git
+^codecov\.yml$
+^\.github$
+
