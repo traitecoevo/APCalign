@@ -76,7 +76,50 @@ a URL which is the cutting edge version, but this may change at any time without
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Load the most recent version of the dataset </span></span></span>
 <span class="r-in"><span><span class="fu">dataset_access_function</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘arrow’</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $APC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 109,624 × 37</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    taxonID    nameType acceptedNameUsageID acceptedNameUsage nomenclaturalStatus</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> https://i… scienti… https://id.biodive… Plantae Haeckel   <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> https://i… scienti… https://id.biodive… Charophyta Sachs  <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> https://i… scienti… https://id.biodive… Charophyta Sachs  orth. var.         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> https://i… scienti… https://id.biodive… Equisetopsida C.… <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> https://i… scienti… https://id.biodive… Equisetopsida C.… orth. var.         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> https://i… scienti… https://id.biodive… Equisetopsida C.… <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> https://i… scienti… https://id.biodive… Cycadidae Pax     <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 109,614 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 32 more variables: nomIlleg &lt;chr&gt;, nomInval &lt;chr&gt;, taxonomicStatus &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   proParte &lt;lgl&gt;, scientificName &lt;chr&gt;, scientificNameID &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   canonicalName &lt;chr&gt;, scientificNameAuthorship &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   parentNameUsageID &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonRankSortOrder &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   kingdom &lt;chr&gt;, class &lt;chr&gt;, subclass &lt;chr&gt;, family &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonConceptID &lt;chr&gt;, nameAccordingTo &lt;chr&gt;, nameAccordingToID &lt;chr&gt;, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $APNI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 109,624 × 37</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    taxonID    nameType acceptedNameUsageID acceptedNameUsage nomenclaturalStatus</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> https://i… scienti… https://id.biodive… Plantae Haeckel   <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> https://i… scienti… https://id.biodive… Charophyta Sachs  <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> https://i… scienti… https://id.biodive… Charophyta Sachs  orth. var.         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> https://i… scienti… https://id.biodive… Equisetopsida C.… <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> https://i… scienti… https://id.biodive… Equisetopsida C.… orth. var.         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> https://i… scienti… https://id.biodive… Equisetopsida C.… <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> https://i… scienti… https://id.biodive… Cycadidae Pax     <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 109,614 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 32 more variables: nomIlleg &lt;chr&gt;, nomInval &lt;chr&gt;, taxonomicStatus &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   proParte &lt;lgl&gt;, scientificName &lt;chr&gt;, scientificNameID &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   canonicalName &lt;chr&gt;, scientificNameAuthorship &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   parentNameUsageID &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonRankSortOrder &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   kingdom &lt;chr&gt;, class &lt;chr&gt;, subclass &lt;chr&gt;, family &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonConceptID &lt;chr&gt;, nameAccordingTo &lt;chr&gt;, nameAccordingToID &lt;chr&gt;, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Load the current version of the dataset direct from the APC website</span></span></span>
 <span class="r-in"><span><span class="fu">dataset_access_function</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"current"</span><span class="op">)</span></span></span>
@@ -127,7 +170,50 @@ a URL which is the cutting edge version, but this may change at any time without
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Delete all versions of the dataset</span></span></span>
 <span class="r-in"><span><span class="fu">dataset_access_function</span><span class="op">(</span>version <span class="op">=</span> <span class="cn">NULL</span>, path <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘arrow’</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $APC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 109,624 × 37</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    taxonID    nameType acceptedNameUsageID acceptedNameUsage nomenclaturalStatus</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> https://i… scienti… https://id.biodive… Plantae Haeckel   <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> https://i… scienti… https://id.biodive… Charophyta Sachs  <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> https://i… scienti… https://id.biodive… Charophyta Sachs  orth. var.         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> https://i… scienti… https://id.biodive… Equisetopsida C.… <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> https://i… scienti… https://id.biodive… Equisetopsida C.… orth. var.         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> https://i… scienti… https://id.biodive… Equisetopsida C.… <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> https://i… scienti… https://id.biodive… Cycadidae Pax     <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 109,614 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 32 more variables: nomIlleg &lt;chr&gt;, nomInval &lt;chr&gt;, taxonomicStatus &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   proParte &lt;lgl&gt;, scientificName &lt;chr&gt;, scientificNameID &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   canonicalName &lt;chr&gt;, scientificNameAuthorship &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   parentNameUsageID &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonRankSortOrder &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   kingdom &lt;chr&gt;, class &lt;chr&gt;, subclass &lt;chr&gt;, family &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonConceptID &lt;chr&gt;, nameAccordingTo &lt;chr&gt;, nameAccordingToID &lt;chr&gt;, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $APNI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 109,624 × 37</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    taxonID    nameType acceptedNameUsageID acceptedNameUsage nomenclaturalStatus</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> https://i… scienti… https://id.biodive… Plantae Haeckel   <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> https://i… scienti… https://id.biodive… Charophyta Sachs  <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> https://i… scienti… https://id.biodive… Charophyta Sachs  orth. var.         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> https://i… scienti… https://id.biodive… Equisetopsida C.… <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> https://i… scienti… https://id.biodive… Equisetopsida C.… orth. var.         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> https://i… scienti… https://id.biodive… Equisetopsida C.… <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> https://i… scienti… https://id.biodive… Cycadidae Pax     <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 109,614 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 32 more variables: nomIlleg &lt;chr&gt;, nomInval &lt;chr&gt;, taxonomicStatus &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   proParte &lt;lgl&gt;, scientificName &lt;chr&gt;, scientificNameID &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   canonicalName &lt;chr&gt;, scientificNameAuthorship &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   parentNameUsageID &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonRankSortOrder &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   kingdom &lt;chr&gt;, class &lt;chr&gt;, subclass &lt;chr&gt;, family &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonConceptID &lt;chr&gt;, nameAccordingTo &lt;chr&gt;, nameAccordingToID &lt;chr&gt;, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </div>
