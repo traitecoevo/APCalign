@@ -74,24 +74,25 @@ dataset_info <- function(path) {
 
 
 
-dataset_get <- function(version = NULL,
+dataset_get <- function(version = "0.0.2.9000",
                         path = NULL,
                         type = "parquet") {
   if (type == "csv") {
     return(datastorr::github_release_get(get_version_details(path, version), version))
   }
   if (type == "parquet") {
-    #TO DO 1) add dynamic versions here 
-    # 2) use the stable location that Carl referenced (how?)
+    # TO DO
+    # use the stable location that Carl referenced (how?)
+    #
     tmp_pqt <- tempfile(fileext = ".parquet")
     download.file(
-      "https://github.com/traitecoevo/ausflora/releases/download/0.0.2.9000/apc.parquet",
+      paste0("https://github.com/traitecoevo/ausflora/releases/download/",version,"/apc.parquet"),
       destfile = tmp_pqt
     )
     APC <- arrow::read_parquet(tmp_pqt)
     tmp_pqt2 <- tempfile(fileext = ".parquet")
     download.file(
-      "https://github.com/traitecoevo/ausflora/releases/download/0.0.2.9000/apc.parquet",
+      paste0("https://github.com/traitecoevo/ausflora/releases/download/",version,"/apc.parquet"),
       destfile = tmp_pqt2
     )
     APNI <- arrow::read_parquet(tmp_pqt2)
