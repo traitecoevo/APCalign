@@ -10,10 +10,10 @@
 #' default_version()
 #'
 #'
-#' @seealso 
+#' @seealso
 #' align_taxa
 #'
-#' 
+#'
 default_version <- function() {
   "0.0.1.9000"
 }
@@ -90,7 +90,7 @@ align_taxa <- function(original_name,
     dplyr::bind_rows(
       taxa_raw,
       tibble::tibble(
-        original_name = subset(original_name, !original_name %in% taxa_raw$original_name) %>% unique(),
+        original_name = subset(original_name,!original_name %in% taxa_raw$original_name) %>% unique(),
         cleaned_name = NA_character_,
         stripped_name = NA_character_,
         aligned_name = NA_character_,
@@ -210,7 +210,7 @@ align_taxa <- function(original_name,
                   "APC list (known names)",
                   "APNI names"))  {
         distance_c <-
-          utils::adist(stripped_name, resources[[v]]$stripped_canonical, fixed = TRUE)[1,]
+          utils::adist(stripped_name, resources[[v]]$stripped_canonical, fixed = TRUE)[1, ]
         min_dist_abs_c <-  min(distance_c)
         min_dist_per_c <-
           min(distance_c) / stringr::str_length(stripped_name)
@@ -232,7 +232,7 @@ align_taxa <- function(original_name,
         distance_s <-
           utils::adist(stripped_name,
                        resources[[v]]$stripped_scientific,
-                       fixed = TRUE)[1,]
+                       fixed = TRUE)[1, ]
         min_dist_abs_s <-  min(distance_s)
         min_dist_per_s <-
           min(distance_s) / stringr::str_length(stripped_name)
@@ -285,7 +285,7 @@ align_taxa <- function(original_name,
 #'
 #' This function uses the Australia's Virtual Herbarium's taxonomic resources, specifically the Australian Plant
 #' Census (APC) and the Australian Plant Name Index (APNI), to update taxonomy of plant species, replacing any synonyms
-#' to their current accepted name. 
+#' to their current accepted name.
 #'
 #' @param aligned_names A character vector of plant names to update. These names must be in the format of the
 #' scientific name, with genus and species, and may contain additional qualifiers such as subspecies or varieties.
@@ -314,7 +314,7 @@ align_taxa <- function(original_name,
 #'   \item \code{taxonDistribution}: the distribution of the accepted name.
 #'   \item \code{ccAttributionIRI}: the Creative Commons Attribution International Rights URI of the accepted name.
 #' }
-#' 
+#'
 #' @export
 #'
 #' @examples
@@ -500,7 +500,7 @@ update_taxonomy <- function(aligned_names,
 #' load_taxonomic_resources(reload = FALSE, ver = "v2.2")
 #'
 #' load_taxonomic_resources(ver = "v1.1")
-#' 
+#'
 #' @importFrom dplyr filter select mutate distinct arrange
 #' @importFrom crayon red
 
@@ -553,9 +553,9 @@ load_taxonomic_resources <-
 
 #' Strip taxonomic names of subtaxa designations and special characters
 #'
-#' Given a vector of taxonomic names, this function removes subtaxa designations (e.g., "subsp."), 
+#' Given a vector of taxonomic names, this function removes subtaxa designations (e.g., "subsp."),
 #' special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The resulting vector
-#' of names is also converted to lowercase. 
+#' of names is also converted to lowercase.
 #'
 #' @param taxon_names A character vector of taxonomic names to be stripped.
 #'
@@ -567,7 +567,7 @@ load_taxonomic_resources <-
 #' @examples
 #' strip_names(c("Abies lasiocarpa subsp. lasiocarpa", "Quercus kelloggii", "Pinus contorta var. latifolia"))
 #'
-  
+
 strip_names <- function(taxon_names) {
   taxon_names %>%
     stringr::str_remove_all(" subsp\\.") %>% stringr::str_remove_all(" aff\\.")  %>%
@@ -645,23 +645,24 @@ standardise_names <- function(taxon_names) {
 #'
 #' This function takes a list of Australian plant species that needs to be reconciled with current taxonomy and generates a lookup table to help fix the taxonomy. The lookup table contains the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #'
-#' 
+#'
 #' @param species_list A list of Australian plant species that needs to be reconciled with current taxonomy.
 #' @param fuzzy_matching A logical value indicating whether fuzzy matching should be used to align the species names. Default is \code{FALSE}.
 #' @param version The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @export
 #' @examples
-#' create_taxonomic_update_lookup(c("Eucalyptus regnans", "Acacia melanoxylon", "Banksia integrifolia","Not a species"))
+#' create_taxonomic_update_lookup(c("Eucalyptus regnans", "Acacia melanoxylon", 
+#' "Banksia integrifolia","Not a species"))
 #'
 create_taxonomic_update_lookup <-
   function(species_list,
            fuzzy_matching = FALSE,
-           version = "0.0.1.9000") {
-    tmp <- dataset_access_function(ver = version)
+            version_number = "0.0.1.9000") {
+    tmp <- dataset_access_function(ver = version_number)
     aligned_data <-
       unique(species_list) %>%
-      align_taxa(fuzzy_matching = fuzzy_matching, ver = version)
+      align_taxa(fuzzy_matching = fuzzy_matching, ver = version_number)
     
     aligned_species_list_tmp <-
       aligned_data$aligned_name %>% update_taxonomy()
@@ -676,5 +677,3 @@ create_taxonomic_update_lookup <-
     
     return(aligned_species_list)
   }
-
-

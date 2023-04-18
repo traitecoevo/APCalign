@@ -14,7 +14,7 @@ A character vector of stripped taxonomic names, with subtaxa designations, speci
 characters, and extra whitespace removed, and all letters converted to lowercase.
 }
 \description{
-Given a vector of taxonomic names, this function removes subtaxa designations (e.g., "subsp."), 
+Given a vector of taxonomic names, this function removes subtaxa designations (e.g., "subsp."),
 special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The resulting vector
 of names is also converted to lowercase.
 }

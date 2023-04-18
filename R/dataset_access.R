@@ -17,13 +17,10 @@
 ##'   a URL which is the cutting edge version, but this may change at any time without notice.
 ##' @export
 ##' @examples
-##' # Load the most recent version of the dataset from a local file
+##' # Load the most recent version of the dataset 
 ##' dataset_access_function()
 ##'
-##' # Load a specific version of the dataset from a local file
-##' dataset_access_function(version = 1.0, path = "/path/to/dataset")
-##'
-##' # Load the current version of the dataset from a URL
+##' # Load the current version of the dataset direct from the APC website
 ##' dataset_access_function(type = "current")
 ##'
 ##' # Delete all versions of the dataset
@@ -76,8 +73,32 @@ dataset_info <- function(path) {
 }
 
 
-dataset_get <- function(version=NULL, path=NULL) {
-  datastorr::github_release_get(get_version_details(path, version), version)
+
+dataset_get <- function(version = NULL,
+                        path = NULL,
+                        type = "parquet") {
+  if (type == "csv") {
+    return(datastorr::github_release_get(get_version_details(path, version), version))
+  }
+  if (type == "parquet") {
+    #TO DO 1) add dynamic versions here 
+    # 2) use the stable location that Carl referenced (how?)
+    tmp_pqt <- tempfile(fileext = ".parquet")
+    download.file(
+      "https://github.com/traitecoevo/ausflora/releases/download/0.0.2.9000/apc.parquet",
+      destfile = tmp_pqt
+    )
+    APC <- arrow::read_parquet(tmp_pqt)
+    tmp_pqt2 <- tempfile(fileext = ".parquet")
+    download.file(
+      "https://github.com/traitecoevo/ausflora/releases/download/0.0.2.9000/apc.parquet",
+      destfile = tmp_pqt2
+    )
+    APNI <- arrow::read_parquet(tmp_pqt2)
+    current_list <- list(APC, APNI)
+    names(current_list) <- c("APC", "APNI")
+    return(current_list)
+  }
 }
 
 ##' Get Available Versions of the Australian Plant Census and Australian Plant Names Index Datasets
@@ -100,8 +121,6 @@ dataset_get <- function(version=NULL, path=NULL) {
 ##' # Get available Github versions of the Australian Plant Census and Australian Plant Names Index datasets
 ##' dataset_versions(local = FALSE)
 ##'
-##' # Get available versions of the Australian Plant Census and Australian Plant Names Index datasets stored at a specific path
-##' dataset_versions(path = "/path/to/dataset")
 dataset_versions <- function(local = TRUE, path = NULL) {
   datastorr::github_release_versions(dataset_info(path), local)
 }

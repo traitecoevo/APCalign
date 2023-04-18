@@ -30,6 +30,4 @@ dataset_versions()
 # Get available Github versions of the Australian Plant Census and Australian Plant Names Index datasets
 dataset_versions(local = FALSE)
 
-# Get available versions of the Australian Plant Census and Australian Plant Names Index datasets stored at a specific path
-dataset_versions(path = "/path/to/dataset")
 }
