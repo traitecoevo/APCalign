@@ -9,6 +9,3 @@ get_apc_genus_family_lookup(type_of_data = "stable", ver = default_version())
 \description{
 This function returns a genus family lookup from a stable or live version of the APC.
 }
-\examples{
-get_apc_genus_family_lookup()
-}
