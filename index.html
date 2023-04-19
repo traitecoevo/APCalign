@@ -78,11 +78,6 @@
 <p>Generating a lookup table can be done with just one function</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia integrifolia"</span>,<span class="st">"Acacia longifolia"</span>,<span class="st">"Commersonia rosea"</span><span class="op">)</span>,full<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Checking alignments of 3 taxa</span></span>
-<span><span class="co">#&gt;   -&gt; 0 names already matched; 0 names checked but without a match; 3 taxa yet to be checked</span></span>
-<span><span class="co">#&gt;   -&gt; checking for exact matches for 3 species</span></span>
-<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
-<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
 <span><span class="co">#&gt; # A tibble: 3 × 2</span></span>
 <span><span class="co">#&gt;   original_name        canonicalName       </span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;               </span></span>
@@ -92,11 +87,6 @@
 <p>this is the core functionality. now for some more features: to see the full taxonomic information use <code>full=TRUE</code></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia integrifolia"</span>,<span class="st">"Acacia longifolia"</span>,<span class="st">"Commersonia rosea"</span><span class="op">)</span>,full<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Checking alignments of 3 taxa</span></span>
-<span><span class="co">#&gt;   -&gt; 0 names already matched; 0 names checked but without a match; 3 taxa yet to be checked</span></span>
-<span><span class="co">#&gt;   -&gt; checking for exact matches for 3 species</span></span>
-<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
-<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
 <span><span class="co">#&gt; # A tibble: 3 × 16</span></span>
 <span><span class="co">#&gt;   original_name        aligned_name     source taxonIDClean taxonomicStatusClean</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;            &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;               </span></span>
@@ -111,11 +101,6 @@
 <p>to make a reproducible workflow, specify the version number in your code. without this the underlying taxonomic data may change.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia integrifolia"</span>,<span class="st">"Acacia longifolia"</span>,<span class="st">"Commersonia rosea"</span><span class="op">)</span>, version_number<span class="op">=</span><span class="st">"0.0.2.9000"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Checking alignments of 3 taxa</span></span>
-<span><span class="co">#&gt;   -&gt; 0 names already matched; 0 names checked but without a match; 3 taxa yet to be checked</span></span>
-<span><span class="co">#&gt;   -&gt; checking for exact matches for 3 species</span></span>
-<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
-<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
 <span><span class="co">#&gt; # A tibble: 3 × 2</span></span>
 <span><span class="co">#&gt;   original_name        canonicalName       </span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;               </span></span>
@@ -125,13 +110,7 @@
 <p>if you’ve got potential misspellings in your data turn on fuzzy matching</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia integrifolia"</span>,<span class="st">"Acacia longifolia"</span>,<span class="st">"Commersonia rosea"</span>,<span class="st">"Baksia integrifolia"</span><span class="op">)</span>, fuzzy_matching<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Checking alignments of 4 taxa</span></span>
-<span><span class="co">#&gt;   -&gt; 0 names already matched; 0 names checked but without a match; 4 taxa yet to be checked</span></span>
-<span><span class="co">#&gt;   -&gt; checking for exact matches for 4 species</span></span>
-<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
-<span><span class="co">#&gt;   -&gt; checking for fuzzy matches for 1 taxa</span></span>
 <span><span class="co">#&gt;   1   Baksia integrifolia    found:   Banksia integrifolia    APC list (accepted)</span></span>
-<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
 <span><span class="co">#&gt; # A tibble: 4 × 2</span></span>
 <span><span class="co">#&gt;   original_name        canonicalName       </span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;               </span></span>
