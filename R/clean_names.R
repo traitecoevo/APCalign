@@ -512,7 +512,7 @@ load_taxonomic_resources <-
       message(crayon::red(
         "loading object `taxonomic_resources` into global environment"
       ))
-      taxonomic_resources <- dataset_access_function(ver,filetype=filetype)
+      taxonomic_resources <- dataset_access_function(version=ver, path=NULL, type="stable",filetype=filetype)
       names(taxonomic_resources) <- c("APC", "APNI")
       
       taxonomic_resources[["genera_accepted"]] <-
