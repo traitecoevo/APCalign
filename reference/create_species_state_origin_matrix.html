@@ -44,7 +44,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_species_state_origin_matrix</span><span class="op">(</span>type_of_data <span class="op">=</span> <span class="st">"stable"</span>, ver <span class="op">=</span> <span class="st">"0.0.1.9000"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_species_state_origin_matrix</span><span class="op">(</span>type_of_data <span class="op">=</span> <span class="st">"stable"</span>, ver <span class="op">=</span> <span class="st">"0.0.2.9000"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -67,9 +67,22 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">create_species_state_origin_matrix</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>downloaded length 0 != reported length 9</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open URL 'https://github.com/traitecoevo/ausflora/releases/download/0.0.1.9000/apc.parquet': HTTP status was '404 Not Found'</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in download.file(paste0("https://github.com/traitecoevo/ausflora/releases/download/",     version, "/apc.parquet"), destfile = tmp_pqt):</span> cannot open URL 'https://github.com/traitecoevo/ausflora/releases/download/0.0.1.9000/apc.parquet'</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 26,243 × 19</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    species     NT    Qld   WA    ChI   NSW   SA    Vic   Tas   ACT   NI    LHI  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Cycas angu… nati… nati… not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Cycas aren… nati… not … not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Cycas arms… nati… not … not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Cycas arnh… nati… not … not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Cycas bade… not … nati… not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Cycas basa… not … not … nati… not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Cycas brun… nati… nati… not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Cycas cair… not … nati… not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Cycas calc… nati… not … not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Cycas cana… nati… not … not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 26,233 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: MI &lt;chr&gt;, HI &lt;chr&gt;, MDI &lt;chr&gt;, CoI &lt;chr&gt;, CSI &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   AR &lt;chr&gt;, CaI &lt;chr&gt;</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
