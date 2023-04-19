@@ -98,9 +98,15 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">0</span> names already matched; <span style="color: #0000BB;">0</span> names checked but without a match; <span style="color: #0000BB;">2</span> taxa yet to be checked</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; checking for exact matches for 2 species</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">loading object `taxonomic_resources` into global environment</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::filter(., nameElement != "sp."):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `nameElement != "sp."`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> object 'nameElement' not found</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; checking for fuzzy matches for 1 taxa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	 1 	 Abies alba<span style="color: #0000BB;">	not found</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   - output saved in file: taxa_alignments.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   original_name cleaned_name aligned_name source     known checked stripped_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Abies alba    Abies alba   <span style="color: #BB0000;">NA</span>           <span style="color: #BB0000;">NA</span>         FALSE TRUE    abies alba   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Poa annua     Poa annua    Poa annua    APC list … TRUE  TRUE    poa annua    </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
