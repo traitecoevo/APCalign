@@ -47,7 +47,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_taxonomic_update_lookup</span><span class="op">(</span></span>
 <span>  <span class="va">species_list</span>,</span>
 <span>  fuzzy_matching <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  version_number <span class="op">=</span> <span class="fu"><a href="default_version.html">default_version</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  version_number <span class="op">=</span> <span class="fu"><a href="default_version.html">default_version</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  full <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -63,6 +64,10 @@
 
 <dt>version_number</dt>
 <dd><p>The version number of the dataset to use. Default is <code>"0.0.1.9000"</code>.</p></dd>
+
+
+<dt>full</dt>
+<dd><p>logical for whether the full lookup table is returned or just the two key columns</p></dd>
 
 </dl></div>
     <div id="value">
@@ -81,17 +86,12 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; checking for exact matches for 4 species</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">loading object `taxonomic_resources` into global environment</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">loading object `taxonomic_resources` into global environment</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 16</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   original_name        aligned_name     source taxonIDClean taxonomicStatusClean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Eucalyptus regnans   Eucalyptus regn… APC    https://id.… accepted            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Acacia melanoxylon   Acacia melanoxy… APC    https://id.… accepted            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Banksia integrifolia Banksia integri… APC    https://id.… accepted            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 11 more variables: alternativeTaxonomicStatusClean &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   acceptedNameUsageID &lt;chr&gt;, canonicalName &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientificNameAuthorship &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonomicStatus &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   family &lt;chr&gt;, subclass &lt;chr&gt;, taxonDistribution &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ccAttributionIRI &lt;chr&gt;, genus &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   original_name        canonicalName       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Eucalyptus regnans   Eucalyptus regnans  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Acacia melanoxylon   Acacia melanoxylon  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Banksia integrifolia Banksia integrifolia</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

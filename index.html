@@ -75,109 +75,70 @@
 <div class="section level2">
 <h2 id="a-quick-demo">A quick demo<a class="anchor" aria-label="anchor" href="#a-quick-demo"></a>
 </h2>
-<p>First, we will retrieve the current <a href="https://github.com/traitecoevo/ausflora/releases/tag/0.0.0.9000" class="external-link">release of APC names</a>. The <code>dataset_access_function</code> saves the download in a local, temporary folder.</p>
+<p>Generating a lookup table can be done with just one function</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dataset_access_function.html">dataset_access_function</a></span><span class="op">(</span><span class="st">"0.0.0.9000"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">tmp</span></span>
-<span><span class="co">#&gt; $APC</span></span>
-<span><span class="co">#&gt; # A tibble: 100,835 × 34</span></span>
-<span><span class="co">#&gt;    taxonID       nameT…¹ accep…² accep…³ nomen…⁴ taxon…⁵ proPa…⁶ scien…⁷ scien…⁸</span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;lgl&gt;   &lt;chr&gt;   &lt;chr&gt;  </span></span>
-<span><span class="co">#&gt;  1 https://id.b… scient… https:… Planta… &lt;NA&gt;    accept… FALSE   Planta… https:…</span></span>
-<span><span class="co">#&gt;  2 https://id.b… scient… https:… Charop… &lt;NA&gt;    orthog… FALSE   Charac… https:…</span></span>
-<span><span class="co">#&gt;  3 https://id.b… scient… https:… Charop… &lt;NA&gt;    accept… FALSE   Charop… https:…</span></span>
-<span><span class="co">#&gt;  4 https://id.b… scient… https:… Equise… &lt;NA&gt;    orthog… FALSE   Equise… https:…</span></span>
-<span><span class="co">#&gt;  5 https://id.b… scient… https:… Equise… &lt;NA&gt;    accept… FALSE   Equise… https:…</span></span>
-<span><span class="co">#&gt;  6 https://id.b… scient… https:… Equise… &lt;NA&gt;    taxono… FALSE   Spheno… https:…</span></span>
-<span><span class="co">#&gt;  7 https://id.b… scient… https:… Cycadi… &lt;NA&gt;    accept… FALSE   Cycadi… https:…</span></span>
-<span><span class="co">#&gt;  8 https://id.b… scient… https:… Cycada… &lt;NA&gt;    taxono… FALSE   Zamiin… https:…</span></span>
-<span><span class="co">#&gt;  9 https://id.b… scient… https:… Cycada… &lt;NA&gt;    accept… FALSE   Cycada… https:…</span></span>
-<span><span class="co">#&gt; 10 https://id.b… scient… https:… Cycada… &lt;NA&gt;    taxono… FALSE   Stange… https:…</span></span>
-<span><span class="co">#&gt; # … with 100,825 more rows, 25 more variables: canonicalName &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   scientificNameAuthorship &lt;chr&gt;, parentNameUsageID &lt;chr&gt;, taxonRank &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   taxonRankSortOrder &lt;dbl&gt;, kingdom &lt;chr&gt;, class &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   family &lt;chr&gt;, created &lt;dttm&gt;, modified &lt;dttm&gt;, datasetName &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   taxonConceptID &lt;chr&gt;, nameAccordingTo &lt;chr&gt;, nameAccordingToID &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   taxonRemarks &lt;chr&gt;, taxonDistribution &lt;chr&gt;, higherClassification &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   firstHybridParentName &lt;chr&gt;, firstHybridParentNameID &lt;chr&gt;, …</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $APNI</span></span>
-<span><span class="co">#&gt; # A tibble: 154,302 × 42</span></span>
-<span><span class="co">#&gt;    scientificN…¹ scien…² canon…³ canon…⁴ nameE…⁵ scien…⁶ nameT…⁷ taxon…⁸ nomen…⁹</span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  </span></span>
-<span><span class="co">#&gt;  1 Aaron's Beard &lt;commo… Aaron'… &lt;commo… Aaron'… https:… common  unplac… [n/a]  </span></span>
-<span><span class="co">#&gt;  2 Aaron's Rod   &lt;commo… Aaron'… &lt;commo… Aaron'… https:… common  unplac… [n/a]  </span></span>
-<span><span class="co">#&gt;  3 Abacopteris … &lt;scien… Abacop… &lt;scien… Abacop… https:… scient… includ… &lt;NA&gt;   </span></span>
-<span><span class="co">#&gt;  4 Abacopteris … &lt;scien… Abacop… &lt;scien… Abacop… https:… scient… unplac… nom. i…</span></span>
-<span><span class="co">#&gt;  5 Abacopteris … &lt;scien… Abacop… &lt;scien… aspera  https:… scient… includ… &lt;NA&gt;   </span></span>
-<span><span class="co">#&gt;  6 Abacopteris … &lt;scien… Abacop… &lt;scien… presli… https:… scient… unplac… &lt;NA&gt;   </span></span>
-<span><span class="co">#&gt;  7 Abacopteris … &lt;scien… Abacop… &lt;scien… triphy… https:… scient… includ… &lt;NA&gt;   </span></span>
-<span><span class="co">#&gt;  8 Abarema Pitt… &lt;scien… Abarema &lt;scien… Abarema https:… scient… unplac… &lt;NA&gt;   </span></span>
-<span><span class="co">#&gt;  9 Abarema clyp… &lt;scien… Abarem… &lt;scien… praini… https:… scient… unplac… nom. i…</span></span>
-<span><span class="co">#&gt; 10 Abarema gran… &lt;scien… Abarem… &lt;scien… grandi… https:… scient… includ… &lt;NA&gt;   </span></span>
-<span><span class="co">#&gt; # … with 154,292 more rows, 33 more variables: scientificNameAuthorship &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   cultivarEpithet &lt;chr&gt;, autonym &lt;lgl&gt;, hybrid &lt;lgl&gt;, cultivar &lt;lgl&gt;,</span></span>
-<span><span class="co">#&gt; #   formula &lt;lgl&gt;, scientific &lt;lgl&gt;, nomInval &lt;lgl&gt;, nomIlleg &lt;lgl&gt;,</span></span>
-<span><span class="co">#&gt; #   namePublishedIn &lt;chr&gt;, namePublishedInYear &lt;dbl&gt;, nameInstanceType &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   originalNameUsage &lt;chr&gt;, originalNameUsageID &lt;chr&gt;, typeCitation &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   kingdom &lt;chr&gt;, family &lt;chr&gt;, genericName &lt;chr&gt;, specificEpithet &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   infraspecificEpithet &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonRankSortOrder &lt;dbl&gt;, …</span></span></code></pre></div>
-<p>Now we will load a toy plant species list and try align it with the APC species names.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia integrifolia"</span>,<span class="st">"Acacia longifolia"</span>,<span class="st">"Commersonia rosea"</span><span class="op">)</span>,full<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Checking alignments of 3 taxa</span></span>
+<span><span class="co">#&gt;   -&gt; 0 names already matched; 0 names checked but without a match; 3 taxa yet to be checked</span></span>
+<span><span class="co">#&gt;   -&gt; checking for exact matches for 3 species</span></span>
+<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
+<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 2</span></span>
+<span><span class="co">#&gt;   original_name        canonicalName       </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;               </span></span>
+<span><span class="co">#&gt; 1 Banksia integrifolia Banksia integrifolia</span></span>
+<span><span class="co">#&gt; 2 Acacia longifolia    Acacia longifolia   </span></span>
+<span><span class="co">#&gt; 3 Commersonia rosea    Androcalva rosea</span></span></code></pre></div>
+<p>this is the core functionality. now for some more features: to see the full taxonomic information use <code>full=TRUE</code></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#remotes::install_packages("readr")</span></span>
-<span><span class="va">species_list</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"species.csv"</span>, package <span class="op">=</span> <span class="st">"ausflora"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">species_list</span></span>
-<span><span class="co">#&gt; # A tibble: 199 × 1</span></span>
-<span><span class="co">#&gt;    name                       </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;                      </span></span>
-<span><span class="co">#&gt;  1 Eucalyptus tectifica       </span></span>
-<span><span class="co">#&gt;  2 Eulalia aurea              </span></span>
-<span><span class="co">#&gt;  3 Triodia bitextura          </span></span>
-<span><span class="co">#&gt;  4 Terminalia canescens       </span></span>
-<span><span class="co">#&gt;  5 Annual forb                </span></span>
-<span><span class="co">#&gt;  6 Erythrophleum chlorostachys</span></span>
-<span><span class="co">#&gt;  7 Schizachyrium fragile      </span></span>
-<span><span class="co">#&gt;  8 Acacia hemsleyi            </span></span>
-<span><span class="co">#&gt;  9 Eriachne obtusa            </span></span>
-<span><span class="co">#&gt; 10 Corchorus sidoides         </span></span>
-<span><span class="co">#&gt; # … with 189 more rows</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="align-away">Align away!<a class="anchor" aria-label="anchor" href="#align-away"></a>
-</h3>
-<p><code>align_taxa</code> will try match the species names in our list to those listed in the APC. You can specify a file path and file name using the argument <code>output</code> to save this aligned data</p>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia integrifolia"</span>,<span class="st">"Acacia longifolia"</span>,<span class="st">"Commersonia rosea"</span><span class="op">)</span>,full<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Checking alignments of 3 taxa</span></span>
+<span><span class="co">#&gt;   -&gt; 0 names already matched; 0 names checked but without a match; 3 taxa yet to be checked</span></span>
+<span><span class="co">#&gt;   -&gt; checking for exact matches for 3 species</span></span>
+<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
+<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 16</span></span>
+<span><span class="co">#&gt;   original_name        aligned_name     source taxonIDClean taxonomicStatusClean</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;            &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;               </span></span>
+<span><span class="co">#&gt; 1 Banksia integrifolia Banksia integri… APC    https://id.… accepted            </span></span>
+<span><span class="co">#&gt; 2 Acacia longifolia    Acacia longifol… APC    https://id.… accepted            </span></span>
+<span><span class="co">#&gt; 3 Commersonia rosea    Commersonia ros… APC    https://id.… basionym            </span></span>
+<span><span class="co">#&gt; # ℹ 11 more variables: alternativeTaxonomicStatusClean &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   acceptedNameUsageID &lt;chr&gt;, canonicalName &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   scientificNameAuthorship &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonomicStatus &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   family &lt;chr&gt;, subclass &lt;chr&gt;, taxonDistribution &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   ccAttributionIRI &lt;chr&gt;, genus &lt;chr&gt;</span></span></code></pre></div>
+<p>to make a reproducible workflow, specify the version number in your code. without this the underlying taxonomic data may change.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">aligned_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/align_taxa.html">align_taxa</a></span><span class="op">(</span><span class="va">species_list</span><span class="op">$</span><span class="va">name</span>, output <span class="op">=</span> <span class="st">"taxonomic_updates.csv"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Checking alignments of 199 taxa</span></span>
-<span><span class="co">#&gt;   - reading existing data from taxonomic_updates.csv</span></span>
-<span><span class="co">#&gt;   - all taxa are already checked, yay!</span></span>
-<span></span>
-<span><span class="va">aligned_data</span></span>
-<span><span class="co">#&gt; # A tibble: 199 × 7</span></span>
-<span><span class="co">#&gt;    original_name                 cleaned_…¹ align…² source known checked strip…³</span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;                         &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;  &lt;lgl&gt; &lt;lgl&gt;   &lt;chr&gt;  </span></span>
-<span><span class="co">#&gt;  1 Annual forb                   Annual fo… &lt;NA&gt;    &lt;NA&gt;   FALSE TRUE    annual…</span></span>
-<span><span class="co">#&gt;  2 Tephrosia sp. macarthur river Tephrosia… &lt;NA&gt;    &lt;NA&gt;   FALSE TRUE    tephro…</span></span>
-<span><span class="co">#&gt;  3 No id                         No id      &lt;NA&gt;    &lt;NA&gt;   FALSE TRUE    no id  </span></span>
-<span><span class="co">#&gt;  4 Sorghum sp.                   Sorghum s… &lt;NA&gt;    &lt;NA&gt;   FALSE TRUE    sorghu…</span></span>
-<span><span class="co">#&gt;  5 Tephrosia sp.                 Tephrosia… &lt;NA&gt;    &lt;NA&gt;   FALSE TRUE    tephro…</span></span>
-<span><span class="co">#&gt;  6 Corymbia sp.                  Corymbia … &lt;NA&gt;    &lt;NA&gt;   FALSE TRUE    corymb…</span></span>
-<span><span class="co">#&gt;  7 Alphitonia sp.                Alphitoni… &lt;NA&gt;    &lt;NA&gt;   FALSE TRUE    alphit…</span></span>
-<span><span class="co">#&gt;  8 Poaceae sp.                   Poaceae s… &lt;NA&gt;    &lt;NA&gt;   FALSE TRUE    poacea…</span></span>
-<span><span class="co">#&gt;  9 Pultenaea sp.                 Pultenaea… &lt;NA&gt;    &lt;NA&gt;   FALSE TRUE    pulten…</span></span>
-<span><span class="co">#&gt; 10 Eucalyptus tectifica          Eucalyptu… Eucaly… APC l… TRUE  TRUE    eucaly…</span></span>
-<span><span class="co">#&gt; # … with 189 more rows, and abbreviated variable names ¹​cleaned_name,</span></span>
-<span><span class="co">#&gt; #   ²​aligned_name, ³​stripped_name</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="update-taxonomic-names">Update taxonomic names<a class="anchor" aria-label="anchor" href="#update-taxonomic-names"></a>
-</h3>
-<p>Once alignment is complete we can update our species names, replacing synonyms to current APC names. Note that this function drops the observations where names cannot be aligned. Again, this updated species list can be saved using the <code>output</code> argument.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia integrifolia"</span>,<span class="st">"Acacia longifolia"</span>,<span class="st">"Commersonia rosea"</span><span class="op">)</span>, version_number<span class="op">=</span><span class="st">"0.0.2.9000"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Checking alignments of 3 taxa</span></span>
+<span><span class="co">#&gt;   -&gt; 0 names already matched; 0 names checked but without a match; 3 taxa yet to be checked</span></span>
+<span><span class="co">#&gt;   -&gt; checking for exact matches for 3 species</span></span>
+<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
+<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 2</span></span>
+<span><span class="co">#&gt;   original_name        canonicalName       </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;               </span></span>
+<span><span class="co">#&gt; 1 Banksia integrifolia Banksia integrifolia</span></span>
+<span><span class="co">#&gt; 2 Acacia longifolia    Acacia longifolia   </span></span>
+<span><span class="co">#&gt; 3 Commersonia rosea    Androcalva rosea</span></span></code></pre></div>
+<p>if you’ve got potential misspellings in your data turn on fuzzy matching</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">aligned_species_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/update_taxonomy.html">update_taxonomy</a></span><span class="op">(</span><span class="va">aligned_data</span><span class="op">$</span><span class="va">aligned_name</span><span class="op">)</span></span>
-<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span></code></pre></div>
-</div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia integrifolia"</span>,<span class="st">"Acacia longifolia"</span>,<span class="st">"Commersonia rosea"</span>,<span class="st">"Baksia integrifolia"</span><span class="op">)</span>, fuzzy_matching<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Checking alignments of 4 taxa</span></span>
+<span><span class="co">#&gt;   -&gt; 0 names already matched; 0 names checked but without a match; 4 taxa yet to be checked</span></span>
+<span><span class="co">#&gt;   -&gt; checking for exact matches for 4 species</span></span>
+<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
+<span><span class="co">#&gt;   -&gt; checking for fuzzy matches for 1 taxa</span></span>
+<span><span class="co">#&gt;   1   Baksia integrifolia    found:   Banksia integrifolia    APC list (accepted)</span></span>
+<span><span class="co">#&gt; loading object `taxonomic_resources` into global environment</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 2</span></span>
+<span><span class="co">#&gt;   original_name        canonicalName       </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;               </span></span>
+<span><span class="co">#&gt; 1 Baksia integrifolia  Banksia integrifolia</span></span>
+<span><span class="co">#&gt; 2 Banksia integrifolia Banksia integrifolia</span></span>
+<span><span class="co">#&gt; 3 Acacia longifolia    Acacia longifolia   </span></span>
+<span><span class="co">#&gt; 4 Commersonia rosea    Androcalva rosea</span></span></code></pre></div>
 </div>
 </div>
 
