@@ -43,25 +43,25 @@ library(ausflora)
 
 Generating a lookup table can be done with just one function
 
-```{r}
+```{r,message=FALSE}
 create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea"),full=FALSE)
 ```
 
 this is the core functionality.  now for some more features: to see the full taxonomic information use `full=TRUE`
 
-```{r}
+```{r, message=FALSE}
 create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea"),full=TRUE)
 ```
 
 to make a reproducible workflow, specify the version number in your code. without this the underlying taxonomic data may change.  
 
-```{r}
+```{r,message=FALSE}
 create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea"), version_number="0.0.2.9000")
 ```
 
 if you've got potential misspellings in your data turn on fuzzy matching
 
-```{r}
+```{r, message=FALSE}
 create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea","Baksia integrifolia"), fuzzy_matching=TRUE)
 ```
 

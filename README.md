@@ -35,11 +35,6 @@ Generating a lookup table can be done with just one function
 
 ``` r
 create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea"),full=FALSE)
-#> Checking alignments of 3 taxa
-#>   -> 0 names already matched; 0 names checked but without a match; 3 taxa yet to be checked
-#>   -> checking for exact matches for 3 species
-#> loading object `taxonomic_resources` into global environment
-#> loading object `taxonomic_resources` into global environment
 #> # A tibble: 3 × 2
 #>   original_name        canonicalName       
 #>   <chr>                <chr>               
@@ -53,11 +48,6 @@ full taxonomic information use `full=TRUE`
 
 ``` r
 create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea"),full=TRUE)
-#> Checking alignments of 3 taxa
-#>   -> 0 names already matched; 0 names checked but without a match; 3 taxa yet to be checked
-#>   -> checking for exact matches for 3 species
-#> loading object `taxonomic_resources` into global environment
-#> loading object `taxonomic_resources` into global environment
 #> # A tibble: 3 × 16
 #>   original_name        aligned_name     source taxonIDClean taxonomicStatusClean
 #>   <chr>                <chr>            <chr>  <chr>        <chr>               
@@ -76,11 +66,6 @@ code. without this the underlying taxonomic data may change.
 
 ``` r
 create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea"), version_number="0.0.2.9000")
-#> Checking alignments of 3 taxa
-#>   -> 0 names already matched; 0 names checked but without a match; 3 taxa yet to be checked
-#>   -> checking for exact matches for 3 species
-#> loading object `taxonomic_resources` into global environment
-#> loading object `taxonomic_resources` into global environment
 #> # A tibble: 3 × 2
 #>   original_name        canonicalName       
 #>   <chr>                <chr>               
@@ -93,13 +78,7 @@ if you’ve got potential misspellings in your data turn on fuzzy matching
 
 ``` r
 create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea","Baksia integrifolia"), fuzzy_matching=TRUE)
-#> Checking alignments of 4 taxa
-#>   -> 0 names already matched; 0 names checked but without a match; 4 taxa yet to be checked
-#>   -> checking for exact matches for 4 species
-#> loading object `taxonomic_resources` into global environment
-#>   -> checking for fuzzy matches for 1 taxa
 #>   1   Baksia integrifolia    found:   Banksia integrifolia    APC list (accepted)
-#> loading object `taxonomic_resources` into global environment
 #> # A tibble: 4 × 2
 #>   original_name        canonicalName       
 #>   <chr>                <chr>               
