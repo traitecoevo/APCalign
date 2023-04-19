@@ -544,10 +544,11 @@ load_taxonomic_resources <-
         dplyr::distinct() %>%
         dplyr::arrange(canonicalName)
       
-      assign("taxonomic_resources", taxonomic_resources, envir = .GlobalEnv)
+      #assign("taxonomic_resources", taxonomic_resources, envir = .GlobalEnv)
     }
     
-    get0("taxonomic_resources", envir = .GlobalEnv)
+    #get0("taxonomic_resources", envir = .GlobalEnv)
+    taxonomic_resources
   }
 
 
@@ -648,7 +649,7 @@ standardise_names <- function(taxon_names) {
 #'
 #' @param species_list A list of Australian plant species that needs to be reconciled with current taxonomy.
 #' @param fuzzy_matching A logical value indicating whether fuzzy matching should be used to align the species names. Default is \code{FALSE}.
-#' @param version The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
+#' @param version_number The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @export
 #' @examples

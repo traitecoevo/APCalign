@@ -17,18 +17,18 @@
 ##'   a URL which is the cutting edge version, but this may change at any time without notice.
 ##' @export
 ##' @examples
-##' # Load the most recent version of the dataset 
-##' dataset_access_function()
 ##'
 ##' # Load the current version of the dataset direct from the APC website
 ##' dataset_access_function(type = "current")
 ##'
-##' # Delete all versions of the dataset
-##' dataset_access_function(version = NULL, path = NULL)
+##' # Load the a stable version of the dataset 
+##' dataset_access_function(version="0.0.2.9000",type = "stable")
+##'
+
 
 dataset_access_function <- function(version=default_version(), path=NULL, type="stable",filetype = "parquet") {
   if(type=="stable"){
-    return(dataset_get(version, path,filetype))
+    return(dataset_get(version,path,filetype))
   }
   if(type=="current"){
     APC <- readr::read_csv("https://biodiversity.org.au/nsl/services/export/taxonCsv",
@@ -140,11 +140,8 @@ dataset_version_current <- function(local=TRUE, path=NULL) {
 #' @param version The version number of the dataset release to delete.
 #' @param path (optional) The path to the dataset in the datastorr registry. Defaults to NULL.
 #'
-#' @export
 #' @rdname dataset_del
 #'
-#' @examples
-#' dataset_del("v1.0")
 #'
 #' @return NULL
 #'

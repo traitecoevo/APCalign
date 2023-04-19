@@ -6,4 +6,4 @@ ignore/
 .git
 ^codecov\.yml$
 ^\.github$
-
+^todo.md

@@ -14,7 +14,3 @@ dataset_del(version, path = NULL)
 \description{
 This function deletes a dataset release from GitHub, using the datastorr package.
 }
-\examples{
-dataset_del("v1.0")
-
-}

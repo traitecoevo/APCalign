@@ -7,7 +7,7 @@
 #'
 #' @param type_of_data A character string indicating the type of data to be used. The default is "stable".  "current" downloads the file from APC directly and remakes the calculations from the most recent version.
 #'
-#' @param ver Version of the database (for the stable option only)
+#' @param version Version of the database (for the stable option only)
 #'
 #' @return A data frame with columns representing each state and rows representing each species. The values in each cell represent the origin of the species in that state.
 #'
@@ -19,8 +19,8 @@
 #'
 #' @export
 create_species_state_origin_matrix <-
-  function(type_of_data = "stable", ver = "0.0.2.9000") {
-    apc <- dataset_access_function(ver = ver, type = type_of_data)
+  function(type_of_data = "stable", version = default_version()) {
+    apc <- dataset_access_function(ver = version, type = type_of_data)
       apc_species <-
         dplyr::filter(apc$APC,
                       taxonRank == "Species" & taxonomicStatus == "accepted")
