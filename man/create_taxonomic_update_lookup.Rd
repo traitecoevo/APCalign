@@ -7,7 +7,8 @@
 create_taxonomic_update_lookup(
   species_list,
   fuzzy_matching = FALSE,
-  version_number = default_version()
+  version_number = default_version(),
+  full = FALSE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ create_taxonomic_update_lookup(
 \item{fuzzy_matching}{A logical value indicating whether fuzzy matching should be used to align the species names. Default is \code{FALSE}.}
 
 \item{version_number}{The version number of the dataset to use. Default is \code{"0.0.1.9000"}.}
+
+\item{full}{logical for whether the full lookup table is returned or just the two key columns}
 }
 \value{
 A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.

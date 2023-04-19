@@ -14,6 +14,8 @@ load_taxonomic_resources(
 \item{ver}{The version number of the dataset to use. Defaults to the default version.}
 
 \item{reload}{A logical indicating whether to reload the dataset from the data source. Defaults to FALSE.}
+
+\item{filetype}{type of file to download. parquet or csv}
 }
 \value{
 The taxonomic resources data loaded into the global environment.
@@ -24,20 +26,5 @@ Loads taxonomic resources into the global environment. This function accesses ta
 \examples{
 load_taxonomic_resources()
 
-load_taxonomic_resources("v2.0")
-
-load_taxonomic_resources(reload = TRUE)
-
-load_taxonomic_resources("v2.1", reload = TRUE)
-
-load_taxonomic_resources("v1.5")
-
-load_taxonomic_resources(reload = FALSE)
-
-load_taxonomic_resources(default_version())
-
-load_taxonomic_resources(reload = FALSE, ver = "v2.2")
-
-load_taxonomic_resources(ver = "v1.1")
 
 }

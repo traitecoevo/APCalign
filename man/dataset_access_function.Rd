@@ -25,6 +25,8 @@ delete the persistent data at any time by running `mydata_del(NULL)` (or
 \item{type}{Type of dataset to access. The default is "stable", which loads the 
 dataset from a github archived file. If set to "current", the dataset will be loaded from 
 a URL which is the cutting edge version, but this may change at any time without notice.}
+
+\item{filetype}{either parquet, which is faster, or csv which is easier with text editors}
 }
 \description{
 This function provides access to the Australian Plant Census dataset containing information

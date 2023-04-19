@@ -15,6 +15,7 @@
 ##' @param type Type of dataset to access. The default is "stable", which loads the 
 ##'   dataset from a github archived file. If set to "current", the dataset will be loaded from 
 ##'   a URL which is the cutting edge version, but this may change at any time without notice.
+##' @param filetype either parquet, which is faster, or csv which is easier with text editors
 ##' @export
 ##' @examples
 ##'
@@ -26,7 +27,8 @@
 ##'
 
 
-dataset_access_function <- function(version=default_version(), path=NULL, type="stable",filetype = "parquet") {
+dataset_access_function <- function(version=default_version(), path=NULL, 
+                                    type="stable",filetype = "parquet") {
   if(type=="stable"){
     return(dataset_get(version,path,filetype))
   }

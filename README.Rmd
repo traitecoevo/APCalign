@@ -41,38 +41,28 @@ library(ausflora)
 
 ## A quick demo
 
-First, we will retrieve the current [release of APC names](https://github.com/traitecoevo/ausflora/releases/tag/0.0.0.9000). The `dataset_access_function` saves the download in a local, temporary folder.
-
-```{r retrieve}
-tmp <- dataset_access_function("0.0.0.9000")
-
-tmp
-```
-
-Now we will load a toy plant species list and try align it with the APC species names. 
-
-```{r toy names, message=FALSE}
-#remotes::install_packages("readr")
-species_list <- readr::read_csv(system.file("extdata", "species.csv", package = "ausflora"))
-
-species_list
-```
-
-### Align away! 
-`align_taxa` will try match the species names in our list to those listed in the APC. You can specify a file path and file name using the argument `output` to save this aligned data
-
-```{r align}
-aligned_data <- align_taxa(species_list$name, output = "taxonomic_updates.csv")
-
-aligned_data
-```
-
-### Update taxonomic names
-Once alignment is complete we can update our species names, replacing synonyms to current APC names. Note that this function drops the observations where names cannot be aligned. Again, this updated species list can be saved using the `output` argument.
+Generating a lookup table can be done with just one function
 
 ```{r}
-aligned_species_list <- update_taxonomy(aligned_data$aligned_name)
+create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea"),full=FALSE)
 ```
 
+this is the core functionality.  now for some more features: to see the full taxonomic information use `full=TRUE`
+
+```{r}
+create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea"),full=TRUE)
+```
+
+to make a reproducible workflow, specify the version number in your code. without this the underlying taxonomic data may change.  
+
+```{r}
+create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea"), version_number="0.0.2.9000")
+```
+
+if you've got potential misspellings in your data turn on fuzzy matching
+
+```{r}
+create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea","Baksia integrifolia"), fuzzy_matching=TRUE)
+```
 
 

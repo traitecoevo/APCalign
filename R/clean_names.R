@@ -478,6 +478,7 @@ update_taxonomy <- function(aligned_names,
 #'
 #' @param ver The version number of the dataset to use. Defaults to the default version.
 #' @param reload A logical indicating whether to reload the dataset from the data source. Defaults to FALSE.
+#' @param filetype type of file to download. parquet or csv
 #'
 #' @return The taxonomic resources data loaded into the global environment.
 #' @export
@@ -485,21 +486,6 @@ update_taxonomy <- function(aligned_names,
 #' @examples
 #' load_taxonomic_resources()
 #'
-#' load_taxonomic_resources("v2.0")
-#'
-#' load_taxonomic_resources(reload = TRUE)
-#'
-#' load_taxonomic_resources("v2.1", reload = TRUE)
-#'
-#' load_taxonomic_resources("v1.5")
-#'
-#' load_taxonomic_resources(reload = FALSE)
-#'
-#' load_taxonomic_resources(default_version())
-#'
-#' load_taxonomic_resources(reload = FALSE, ver = "v2.2")
-#'
-#' load_taxonomic_resources(ver = "v1.1")
 #'
 #' @importFrom dplyr filter select mutate distinct arrange
 #' @importFrom crayon red
@@ -650,6 +636,7 @@ standardise_names <- function(taxon_names) {
 #' @param species_list A list of Australian plant species that needs to be reconciled with current taxonomy.
 #' @param fuzzy_matching A logical value indicating whether fuzzy matching should be used to align the species names. Default is \code{FALSE}.
 #' @param version_number The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
+#' @param full logical for whether the full lookup table is returned or just the two key columns
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @export
 #' @examples
@@ -659,7 +646,8 @@ standardise_names <- function(taxon_names) {
 create_taxonomic_update_lookup <-
   function(species_list,
            fuzzy_matching = FALSE,
-            version_number = default_version()) {
+            version_number = default_version(),
+           full=FALSE) {
     tmp <- dataset_access_function(ver = version_number)
     aligned_data <-
       unique(species_list) %>%
@@ -676,5 +664,10 @@ create_taxonomic_update_lookup <-
       dplyr::filter(!is.na(taxonIDClean)) %>%
       dplyr::mutate(genus = stringr::word(canonicalName, 1, 1))
     
-    return(aligned_species_list)
+    if (full==TRUE){
+      return(aligned_species_list)  
+    }
+    if (full==FALSE){
+      return(dplyr::select(aligned_species_list,original_name,canonicalName))  
+    }
   }

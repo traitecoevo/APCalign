@@ -147,10 +147,7 @@ state_diversity_counts <- function(state = c(
   }
 
 
-#' Genus-Family Lookup
-#'
-#' This function returns a genus family lookup from a stable or live version of the APC.
-#'
+
 
 get_apc_genus_family_lookup <- function(type_of_data = "stable", ver = default_version()){
   apc <- dataset_access_function(ver = ver, type = type_of_data)
