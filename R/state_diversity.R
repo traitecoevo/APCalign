@@ -19,7 +19,7 @@
 #'
 #' @export
 create_species_state_origin_matrix <-
-  function(type_of_data = "stable", ver = "0.0.1.9000") {
+  function(type_of_data = "stable", ver = "0.0.2.9000") {
     apc <- dataset_access_function(ver = ver, type = type_of_data)
       apc_species <-
         dplyr::filter(apc$APC,
@@ -115,7 +115,7 @@ create_species_state_origin_matrix <-
 #' @export
 #'
 #' @examples
-#' state_diversity_counts(state = "NSW", type_of_data = "current", ver = "0.0.1.9000")
+#' state_diversity_counts(state = "NSW", type_of_data = "current", ver = "0.0.2.9000")
 state_diversity_counts <- function(state = c(
     "NSW",
     "NT",
@@ -138,7 +138,7 @@ state_diversity_counts <- function(state = c(
     "CaI"
   ),
   type_of_data = "stable",
-  ver = "0.0.1.9000") {
+  ver = default_version()) {
     test <-
       create_species_state_origin_matrix(ver = ver, type_of_data = type_of_data)
     test2 <- test[test[[state]] != "not present", ]
@@ -153,7 +153,7 @@ state_diversity_counts <- function(state = c(
 #'
 #' @examples
 #' get_apc_genus_family_lookup()
-get_apc_genus_family_lookup <- function(type_of_data = "stable", ver = "0.0.1.9000"){
+get_apc_genus_family_lookup <- function(type_of_data = "stable", ver = default_version()){
   apc <- dataset_access_function(ver = ver, type = type_of_data)
   apc_s<-filter(apc$APC,
                 taxonRank == "Species")

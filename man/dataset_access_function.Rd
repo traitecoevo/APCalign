@@ -4,7 +4,12 @@
 \alias{dataset_access_function}
 \title{Access Australian Plant Census Dataset}
 \usage{
-dataset_access_function(version = NULL, path = NULL, type = "stable")
+dataset_access_function(
+  version = default_version(),
+  path = NULL,
+  type = "stable",
+  filetype = "parquet"
+)
 }
 \arguments{
 \item{version}{Version number. The default is NULL, which will load the most recent

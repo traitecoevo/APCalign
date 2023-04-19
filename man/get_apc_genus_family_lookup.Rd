@@ -4,7 +4,7 @@
 \alias{get_apc_genus_family_lookup}
 \title{Genus-Family Lookup}
 \usage{
-get_apc_genus_family_lookup(type_of_data = "stable", ver = "0.0.1.9000")
+get_apc_genus_family_lookup(type_of_data = "stable", ver = default_version())
 }
 \description{
 This function returns a genus family lookup from a stable or live version of the APC.

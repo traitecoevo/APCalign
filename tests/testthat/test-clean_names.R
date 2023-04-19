@@ -30,7 +30,7 @@ test_that("update_taxonomy() works",{
 
 
 test_that("state_diversity() works",{
-  nsw_species_counts<-state_diversity_counts(state = "NSW", type_of_data = "stable")
+  nsw_species_counts<-state_diversity_counts(state = "NSW", type_of_data = "stable",ver=default_version())
   expect_true(sum(nsw_species_counts$num_species)>7000 & sum(nsw_species_counts$num_species)<10000)
   nsw_species_counts_2<-state_diversity_counts(state = "NSW", type_of_data = "current")
   expect_true(sum(nsw_species_counts_2$num_species)>7000 & sum(nsw_species_counts_2$num_species)<10000)

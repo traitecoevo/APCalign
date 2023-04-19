@@ -15,7 +15,7 @@
 #'
 #'
 default_version <- function() {
-  "0.0.1.9000"
+  "0.0.2.9000"
 }
 
 
@@ -505,14 +505,14 @@ update_taxonomy <- function(aligned_names,
 #' @importFrom crayon red
 
 load_taxonomic_resources <-
-  function(ver = default_version(), reload = FALSE) {
+  function(ver = default_version(), reload = FALSE,filetype="parquet") {
     # TODO: replace with latest version as default
     
     if (!exists("taxonomic_resources",  envir = .GlobalEnv)) {
       message(crayon::red(
         "loading object `taxonomic_resources` into global environment"
       ))
-      taxonomic_resources <- dataset_access_function(ver)
+      taxonomic_resources <- dataset_access_function(ver,filetype=filetype)
       names(taxonomic_resources) <- c("APC", "APNI")
       
       taxonomic_resources[["genera_accepted"]] <-
@@ -658,7 +658,7 @@ standardise_names <- function(taxon_names) {
 create_taxonomic_update_lookup <-
   function(species_list,
            fuzzy_matching = FALSE,
-            version_number = "0.0.1.9000") {
+            version_number = default_version()) {
     tmp <- dataset_access_function(ver = version_number)
     aligned_data <-
       unique(species_list) %>%

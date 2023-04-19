@@ -26,9 +26,9 @@
 ##' # Delete all versions of the dataset
 ##' dataset_access_function(version = NULL, path = NULL)
 
-dataset_access_function <- function(version=NULL, path=NULL, type="stable") {
+dataset_access_function <- function(version=default_version(), path=NULL, type="stable",filetype = "parquet") {
   if(type=="stable"){
-    return(dataset_get(version, path))
+    return(dataset_get(version, path,filetype))
   }
   if(type=="current"){
     APC <- readr::read_csv("https://biodiversity.org.au/nsl/services/export/taxonCsv",
@@ -74,13 +74,13 @@ dataset_info <- function(path) {
 
 
 
-dataset_get <- function(version = "0.0.2.9000",
+dataset_get <- function(version = default_version(),
                         path = NULL,
-                        type = "parquet") {
-  if (type == "csv") {
+                        filetype = "parquet") {
+  if (filetype == "csv") {
     return(datastorr::github_release_get(get_version_details(path, version), version))
   }
-  if (type == "parquet") {
+  if (filetype == "parquet") {
     # TO DO
     # use the stable location that Carl referenced (how?)
     #

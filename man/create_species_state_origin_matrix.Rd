@@ -4,7 +4,7 @@
 \alias{create_species_state_origin_matrix}
 \title{Process Geographic Data and Return State Level Species Origin and Diversity Counts}
 \usage{
-create_species_state_origin_matrix(type_of_data = "stable", ver = "0.0.1.9000")
+create_species_state_origin_matrix(type_of_data = "stable", ver = "0.0.2.9000")
 }
 \arguments{
 \item{type_of_data}{A character string indicating the type of data to be used. The default is "stable".  "current" downloads the file from APC directly and remakes the calculations from the most recent version.}

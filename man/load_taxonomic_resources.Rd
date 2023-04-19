@@ -4,7 +4,11 @@
 \alias{load_taxonomic_resources}
 \title{Load taxonomic resources}
 \usage{
-load_taxonomic_resources(ver = default_version(), reload = FALSE)
+load_taxonomic_resources(
+  ver = default_version(),
+  reload = FALSE,
+  filetype = "parquet"
+)
 }
 \arguments{
 \item{ver}{The version number of the dataset to use. Defaults to the default version.}

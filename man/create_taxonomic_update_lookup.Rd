@@ -7,7 +7,7 @@
 create_taxonomic_update_lookup(
   species_list,
   fuzzy_matching = FALSE,
-  version_number = "0.0.1.9000"
+  version_number = default_version()
 )
 }
 \arguments{
