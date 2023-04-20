@@ -492,13 +492,8 @@ update_taxonomy <- function(aligned_names,
 
 load_taxonomic_resources <-
   function(ver = default_version(), reload = FALSE,filetype="parquet") {
-    # TODO: replace with latest version as default
-    
-    if (!exists("taxonomic_resources",  envir = .GlobalEnv)) {
-      message(crayon::red(
-        "loading object `taxonomic_resources` into global environment"
-      ))
-      taxonomic_resources <- dataset_access_function(version=ver, path=NULL, type="stable",filetype=filetype)
+   
+      taxonomic_resources <- dataset_access_function(version=ver, path=NULL, type="stable")
       names(taxonomic_resources) <- c("APC", "APNI")
       
       taxonomic_resources[["genera_accepted"]] <-
@@ -530,11 +525,7 @@ load_taxonomic_resources <-
         dplyr::distinct() %>%
         dplyr::arrange(canonicalName)
       
-      #assign("taxonomic_resources", taxonomic_resources, envir = .GlobalEnv)
-    }
-    
-    #get0("taxonomic_resources", envir = .GlobalEnv)
-    taxonomic_resources
+    return(taxonomic_resources)
   }
 
 

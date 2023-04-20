@@ -15,17 +15,14 @@ LazyData: true
 Depends:
     R (>= 3.1.0)
 Imports:
-    datastorr (>= 0.0.3),
     readr,
     forcats,
     tibble,
     dplyr,
+    contentid,
     stringr,
-    crayon,
     arrow,
     magrittr
-Remotes:
-    traitecoevo/datastorr
 Suggests:
     covr,
     testthat (>= 3.0.0)
