@@ -13,7 +13,7 @@ Encoding: UTF-8
 Language: en
 LazyData: true
 Depends:
-    R (>= 3.1.0)
+    R (>= 4.0.0)
 Imports:
     readr,
     forcats,
