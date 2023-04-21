@@ -64,7 +64,7 @@ dataset_access_function <- function(version=default_version(), path=NULL,
 
 
 dataset_get <- function(version = default_version(),
-                        path = NULL) {
+                        path = tools::R_user_dir("ausflora")) {
     #APC
     url <- paste0("https://github.com/traitecoevo/ausflora/releases/download/",
                   version,"/apc.parquet")
