@@ -22,6 +22,7 @@ Imports:
     contentid,
     stringr,
     arrow,
+    crayon,
     magrittr
 Suggests:
     covr,
