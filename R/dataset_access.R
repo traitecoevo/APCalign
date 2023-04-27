@@ -69,14 +69,14 @@ dataset_get <- function(version = default_version(),
     url <- paste0("https://github.com/traitecoevo/ausflora/releases/download/",
                   version,"/apc.parquet")
     apc_hash <- contentid::register(url)
-    apc_file <- contentid::resolve(apc_hash,store=TRUE,dir = path)
+    apc_file <- contentid::resolve(apc_hash,store=TRUE)
     APC <- arrow::read_parquet(apc_file)
     
     #APNI
     url <- paste0("https://github.com/traitecoevo/ausflora/releases/download/",
                   version,"/apni.parquet")
     apni_hash <- contentid::register(url)
-    apni_file <- contentid::resolve(apni_hash,store=TRUE,dir = path)
+    apni_file <- contentid::resolve(apni_hash,store=TRUE)
     APNI <- arrow::read_parquet(apni_file)
     
     #combine
