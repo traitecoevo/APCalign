@@ -647,6 +647,7 @@ create_taxonomic_update_lookup <-
     aligned_data <-
       unique(species_list) %>%
       align_taxa(fuzzy_matching = fuzzy_matching, ver = version_number)
+    # it'd be nice to carry a column for TRUE/FALSE on the fuzzy fix back to the top level
     
     aligned_species_list_tmp <-
       aligned_data$aligned_name %>% update_taxonomy()
@@ -658,7 +659,7 @@ create_taxonomic_update_lookup <-
                        multiple = "first") %>%
       dplyr::filter(!is.na(taxonIDClean)) %>%
       dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
-      dplyr::rename(canonical_name = canonicalName)
+      dplyr::rename(canonical_name = canonicalName) 
     
     if (full == TRUE) {
       return(aligned_species_list)
