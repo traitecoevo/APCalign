@@ -90,7 +90,7 @@ align_taxa <- function(original_name,
     dplyr::bind_rows(
       taxa_raw,
       tibble::tibble(
-        original_name = subset(original_name,!original_name %in% taxa_raw$original_name) %>% unique(),
+        original_name = subset(original_name, !original_name %in% taxa_raw$original_name) %>% unique(),
         cleaned_name = NA_character_,
         stripped_name = NA_character_,
         aligned_name = NA_character_,
@@ -210,7 +210,7 @@ align_taxa <- function(original_name,
                   "APC list (known names)",
                   "APNI names"))  {
         distance_c <-
-          utils::adist(stripped_name, resources[[v]]$stripped_canonical, fixed = TRUE)[1, ]
+          utils::adist(stripped_name, resources[[v]]$stripped_canonical, fixed = TRUE)[1,]
         min_dist_abs_c <-  min(distance_c)
         min_dist_per_c <-
           min(distance_c) / stringr::str_length(stripped_name)
@@ -232,7 +232,7 @@ align_taxa <- function(original_name,
         distance_s <-
           utils::adist(stripped_name,
                        resources[[v]]$stripped_scientific,
-                       fixed = TRUE)[1, ]
+                       fixed = TRUE)[1,]
         min_dist_abs_s <-  min(distance_s)
         min_dist_per_s <-
           min(distance_s) / stringr::str_length(stripped_name)
@@ -491,40 +491,44 @@ update_taxonomy <- function(aligned_names,
 #' @importFrom crayon red
 
 load_taxonomic_resources <-
-  function(ver = default_version(), reload = FALSE,filetype="parquet") {
-   
-      taxonomic_resources <- dataset_access_function(version=ver, path=NULL, type="stable")
-      names(taxonomic_resources) <- c("APC", "APNI")
-      
-      taxonomic_resources[["genera_accepted"]] <-
-        taxonomic_resources$APC %>% dplyr::filter(taxonRank %in% c('Genus'), taxonomicStatus == "accepted")
-      
-      APC_tmp <-
-        taxonomic_resources$APC %>%
-        dplyr::filter(taxonRank %in% c('Series', 'Subspecies', 'Species', 'Forma', 'Varietas')) %>%
-        dplyr::select(canonicalName, scientificName, taxonomicStatus, ID = taxonID) %>%
-        dplyr::mutate(
-          stripped_canonical = strip_names(canonicalName),
-          stripped_scientific = strip_names(scientificName)
-        ) %>%
-        dplyr::distinct()
-      
-      taxonomic_resources[["APC list (accepted)"]] <-
-        APC_tmp %>% dplyr::filter(taxonomicStatus == "accepted")
-      taxonomic_resources[["APC list (known names)"]] <-
-        APC_tmp %>% dplyr::filter(taxonomicStatus != "accepted")
-      
-      taxonomic_resources[["APNI names"]] <-
-        taxonomic_resources$APNI %>% dplyr::filter(nameElement != "sp.") %>%
-        dplyr::select(canonicalName, scientificName, ID = scientificNameID) %>%
-        dplyr::mutate(
-          taxonomicStatus = "unplaced",
-          stripped_canonical = strip_names(canonicalName),
-          stripped_scientific = strip_names(scientificName)
-        ) %>%
-        dplyr::distinct() %>%
-        dplyr::arrange(canonicalName)
-      
+  function(ver = default_version(),
+           reload = FALSE,
+           filetype = "parquet") {
+    taxonomic_resources <-
+      dataset_access_function(version = ver,
+                              path = NULL,
+                              type = "stable")
+    names(taxonomic_resources) <- c("APC", "APNI")
+    
+    taxonomic_resources[["genera_accepted"]] <-
+      taxonomic_resources$APC %>% dplyr::filter(taxonRank %in% c('Genus'), taxonomicStatus == "accepted")
+    
+    APC_tmp <-
+      taxonomic_resources$APC %>%
+      dplyr::filter(taxonRank %in% c('Series', 'Subspecies', 'Species', 'Forma', 'Varietas')) %>%
+      dplyr::select(canonicalName, scientificName, taxonomicStatus, ID = taxonID) %>%
+      dplyr::mutate(
+        stripped_canonical = strip_names(canonicalName),
+        stripped_scientific = strip_names(scientificName)
+      ) %>%
+      dplyr::distinct()
+    
+    taxonomic_resources[["APC list (accepted)"]] <-
+      APC_tmp %>% dplyr::filter(taxonomicStatus == "accepted")
+    taxonomic_resources[["APC list (known names)"]] <-
+      APC_tmp %>% dplyr::filter(taxonomicStatus != "accepted")
+    
+    taxonomic_resources[["APNI names"]] <-
+      taxonomic_resources$APNI %>% dplyr::filter(nameElement != "sp.") %>%
+      dplyr::select(canonicalName, scientificName, ID = scientificNameID) %>%
+      dplyr::mutate(
+        taxonomicStatus = "unplaced",
+        stripped_canonical = strip_names(canonicalName),
+        stripped_scientific = strip_names(scientificName)
+      ) %>%
+      dplyr::distinct() %>%
+      dplyr::arrange(canonicalName)
+    
     return(taxonomic_resources)
   }
 
@@ -631,14 +635,14 @@ standardise_names <- function(taxon_names) {
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @export
 #' @examples
-#' create_taxonomic_update_lookup(c("Eucalyptus regnans", "Acacia melanoxylon", 
+#' create_taxonomic_update_lookup(c("Eucalyptus regnans", "Acacia melanoxylon",
 #' "Banksia integrifolia","Not a species"))
 #'
 create_taxonomic_update_lookup <-
   function(species_list,
            fuzzy_matching = FALSE,
-            version_number = default_version(),
-           full=FALSE) {
+           version_number = default_version(),
+           full = FALSE) {
     tmp <- dataset_access_function(ver = version_number)
     aligned_data <-
       unique(species_list) %>%
@@ -653,12 +657,13 @@ create_taxonomic_update_lookup <-
                        by = c("aligned_name"),
                        multiple = "first") %>%
       dplyr::filter(!is.na(taxonIDClean)) %>%
-      dplyr::mutate(genus = stringr::word(canonicalName, 1, 1))
+      dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
+      dplyr::rename(canonical_name = canonicalName)
     
-    if (full==TRUE){
-      return(aligned_species_list)  
+    if (full == TRUE) {
+      return(aligned_species_list)
     }
-    if (full==FALSE){
-      return(dplyr::select(aligned_species_list,original_name,canonicalName))  
+    if (full == FALSE) {
+      return(dplyr::select(aligned_species_list, original_name, canonical_name))
     }
   }
