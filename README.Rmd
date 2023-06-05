@@ -29,40 +29,39 @@ A  R package for aligning and updating taxonomic names from the [Australian Plan
 
 ## Installation 
 
-`ausflora` relies on another R package `datastorr`, both of which are currently available from  [GitHub](https://github.com/traitecoevo/ausflora) only. You can install both these packages with:
-
 ```{r install, eval= FALSE}
 # install.packages("remotes")
-remotes::install_github("traitecoevo/datastorr")
-remotes::install_github("traitecoevo/ausflora")
+# remotes::install_github("traitecoevo/ausflora")
 
 library(ausflora)
 ```
 
 ## A quick demo
 
-Generating a lookup table can be done with just one function
+Generating a look-up table can be done with just one function
 
 ```{r,message=FALSE}
-create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea"),full=FALSE)
+create_taxonomic_update_lookup(c("Banksia integrifolia", "Acacia longifolia", "Commersonia rosea"))
 ```
 
-this is the core functionality.  now for some more features: to see the full taxonomic information use `full=TRUE`
+`create_taxonomic_update_lookup` (1) provides updates where appropiate, (2) returns same name where there is a match to an accepted name, and (3) returns nothing for names the function doesn't find a match.  The returned dataframe is designed to be  set up to call `left_join` with your dataset. 
+
+This is the core functionality.  Now for some more features--to see the full taxonomic information use `full=TRUE`
 
 ```{r, message=FALSE}
-create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea"),full=TRUE)
+create_taxonomic_update_lookup(c("Banksia integrifolia", "Acacia longifolia", "Commersonia rosea"), full = TRUE)
 ```
 
-to make a reproducible workflow, specify the version number in your code. without this the underlying taxonomic data may change.  
+To make a reproducible workflow, specify the version number in your code. without this the underlying taxonomic data may change.  
 
 ```{r,message=FALSE}
-create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea"), version_number="0.0.2.9000")
+create_taxonomic_update_lookup(c("Banksia integrifolia", "Acacia longifolia", "Commersonia rosea"), version_number = "0.0.2.9000")
 ```
 
-if you've got potential misspellings in your data turn on fuzzy matching
+If you've got potential misspellings in your data, turn on fuzzy matching, and a putative spelling fix will be returned.  
 
 ```{r, message=FALSE}
-create_taxonomic_update_lookup(c("Banksia integrifolia","Acacia longifolia","Commersonia rosea","Baksia integrifolia"), fuzzy_matching=TRUE)
+create_taxonomic_update_lookup(c("Banksia integrifolia", "Acacia longifolia", "Commersonia rosea", "Baksia integrifolia"), fuzzy_matching = TRUE)
 ```
 
 
