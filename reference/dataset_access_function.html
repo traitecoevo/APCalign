@@ -49,8 +49,7 @@ about various species. The dataset can be loaded from a github for a stable file
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">dataset_access_function</span><span class="op">(</span></span>
 <span>  version <span class="op">=</span> <span class="fu"><a href="default_version.html">default_version</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  path <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"stable"</span>,</span>
-<span>  filetype <span class="op">=</span> <span class="st">"parquet"</span></span>
+<span>  type <span class="op">=</span> <span class="st">"stable"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -74,10 +73,6 @@ delete the persistent data at any time by running `mydata_del(NULL)` (or
 <dd><p>Type of dataset to access. The default is "stable", which loads the 
 dataset from a github archived file. If set to "current", the dataset will be loaded from 
 a URL which is the cutting edge version, but this may change at any time without notice.</p></dd>
-
-
-<dt>filetype</dt>
-<dd><p>either parquet, which is faster, or csv which is easier with text editors</p></dd>
 
 </dl></div>
 

@@ -25,12 +25,6 @@
     <loc>/reference/dataset_access_function.html</loc>
   </url>
   <url>
-    <loc>/reference/dataset_del.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dataset_versions.html</loc>
-  </url>
-  <url>
     <loc>/reference/default_version.html</loc>
   </url>
   <url>
@@ -53,8 +47,5 @@
   </url>
   <url>
     <loc>/reference/update_taxonomy.html</loc>
-  </url>
-  <url>
-    <loc>/todo.html</loc>
   </url>
 </urlset>
