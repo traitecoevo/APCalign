@@ -89,13 +89,13 @@ dataset_get <- function(version = default_version(),
     tmp_pqt <- tempfile(fileext = ".parquet")
     download.file(
       paste0("https://github.com/traitecoevo/ausflora/releases/download/",version,"/apc.parquet"),
-      destfile = tmp_pqt
+      destfile = tmp_pqt, mode = "wb"
     )
     APC <- arrow::read_parquet(tmp_pqt)
     tmp_pqt2 <- tempfile(fileext = ".parquet")
     download.file(
       paste0("https://github.com/traitecoevo/ausflora/releases/download/",version,"/apni.parquet"),
-      destfile = tmp_pqt2
+      destfile = tmp_pqt2, mode = "wb"
     )
     APNI <- arrow::read_parquet(tmp_pqt2)
     current_list <- list(APC, APNI)
