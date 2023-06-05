@@ -47,6 +47,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_taxonomic_update_lookup</span><span class="op">(</span></span>
 <span>  <span class="va">species_list</span>,</span>
 <span>  fuzzy_matching <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"stable"</span>,</span>
 <span>  version_number <span class="op">=</span> <span class="fu"><a href="default_version.html">default_version</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  full <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -60,6 +61,10 @@
 
 <dt>fuzzy_matching</dt>
 <dd><p>A logical value indicating whether fuzzy matching should be used to align the species names. Default is <code>FALSE</code>.</p></dd>
+
+
+<dt>type</dt>
+<dd><p>either "stable" for a consistent version, or "current" for the leading edge version.</p></dd>
 
 
 <dt>version_number</dt>
@@ -79,7 +84,7 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">create_taxonomic_update_lookup</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus regnans"</span>, <span class="st">"Acacia melanoxylon"</span>, </span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">create_taxonomic_update_lookup</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus regnans"</span>, <span class="st">"Acacia melanoxylon"</span>,</span></span>
 <span class="r-in"><span><span class="st">"Banksia integrifolia"</span>,<span class="st">"Not a species"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Checking alignments of 4 taxa</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">0</span> names already matched; <span style="color: #0000BB;">0</span> names checked but without a match; <span style="color: #0000BB;">4</span> taxa yet to be checked</span>
