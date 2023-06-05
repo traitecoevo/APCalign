@@ -630,6 +630,7 @@ standardise_names <- function(taxon_names) {
 #'
 #' @param species_list A list of Australian plant species that needs to be reconciled with current taxonomy.
 #' @param fuzzy_matching A logical value indicating whether fuzzy matching should be used to align the species names. Default is \code{FALSE}.
+#' @param type either "stable" for a consistent version, or "current" for the leading edge version.
 #' @param version_number The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
 #' @param full logical for whether the full lookup table is returned or just the two key columns
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
@@ -641,9 +642,10 @@ standardise_names <- function(taxon_names) {
 create_taxonomic_update_lookup <-
   function(species_list,
            fuzzy_matching = FALSE,
+           type = "stable",
            version_number = default_version(),
            full = FALSE) {
-    tmp <- dataset_access_function(ver = version_number)
+    tmp <- dataset_access_function(ver = version_number,type=type)
     aligned_data <-
       unique(species_list) %>%
       align_taxa(fuzzy_matching = fuzzy_matching, ver = version_number)
