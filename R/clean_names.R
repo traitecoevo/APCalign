@@ -658,7 +658,7 @@ create_taxonomic_update_lookup <-
       aligned_data %>% dplyr::select(original_name, aligned_name) %>%
       dplyr::left_join(aligned_species_list_tmp,
                        by = c("aligned_name"),
-                       multiple = "first") %>%
+                       multiple = "first") %>% #consider implications
       dplyr::filter(!is.na(taxonIDClean)) %>%
       dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
       dplyr::rename(canonical_name = canonicalName) 
@@ -667,6 +667,6 @@ create_taxonomic_update_lookup <-
       return(aligned_species_list)
     }
     if (full == FALSE) {
-      return(dplyr::select(aligned_species_list, original_name, canonical_name))
+      return(dplyr::select(aligned_species_list, original_name, canonical_name,taxonomic_status_of_original_name=taxonomicStatusClean))
     }
   }
