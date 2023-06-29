@@ -121,7 +121,7 @@ updates %>% distinct() %>%
   dplyr::mutate(
     stripped_name = strip_names(find),
     stripped_name2 = strip_names_2(find),
-    cleaned_name = process_standardise_names(find),
+    cleaned_name = standardise_names(find),
     trinomial = stringr::word(stripped_name2, start = 1, end = 3),
     binomial = stringr::word(stripped_name2, start = 1, end = 2),
     genus = stringr::word(find, start = 1, end = 1),
