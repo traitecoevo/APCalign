@@ -103,8 +103,7 @@ create_species_state_origin_matrix <-
 #' This function calculates state-level diversity for native, introduced, and more complicated species origins based on the geographic data available in the current Australian Plant Census.
 #'
 #' @param state A character string indicating the Australian state or territory to calculate the diversity for. Default is "NSW". Possible values are "NSW", "NT", "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI", "MDI", "CoI", "CSI", and "AR".
-#' @param type_of_data A character string indicating the type of data to use for the calculation. Default is "stable". Possible values are "stable" and "current".
-#' @param version A character string indicating the version of the data to use for the calculation in the case of "stable" source. Default is "0.0.1.9000".
+#' @param resources XXXX
 #'
 #' @return A tibble of diversity counts for the specified state or territory, including native, introduced, and more complicated species origins.
 #' The tibble has three columns: "origin" indicating the origin of the species, "state" indicating the Australian state or territory, and "num_species" indicating the number of species for that origin and state.
@@ -112,7 +111,7 @@ create_species_state_origin_matrix <-
 #' @export
 #'
 #' @examples
-#' state_diversity_counts(state = "NSW", type_of_data = "current", version = "0.0.2.9000")
+#'  \dontrun{state_diversity_counts(state = "NSW")}
 state_diversity_counts <- function(state = c(
     "NSW",
     "NT",

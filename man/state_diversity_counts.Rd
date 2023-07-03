@@ -7,16 +7,13 @@
 state_diversity_counts(
   state = c("NSW", "NT", "Qld", "WA", "ChI", "NSW", "SA", "Vic", "Tas", "ACT", "NI",
     "LHI", "MI", "HI", "MDI", "CoI", "CSI", "AR", "CaI"),
-  type_of_data = "stable",
-  version = default_version()
+  resources = load_taxonomic_resources(version = default_version())
 )
 }
 \arguments{
 \item{state}{A character string indicating the Australian state or territory to calculate the diversity for. Default is "NSW". Possible values are "NSW", "NT", "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI", "MDI", "CoI", "CSI", and "AR".}
 
-\item{type_of_data}{A character string indicating the type of data to use for the calculation. Default is "stable". Possible values are "stable" and "current".}
-
-\item{ver}{A character string indicating the version of the data to use for the calculation in the case of "stable" source. Default is "0.0.1.9000".}
+\item{resources}{XXXX}
 }
 \value{
 A tibble of diversity counts for the specified state or territory, including native, introduced, and more complicated species origins.
@@ -26,5 +23,5 @@ The tibble has three columns: "origin" indicating the origin of the species, "st
 This function calculates state-level diversity for native, introduced, and more complicated species origins based on the geographic data available in the current Australian Plant Census.
 }
 \examples{
-state_diversity_counts(state = "NSW", type_of_data = "current", version = "0.0.2.9000")
+ \dontrun{state_diversity_counts(state = "NSW")}
 }

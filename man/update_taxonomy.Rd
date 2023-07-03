@@ -4,7 +4,11 @@
 \alias{update_taxonomy}
 \title{Use APC and APNI to update taxonomy, replacing synonyms to current taxa where relevant}
 \usage{
-update_taxonomy(aligned_names, output = NULL, version = default_version())
+update_taxonomy(
+  aligned_names,
+  output = NULL,
+  resources = load_taxonomic_resources()
+)
 }
 \arguments{
 \item{aligned_names}{A character vector of plant names to update. These names must be in the format of the
@@ -14,8 +18,7 @@ The names are case insensitive.}
 \item{output}{(optional) Name of the file where results are saved. The default is NULL and no file is created.
 If specified, the output will be saved in a CSV file with the given name.}
 
-\item{ver}{The version of the taxonomic resources to use. Default is set to the latest version available at
-the time of running the function.}
+\item{resources}{XXXX}
 }
 \value{
 A tibble with updated taxonomy for the specified plant names. The tibble contains the following columns:

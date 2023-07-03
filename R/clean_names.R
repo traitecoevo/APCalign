@@ -552,7 +552,7 @@ standardise_names <- function(taxon_names) {
 #' @param type either "stable" for a consistent version, or "current" for the leading edge version.
 #' @param version The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
 #' @param full logical for whether the full lookup table is returned or just the two key columns
-#' @param resoruces XXXX
+#' @param resources XXXX
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @export
 #' @examples
