@@ -32,6 +32,8 @@ file_paths <- list(
 taxonomic_resources <- list()
 taxonomic_resources$APC <- read_csv_char(file_paths$APC)
 taxonomic_resources$APNI <- read_csv_char(file_paths$APNI) %>% dplyr::distinct(.data$canonicalName, .keep_all = TRUE)
+
+## Note - changes here
 taxonomic_resources[["genera_accepted"]] <- taxonomic_resources$APC %>% dplyr::filter(taxonRank %in% c('Genus'), taxonomicStatus == "accepted")
 
 to_check <- list()
@@ -39,12 +41,16 @@ to_review <- tibble::tibble(dataset_id = character(), taxon_name = character())
 
 APC_tmp <- 
   taxonomic_resources$APC %>% 
+  ### Note:  why Series, remove
   dplyr::filter(.data$taxonRank %in% c('Series', 'Subspecies', 'Species', 'Forma', 'Varietas')) %>% 
   dplyr::select(.data$canonicalName, .data$scientificName, .data$taxonomicStatus, ID = .data$taxonID, .data$nameType, .data$taxonRank) %>% 
   dplyr::mutate(
     stripped_canonical = strip_names(.data$canonicalName),
+    ## note: New here
     stripped_canonical2 = strip_names_2(.data$canonicalName),
     stripped_scientific = strip_names(.data$scientificName),
+    ### Note:  zz instead of blanks
+
     binomial = ifelse(taxonRank == "Species",stringr::word(.data$stripped_canonical2, start = 1, end = 2),"zzzz zzzz"),
     binomial = ifelse(is.na(binomial), "zzzz zzzz", binomial),
     binomial = base::replace(binomial, duplicated(binomial), "zzzz zzzz"),
@@ -59,6 +65,8 @@ to_check[["APC list (accepted)"]] <- APC_tmp %>% dplyr::filter(.data$taxonomicSt
 to_check[["APC list (known names)"]] <- APC_tmp %>% dplyr::filter(.data$taxonomicStatus != "accepted") %>% mutate(taxonomic_ref = "APC known")
 
 to_check[["APNI names"]] <- 
+
+## Repeated from above - bionomial, tronomials etc
   taxonomic_resources$APNI %>% dplyr::filter(.data$nameElement != "sp.")  %>%
   dplyr::filter(!.data$canonicalName %in% APC_tmp$canonicalName) %>% 
   dplyr::select(.data$canonicalName, .data$scientificName, ID = .data$scientificNameID, .data$nameType, .data$taxonRank) %>% 
@@ -77,9 +85,11 @@ to_check[["APNI names"]] <-
     taxonomic_ref = "APNI"
   ) %>%
   dplyr::distinct() %>% dplyr::arrange(.data$canonicalName)
+
 # the `zzzz zzzz` is because the fuzzy matching algorithm can't handles NA's
 # stripped_2 gets rid of `sp` and `spp` which is helpful for some matches
 
+## Note:  this all new
 genera_accepted <-  
   taxonomic_resources$APC %>% 
     dplyr::select(.data$canonicalName, .data$acceptedNameUsage, .data$scientificName, .data$taxonomicStatus, ID = .data$taxonID, .data$nameType, .data$taxonRank) %>%
@@ -107,15 +117,14 @@ family_accepted <-  taxonomic_resources$APC %>% dplyr::filter(.data$taxonRank %i
 
 ### Start matching
 
+## txa trying to match
+update <- ....
+
 updates <- update %>% 
   rename(find = taxon_name)%>%
+  # Note:  - still_to_match: flag to keep looking for match
   mutate(still_to_match = "needs_match") %>%
   select(-taxonomic_reference, -taxon_rank)
-
-try_again %>% 
-  rename(find = taxon_name) %>%
-  mutate(still_to_match = "needs_match") %>%
-  mutate(dataset_id = "Sweedman_2006") -> updates
 
 updates %>% distinct() %>%
   dplyr::mutate(
@@ -146,11 +155,17 @@ updates %>% distinct() %>%
 
 #### Start matches
 
+# Note:  -- Start checking anything that 
+## Finished with checking genus sp. above, now continue with full species
+## Better to get these done and out of the way as they otherwise present lots of errors later
+
+
 # fuzzy match genera
   # it is important for fuzzy matches to be done on somewhat limited lists of species 
   # therefore it is best to keep the two APC components and APNI separate
   # this ensures that there are more unique matches - and that the match for the prioritised list is the one that is output
 
+# Note:  - Only on genera, do now or later?
 for (i in 1:nrow(updates2)) {
   updates2$fuzzy_match_genus[[i]] <- fuzzy_match(updates2$genus[[i]], genera_accepted$canonicalName, 2, 0.35, n_allowed = 1)
 }
@@ -179,6 +194,7 @@ updates2[i,] <- updates2[i,] %>%
     reason_new = paste0("match_01. Rewording taxon with ending with `sp.` to indicate a genus-level alignment with `", taxonomic_ref ,"` name (", Sys.Date(),")"),
     still_to_match = "match_01"
   )
+
 
 # match_01_fuzzy_accepted, `genus sp.` matches, across all lists simultaneously
   # for names where the final "word" is `sp` or `spp`, if it doesn't exactly match a genus name, try fuzzy matches with APC accepted genera 
@@ -375,6 +391,8 @@ updates2[i,] <- updates2[i,] %>%
     reason_new = paste0("match_04_x. Rewording taxon where `/` indicates uncertain species identification, but genus doesn't align to APC accepted genus via fuzzy match (", Sys.Date(),")"),
     still_to_match = "match_04_x"
   )
+
+# Note:  -- Finished with checking genus sp. above, now continue with full species
 
 # match_05_accepted, `scientific name` matches
   # see if the author has submitted a scientific name, with authorship
