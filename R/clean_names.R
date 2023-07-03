@@ -1,22 +1,3 @@
-#' Get the default version for stable data
-#'
-#' This function returns the default version for stable data, which is used when no
-#' version is specified. The default version is "0.0.1.9000".
-#'
-#' @return A character string representing the default version for stable data.
-#' @export
-#'
-#' @examples
-#' default_version()
-#'
-#'
-#' @seealso
-#' align_taxa
-#'
-#'
-default_version <- function() {
-  "0.0.2.9000"
-}
 
 
 
@@ -29,7 +10,7 @@ default_version <- function() {
 #' @param fuzzy_matching An option to turn off fuzzy matching.
 #' @param max_distance_abs The absolute distance in substitution space.
 #' @param max_distance_rel The relative distance in substitution space.
-#' @param ver The version number for the flora resource.
+#' @param resources XXXX
 #'
 #' @return A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
 #' @export
@@ -51,10 +32,11 @@ default_version <- function() {
 #'
 align_taxa <- function(original_name,
                        output = NULL,
-                       fuzzy_matching = TRUE,
+                       fuzzy_matching = FALSE,
                        max_distance_abs = 3,
                        max_distance_rel = 0.2,
-                       ver = default_version()) {
+                       resources = load_taxonomic_resources()
+                       ) {
   message("Checking alignments of ", length(original_name), " taxa\n")
   
   if (!is.null(output) && file.exists(output)) {
@@ -72,7 +54,7 @@ align_taxa <- function(original_name,
     
     # TODO: check taxa_ raw has correct columns
   }
-  else
+  else {
     taxa_raw <-
       tibble::tibble(
         original_name = character(0L),
@@ -82,6 +64,7 @@ align_taxa <- function(original_name,
         known = logical(0L),
         checked = logical(0L)
       )
+  }
   
   # create list, will have two elements: tocheck, checked
   taxa <- list()
@@ -153,9 +136,7 @@ align_taxa <- function(original_name,
   message("  -> checking for exact matches for ",
           nrow(taxa$tocheck),
           " species")
-  
-  resources <- load_taxonomic_resources(ver = ver)
-  
+
   for (v in c("APC list (accepted)", "APC list (known names)", "APNI names"))  {
     # Compare to canonical name
     i <-
@@ -274,6 +255,7 @@ align_taxa <- function(original_name,
     dplyr::mutate(known = !is.na(aligned_name))
   
   if (!is.null(output)) {
+    dir.create(dirname(output), FALSE, TRUE)
     readr::write_csv(taxa_out, output)
     message("  - output saved in file: ", output)
   }
@@ -294,8 +276,7 @@ align_taxa <- function(original_name,
 #' @param output (optional) Name of the file where results are saved. The default is NULL and no file is created.
 #' If specified, the output will be saved in a CSV file with the given name.
 #'
-#' @param ver The version of the taxonomic resources to use. Default is set to the latest version available at
-#' the time of running the function.
+#' @param resources XXXX
 #'
 #' @return A tibble with updated taxonomy for the specified plant names. The tibble contains the following columns:
 #' \itemize{
@@ -325,7 +306,7 @@ align_taxa <- function(original_name,
 #' update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"), "updated_taxonomy.csv")
 update_taxonomy <- function(aligned_names,
                             output = NULL,
-                            ver = default_version()) {
+                            resources = load_taxonomic_resources()) {
   preferred_order <-
     c(
       "accepted",
@@ -346,8 +327,6 @@ update_taxonomy <- function(aligned_names,
       "doubtful misapplied",
       "doubtful pro parte misapplied"
     )
-  
-  resources <- load_taxonomic_resources(ver = ver)
   
   taxa_out <-
     tibble::tibble(aligned_name = aligned_names) %>%
@@ -472,66 +451,6 @@ update_taxonomy <- function(aligned_names,
   taxa_out
 }
 
-#' Load taxonomic resources
-#'
-#' Loads taxonomic resources into the global environment. This function accesses taxonomic data from a dataset using the provided version number or the default version. The loaded data contains two lists: APC and APNI, which contain taxonomic information about plant species in Australia. The function creates several data frames by filtering and selecting data from the loaded lists.
-#'
-#' @param ver The version number of the dataset to use. Defaults to the default version.
-#' @param reload A logical indicating whether to reload the dataset from the data source. Defaults to FALSE.
-#' @param filetype type of file to download. parquet or csv
-#'
-#' @return The taxonomic resources data loaded into the global environment.
-#' @export
-#'
-#' @examples
-#' load_taxonomic_resources()
-#'
-#'
-#' @importFrom dplyr filter select mutate distinct arrange
-#' @importFrom crayon red
-
-load_taxonomic_resources <-
-  function(ver = default_version(),
-           reload = FALSE,
-           filetype = "parquet") {
-    taxonomic_resources <-
-      dataset_access_function(version = ver,
-                              path = NULL,
-                              type = "stable")
-    names(taxonomic_resources) <- c("APC", "APNI")
-    
-    taxonomic_resources[["genera_accepted"]] <-
-      taxonomic_resources$APC %>% dplyr::filter(taxonRank %in% c('Genus'), taxonomicStatus == "accepted")
-    
-    APC_tmp <-
-      taxonomic_resources$APC %>%
-      dplyr::filter(taxonRank %in% c('Series', 'Subspecies', 'Species', 'Forma', 'Varietas')) %>%
-      dplyr::select(canonicalName, scientificName, taxonomicStatus, ID = taxonID) %>%
-      dplyr::mutate(
-        stripped_canonical = strip_names(canonicalName),
-        stripped_scientific = strip_names(scientificName)
-      ) %>%
-      dplyr::distinct()
-    
-    taxonomic_resources[["APC list (accepted)"]] <-
-      APC_tmp %>% dplyr::filter(taxonomicStatus == "accepted")
-    taxonomic_resources[["APC list (known names)"]] <-
-      APC_tmp %>% dplyr::filter(taxonomicStatus != "accepted")
-    
-    taxonomic_resources[["APNI names"]] <-
-      taxonomic_resources$APNI %>% dplyr::filter(nameElement != "sp.") %>%
-      dplyr::select(canonicalName, scientificName, ID = scientificNameID) %>%
-      dplyr::mutate(
-        taxonomicStatus = "unplaced",
-        stripped_canonical = strip_names(canonicalName),
-        stripped_scientific = strip_names(scientificName)
-      ) %>%
-      dplyr::distinct() %>%
-      dplyr::arrange(canonicalName)
-    
-    return(taxonomic_resources)
-  }
-
 
 #' Strip taxonomic names of subtaxa designations and special characters
 #'
@@ -631,8 +550,9 @@ standardise_names <- function(taxon_names) {
 #' @param species_list A list of Australian plant species that needs to be reconciled with current taxonomy.
 #' @param fuzzy_matching A logical value indicating whether fuzzy matching should be used to align the species names. Default is \code{FALSE}.
 #' @param type either "stable" for a consistent version, or "current" for the leading edge version.
-#' @param version_number The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
+#' @param version The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
 #' @param full logical for whether the full lookup table is returned or just the two key columns
+#' @param resoruces XXXX
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @export
 #' @examples
@@ -643,17 +563,19 @@ create_taxonomic_update_lookup <-
   function(species_list,
            fuzzy_matching = FALSE,
            type = "stable",
-           version_number = default_version(),
-           full = FALSE) {
-    tmp <- dataset_access_function(ver = version_number,type=type)
+           version = default_version(),
+           full = FALSE,
+           resources = load_taxonomic_resources(version = version, type= type)
+           ) {
+
     aligned_data <-
       unique(species_list) %>%
-      align_taxa(fuzzy_matching = fuzzy_matching, ver = version_number)
+      align_taxa(fuzzy_matching = fuzzy_matching, resources = resources)
     # it'd be nice to carry a column for TRUE/FALSE on the fuzzy fix back to the top level
     
     aligned_species_list_tmp <-
-      aligned_data$aligned_name %>% update_taxonomy()
-    
+      aligned_data$aligned_name %>% update_taxonomy(resources = resources)
+
     aligned_species_list <-
       aligned_data %>% dplyr::select(original_name, aligned_name) %>%
       dplyr::left_join(aligned_species_list_tmp,

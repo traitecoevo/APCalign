@@ -10,7 +10,7 @@ align_taxa(
   fuzzy_matching = TRUE,
   max_distance_abs = 3,
   max_distance_rel = 0.2,
-  ver = default_version()
+  version = default_version()
 )
 }
 \arguments{

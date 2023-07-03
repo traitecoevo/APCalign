@@ -8,7 +8,7 @@ create_taxonomic_update_lookup(
   species_list,
   fuzzy_matching = FALSE,
   type = "stable",
-  version_number = default_version(),
+  version = default_version(),
   full = FALSE
 )
 }
@@ -19,7 +19,7 @@ create_taxonomic_update_lookup(
 
 \item{type}{either "stable" for a consistent version, or "current" for the leading edge version.}
 
-\item{version_number}{The version number of the dataset to use. Default is \code{"0.0.1.9000"}.}
+\item{version}{The version number of the dataset to use. Default is \code{"0.0.1.9000"}.}
 
 \item{full}{logical for whether the full lookup table is returned or just the two key columns}
 }

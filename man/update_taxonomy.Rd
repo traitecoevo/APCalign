@@ -4,7 +4,7 @@
 \alias{update_taxonomy}
 \title{Use APC and APNI to update taxonomy, replacing synonyms to current taxa where relevant}
 \usage{
-update_taxonomy(aligned_names, output = NULL, ver = default_version())
+update_taxonomy(aligned_names, output = NULL, version = default_version())
 }
 \arguments{
 \item{aligned_names}{A character vector of plant names to update. These names must be in the format of the
