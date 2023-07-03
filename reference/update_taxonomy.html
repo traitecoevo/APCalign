@@ -48,7 +48,11 @@ to their current accepted name.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">update_taxonomy</span><span class="op">(</span><span class="va">aligned_names</span>, output <span class="op">=</span> <span class="cn">NULL</span>, version <span class="op">=</span> <span class="fu"><a href="default_version.html">default_version</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">update_taxonomy</span><span class="op">(</span></span>
+<span>  <span class="va">aligned_names</span>,</span>
+<span>  output <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -64,9 +68,8 @@ The names are case insensitive.</p></dd>
 If specified, the output will be saved in a CSV file with the given name.</p></dd>
 
 
-<dt>ver</dt>
-<dd><p>The version of the taxonomic resources to use. Default is set to the latest version available at
-the time of running the function.</p></dd>
+<dt>resources</dt>
+<dd><p>XXXX</p></dd>
 
 </dl></div>
     <div id="value">

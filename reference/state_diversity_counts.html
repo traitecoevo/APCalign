@@ -47,8 +47,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">state_diversity_counts</span><span class="op">(</span></span>
 <span>  state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NSW"</span>, <span class="st">"NT"</span>, <span class="st">"Qld"</span>, <span class="st">"WA"</span>, <span class="st">"ChI"</span>, <span class="st">"NSW"</span>, <span class="st">"SA"</span>, <span class="st">"Vic"</span>, <span class="st">"Tas"</span>, <span class="st">"ACT"</span>, <span class="st">"NI"</span>,</span>
 <span>    <span class="st">"LHI"</span>, <span class="st">"MI"</span>, <span class="st">"HI"</span>, <span class="st">"MDI"</span>, <span class="st">"CoI"</span>, <span class="st">"CSI"</span>, <span class="st">"AR"</span>, <span class="st">"CaI"</span><span class="op">)</span>,</span>
-<span>  type_of_data <span class="op">=</span> <span class="st">"stable"</span>,</span>
-<span>  version <span class="op">=</span> <span class="fu"><a href="default_version.html">default_version</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>version <span class="op">=</span> <span class="fu"><a href="default_version.html">default_version</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -58,12 +57,8 @@
 <dd><p>A character string indicating the Australian state or territory to calculate the diversity for. Default is "NSW". Possible values are "NSW", "NT", "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI", "MDI", "CoI", "CSI", and "AR".</p></dd>
 
 
-<dt>type_of_data</dt>
-<dd><p>A character string indicating the type of data to use for the calculation. Default is "stable". Possible values are "stable" and "current".</p></dd>
-
-
-<dt>ver</dt>
-<dd><p>A character string indicating the version of the data to use for the calculation in the case of "stable" source. Default is "0.0.1.9000".</p></dd>
+<dt>resources</dt>
+<dd><p>XXXX</p></dd>
 
 </dl></div>
     <div id="value">
@@ -76,8 +71,7 @@ The tibble has three columns: "origin" indicating the origin of the species, "st
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">state_diversity_counts</span><span class="op">(</span>state <span class="op">=</span> <span class="st">"NSW"</span>, type_of_data <span class="op">=</span> <span class="st">"current"</span>, version <span class="op">=</span> <span class="st">"0.0.2.9000"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in state_diversity_counts(state = "NSW", type_of_data = "current",     version = "0.0.2.9000"):</span> unused arguments (type_of_data = "current", version = "0.0.2.9000")</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span> <span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="fu">state_diversity_counts</span><span class="op">(</span>state <span class="op">=</span> <span class="st">"NSW"</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
