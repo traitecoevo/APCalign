@@ -29,7 +29,7 @@ default_version <- function() {
 #' @param fuzzy_matching An option to turn off fuzzy matching.
 #' @param max_distance_abs The absolute distance in substitution space.
 #' @param max_distance_rel The relative distance in substitution space.
-#' @param ver The version number for the flora resource.
+#' @param resources XXXX
 #'
 #' @return A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
 #' @export
@@ -51,10 +51,11 @@ default_version <- function() {
 #'
 align_taxa <- function(original_name,
                        output = NULL,
-                       fuzzy_matching = TRUE,
+                       fuzzy_matching = FALSE,
                        max_distance_abs = 3,
                        max_distance_rel = 0.2,
-                       ver = default_version()) {
+                       resources = load_taxonomic_resources()
+                       ) {
   message("Checking alignments of ", length(original_name), " taxa\n")
   
   if (!is.null(output) && file.exists(output)) {
@@ -153,9 +154,7 @@ align_taxa <- function(original_name,
   message("  -> checking for exact matches for ",
           nrow(taxa$tocheck),
           " species")
-  
-  resources <- load_taxonomic_resources(ver = ver)
-  
+
   for (v in c("APC list (accepted)", "APC list (known names)", "APNI names"))  {
     # Compare to canonical name
     i <-
@@ -494,6 +493,8 @@ load_taxonomic_resources <-
   function(ver = default_version(),
            reload = FALSE,
            filetype = "parquet") {
+
+    message("Loading!!\n")
     taxonomic_resources <-
       dataset_access_function(version = ver,
                               path = NULL,
@@ -633,6 +634,7 @@ standardise_names <- function(taxon_names) {
 #' @param type either "stable" for a consistent version, or "current" for the leading edge version.
 #' @param version_number The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
 #' @param full logical for whether the full lookup table is returned or just the two key columns
+#' @param resoruces XXXX
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @export
 #' @examples
@@ -644,16 +646,19 @@ create_taxonomic_update_lookup <-
            fuzzy_matching = FALSE,
            type = "stable",
            version_number = default_version(),
-           full = FALSE) {
-    tmp <- dataset_access_function(ver = version_number,type=type)
+           full = FALSE,
+           resources = load_taxonomic_resources(ver = version_number, type= type)
+           ) {
+
+    cat("2 ")
     aligned_data <-
       unique(species_list) %>%
-      align_taxa(fuzzy_matching = fuzzy_matching, ver = version_number)
+      align_taxa(fuzzy_matching = fuzzy_matching, resources = resources)
     # it'd be nice to carry a column for TRUE/FALSE on the fuzzy fix back to the top level
     
     aligned_species_list_tmp <-
       aligned_data$aligned_name %>% update_taxonomy()
-    
+    cat("3 ")
     aligned_species_list <-
       aligned_data %>% dplyr::select(original_name, aligned_name) %>%
       dplyr::left_join(aligned_species_list_tmp,
