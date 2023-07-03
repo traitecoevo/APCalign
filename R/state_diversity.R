@@ -5,10 +5,8 @@
 #' This function processes the geographic data available in the current Australian Plant Census and returns state level diversity for native, introduced and more complicated species origins.
 #'
 #'
-#' @param type_of_data A character string indicating the type of data to be used. The default is "stable".  "current" downloads the file from APC directly and remakes the calculations from the most recent version.
-#'
-#' @param version Version of the database (for the stable option only)
-#'
+#' @param resources XXX
+#' 
 #' @return A data frame with columns representing each state and rows representing each species. The values in each cell represent the origin of the species in that state.
 #'
 #' @import dplyr
@@ -19,10 +17,9 @@
 #'
 #' @export
 create_species_state_origin_matrix <-
-  function(type_of_data = "stable", version = default_version()) {
-    apc <- dataset_access_function(ver = version, type = type_of_data)
-      apc_species <-
-        dplyr::filter(apc$APC,
+  function(resources = load_taxonomic_resources()) {
+    apc_species <-
+       dplyr::filter(resources$APC,
                       taxonRank == "Species" & taxonomicStatus == "accepted")
     #seperate the states
     sep_state_data <-
@@ -106,8 +103,7 @@ create_species_state_origin_matrix <-
 #' This function calculates state-level diversity for native, introduced, and more complicated species origins based on the geographic data available in the current Australian Plant Census.
 #'
 #' @param state A character string indicating the Australian state or territory to calculate the diversity for. Default is "NSW". Possible values are "NSW", "NT", "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI", "MDI", "CoI", "CSI", and "AR".
-#' @param type_of_data A character string indicating the type of data to use for the calculation. Default is "stable". Possible values are "stable" and "current".
-#' @param ver A character string indicating the version of the data to use for the calculation in the case of "stable" source. Default is "0.0.1.9000".
+#' @param resources XXXX
 #'
 #' @return A tibble of diversity counts for the specified state or territory, including native, introduced, and more complicated species origins.
 #' The tibble has three columns: "origin" indicating the origin of the species, "state" indicating the Australian state or territory, and "num_species" indicating the number of species for that origin and state.
@@ -115,7 +111,7 @@ create_species_state_origin_matrix <-
 #' @export
 #'
 #' @examples
-#' state_diversity_counts(state = "NSW", type_of_data = "current", ver = "0.0.2.9000")
+#'  \dontrun{state_diversity_counts(state = "NSW")}
 state_diversity_counts <- function(state = c(
     "NSW",
     "NT",
@@ -137,10 +133,9 @@ state_diversity_counts <- function(state = c(
     "AR",
     "CaI"
   ),
-  type_of_data = "stable",
-  ver = default_version()) {
+   resources = load_taxonomic_resources(version = default_version())) {
     test <-
-      create_species_state_origin_matrix(ver = ver, type_of_data = type_of_data)
+      create_species_state_origin_matrix(resources=resources)
     test2 <- test[test[[state]] != "not present", ]
     state_table <- table(test2[[state]])
     return(tibble(origin=names(state_table), state=state, num_species=state_table))
@@ -149,9 +144,8 @@ state_diversity_counts <- function(state = c(
 
 
 
-get_apc_genus_family_lookup <- function(type_of_data = "stable", ver = default_version()){
-  apc <- dataset_access_function(ver = ver, type = type_of_data)
-  apc_s<-filter(apc$APC,
+get_apc_genus_family_lookup <- function(resources=load_taxonomic_resources()){
+  apc_s<-filter(resourcesAPC,
                 taxonRank == "Species")
   tibble(genus=word(apc_s$scientificName,1,1),family=apc_s$family) %>%
     distinct() -> lu

@@ -32,7 +32,7 @@ about various species. The dataset can be loaded from a github for a stable file
 \examples{
 
 # Load the current version of the dataset direct from the APC website
-dataset_access_function(type = "current")
+ \dontrun{dataset_access_function(type = "current")}
 
 # Load the a stable version of the dataset 
 dataset_access_function(version="0.0.2.9000",type = "stable")

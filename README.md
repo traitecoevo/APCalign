@@ -65,7 +65,7 @@ To make a reproducible workflow, specify the version number in your
 code. without this the underlying taxonomic data may change.
 
 ``` r
-create_taxonomic_update_lookup(c("Banksia integrifolia", "Acacia longifolia", "Commersonia rosea"), version_number = "0.0.2.9000")
+create_taxonomic_update_lookup(c("Banksia integrifolia", "Acacia longifolia", "Commersonia rosea"), version = "0.0.2.9000")
 #> # A tibble: 3 × 2
 #>   original_name        canonical_name      
 #>   <chr>                <chr>               

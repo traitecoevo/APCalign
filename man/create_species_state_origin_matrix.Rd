@@ -4,15 +4,10 @@
 \alias{create_species_state_origin_matrix}
 \title{Process Geographic Data and Return State Level Species Origin and Diversity Counts}
 \usage{
-create_species_state_origin_matrix(
-  type_of_data = "stable",
-  version = default_version()
-)
+create_species_state_origin_matrix(resources = load_taxonomic_resources())
 }
 \arguments{
-\item{type_of_data}{A character string indicating the type of data to be used. The default is "stable".  "current" downloads the file from APC directly and remakes the calculations from the most recent version.}
-
-\item{version}{Version of the database (for the stable option only)}
+\item{resources}{XXX}
 }
 \value{
 A data frame with columns representing each state and rows representing each species. The values in each cell represent the origin of the species in that state.

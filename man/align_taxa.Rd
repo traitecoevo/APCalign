@@ -7,10 +7,10 @@
 align_taxa(
   original_name,
   output = NULL,
-  fuzzy_matching = TRUE,
+  fuzzy_matching = FALSE,
   max_distance_abs = 3,
   max_distance_rel = 0.2,
-  ver = default_version()
+  resources = load_taxonomic_resources()
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ align_taxa(
 
 \item{max_distance_rel}{The relative distance in substitution space.}
 
-\item{ver}{The version number for the flora resource.}
+\item{resources}{XXXX}
 }
 \value{
 A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
