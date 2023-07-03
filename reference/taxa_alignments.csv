@@ -1,3 +1,3 @@
 original_name,cleaned_name,aligned_name,source,known,checked,stripped_name
-Abies alba,Abies alba,NA,NA,FALSE,TRUE,abies alba
+Abies alba,Abies alba,NA,NA,FALSE,FALSE,abies alba
 Poa annua,Poa annua,Poa annua,APC list (accepted),TRUE,TRUE,poa annua

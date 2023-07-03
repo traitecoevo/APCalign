@@ -81,50 +81,7 @@ a URL which is the cutting edge version, but this may change at any time without
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Load the current version of the dataset direct from the APC website</span></span></span>
 <span class="r-in"><span><span class="fu">dataset_access_function</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"current"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $APC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 109,635 × 37</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    taxonID    nameType acceptedNameUsageID acceptedNameUsage nomenclaturalStatus</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> https://i… scienti… https://id.biodive… Plantae Haeckel   <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> https://i… scienti… https://id.biodive… Charophyta Sachs  <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> https://i… scienti… https://id.biodive… Charophyta Sachs  orth. var.         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> https://i… scienti… https://id.biodive… Equisetopsida C.… <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> https://i… scienti… https://id.biodive… Equisetopsida C.… orth. var.         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> https://i… scienti… https://id.biodive… Equisetopsida C.… <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> https://i… scienti… https://id.biodive… Cycadidae Pax     <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 109,625 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 32 more variables: nomIlleg &lt;chr&gt;, nomInval &lt;chr&gt;, taxonomicStatus &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   proParte &lt;lgl&gt;, scientificName &lt;chr&gt;, scientificNameID &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   canonicalName &lt;chr&gt;, scientificNameAuthorship &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   parentNameUsageID &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonRankSortOrder &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   kingdom &lt;chr&gt;, class &lt;chr&gt;, subclass &lt;chr&gt;, family &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonConceptID &lt;chr&gt;, nameAccordingTo &lt;chr&gt;, nameAccordingToID &lt;chr&gt;, …</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $APNI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 132,479 × 47</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    scientificNameID     nameType scientificName scientificNameHTML canonicalName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> https://id.biodiver… scienti… Acanthus ebra… &lt;scientific&gt;&lt;name… Acanthus ebr…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> https://id.biodiver… autonym  Acanthus ebra… &lt;scientific&gt;&lt;name… Acanthus ebr…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> https://id.biodiver… scienti… Acanthus ebra… &lt;scientific&gt;&lt;name… Acanthus ebr…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> https://id.biodiver… autonym  Acanthus ilic… &lt;scientific&gt;&lt;name… Acanthus ili…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> https://id.biodiver… scienti… Acanthus ilic… &lt;scientific&gt;&lt;name… Acanthus ili…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> https://id.biodiver… scienti… Acanthus ilic… &lt;scientific&gt;&lt;name… Acanthus ili…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> https://id.biodiver… scienti… Acanthus ilic… &lt;scientific&gt;&lt;name… Acanthus ili…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> https://id.biodiver… scienti… Acanthus moll… &lt;scientific&gt;&lt;name… Acanthus mol…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> https://id.biodiver… scienti… Acanthus volu… &lt;scientific&gt;&lt;name… Acanthus vol…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> https://id.biodiver… scienti… Acanthus L.    &lt;scientific&gt;&lt;name… Acanthus     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 132,469 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 42 more variables: canonicalNameHTML &lt;chr&gt;, nameElement &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   nomenclaturalStatus &lt;chr&gt;, scientificNameAuthorship &lt;chr&gt;, autonym &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   hybrid &lt;lgl&gt;, cultivar &lt;lgl&gt;, formula &lt;lgl&gt;, scientific &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   nomInval &lt;lgl&gt;, nomIlleg &lt;lgl&gt;, namePublishedIn &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   namePublishedInID &lt;chr&gt;, namePublishedInYear &lt;dbl&gt;, nameInstanceType &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   nameAccordingToID &lt;chr&gt;, nameAccordingTo &lt;chr&gt;, originalNameUsage &lt;chr&gt;, …</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in open.connection(structure(4L, class = c("curl", "connection"), conn_id = &lt;pointer: 0x378&gt;),     "rb"):</span> HTTP error 504.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Load the a stable version of the dataset </span></span></span>
 <span class="r-in"><span><span class="fu">dataset_access_function</span><span class="op">(</span>version<span class="op">=</span><span class="st">"0.0.2.9000"</span>,type <span class="op">=</span> <span class="st">"stable"</span><span class="op">)</span></span></span>

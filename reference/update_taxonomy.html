@@ -48,7 +48,7 @@ to their current accepted name.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">update_taxonomy</span><span class="op">(</span><span class="va">aligned_names</span>, output <span class="op">=</span> <span class="cn">NULL</span>, ver <span class="op">=</span> <span class="fu"><a href="default_version.html">default_version</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">update_taxonomy</span><span class="op">(</span><span class="va">aligned_names</span>, output <span class="op">=</span> <span class="cn">NULL</span>, version <span class="op">=</span> <span class="fu"><a href="default_version.html">default_version</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -93,6 +93,8 @@ the time of running the function.</p></dd>
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Update taxonomy for two plant names and print the result</span></span></span>
 <span class="r-in"><span><span class="fu">update_taxonomy</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus pauciflora"</span>, <span class="st">"Acacia victoriae"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading resources...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ...done</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 14</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   aligned_name   source taxonIDClean taxonomicStatusClean alternativeTaxonomic…¹</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 </span>
@@ -106,6 +108,8 @@ the time of running the function.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Update taxonomy for two plant names and save the result to a CSV file</span></span></span>
 <span class="r-in"><span><span class="fu">update_taxonomy</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus pauciflora"</span>, <span class="st">"Acacia victoriae"</span><span class="op">)</span>, <span class="st">"updated_taxonomy.csv"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading resources...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ...done</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   - output saved in file: updated_taxonomy.csv</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 14</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   aligned_name   source taxonIDClean taxonomicStatusClean alternativeTaxonomic…¹</span>
