@@ -5,7 +5,7 @@
 \title{Load taxonomic resources}
 \usage{
 load_taxonomic_resources(
-  ver = default_version(),
+  version = default_version(),
   reload = FALSE,
   filetype = "parquet"
 )
