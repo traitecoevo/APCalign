@@ -374,15 +374,6 @@ strip_names <- function(x) {
     tolower()
 }
 
-
-#' Strip names of punctuation and filler words, including sp.
-#'
-#' @param x Text string, generally a taxonomic name
-#'
-#' @return Taxonomic name stripped of punctuation and filler words, including sp.
-#' @export
-#'
-#' @examples
 strip_names_2 <- function(x) {
   x %>%
     stringr::str_replace_all("[:punct:]", " ") %>%
@@ -481,7 +472,7 @@ standardise_names <- function(taxon_names) {
 #' @param type either "stable" for a consistent version, or "current" for the leading edge version.
 #' @param version The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
 #' @param full logical for whether the full lookup table is returned or just the two key columns
-#' @param resources XXXX
+#' @param resources These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @export
 #' @examples
@@ -518,6 +509,6 @@ create_taxonomic_update_lookup <-
       return(aligned_species_list)
     }
     if (full == FALSE) {
-      return(dplyr::select(aligned_species_list, original_name, aligned_name, canonical_name, taxonomic_status_of_original_name = taxonomicStatusClean, aligned_reason))
+      return(dplyr::select(aligned_species_list, original_name, aligned_name, apc_name=canonical_name, aligned_reason, taxonomic_status_of_aligned_name = taxonomicStatusClean ))
     }
   }
