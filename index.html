@@ -75,48 +75,161 @@
 </h2>
 <p>Generating a look-up table can be done with just one function</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia integrifolia"</span>, <span class="st">"Acacia longifolia"</span>, <span class="st">"Commersonia rosea"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 3 × 2</span></span>
-<span><span class="co">#&gt;   original_name        canonical_name      </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;               </span></span>
-<span><span class="co">#&gt; 1 Banksia integrifolia Banksia integrifolia</span></span>
-<span><span class="co">#&gt; 2 Acacia longifolia    Acacia longifolia   </span></span>
-<span><span class="co">#&gt; 3 Commersonia rosea    Androcalva rosea</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Banksia integrifolia"</span>,</span>
+<span>    <span class="st">"Acacia longifolia"</span>,</span>
+<span>    <span class="st">"Commersonia rosea"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  resources <span class="op">=</span> <span class="va">resources</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 5</span></span>
+<span><span class="co">#&gt;   original_name      aligned_name apc_name aligned_reason taxonomic_status_of_…¹</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;              &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;                 </span></span>
+<span><span class="co">#&gt; 1 Banksia integrifo… Banksia int… Banksia… match_06. Aut… accepted              </span></span>
+<span><span class="co">#&gt; 2 Acacia longifolia  Acacia long… Acacia … match_06. Aut… accepted              </span></span>
+<span><span class="co">#&gt; 3 Commersonia rosea  Commersonia… Androca… match_06. Aut… basionym              </span></span>
+<span><span class="co">#&gt; # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name</span></span></code></pre></div>
 <p><code>create_taxonomic_update_lookup</code> (1) provides updates where appropiate, (2) returns same name where there is a match to an accepted name, and (3) returns nothing for names the function doesn’t find a match. The returned dataframe is designed to be set up to call <code>left_join</code> with your dataset.</p>
 <p>This is the core functionality. Now for some more features–to see the full taxonomic information use <code>full=TRUE</code></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia integrifolia"</span>, <span class="st">"Acacia longifolia"</span>, <span class="st">"Commersonia rosea"</span><span class="op">)</span>, full <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 3 × 16</span></span>
-<span><span class="co">#&gt;   original_name        aligned_name     source taxonIDClean taxonomicStatusClean</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;            &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;               </span></span>
-<span><span class="co">#&gt; 1 Banksia integrifolia Banksia integri… APC    https://id.… accepted            </span></span>
-<span><span class="co">#&gt; 2 Acacia longifolia    Acacia longifol… APC    https://id.… accepted            </span></span>
-<span><span class="co">#&gt; 3 Commersonia rosea    Commersonia ros… APC    https://id.… basionym            </span></span>
-<span><span class="co">#&gt; # ℹ 11 more variables: alternativeTaxonomicStatusClean &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   acceptedNameUsageID &lt;chr&gt;, canonical_name &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   scientificNameAuthorship &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonomicStatus &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   family &lt;chr&gt;, subclass &lt;chr&gt;, taxonDistribution &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   ccAttributionIRI &lt;chr&gt;, genus &lt;chr&gt;</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Banksia integrifolia"</span>,</span>
+<span>    <span class="st">"Acacia longifolia"</span>,</span>
+<span>    <span class="st">"Commersonia rosea"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  full <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  resources <span class="op">=</span> <span class="va">resources</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 17</span></span>
+<span><span class="co">#&gt;   original_name        aligned_name         aligned_reason   source taxonIDClean</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;                &lt;chr&gt;            &lt;chr&gt;  &lt;chr&gt;       </span></span>
+<span><span class="co">#&gt; 1 Banksia integrifolia Banksia integrifolia match_06. Autom… APC    https://id.…</span></span>
+<span><span class="co">#&gt; 2 Acacia longifolia    Acacia longifolia    match_06. Autom… APC    https://id.…</span></span>
+<span><span class="co">#&gt; 3 Commersonia rosea    Commersonia rosea    match_06. Autom… APC    https://id.…</span></span>
+<span><span class="co">#&gt; # ℹ 12 more variables: taxonomicStatusClean &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   alternativeTaxonomicStatusClean &lt;chr&gt;, acceptedNameUsageID &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   canonical_name &lt;chr&gt;, scientificNameAuthorship &lt;chr&gt;, taxonRank &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   taxonomicStatus &lt;chr&gt;, family &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   taxonDistribution &lt;chr&gt;, ccAttributionIRI &lt;chr&gt;, genus &lt;chr&gt;</span></span></code></pre></div>
 <p>To make a reproducible workflow, specify the version number in your code. without this the underlying taxonomic data may change.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia integrifolia"</span>, <span class="st">"Acacia longifolia"</span>, <span class="st">"Commersonia rosea"</span><span class="op">)</span>, version <span class="op">=</span> <span class="st">"0.0.2.9000"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 3 × 2</span></span>
-<span><span class="co">#&gt;   original_name        canonical_name      </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;               </span></span>
-<span><span class="co">#&gt; 1 Banksia integrifolia Banksia integrifolia</span></span>
-<span><span class="co">#&gt; 2 Acacia longifolia    Acacia longifolia   </span></span>
-<span><span class="co">#&gt; 3 Commersonia rosea    Androcalva rosea</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">resources_0029</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>version <span class="op">=</span> <span class="st">"0.0.2.9000"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Banksia integrifolia"</span>,</span>
+<span>    <span class="st">"Acacia longifolia"</span>,</span>
+<span>    <span class="st">"Commersonia rosea"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  resources <span class="op">=</span> <span class="va">resources_0029</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 5</span></span>
+<span><span class="co">#&gt;   original_name      aligned_name apc_name aligned_reason taxonomic_status_of_…¹</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;              &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;                 </span></span>
+<span><span class="co">#&gt; 1 Banksia integrifo… Banksia int… Banksia… match_06. Aut… accepted              </span></span>
+<span><span class="co">#&gt; 2 Acacia longifolia  Acacia long… Acacia … match_06. Aut… accepted              </span></span>
+<span><span class="co">#&gt; 3 Commersonia rosea  Commersonia… Androca… match_06. Aut… basionym              </span></span>
+<span><span class="co">#&gt; # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name</span></span></code></pre></div>
 <p>If you’ve got potential misspellings in your data, turn on fuzzy matching, and a putative spelling fix will be returned.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia integrifolia"</span>, <span class="st">"Acacia longifolia"</span>, <span class="st">"Commersonia rosea"</span>, <span class="st">"Baksia integrifolia"</span><span class="op">)</span>, fuzzy_matching <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   1   Baksia integrifolia    found:   Banksia integrifolia    APC list (accepted)</span></span>
-<span><span class="co">#&gt; # A tibble: 4 × 2</span></span>
-<span><span class="co">#&gt;   original_name        canonical_name      </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;               </span></span>
-<span><span class="co">#&gt; 1 Baksia integrifolia  Banksia integrifolia</span></span>
-<span><span class="co">#&gt; 2 Banksia integrifolia Banksia integrifolia</span></span>
-<span><span class="co">#&gt; 3 Acacia longifolia    Acacia longifolia   </span></span>
-<span><span class="co">#&gt; 4 Commersonia rosea    Androcalva rosea</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Banksia integrifolia"</span>,</span>
+<span>    <span class="st">"Acacia longifolia"</span>,</span>
+<span>    <span class="st">"Commersonia rosea"</span>,</span>
+<span>    <span class="st">"Baksia integrifolia"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  fuzzy_matching <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  resources <span class="op">=</span> <span class="va">resources_0029</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 5</span></span>
+<span><span class="co">#&gt;   original_name      aligned_name apc_name aligned_reason taxonomic_status_of_…¹</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;              &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;                 </span></span>
+<span><span class="co">#&gt; 1 Banksia integrifo… Banksia int… Banksia… match_06. Aut… accepted              </span></span>
+<span><span class="co">#&gt; 2 Acacia longifolia  Acacia long… Acacia … match_06. Aut… accepted              </span></span>
+<span><span class="co">#&gt; 3 Commersonia rosea  Commersonia… Androca… match_06. Aut… basionym              </span></span>
+<span><span class="co">#&gt; 4 Baksia integrifol… Banksia int… Banksia… match_07_fuzz… accepted              </span></span>
+<span><span class="co">#&gt; # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="how-to-link">How to link<a class="anchor" aria-label="anchor" href="#how-to-link"></a>
+</h3>
+<p>To link the lookup back to the original data, use <code>left_join</code> (or one of the other join functions):</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">raw_data</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<span>  original_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Banksia integrifolia"</span>,</span>
+<span>    <span class="st">"Acacia longifolia"</span>,</span>
+<span>    <span class="st">"Commersonia rosea"</span>,</span>
+<span>    <span class="st">"Baksia integrifolia"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  other_data <span class="op">=</span> <span class="cn">NA</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">lookup</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="va">raw_data</span><span class="op">$</span><span class="va">original_name</span>,</span>
+<span>  fuzzy_matching <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  resources <span class="op">=</span> <span class="va">resources_0029</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">left_join</span><span class="op">(</span><span class="va">raw_data</span>, <span class="va">lookup</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 6</span></span>
+<span><span class="co">#&gt;   original_name        other_data aligned_name         apc_name   aligned_reason</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                &lt;lgl&gt;      &lt;chr&gt;                &lt;chr&gt;      &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt; 1 Banksia integrifolia NA         Banksia integrifolia Banksia i… match_06. Aut…</span></span>
+<span><span class="co">#&gt; 2 Acacia longifolia    NA         Acacia longifolia    Acacia lo… match_06. Aut…</span></span>
+<span><span class="co">#&gt; 3 Commersonia rosea    NA         Commersonia rosea    Androcalv… match_06. Aut…</span></span>
+<span><span class="co">#&gt; 4 Baksia integrifolia  NA         Banksia integrifolia Banksia i… match_07_fuzz…</span></span>
+<span><span class="co">#&gt; # ℹ 1 more variable: taxonomic_status_of_aligned_name &lt;chr&gt;</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="more-detailed-queires">More detailed queires<a class="anchor" aria-label="anchor" href="#more-detailed-queires"></a>
+</h3>
+<p>For more experienced users, run two steps in workflow…</p>
+<ol style="list-style-type: decimal">
+<li>
+<code>align_taxa</code>: …find best alignment with name in APNI. Name may not be current. This does the best possible effort to match phrase names and subspecific taxa which often have alternative formatting. This function also searches for potential spelling mistakes.</li>
+<li>
+<code>update_taxonomy</code>: …update APNI taxa to specified (or current) version of APC. This will</li>
+</ol>
+<p>This will do spelling and formatting fixes but not taxonomic updates:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">aligned</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/align_taxa.html">align_taxa</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Banksia integrifolia"</span>,</span>
+<span>    <span class="st">"Acacia longifolia"</span>,</span>
+<span>    <span class="st">"Commersonia rosea"</span>,</span>
+<span>    <span class="st">"Baksia integrifolia"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  resources <span class="op">=</span> <span class="va">resources</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Checking alignments of 4 taxa</span></span>
+<span><span class="co">#&gt;   -&gt; 0 names already matched; 0 names checked but without a match; 4 taxa yet to be checked</span></span></code></pre></div>
+<p>This will do the taxonomic update:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/update_taxonomy.html">update_taxonomy</a></span><span class="op">(</span><span class="va">aligned</span><span class="op">$</span><span class="va">aligned_name</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading resources......done</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 14</span></span>
+<span><span class="co">#&gt;   aligned_name   source taxonIDClean taxonomicStatusClean alternativeTaxonomic…¹</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;          &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;                &lt;chr&gt;                 </span></span>
+<span><span class="co">#&gt; 1 Acacia longif… APC    https://id.… accepted             misapplied            </span></span>
+<span><span class="co">#&gt; 2 Banksia integ… APC    https://id.… accepted             misapplied            </span></span>
+<span><span class="co">#&gt; 3 Commersonia r… APC    https://id.… basionym             &lt;NA&gt;                  </span></span>
+<span><span class="co">#&gt; # ℹ abbreviated name: ¹​alternativeTaxonomicStatusClean</span></span>
+<span><span class="co">#&gt; # ℹ 9 more variables: acceptedNameUsageID &lt;chr&gt;, canonicalName &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   scientificNameAuthorship &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonomicStatus &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   family &lt;chr&gt;, subclass &lt;chr&gt;, taxonDistribution &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   ccAttributionIRI &lt;chr&gt;</span></span></code></pre></div>
+<p>Both functions are called by <code>create_taxonomic_update_lookup</code> so if you want the combined functionality it’s better to use <code>create_taxonomic_update_lookup</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="saving-outputs">Saving outputs<a class="anchor" aria-label="anchor" href="#saving-outputs"></a>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># add more here</span></span></code></pre></div>
+</div>
 </div>
 </div>
 
