@@ -17,7 +17,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       stripped_name = stripped_name %>% 
         update_na_with(strip_names(original_name)),
       stripped_name2 = stripped_name %>% 
-        update_na_with(strip_names2(original_name)),
+        update_na_with(ausflora:::strip_names_2(original_name)),
       trinomial = stringr::word(stripped_name2, start = 1, end = 3),
       binomial = stringr::word(stripped_name2, start = 1, end = 2),
       genus = stringr::word(original_name, start = 1, end = 1),
@@ -935,7 +935,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # these alignments might actually align a taxon that is on the APC to an APNI name
   # this is especially true for phrase names with lots of syntax options
   for (i in 1:nrow(taxa$tocheck)) {
-      taxa$tocheck$fuzzy_match_cleaned_APNI[i] <- fuzzy_match(taxa$tocheck$stripped_name[i], resources$`APNI names`$stripped_canonical, 3, 0.2, n_allowed = 1)
+      taxa$tocheck$fuzzy_match_cleaned_APNI[i] <- fuzzy_match(taxa$tocheck$stripped_name[i], 
+                                                              resources$`APNI names`$stripped_canonical, 
+                                                              3, 0.2, n_allowed = 1)
   }
 
   i <-
