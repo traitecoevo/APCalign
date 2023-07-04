@@ -43,7 +43,14 @@ Generating a look-up table can be done with just one function
 ```{r,message=FALSE}
 resources <- load_taxonomic_resources()
 
-create_taxonomic_update_lookup(c("Banksia integrifolia", "Acacia longifolia", "Commersonia rosea"), resources = resources)
+create_taxonomic_update_lookup(
+  c(
+    "Banksia integrifolia",
+    "Acacia longifolia",
+    "Commersonia rosea"
+  ),
+  resources = resources
+)
 ```
 
 `create_taxonomic_update_lookup` (1) provides updates where appropiate, (2) returns same name where there is a match to an accepted name, and (3) returns nothing for names the function doesn't find a match.  The returned dataframe is designed to be  set up to call `left_join` with your dataset. 
@@ -51,47 +58,101 @@ create_taxonomic_update_lookup(c("Banksia integrifolia", "Acacia longifolia", "C
 This is the core functionality.  Now for some more features--to see the full taxonomic information use `full=TRUE`
 
 ```{r, message=FALSE}
-create_taxonomic_update_lookup(c("Banksia integrifolia", "Acacia longifolia", "Commersonia rosea"), full = TRUE, resources = resources)
+create_taxonomic_update_lookup(
+  c(
+    "Banksia integrifolia",
+    "Acacia longifolia",
+    "Commersonia rosea"
+  ),
+  full = TRUE,
+  resources = resources
+)
 ```
 
 To make a reproducible workflow, specify the version number in your code. without this the underlying taxonomic data may change.  
 
 ```{r,message=FALSE}
-resources_0029 = load_taxonomic_resources(version = "0.0.2.9000")
-create_taxonomic_update_lookup(c("Banksia integrifolia", "Acacia longifolia", "Commersonia rosea"), resources = resources_0029)
+resources_0029 <- load_taxonomic_resources(version = "0.0.2.9000")
+create_taxonomic_update_lookup(
+  c(
+    "Banksia integrifolia",
+    "Acacia longifolia",
+    "Commersonia rosea"
+  ),
+  resources = resources_0029
+)
 ```
 
 If you've got potential misspellings in your data, turn on fuzzy matching, and a putative spelling fix will be returned.  
 
 ```{r, message=FALSE}
-create_taxonomic_update_lookup(c("Banksia integrifolia", "Acacia longifolia", "Commersonia rosea", "Baksia integrifolia"), fuzzy_matching = TRUE, resources = resources_0029)
+create_taxonomic_update_lookup(
+  c(
+    "Banksia integrifolia",
+    "Acacia longifolia",
+    "Commersonia rosea",
+    "Baksia integrifolia"
+  ),
+  fuzzy_matching = TRUE,
+  resources = resources_0029
+)
 ```
 
-### How to linkt 
+### How to link
+
+To link the lookup back to the original data, use `left_join` (or one of the other join functions):
+
+```{r, message=FALSE}
+library(tidyverse, quietly = TRUE)
+raw_data <- tibble(
+  original_name = c(
+    "Banksia integrifolia",
+    "Acacia longifolia",
+    "Commersonia rosea",
+    "Baksia integrifolia"
+  ),
+  other_data = NA
+)
+
+lookup <- create_taxonomic_update_lookup(raw_data$original_name,
+  fuzzy_matching = TRUE,
+  resources = resources_0029
+)
+
+left_join(raw_data, lookup)
+```
 
 ### More detailed queires
 
-For more experenced users, run two steps in workflow...
+For more experienced users, run two steps in workflow...
 
-1. `align_taxa`: ...Purpose is to find best alignment with name in APC and APNI. Name may not be current 
-2. `update_taxonomy`: ... Purpose is to update taxa with most relevant current name (logic behind this)
+1. `align_taxa`: ...find best alignment with name in APNI. Name may not be current.  This does the best possible effort to match phrase names and subspecific taxa which often have alternative formatting.  This function also searches for potential spelling mistakes. 
+2. `update_taxonomy`: ...update APNI taxa to specified (or current) version of APC.  This will 
 
+
+This will do spelling and formatting fixes but not taxonomic updates:
 ```{r}
-aligned <- align_taxa(c("Banksia integrifolia", "Acacia longifolia", "Commersonia rosea", "Baksia integrifolia"), resources = resources)
-
-aligned <- align_taxa(c("Poa annua", "Abies alba"), resources = resources)
+aligned <- align_taxa(
+  c(
+    "Banksia integrifolia",
+    "Acacia longifolia",
+    "Commersonia rosea",
+    "Baksia integrifolia"
+  ),
+  resources = resources
+)
 ```
 
-The update 
+This will do the taxonomic update:
 ```{r}
-#update_taxonomy(...)
+update_taxonomy(aligned$aligned_name)
 ```
+Both functions are called by `create_taxonomic_update_lookup` so if you want the combined functionality it's better to use `create_taxonomic_update_lookup`.
 
-Can also save as file
+### Saving outputs
+
 
 ```{r}
-aligned <- align_taxa(c("Poa annua", "Abies alba"), output = "output/taxa_alignments.csv", resources = resources)
-
-#update_taxonomy(...)
+# add more here
 ```
 
