@@ -1,3 +1,4 @@
+resources_current<-load_taxonomic_resources(type="current")
 resources <- load_taxonomic_resources(version = "0.0.2.9000")
 
 test_that("align_taxa() works no fuzzy", {
