@@ -24,7 +24,7 @@ create_taxonomic_update_lookup(
 
 \item{full}{logical for whether the full lookup table is returned or just the two key columns}
 
-\item{resources}{XXXX}
+\item{resources}{These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.}
 }
 \value{
 A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.

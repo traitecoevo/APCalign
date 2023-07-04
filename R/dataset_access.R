@@ -137,35 +137,96 @@ load_taxonomic_resources <-
       )
     names(taxonomic_resources) <- c("APC", "APNI")
 
-    taxonomic_resources[["genera_accepted"]] <-
-      taxonomic_resources$APC %>% dplyr::filter(taxonRank %in% c("Genus"), taxonomicStatus == "accepted")
-
+    ## todo :review this, why zzz
+    ### Note: Use `zzzz zzzz` because the fuzzy matching algorithm can't handles NA's
+    zzz <- "zzzz zzzz"
+    
     APC_tmp <-
       taxonomic_resources$APC %>%
-      dplyr::filter(taxonRank %in% c("Series", "Subspecies", "Species", "Forma", "Varietas")) %>%
-      dplyr::select(canonicalName, scientificName, taxonomicStatus, ID = taxonID) %>%
+      dplyr::filter(taxonRank %in% c("Subspecies", "Species", "Forma", "Varietas")) %>%
+      dplyr::select(canonicalName, scientificName, taxonomicStatus, ID = taxonID, nameType, taxonRank) %>%
       dplyr::mutate(
         stripped_canonical = strip_names(canonicalName),
-        stripped_scientific = strip_names(scientificName)
+        ## Todo: rename stripped_canonical2, state purpose
+        # stripped_2 gets rid of `sp` and `spp` which is helpful for some matches
+        stripped_canonical2 = strip_names_2(canonicalName),
+        stripped_scientific = strip_names(scientificName),
+        binomial = ifelse(taxonRank == "Species", stringr::word(stripped_canonical2, start = 1, end = 2), zzz),
+        binomial = ifelse(is.na(binomial), zzz, binomial),
+        binomial = base::replace(binomial, duplicated(binomial), zzz),
+        genus = stringr::word(stripped_canonical, 1),
+        trinomial = stringr::word(stripped_canonical2, start = 1, end = 3),
+        trinomial = ifelse(is.na(trinomial), zzz, trinomial),
+        trinomial = base::replace(trinomial, duplicated(trinomial), zzz), 
       ) %>%
       dplyr::distinct()
 
     taxonomic_resources[["APC list (accepted)"]] <-
-      APC_tmp %>% dplyr::filter(taxonomicStatus == "accepted")
+      APC_tmp %>%
+        dplyr::filter(taxonomicStatus == "accepted") %>%
+        dplyr::mutate(taxonomic_ref = "APC accepted")
     taxonomic_resources[["APC list (known names)"]] <-
-      APC_tmp %>% dplyr::filter(taxonomicStatus != "accepted")
+      APC_tmp %>%
+        dplyr::filter(taxonomicStatus != "accepted") %>%
+        dplyr::mutate(taxonomic_ref = "APC known")
 
+
+    # Repeated from above - bionomial, tronomials etc
     taxonomic_resources[["APNI names"]] <-
       taxonomic_resources$APNI %>%
       dplyr::filter(nameElement != "sp.") %>%
-      dplyr::select(canonicalName, scientificName, ID = scientificNameID) %>%
+      dplyr::filter(!canonicalName %in% APC_tmp$canonicalName) %>%
+      dplyr::select(canonicalName, scientificName, ID = scientificNameID, nameType, taxonRank) %>%
+      dplyr::filter(taxonRank %in% c("Series", "Subspecies", "Species", "Forma", "Varietas")) %>%
       dplyr::mutate(
-        taxonomicStatus = "unplaced",
+        taxonomicStatus = "unplaced for APC",
         stripped_canonical = strip_names(canonicalName),
-        stripped_scientific = strip_names(scientificName)
+        stripped_canonical2 = strip_names_2(canonicalName),
+        stripped_scientific = strip_names(scientificName),
+        binomial = ifelse(taxonRank == "Species", stringr::word(stripped_canonical2, start = 1, end = 2), "zzzz zzzz"),
+        binomial = ifelse(is.na(binomial), "zzzz zzzz", binomial),
+        trinomial = stringr::word(stripped_canonical2, start = 1, end = 3),
+        trinomial = ifelse(is.na(trinomial), "zzzz zzzz", trinomial),
+        trinomial = base::replace(trinomial, duplicated(trinomial), "zzzz zzzz"),
+        genus = stringr::word(stripped_canonical, 1),
+        taxonomic_ref = "APNI"
       ) %>%
       dplyr::distinct() %>%
       dplyr::arrange(canonicalName)
+
+      ## Todo: do we need all this, or only genera_all
+
+      taxonomic_resources[["genera_accepted"]] <-
+        taxonomic_resources$APC %>%
+        dplyr::select(canonicalName, acceptedNameUsage, scientificName, taxonomicStatus, ID = taxonID, nameType, taxonRank) %>%
+        dplyr::filter(taxonRank %in% c("Genus"), taxonomicStatus == "accepted") %>%
+        dplyr::mutate(taxonomic_ref = "APC accepted")
+      
+      taxonomic_resources[["genera_known"]] <-
+        taxonomic_resources$APC %>%
+        dplyr::select(canonicalName, acceptedNameUsage, scientificName, taxonomicStatus, ID = taxonID, nameType, taxonRank) %>%
+        dplyr::filter(taxonRank %in% c("Genus")) %>%
+        dplyr::filter(!canonicalName %in% taxonomic_resources$genera_accepted$canonicalName) %>%
+        dplyr::mutate(taxonomic_ref = "APC known")
+      
+      taxonomic_resources[["genera_APNI"]] <-
+        taxonomic_resources$APNI %>%
+        dplyr::select(canonicalName, taxonomicStatus, nameType, taxonRank, scientificName) %>%
+        dplyr::filter(taxonRank %in% c("Genus")) %>%
+        dplyr::filter(!canonicalName %in% taxonomic_resources$APC$canonicalName) %>%
+        dplyr::mutate(taxonomic_ref = "APNI")
+      
+      taxonomic_resources[["genera_all"]] <- 
+        dplyr::bind_rows(taxonomic_resources$genera_accepted, taxonomic_resources$genera_known, taxonomic_resources$genera_APNI) %>%
+        dplyr::mutate(
+          cleaned_name = stringr::word(acceptedNameUsage, 1),
+          cleaned_name = ifelse(is.na(cleaned_name), canonicalName, cleaned_name)
+        ) %>%
+        dplyr::distinct(cleaned_name, canonicalName, scientificName, .keep_all = TRUE)
+      
+      taxonomic_resources[["family_accepted"]] <- 
+        taxonomic_resources$APC %>% 
+        dplyr::filter(taxonRank %in% c("Familia"), taxonomicStatus == "accepted")
 
     return(taxonomic_resources)
   }

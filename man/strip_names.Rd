@@ -19,6 +19,8 @@ special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The re
 of names is also converted to lowercase.
 }
 \examples{
-strip_names(c("Abies lasiocarpa subsp. lasiocarpa", "Quercus kelloggii", "Pinus contorta var. latifolia"))
+strip_names(c("Abies lasiocarpa subsp. lasiocarpa", 
+              "Quercus kelloggii", 
+              "Pinus contorta var. latifolia"))
 
 }

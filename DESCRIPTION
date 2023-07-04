@@ -13,17 +13,17 @@ Encoding: UTF-8
 Language: en
 LazyData: true
 Depends:
-    R (>= 4.0.0)
+    R (>= 4.0.0),
 Imports:
     readr,
+    purrr,
     forcats,
     tibble,
     dplyr,
     contentid,
     stringr,
     arrow,
-    crayon,
-    magrittr
+    crayon
 Suggests:
     covr,
     testthat (>= 3.0.0)

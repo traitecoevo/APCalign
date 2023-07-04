@@ -10,7 +10,7 @@
 #' @param fuzzy_matching An option to turn off fuzzy matching.
 #' @param max_distance_abs The absolute distance in substitution space.
 #' @param max_distance_rel The relative distance in substitution space.
-#' @param resources XXXX
+#' @param resources the taxonomic resources used to allign the taxa names. this defaults to loading from a local cache, but this is slow
 #'
 #' @return A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
 #' @export
@@ -68,7 +68,7 @@ align_taxa <- function(original_name,
   
   # create list, will have two elements: tocheck, checked
   taxa <- list()
-  
+
   taxa[["tocheck"]] <-
     dplyr::bind_rows(
       taxa_raw,
@@ -76,30 +76,41 @@ align_taxa <- function(original_name,
         original_name = subset(original_name, !original_name %in% taxa_raw$original_name) %>% unique(),
         cleaned_name = NA_character_,
         stripped_name = NA_character_,
+        stripped_name2 = NA_character_,
+        trinomial = NA_character_,
+        binomial = NA_character_,
+        genus = NA_character_,
         aligned_name = NA_character_,
-        source = NA_character_,
+        aligned_reason = NA_character_,
+        fuzzy_match_genus = NA_character_,
+        fuzzy_match_genus_known = NA_character_,
+        fuzzy_match_genus_APNI = NA_character_,
+        fuzzy_match_binomial = NA_character_,
+        fuzzy_match_binomial_APC_known = NA_character_,
+        fuzzy_match_trinomial = NA_character_,
+        fuzzy_match_trinomial_known = NA_character_,
+        fuzzy_match_cleaned_APC = NA_character_,
+        fuzzy_match_cleaned_APC_known = NA_character_,
+        fuzzy_match_cleaned_APNI = NA_character_,
+        fuzzy_match_cleaned_APC_imprecise = NA_character_,
+        fuzzy_match_cleaned_APC_known_imprecise = NA_character_,
+        fuzzy_match_cleaned_APNI_imprecise = NA_character_,
+        taxonomic_ref = NA_character_,
+        taxonomic_resolution = NA_character_,
+        still_to_match = "needs_match",
         checked = FALSE,
         known = FALSE
       )
-    ) %>%
-    dplyr::mutate(
-      cleaned_name = ifelse(
-        is.na(cleaned_name),
-        standardise_names(original_name),
-        cleaned_name
-      ),
-      stripped_name = ifelse(
-        is.na(stripped_name),
-        strip_names(cleaned_name),
-        stripped_name
-      )
     )
-  
+
   if (all(taxa$tocheck$checked)) {
     message("  - all taxa are already checked, yay!")
-    return(invisible(taxa$tocheck))
+      return(invisible(taxa$tocheck))
   }
-  
+
+  # move all checked taxa to "checked"
+  taxa <- redistribute(taxa)
+
   # check unknown taxa
   message(
     "  -> ",
@@ -107,149 +118,16 @@ align_taxa <- function(original_name,
     " names already matched; ",
     crayon::blue(sum(
       taxa$tocheck$checked &
-        !taxa$tocheck$known, na.rm = T
+        !taxa$tocheck$known,
+      na.rm = T
     )),
     " names checked but without a match; ",
     crayon::blue(sum(!taxa$tocheck$checked)),
     " taxa yet to be checked"
   )
-  
-  redistribute <- function(data) {
-    data[["checked"]] <- dplyr::bind_rows(data[["checked"]],
-                                          data[["tocheck"]] %>% dplyr::filter(checked))
-    
-    data[["tocheck"]] <-
-      data[["tocheck"]] %>% dplyr::filter(!checked)
-    data
-  }
-  
-  taxa <- redistribute(taxa)
-  
-  # Not checking anything ending in `sp.`
-  # Todo: Note, genus in APC?
-  taxa$tocheck <- taxa$tocheck %>%
-    dplyr::mutate(checked = ifelse(!checked &
-                                     grepl("sp\\.$", cleaned_name), TRUE, checked))
-  
-  taxa <- redistribute(taxa)
-  
-  message("  -> checking for exact matches for ",
-          nrow(taxa$tocheck),
-          " species")
 
-  for (v in c("APC list (accepted)", "APC list (known names)", "APNI names"))  {
-    # Compare to canonical name
-    i <-
-      match(taxa$tocheck$original_name, resources[[v]]$canonicalName)
-    taxa$tocheck$aligned_name <- resources[[v]]$canonicalName[i]
-    taxa$tocheck$source[!is.na(i)] <- v
-    taxa$tocheck$checked <- !is.na(i)
-    
-    taxa <- redistribute(taxa)
-    
-    # Compare to stripped canonical name
-    i <-
-      match(taxa$tocheck$stripped_name,
-            resources[[v]]$stripped_canonical)
-    taxa$tocheck$aligned_name <- resources[[v]]$canonicalName[i]
-    taxa$tocheck$source[!is.na(i)] <- v
-    taxa$tocheck$checked <- !is.na(i)
-    
-    taxa <- redistribute(taxa)
-    
-    # Compare to scientific name
-    i <-
-      match(taxa$tocheck$original_name, resources[[v]]$scientificName)
-    taxa$tocheck$aligned_name <- resources[[v]]$canonicalName[i]
-    taxa$tocheck$source[!is.na(i)] <- v
-    taxa$tocheck$checked <- !is.na(i)
-    taxa <- redistribute(taxa)
-    
-    # Compare to stripped scientific name
-    i <-
-      match(taxa$tocheck$stripped_name,
-            resources[[v]]$stripped_scientific)
-    
-    taxa$tocheck$aligned_name <- resources[[v]]$canonicalName[i]
-    taxa$tocheck$source[!is.na(i)] <- v
-    taxa$tocheck$checked <- !is.na(i)
-    taxa <- redistribute(taxa)
-  }
-  
-  if (fuzzy_matching == TRUE) {
-    # For any remaining species, look for distance based estimates
-    message("  -> checking for fuzzy matches for ",
-            nrow(taxa$tocheck),
-            " taxa")
-    
-    for (i in seq_len(nrow(taxa$tocheck))) {
-      stripped_name <- taxa$tocheck$stripped_name[i]
-      taxa$tocheck$checked[i] <- TRUE
-      
-      cat("\t", i, "\t", taxa$tocheck$original_name[i])
-      for (v in c("APC list (accepted)",
-                  "APC list (known names)",
-                  "APNI names"))  {
-        distance_c <-
-          utils::adist(stripped_name, resources[[v]]$stripped_canonical, fixed = TRUE)[1,]
-        min_dist_abs_c <-  min(distance_c)
-        min_dist_per_c <-
-          min(distance_c) / stringr::str_length(stripped_name)
-        j <- which(distance_c == min_dist_abs_c)
-        
-        if (## Within allowable number of characters (absolute)
-          min_dist_abs_c <= max_distance_abs &
-          ## Within allowable number of characters (relative)
-          min_dist_per_c <= max_distance_rel &
-          ## Is a unique solution
-          length(j) == 1) {
-          taxa$tocheck$aligned_name[i] <- resources[[v]]$canonicalName[j]
-          taxa$tocheck$source[i] <- v
-          break
-          
-        }
-        #Todo: suggestions when no match
-        
-        distance_s <-
-          utils::adist(stripped_name,
-                       resources[[v]]$stripped_scientific,
-                       fixed = TRUE)[1,]
-        min_dist_abs_s <-  min(distance_s)
-        min_dist_per_s <-
-          min(distance_s) / stringr::str_length(stripped_name)
-        j <- which(distance_s == min_dist_abs_s)
-        
-        if (## Within allowable number of characters (absolute)
-          min_dist_abs_s <= max_distance_abs &
-          ## Within allowable number of characters (relative)
-          min_dist_per_s <= max_distance_rel &
-          ## Is a unique solution
-          length(j) == 1) {
-          taxa$tocheck$aligned_name[i] <- resources[[v]]$canonicalName[j]
-          taxa$tocheck$source[i] <- v
-          break
-          
-        }
-        #Todo: suggestions when no match
-        
-      }
-    }
-    if (length(taxa$tocheck$aligned_name[i]) == 0)
-      cat("nothing to fix")
-    else{
-      if (is.na(taxa$tocheck$aligned_name[i]))
-        cat(crayon::blue("\tnot found\n"))
-      else{
-        cat(
-          crayon::green("\tfound:\t"),
-          taxa$tocheck$aligned_name[i],
-          "\t",
-          taxa$tocheck$source[i],
-          "\n"
-        )
-      }
-    }
-  }
+  # do the actual matching
+  taxa <- match_taxa(taxa, resources)
   
   taxa_out <- dplyr::bind_rows(taxa) %>%
     dplyr::mutate(known = !is.na(aligned_name))
@@ -260,6 +138,18 @@ align_taxa <- function(original_name,
     message("  - output saved in file: ", output)
   }
   taxa_out
+}
+
+# function moves taxa from tocheck to checked
+redistribute <- function(data) {
+  data[["checked"]] <- dplyr::bind_rows(
+    data[["checked"]],
+    data[["tocheck"]] %>% dplyr::filter(checked)
+  )
+
+  data[["tocheck"]] <-
+    data[["tocheck"]] %>% dplyr::filter(!checked)
+  data
 }
 
 
@@ -466,18 +356,50 @@ update_taxonomy <- function(aligned_names,
 #' @export
 #'
 #' @examples
-#' strip_names(c("Abies lasiocarpa subsp. lasiocarpa", "Quercus kelloggii", "Pinus contorta var. latifolia"))
+#' strip_names(c("Abies lasiocarpa subsp. lasiocarpa", 
+#'               "Quercus kelloggii", 
+#'               "Pinus contorta var. latifolia"))
 #'
 
 strip_names <- function(taxon_names) {
   taxon_names %>%
-    stringr::str_remove_all(" subsp\\.") %>% stringr::str_remove_all(" aff\\.")  %>%
-    stringr::str_remove_all(" var\\.") %>% stringr::str_remove_all(" ser\\.") %>% stringr::str_remove_all(" f\\.") %>%
-    stringr::str_remove_all(" s\\.l\\.") %>% stringr::str_remove_all(" s\\.s\\.") %>%
-    stringr::str_replace_all("[-._()?]", " ") %>%
+    stringr::str_replace_all("[:punct:]", " ") %>%
+    stringr::str_replace_all(" subsp ", " ") %>%
+    stringr::str_replace_all(" var |var$", " ") %>%
+    stringr::str_replace_all(" ser ", " ") %>%
+    stringr::str_replace_all(" f ", " ") %>%
+    stringr::str_replace_all(" s l ", " ") %>%
+    stringr::str_replace_all(" s s ", " ") %>%
+    stringr::str_replace_all("\\=", " ") %>%
+    stringr::str_replace_all("  ", " ") %>%
     stringr::str_squish() %>%
     tolower()
 }
+
+strip_names_2 <- function(x) {
+  x %>%
+    stringr::str_replace_all("[:punct:]", " ") %>%
+    stringr::str_replace_all(" subsp ", " ") %>%
+    stringr::str_replace_all(" var | var$", " ") %>%
+    stringr::str_replace_all(" ser ", " ") %>%
+    stringr::str_replace_all(" f ", " ") %>%
+    stringr::str_replace_all(" forma ", " ") %>%
+    stringr::str_replace_all(" species ", " ") %>%
+    stringr::str_replace_all(" s l ", " ") %>%
+    stringr::str_replace_all(" s s ", " ") %>%
+    stringr::str_replace_all(" ss ", " ") %>%
+    stringr::str_replace_all(" x ", " ") %>%
+    stringr::str_replace_all(" sp |sp $", " ") %>%
+    stringr::str_replace_all(" sp1", " 1") %>%
+    stringr::str_replace_all(" sp2", " 2") %>%
+    stringr::str_replace_all(" ssp |ssp $", " ") %>%
+    stringr::str_replace_all(" cf | cf$", " ") %>%
+    stringr::str_replace_all("\\=", " ") %>%
+    stringr::str_replace_all("  ", " ") %>%
+    stringr::str_squish() %>%
+    tolower()
+}
+
 
 
 #' Standardise Taxon Names
@@ -552,7 +474,7 @@ standardise_names <- function(taxon_names) {
 #' @param type either "stable" for a consistent version, or "current" for the leading edge version.
 #' @param version The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
 #' @param full logical for whether the full lookup table is returned or just the two key columns
-#' @param resources XXXX
+#' @param resources These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @export
 #' @examples
@@ -575,12 +497,12 @@ create_taxonomic_update_lookup <-
     
     aligned_species_list_tmp <-
       aligned_data$aligned_name %>% update_taxonomy(resources = resources)
-
+    
     aligned_species_list <-
-      aligned_data %>% dplyr::select(original_name, aligned_name) %>%
+      aligned_data %>% dplyr::select(original_name, aligned_name, aligned_reason) %>%
       dplyr::left_join(aligned_species_list_tmp,
                        by = c("aligned_name"),
-                       multiple = "first") %>% #consider implications
+                       multiple = "first") %>% # todo: consider implications
       dplyr::filter(!is.na(taxonIDClean)) %>%
       dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
       dplyr::rename(canonical_name = canonicalName) 
@@ -589,6 +511,6 @@ create_taxonomic_update_lookup <-
       return(aligned_species_list)
     }
     if (full == FALSE) {
-      return(dplyr::select(aligned_species_list, original_name, canonical_name,taxonomic_status_of_original_name=taxonomicStatusClean))
+      return(dplyr::select(aligned_species_list, original_name, aligned_name, apc_name=canonical_name, aligned_reason, taxonomic_status_of_aligned_name = taxonomicStatusClean ))
     }
   }
