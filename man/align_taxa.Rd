@@ -24,7 +24,7 @@ align_taxa(
 
 \item{max_distance_rel}{The relative distance in substitution space.}
 
-\item{resources}{XXXX}
+\item{resources}{the taxonomic resources used to allign the taxa names. this defaults to loading from a local cache, but this is slow}
 }
 \value{
 A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.

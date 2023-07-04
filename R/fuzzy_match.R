@@ -13,7 +13,10 @@
 #' @export
 #'
 #' @examples
-#' fuzzy_match("Baksia serrata", c("Banksia serrata", "Banksia integrifolia"), max_distance_abs = 1, max_distance_rel = 1)
+#' fuzzy_match("Baksia serrata", c("Banksia serrata", 
+#'                                  "Banksia integrifolia"), 
+#'                                  max_distance_abs = 1, 
+#'                                  max_distance_rel = 1)
 #' 
 fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, n_allowed = 1) {
   

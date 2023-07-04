@@ -23,8 +23,7 @@ Imports:
     contentid,
     stringr,
     arrow,
-    crayon,
-    magrittr
+    crayon
 Suggests:
     covr,
     testthat (>= 3.0.0)

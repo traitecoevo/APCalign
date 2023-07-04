@@ -10,7 +10,7 @@
 #' @param fuzzy_matching An option to turn off fuzzy matching.
 #' @param max_distance_abs The absolute distance in substitution space.
 #' @param max_distance_rel The relative distance in substitution space.
-#' @param resources XXXX
+#' @param resources the taxonomic resources used to allign the taxa names. this defaults to loading from a local cache, but this is slow
 #'
 #' @return A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
 #' @export
@@ -356,7 +356,9 @@ update_taxonomy <- function(aligned_names,
 #' @export
 #'
 #' @examples
-#' strip_names(c("Abies lasiocarpa subsp. lasiocarpa", "Quercus kelloggii", "Pinus contorta var. latifolia"))
+#' strip_names(c("Abies lasiocarpa subsp. lasiocarpa", 
+#'               "Quercus kelloggii", 
+#'               "Pinus contorta var. latifolia"))
 #'
 
 strip_names <- function(taxon_names) {

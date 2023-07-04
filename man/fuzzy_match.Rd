@@ -31,6 +31,9 @@ This function attempts to match input strings to a list of allowable taxonomic n
 It requires that the first letter (or digit) of each word is identical between the input and output strings to avoid mis-matches
 }
 \examples{
-fuzzy_match("Baksia serrata", c("Banksia serrata", "Banksia integrifolia"), max_distance_abs = 1, max_distance_rel = 1)
+fuzzy_match("Baksia serrata", c("Banksia serrata", 
+                                 "Banksia integrifolia"), 
+                                 max_distance_abs = 1, 
+                                 max_distance_rel = 1)
 
 }
