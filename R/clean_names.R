@@ -376,6 +376,7 @@ strip_names <- function(taxon_names) {
     tolower()
 }
 
+#' @noRd
 strip_names_2 <- function(x) {
   x %>%
     stringr::str_replace_all("[:punct:]", " ") %>%
@@ -421,6 +422,8 @@ standardise_names <- function(taxon_names) {
   }
   
   taxon_names %>%
+    ## for hybrid markers
+    f("×","x") %>%
     ## Weird formatting
     f("[\\n\\t]", " ") %>%
     
