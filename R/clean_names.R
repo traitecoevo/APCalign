@@ -359,8 +359,8 @@ update_taxonomy <- function(aligned_names,
 #' strip_names(c("Abies lasiocarpa subsp. lasiocarpa", "Quercus kelloggii", "Pinus contorta var. latifolia"))
 #'
 
-strip_names <- function(x) {
-  x %>%
+strip_names <- function(taxon_names) {
+  taxon_names %>%
     stringr::str_replace_all("[:punct:]", " ") %>%
     stringr::str_replace_all(" subsp ", " ") %>%
     stringr::str_replace_all(" var |var$", " ") %>%

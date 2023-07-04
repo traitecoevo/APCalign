@@ -16,6 +16,7 @@ Depends:
     R (>= 4.0.0),
 Imports:
     readr,
+    purrr,
     forcats,
     tibble,
     dplyr,
