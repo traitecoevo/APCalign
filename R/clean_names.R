@@ -74,15 +74,14 @@ align_taxa <- function(original_name,
       taxa_raw,
       tibble::tibble(
         original_name = subset(original_name, !original_name %in% taxa_raw$original_name) %>% unique(),
-        find = NA_character_,
         cleaned_name = NA_character_,
         stripped_name = NA_character_,
         stripped_name2 = NA_character_,
         trinomial = NA_character_,
         binomial = NA_character_,
         genus = NA_character_,
-        replace_new = NA_character_,
-        reason_new = NA_character_,
+        aligned_name = NA_character_,
+        aligned_reason = NA_character_,
         fuzzy_match_genus = NA_character_,
         fuzzy_match_genus_known = NA_character_,
         fuzzy_match_genus_APNI = NA_character_,
@@ -505,12 +504,12 @@ create_taxonomic_update_lookup <-
     
     aligned_species_list_tmp <-
       aligned_data$aligned_name %>% update_taxonomy(resources = resources)
-
+    
     aligned_species_list <-
-      aligned_data %>% dplyr::select(original_name, aligned_name) %>%
+      aligned_data %>% dplyr::select(original_name, aligned_name, aligned_reason) %>%
       dplyr::left_join(aligned_species_list_tmp,
                        by = c("aligned_name"),
-                       multiple = "first") %>% #consider implications
+                       multiple = "first") %>% # todo: consider implications
       dplyr::filter(!is.na(taxonIDClean)) %>%
       dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
       dplyr::rename(canonical_name = canonicalName) 
@@ -519,6 +518,6 @@ create_taxonomic_update_lookup <-
       return(aligned_species_list)
     }
     if (full == FALSE) {
-      return(dplyr::select(aligned_species_list, original_name, canonical_name,taxonomic_status_of_original_name=taxonomicStatusClean))
+      return(dplyr::select(aligned_species_list, original_name, aligned_name, canonical_name, taxonomic_status_of_original_name = taxonomicStatusClean, aligned_reason))
     }
   }

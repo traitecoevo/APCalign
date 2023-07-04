@@ -77,6 +77,8 @@ For more experenced users, run two steps in workflow...
 2. `update_taxonomy`: ... Purpose is to update taxa with most relevant current name (logic behind this)
 
 ```{r}
+aligned <- align_taxa(c("Banksia integrifolia", "Acacia longifolia", "Commersonia rosea", "Baksia integrifolia"), resources = resources)
+
 aligned <- align_taxa(c("Poa annua", "Abies alba"), resources = resources)
 ```
 
