@@ -93,10 +93,15 @@
 <span class="r-in"><span><span class="st">"Banksia integrifolia"</span>,<span class="st">"Not a species"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Checking alignments of 4 taxa</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">0</span> names already matched; <span style="color: #0000BB;">0</span> names checked but without a match; <span style="color: #0000BB;">4</span> taxa yet to be checked</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::mutate(., cleaned_name = cleaned_name %&gt;% update_na_with(standardise_names(original_name)),     stripped_name = stripped_name %&gt;% update_na_with(strip_names(original_name)),     stripped_name2 = stripped_name %&gt;% update_na_with(strip_names_2(original_name)),     trinomial = stringr::word(stripped_name2, start = 1, end = 3),     binomial = stringr::word(stripped_name2, start = 1, end = 2),     genus = stringr::word(original_name, start = 1, end = 1),     fuzzy_match_genus = fuzzy_match_genera(genus, resources$genera_accepted$canonicalName),     fuzzy_match_genus_known = fuzzy_match_genera(genus, resources$genera_known$canonicalName),     fuzzy_match_genus_APNI = fuzzy_match_genera(genus, resources$genera_APNI$canonicalName)):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `cleaned_name = cleaned_name %&gt;%</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span>   update_na_with(standardise_names(original_name))`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `stri_trans_general()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> could not find function "stri_trans_general"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading resources...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ...done</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   original_name      aligned_name apc_name aligned_reason taxonomic_status_of_…¹</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Eucalyptus regnans Eucalyptus … Eucalyp… match_06. Aut… accepted              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Acacia melanoxylon Acacia mela… Acacia … match_06. Aut… accepted              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Banksia integrifo… Banksia int… Banksia… match_06. Aut… accepted              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
