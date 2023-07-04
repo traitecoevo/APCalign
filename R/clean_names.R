@@ -423,7 +423,8 @@ standardise_names <- function(taxon_names) {
   
   taxon_names %>%
     ## for hybrid markers
-    f("×","x") %>%
+    stri_trans_general("Any-Latin; Latin-ASCII") %>%
+    f("\\*", "x") %>%
     ## Weird formatting
     f("[\\n\\t]", " ") %>%
     

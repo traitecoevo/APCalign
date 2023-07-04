@@ -17,7 +17,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       stripped_name = stripped_name %>% 
         update_na_with(strip_names(original_name)),
       stripped_name2 = stripped_name %>% 
-        update_na_with(ausflora:::strip_names_2(original_name)),
+        update_na_with(strip_names_2(original_name)),
       trinomial = stringr::word(stripped_name2, start = 1, end = 3),
       binomial = stringr::word(stripped_name2, start = 1, end = 2),
       genus = stringr::word(original_name, start = 1, end = 1),
