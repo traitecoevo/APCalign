@@ -414,7 +414,10 @@ strip_names_2 <- function(x) {
 #' @export
 #'
 #' @examples
-#' standardise_names(c("Abies alba Mill.", "Quercus suber", "Eucalyptus sp.", "Agave americana var. marginata"))
+#' standardise_names(c("Abies alba Mill.", 
+#'                     "Quercus suber", 
+#'                     "Eucalyptus sp.", 
+#'                     "Agave americana var. marginata"))
 #'
 standardise_names <- function(taxon_names) {
   f <- function(x, find, replace) {
@@ -423,7 +426,7 @@ standardise_names <- function(taxon_names) {
   
   taxon_names %>%
     ## for hybrid markers
-    stri_trans_general("Any-Latin; Latin-ASCII") %>%
+    stringi::stri_trans_general("Any-Latin; Latin-ASCII") %>%
     f("\\*", "x") %>%
     ## Weird formatting
     f("[\\n\\t]", " ") %>%
