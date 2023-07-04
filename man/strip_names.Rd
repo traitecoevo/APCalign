@@ -4,7 +4,7 @@
 \alias{strip_names}
 \title{Strip taxonomic names of subtaxa designations and special characters}
 \usage{
-strip_names(taxon_names)
+strip_names(x)
 }
 \arguments{
 \item{taxon_names}{A character vector of taxonomic names to be stripped.}
