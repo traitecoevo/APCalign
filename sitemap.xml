@@ -22,13 +22,7 @@
     <loc>/reference/create_taxonomic_update_lookup.html</loc>
   </url>
   <url>
-    <loc>/reference/dataset_access_function.html</loc>
-  </url>
-  <url>
     <loc>/reference/default_version.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fuzzy_match.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
@@ -37,13 +31,7 @@
     <loc>/reference/load_taxonomic_resources.html</loc>
   </url>
   <url>
-    <loc>/reference/standardise_names.html</loc>
-  </url>
-  <url>
     <loc>/reference/state_diversity_counts.html</loc>
-  </url>
-  <url>
-    <loc>/reference/strip_names.html</loc>
   </url>
   <url>
     <loc>/reference/update_taxonomy.html</loc>
