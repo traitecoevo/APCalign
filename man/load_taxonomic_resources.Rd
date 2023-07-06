@@ -6,19 +6,18 @@
 \usage{
 load_taxonomic_resources(
   version = default_version(),
-  type = "stable",
-  reload = FALSE,
-  filetype = "parquet"
+  stable_or_current_data = "stable",
+  reload = FALSE
 )
 }
 \arguments{
 \item{version}{The version number of the dataset to use. Defaults to the default version.}
 
-\item{type}{XXXX}
+\item{stable_or_current_data}{Type of dataset to access. The default is "stable", which loads the 
+dataset from a github archived file. If set to "current", the dataset will be loaded from 
+a URL which is the cutting edge version, but this may change at any time without notice.}
 
 \item{reload}{A logical indicating whether to reload the dataset from the data source. Defaults to FALSE.}
-
-\item{filetype}{type of file to download. parquet or csv}
 }
 \value{
 The taxonomic resources data loaded into the global environment.

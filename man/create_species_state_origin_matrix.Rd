@@ -2,18 +2,18 @@
 % Please edit documentation in R/state_diversity.R
 \name{create_species_state_origin_matrix}
 \alias{create_species_state_origin_matrix}
-\title{Process Geographic Data and Return State Level Species Origin and Diversity Counts}
+\title{Process geographic data and return state level species origin and diversity counts}
 \usage{
 create_species_state_origin_matrix(resources = load_taxonomic_resources())
 }
 \arguments{
-\item{resources}{XXX}
+\item{resources}{the taxonomic resources to make the summary statistics. this defaults to default_version().  call load_taxonomic_resources seperately to greatly speed this function up.}
 }
 \value{
 A data frame with columns representing each state and rows representing each species. The values in each cell represent the origin of the species in that state.
 }
 \description{
-This function processes the geographic data available in the current Australian Plant Census and returns state level diversity for native, introduced and more complicated species origins.
+This function processes the geographic data available in the current or any version of the Australian Plant Census and returns state level diversity for native, introduced and more complicated species origins.
 }
 \examples{
 create_species_state_origin_matrix()

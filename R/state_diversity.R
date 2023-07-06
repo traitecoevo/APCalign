@@ -1,12 +1,11 @@
 
 
-#' Process Geographic Data and Return State Level Species Origin and Diversity Counts
+#' Process geographic data and return state level species origin and diversity counts
 #'
-#' This function processes the geographic data available in the current Australian Plant Census and returns state level diversity for native, introduced and more complicated species origins.
+#' This function processes the geographic data available in the current or any version of the Australian Plant Census and returns state level diversity for native, introduced and more complicated species origins.
 #'
+#' @param resources the taxonomic resources to make the summary statistics. this defaults to default_version().  call load_taxonomic_resources seperately to greatly speed this function up.
 #'
-#' @param resources XXX
-#' 
 #' @return A data frame with columns representing each state and rows representing each species. The values in each cell represent the origin of the species in that state.
 #'
 #' @import dplyr

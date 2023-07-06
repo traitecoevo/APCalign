@@ -24,6 +24,7 @@
 ##' # Load the a stable version of the dataset 
 ##' dataset_access_function(version="0.0.2.9000",type = "stable")
 ##'
+##' @noRd
 dataset_access_function <- function(version=default_version(), path=NULL, 
                                     type="stable") {
   if(type=="stable"){
@@ -107,9 +108,10 @@ dataset_get <- function(version = default_version(),
 #' Loads taxonomic resources into the global environment. This function accesses taxonomic data from a dataset using the provided version number or the default version. The loaded data contains two lists: APC and APNI, which contain taxonomic information about plant species in Australia. The function creates several data frames by filtering and selecting data from the loaded lists.
 #'
 #' @param version The version number of the dataset to use. Defaults to the default version.
-#' @param type XXXX
+#' @param stable_or_current_data Type of dataset to access. The default is "stable", which loads the 
+#'   dataset from a github archived file. If set to "current", the dataset will be loaded from 
+#'   a URL which is the cutting edge version, but this may change at any time without notice.
 #' @param reload A logical indicating whether to reload the dataset from the data source. Defaults to FALSE.
-#' @param filetype type of file to download. parquet or csv
 #'
 #' @return The taxonomic resources data loaded into the global environment.
 #' @export
@@ -122,9 +124,8 @@ dataset_get <- function(version = default_version(),
 
 load_taxonomic_resources <-
   function(version = default_version(),
-           type = "stable",
-           reload = FALSE,
-           filetype = "parquet") {
+           stable_or_current_data = "stable",
+           reload = FALSE) {
 
     message("Loading resources...", appendLF = FALSE)
     on.exit(message("...done"))
@@ -133,7 +134,7 @@ load_taxonomic_resources <-
       dataset_access_function(
         version = version,
         path = NULL,
-        type = "stable"
+        type = stable_or_current_data
       )
     names(taxonomic_resources) <- c("APC", "APNI")
 

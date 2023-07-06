@@ -360,7 +360,7 @@ update_taxonomy <- function(aligned_names,
 #'               "Quercus kelloggii", 
 #'               "Pinus contorta var. latifolia"))
 #'
-
+#'@noRd
 strip_names <- function(taxon_names) {
   taxon_names %>%
     stringr::str_replace_all("[:punct:]", " ") %>%
@@ -417,7 +417,7 @@ strip_names_2 <- function(x) {
 #'                     "Quercus suber", 
 #'                     "Eucalyptus sp.", 
 #'                     "Agave americana var. marginata"))
-#'
+#' @noRd
 standardise_names <- function(taxon_names) {
   f <- function(x, find, replace) {
     gsub(find, replace, x, perl = TRUE)
