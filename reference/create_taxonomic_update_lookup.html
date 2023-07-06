@@ -45,26 +45,22 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_taxonomic_update_lookup</span><span class="op">(</span></span>
-<span>  <span class="va">species_list</span>,</span>
-<span>  fuzzy_matching <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"stable"</span>,</span>
-<span>  version <span class="op">=</span> <span class="fu"><a href="default_version.html">default_version</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">taxa</span>,</span>
+<span>  stable_or_current_data <span class="op">=</span> <span class="st">"stable"</span>,</span>
+<span>  version <span class="op">=</span> <span class="fu">default_version</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  full <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>version <span class="op">=</span> <span class="va">version</span>, type <span class="op">=</span> <span class="va">type</span><span class="op">)</span></span>
+<span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>stable_or_current_data <span class="op">=</span> <span class="va">stable_or_current_data</span>,</span>
+<span>    version <span class="op">=</span> <span class="va">version</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>species_list</dt>
+    <dl><dt>taxa</dt>
 <dd><p>A list of Australian plant species that needs to be reconciled with current taxonomy.</p></dd>
 
 
-<dt>fuzzy_matching</dt>
-<dd><p>A logical value indicating whether fuzzy matching should be used to align the species names. Default is <code>FALSE</code>.</p></dd>
-
-
-<dt>type</dt>
+<dt>stable_or_current_data</dt>
 <dd><p>either "stable" for a consistent version, or "current" for the leading edge version.</p></dd>
 
 
@@ -77,7 +73,7 @@
 
 
 <dt>resources</dt>
-<dd><p>These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.</p></dd>
+<dd><p>These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using <code><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></code> seperately and pass the data in.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -86,19 +82,33 @@
 
 <p>A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.</p>
     </div>
+    <div id="see-also">
+    <h2>See also</h2>
+    <div class="dont-index"><p><code><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></code></p>
+<p>Other taxonomic alignment functions: 
+<code><a href="align_taxa.html">align_taxa</a>()</code>,
+<code><a href="update_taxonomy.html">update_taxonomy</a>()</code></p></div>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">create_taxonomic_update_lookup</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus regnans"</span>, <span class="st">"Acacia melanoxylon"</span>,</span></span>
-<span class="r-in"><span><span class="st">"Banksia integrifolia"</span>,<span class="st">"Not a species"</span><span class="op">)</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading resources...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ...done</span>
+<span class="r-in"><span><span class="fu">create_taxonomic_update_lookup</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus regnans"</span>, </span></span>
+<span class="r-in"><span>                                 <span class="st">"Acacia melanoxylon"</span>,</span></span>
+<span class="r-in"><span>                                 <span class="st">"Banksia integrifolia"</span>,</span></span>
+<span class="r-in"><span>                                 <span class="st">"Not a species"</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>                                 resources<span class="op">=</span><span class="va">resources</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Checking alignments of 4 taxa</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">0</span> names already matched; <span style="color: #0000BB;">0</span> names checked but without a match; <span style="color: #0000BB;">4</span> taxa yet to be checked</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::mutate(., cleaned_name = cleaned_name %&gt;% update_na_with(standardise_names(original_name)),     stripped_name = stripped_name %&gt;% update_na_with(strip_names(original_name)),     stripped_name2 = stripped_name %&gt;% update_na_with(strip_names_2(original_name)),     trinomial = stringr::word(stripped_name2, start = 1, end = 3),     binomial = stringr::word(stripped_name2, start = 1, end = 2),     genus = stringr::word(original_name, start = 1, end = 1),     fuzzy_match_genus = fuzzy_match_genera(genus, resources$genera_accepted$canonicalName),     fuzzy_match_genus_known = fuzzy_match_genera(genus, resources$genera_known$canonicalName),     fuzzy_match_genus_APNI = fuzzy_match_genera(genus, resources$genera_APNI$canonicalName)):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `fuzzy_match_genus = fuzzy_match_genera(genus,</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span>   resources$genera_accepted$canonicalName)`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `purrr::map_chr()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `load_taxonomic_resources()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> unused argument (type = type)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   original_name      aligned_name apc_name aligned_reason taxonomic_status_of_…¹</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Eucalyptus regnans Eucalyptus … Eucalyp… match_06. Aut… accepted              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Acacia melanoxylon Acacia mela… Acacia … match_06. Aut… accepted              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Banksia integrifo… Banksia int… Banksia… match_06. Aut… accepted              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
