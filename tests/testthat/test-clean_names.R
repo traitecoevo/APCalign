@@ -34,6 +34,7 @@ test_that("update_taxonomy() works",{
 test_that("state_diversity() works",{
   nsw_species_counts<-state_diversity_counts(state = "NSW", resources = resources)
   expect_true(sum(nsw_species_counts$num_species)>7000 & sum(nsw_species_counts$num_species)<10000)
+  expect_error(state_diversity_counts(state="NOTASTATE",resources = resources))
 })
 
 test_that("weird hybrid symbols work",{
