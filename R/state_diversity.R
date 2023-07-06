@@ -21,7 +21,7 @@
 #' @examples
 #' create_species_state_origin_matrix()
 #'
-#' @export
+#' @noRd
 create_species_state_origin_matrix <-
   function(resources = load_taxonomic_resources()) {
     apc_species <-
