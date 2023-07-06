@@ -3,6 +3,7 @@
 
 
 
+
 #' Process geographic data and return state level species origin and diversity counts
 #'
 #' This function processes the geographic data available in the current or any version of the Australian Plant Census and returns state level diversity for native, introduced and more complicated species origins.
@@ -124,8 +125,7 @@ create_species_state_origin_matrix <-
 #' @examples
 #'  \dontrun{state_diversity_counts(state = "NSW")}
 state_diversity_counts <- function(state,
-                                   resources = load_taxonomic_resources(
-                                     version = default_version())) {
+                                   resources = load_taxonomic_resources(version = default_version())) {
   valid_inputs <- c(
     "NSW",
     "NT",
@@ -148,12 +148,16 @@ state_diversity_counts <- function(state,
     "CaI"
   )
   if (!(state %in% valid_inputs)) {
-    stop(paste("Invalid str_input:", state, 
-               ". Expected one of:", paste(valid_inputs, collapse=", ")))
+    stop(paste(
+      "Invalid str_input:",
+      state,
+      ". Expected one of:",
+      paste(valid_inputs, collapse = ", ")
+    ))
   }
   test <-
     create_species_state_origin_matrix(resources = resources)
-  test2 <- test[test[[state]] != "not present",]
+  test2 <- test[test[[state]] != "not present", ]
   state_table <- table(test2[[state]])
   return(tibble(
     origin = names(state_table),
@@ -180,8 +184,8 @@ get_apc_genus_family_lookup <-
 #'
 #' This function checks if the given species is native anywhere in Australia.
 #' It creates a lookup table from taxonomic resources, and checks if the species
-#' is listed as native in that table. Note that this will not detect within Australia invasives, 
-#' e.g. if a species is from Western Australia and is invasive on the east coast.  
+#' is listed as native in that table. Note that this will not detect within Australia invasives,
+#' e.g. if a species is from Western Australia and is invasive on the east coast.
 #'
 #' @family diversity methods
 #' @param species A character string representing the binomial or common name of the species.
@@ -196,15 +200,19 @@ get_apc_genus_family_lookup <-
 #' native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources=resources)
 
 native_anywhere_in_australia <-
-  function(species,resources = load_taxonomic_resources()) {
+  function(species, resources = load_taxonomic_resources()) {
     native_lookup <-
       create_species_state_origin_matrix(resources = resources)
     native_lookup$native_anywhere <-
       apply(native_lookup, 1, function(x)
         any(grepl("native", x)))
-    native_only<-filter(native_lookup,native_anywhere==TRUE) %>%
-      mutate(binomial=word(species,1,2))
-    return(tibble(species=species,
-                  native_anywhere_in_aus=species%in%native_only$binomial|
-                    species%in%native_only$species))
+    native_only <- filter(native_lookup, native_anywhere == TRUE) %>%
+      mutate(binomial = word(species, 1, 2))
+    return(
+      tibble(
+        species = species,
+        native_anywhere_in_aus = species %in% native_only$binomial |
+          species %in% native_only$species
+      )
+    )
   }

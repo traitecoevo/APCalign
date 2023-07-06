@@ -19,7 +19,7 @@ A tibble with two columns: `species`, which is the same as the input `species`,
 \description{
 This function checks if the given species is native anywhere in Australia.
 It creates a lookup table from taxonomic resources, and checks if the species
-is listed as native in that table. Note that this will not detect within Australia invasives, 
+is listed as native in that table. Note that this will not detect within Australia invasives,
 e.g. if a species is from Western Australia and is invasive on the east coast.
 }
 \examples{
