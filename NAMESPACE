@@ -3,6 +3,7 @@
 export(align_taxa)
 export(create_taxonomic_update_lookup)
 export(load_taxonomic_resources)
+export(native_anywhere_in_australia)
 export(state_diversity_counts)
 export(update_taxonomy)
 import(dplyr)
