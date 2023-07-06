@@ -45,8 +45,7 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">state_diversity_counts</span><span class="op">(</span></span>
-<span>  state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NSW"</span>, <span class="st">"NT"</span>, <span class="st">"Qld"</span>, <span class="st">"WA"</span>, <span class="st">"ChI"</span>, <span class="st">"NSW"</span>, <span class="st">"SA"</span>, <span class="st">"Vic"</span>, <span class="st">"Tas"</span>, <span class="st">"ACT"</span>, <span class="st">"NI"</span>,</span>
-<span>    <span class="st">"LHI"</span>, <span class="st">"MI"</span>, <span class="st">"HI"</span>, <span class="st">"MDI"</span>, <span class="st">"CoI"</span>, <span class="st">"CSI"</span>, <span class="st">"AR"</span>, <span class="st">"CaI"</span><span class="op">)</span>,</span>
+<span>  <span class="va">state</span>,</span>
 <span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>version <span class="op">=</span> <span class="fu">default_version</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -54,7 +53,7 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>state</dt>
-<dd><p>A character string indicating the Australian state or territory to calculate the diversity for. Default is "NSW". Possible values are "NSW", "NT", "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI", "MDI", "CoI", "CSI", and "AR".</p></dd>
+<dd><p>A character string indicating the Australian state or territory to calculate the diversity for. Possible values are "NSW", "NT", "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI", "MDI", "CoI", "CSI", and "AR".</p></dd>
 
 
 <dt>resources</dt>
@@ -70,9 +69,7 @@ The tibble has three columns: "origin" indicating the origin of the species, "st
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></code></p>
-<p>Other diversity methods: 
-<code><a href="create_species_state_origin_matrix.html">create_species_state_origin_matrix</a>()</code></p></div>
+    <div class="dont-index"><p><code><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></code></p></div>
     </div>
 
     <div id="ref-examples">
