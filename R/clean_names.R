@@ -353,7 +353,7 @@ update_taxonomy <- function(aligned_names,
 #' @return A character vector of stripped taxonomic names, with subtaxa designations, special
 #' characters, and extra whitespace removed, and all letters converted to lowercase.
 #'
-#' @export
+#' 
 #'
 #' @examples
 #' strip_names(c("Abies lasiocarpa subsp. lasiocarpa", 
@@ -411,7 +411,6 @@ strip_names_2 <- function(x) {
 #'
 #' @return A character vector of standardised taxon names.
 #'
-#' @export
 #'
 #' @examples
 #' standardise_names(c("Abies alba Mill.", 

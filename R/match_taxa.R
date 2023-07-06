@@ -1,5 +1,6 @@
 
 # do the actual matching
+#' @noRd
 match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
 
   update_na_with <- function(current, new) {

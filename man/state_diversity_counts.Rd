@@ -13,7 +13,7 @@ state_diversity_counts(
 \arguments{
 \item{state}{A character string indicating the Australian state or territory to calculate the diversity for. Default is "NSW". Possible values are "NSW", "NT", "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI", "MDI", "CoI", "CSI", and "AR".}
 
-\item{resources}{XXXX}
+\item{resources}{the taxonomic resources to make the summary statistics. this defaults to default_version().  call load_taxonomic_resources seperately to greatly speed this function up.}
 }
 \value{
 A tibble of diversity counts for the specified state or territory, including native, introduced, and more complicated species origins.

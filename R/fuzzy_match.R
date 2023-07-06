@@ -10,7 +10,7 @@
 #' @param n_allowed The number of allowable matches returned. Defaults to 1
 #'
 #' @return A text string that matches a recognised taxon name or scientific name
-#' @export
+#' 
 #'
 #' @examples
 #' fuzzy_match("Baksia serrata", c("Banksia serrata", 

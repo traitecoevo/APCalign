@@ -15,7 +15,7 @@
 ##' @param type Type of dataset to access. The default is "stable", which loads the 
 ##'   dataset from a github archived file. If set to "current", the dataset will be loaded from 
 ##'   a URL which is the cutting edge version, but this may change at any time without notice.
-##' @export
+##' 
 ##' @examples
 ##'
 ##' # Load the current version of the dataset direct from the APC website
