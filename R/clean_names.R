@@ -1,22 +1,22 @@
 
 
 
-#' Find taxonomic alignments for a list of names
+#' Find taxonomic alignments for a list of names to a version of the Australian Plant Census (APC)
 #'
-#' This function uses APC & APNI to find taxonomic alignments for a list of names.
+#' This function uses Australian Plant Census (APC) & the Australian Plant Name Index (APNI) to find taxonomic alignments for a list of names.
 #'
 #' @param original_name A list of names to query for taxonomic alignments.
 #' @param output (optional) The name of the file to save the results to.
-#' @param fuzzy_matching An option to turn off fuzzy matching.
 #' @param max_distance_abs The absolute distance in substitution space.
 #' @param max_distance_rel The relative distance in substitution space.
-#' @param resources the taxonomic resources used to allign the taxa names. this defaults to loading from a local cache, but this is slow
+#' @param resources the taxonomic resources used to align the taxa names. Loading this can be slow, 
+#' so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.
 #'
 #' @return A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
 #' @export
 #'
 #' @examples
-#' align_taxa(c("Poa annua", "Abies alba"), output = "taxa_alignments.csv")
+#' align_taxa(c("Poa annua", "Abies alba"))
 #'
 #' @importFrom readr read_csv cols col_logical col_character
 #' @importFrom tibble tibble
@@ -24,7 +24,7 @@
 #' @keywords taxonomic alignments, APC, APNI, flora resource
 #'
 #' @seealso
-#' \code{\link{default_version}} for the default value of the \code{ver} parameter.
+#' \code{\link{load_taxonomic_resources}} 
 #'
 #' @family taxonomic alignment functions
 #'
@@ -32,7 +32,6 @@
 #'
 align_taxa <- function(original_name,
                        output = NULL,
-                       fuzzy_matching = FALSE,
                        max_distance_abs = 3,
                        max_distance_rel = 0.2,
                        resources = load_taxonomic_resources()
@@ -159,6 +158,8 @@ redistribute <- function(data) {
 #' Census (APC) and the Australian Plant Name Index (APNI), to update taxonomy of plant species, replacing any synonyms
 #' to their current accepted name.
 #'
+#' @family taxonomic alignment functions
+#'
 #' @param aligned_names A character vector of plant names to update. These names must be in the format of the
 #' scientific name, with genus and species, and may contain additional qualifiers such as subspecies or varieties.
 #' The names are case insensitive.
@@ -166,7 +167,8 @@ redistribute <- function(data) {
 #' @param output (optional) Name of the file where results are saved. The default is NULL and no file is created.
 #' If specified, the output will be saved in a CSV file with the given name.
 #'
-#' @param resources XXXX
+#' @param resources the taxonomic resources required to make the summary statistics.  Loading this can be slow, so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.
+#'
 #'
 #' @return A tibble with updated taxonomy for the specified plant names. The tibble contains the following columns:
 #' \itemize{
@@ -186,6 +188,8 @@ redistribute <- function(data) {
 #'   \item \code{ccAttributionIRI}: the Creative Commons Attribution International Rights URI of the accepted name.
 #' }
 #'
+#' @seealso load_taxonomic_resources
+#' 
 #' @export
 #'
 #' @examples
@@ -193,7 +197,7 @@ redistribute <- function(data) {
 #' update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"))
 #'
 #' # Update taxonomy for two plant names and save the result to a CSV file
-#' update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"), "updated_taxonomy.csv")
+#' update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"), output = "updated_taxonomy.csv")
 update_taxonomy <- function(aligned_names,
                             output = NULL,
                             resources = load_taxonomic_resources()) {
@@ -360,7 +364,7 @@ update_taxonomy <- function(aligned_names,
 #'               "Quercus kelloggii", 
 #'               "Pinus contorta var. latifolia"))
 #'
-#'@noRd
+#' @noRd
 strip_names <- function(taxon_names) {
   taxon_names %>%
     stringr::str_replace_all("[:punct:]", " ") %>%
@@ -474,32 +478,36 @@ standardise_names <- function(taxon_names) {
 #'
 #' This function takes a list of Australian plant species that needs to be reconciled with current taxonomy and generates a lookup table to help fix the taxonomy. The lookup table contains the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #'
+#' @family taxonomic alignment functions
 #'
-#' @param species_list A list of Australian plant species that needs to be reconciled with current taxonomy.
-#' @param fuzzy_matching A logical value indicating whether fuzzy matching should be used to align the species names. Default is \code{FALSE}.
-#' @param type either "stable" for a consistent version, or "current" for the leading edge version.
+#' @param taxa A list of Australian plant species that needs to be reconciled with current taxonomy.
+#' @param stable_or_current_data either "stable" for a consistent version, or "current" for the leading edge version.
 #' @param version The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
 #' @param full logical for whether the full lookup table is returned or just the two key columns
-#' @param resources These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.
+#' @param resources These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using \code{\link{load_taxonomic_resources}} seperately and pass the data in.
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @export
+#' 
+#' @seealso \code{\link{load_taxonomic_resources}} 
 #' @examples
-#' create_taxonomic_update_lookup(c("Eucalyptus regnans", "Acacia melanoxylon",
-#' "Banksia integrifolia","Not a species"))
+#' resources <- load_taxonomic_resources()
+#' create_taxonomic_update_lookup(c("Eucalyptus regnans", 
+#'                                  "Acacia melanoxylon",
+#'                                  "Banksia integrifolia",
+#'                                  "Not a species"), 
+#'                                  resources=resources)
 #'
 create_taxonomic_update_lookup <-
-  function(species_list,
-           fuzzy_matching = FALSE,
-           type = "stable",
+  function(taxa,
+           stable_or_current_data = "stable",
            version = default_version(),
            full = FALSE,
-           resources = load_taxonomic_resources(version = version, type= type)
+           resources = load_taxonomic_resources(stable_or_current_data=stable_or_current_data,version = version)
            ) {
 
     aligned_data <-
-      unique(species_list) %>%
-      align_taxa(fuzzy_matching = fuzzy_matching, resources = resources)
-    # it'd be nice to carry a column for TRUE/FALSE on the fuzzy fix back to the top level
+      unique(taxa) %>%
+      align_taxa(resources = resources)
     
     aligned_species_list_tmp <-
       aligned_data$aligned_name %>% update_taxonomy(resources = resources)

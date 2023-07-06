@@ -18,7 +18,7 @@ The names are case insensitive.}
 \item{output}{(optional) Name of the file where results are saved. The default is NULL and no file is created.
 If specified, the output will be saved in a CSV file with the given name.}
 
-\item{resources}{XXXX}
+\item{resources}{the taxonomic resources required to make the summary statistics.  Loading this can be slow, so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.}
 }
 \value{
 A tibble with updated taxonomy for the specified plant names. The tibble contains the following columns:
@@ -49,5 +49,13 @@ to their current accepted name.
 update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"))
 
 # Update taxonomy for two plant names and save the result to a CSV file
-update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"), "updated_taxonomy.csv")
+update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"), output = "updated_taxonomy.csv")
 }
+\seealso{
+load_taxonomic_resources
+
+Other taxonomic alignment functions: 
+\code{\link{align_taxa}()},
+\code{\link{create_taxonomic_update_lookup}()}
+}
+\concept{taxonomic alignment functions}

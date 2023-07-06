@@ -1,21 +1,22 @@
-resources_current<-load_taxonomic_resources(stable_or_current_data="current")
+# currently not testing the current option as the webhosting seems unreliable for that dataset
+# resources_current<-load_taxonomic_resources(stable_or_current_data="current")
 resources<-load_taxonomic_resources(version = "0.0.2.9000")
 
 test_that("align_taxa() works no fuzzy", {
   expect_equal(nrow(align_taxa(original_name=c("Dryandra preissii","Banksia acuminata"),
-                               fuzzy_matching = FALSE, resources = resources)),2)
+                               resources = resources)),2)
 })
 
 
 test_that("align_taxa() works with fuzzy", {
   expect_equal(nrow(align_taxa(original_name=c("Dryandra preissii","Banksia acuminata"),
-                               fuzzy_matching = TRUE, resources = resources)),2)
+                               resources = resources)),2)
 })
 
 test_that("align_taxa() works with longer list", {
   species_list <- readr::read_csv(system.file("extdata", "species.csv", package = "ausflora"), show_col_types = FALSE)
   expect_equal(nrow(aligned_data <- align_taxa(species_list$name,
-                               fuzzy_matching = FALSE, resources = resources)),199)
+                               resources = resources)),199)
 })
 
 

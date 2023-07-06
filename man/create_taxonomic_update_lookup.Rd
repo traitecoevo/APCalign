@@ -5,26 +5,24 @@
 \title{Create a lookup table to help fix the taxonomy for a list of Australian plant species}
 \usage{
 create_taxonomic_update_lookup(
-  species_list,
-  fuzzy_matching = FALSE,
-  type = "stable",
+  taxa,
+  stable_or_current_data = "stable",
   version = default_version(),
   full = FALSE,
-  resources = load_taxonomic_resources(version = version, type = type)
+  resources = load_taxonomic_resources(stable_or_current_data = stable_or_current_data,
+    version = version)
 )
 }
 \arguments{
-\item{species_list}{A list of Australian plant species that needs to be reconciled with current taxonomy.}
+\item{taxa}{A list of Australian plant species that needs to be reconciled with current taxonomy.}
 
-\item{fuzzy_matching}{A logical value indicating whether fuzzy matching should be used to align the species names. Default is \code{FALSE}.}
-
-\item{type}{either "stable" for a consistent version, or "current" for the leading edge version.}
+\item{stable_or_current_data}{either "stable" for a consistent version, or "current" for the leading edge version.}
 
 \item{version}{The version number of the dataset to use. Default is \code{"0.0.1.9000"}.}
 
 \item{full}{logical for whether the full lookup table is returned or just the two key columns}
 
-\item{resources}{These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.}
+\item{resources}{These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using \code{\link{load_taxonomic_resources}} seperately and pass the data in.}
 }
 \value{
 A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
@@ -33,7 +31,19 @@ A lookup table containing the original species names, the aligned species names,
 This function takes a list of Australian plant species that needs to be reconciled with current taxonomy and generates a lookup table to help fix the taxonomy. The lookup table contains the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 }
 \examples{
-create_taxonomic_update_lookup(c("Eucalyptus regnans", "Acacia melanoxylon",
-"Banksia integrifolia","Not a species"))
+resources <- load_taxonomic_resources()
+create_taxonomic_update_lookup(c("Eucalyptus regnans", 
+                                 "Acacia melanoxylon",
+                                 "Banksia integrifolia",
+                                 "Not a species"), 
+                                 resources=resources)
 
 }
+\seealso{
+\code{\link{load_taxonomic_resources}}
+
+Other taxonomic alignment functions: 
+\code{\link{align_taxa}()},
+\code{\link{update_taxonomy}()}
+}
+\concept{taxonomic alignment functions}

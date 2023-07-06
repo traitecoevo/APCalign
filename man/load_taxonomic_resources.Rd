@@ -5,17 +5,17 @@
 \title{Load taxonomic resources}
 \usage{
 load_taxonomic_resources(
-  version = default_version(),
   stable_or_current_data = "stable",
+  version = default_version(),
   reload = FALSE
 )
 }
 \arguments{
-\item{version}{The version number of the dataset to use. Defaults to the default version.}
-
 \item{stable_or_current_data}{Type of dataset to access. The default is "stable", which loads the 
 dataset from a github archived file. If set to "current", the dataset will be loaded from 
 a URL which is the cutting edge version, but this may change at any time without notice.}
+
+\item{version}{The version number of the dataset to use. Defaults to the default version.}
 
 \item{reload}{A logical indicating whether to reload the dataset from the data source. Defaults to FALSE.}
 }
@@ -26,6 +26,7 @@ The taxonomic resources data loaded into the global environment.
 Loads taxonomic resources into the global environment. This function accesses taxonomic data from a dataset using the provided version number or the default version. The loaded data contains two lists: APC and APNI, which contain taxonomic information about plant species in Australia. The function creates several data frames by filtering and selecting data from the loaded lists.
 }
 \examples{
-load_taxonomic_resources()
+load_taxonomic_resources(stable_or_current_data="stable",version="0.0.2.9000")
+\donttest{ load_taxonomic_resources(stable_or_current_data="current")}
 
 }

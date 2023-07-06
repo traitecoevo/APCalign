@@ -2,12 +2,11 @@
 % Please edit documentation in R/clean_names.R
 \name{align_taxa}
 \alias{align_taxa}
-\title{Find taxonomic alignments for a list of names}
+\title{Find taxonomic alignments for a list of names to a version of the Australian Plant Census (APC)}
 \usage{
 align_taxa(
   original_name,
   output = NULL,
-  fuzzy_matching = FALSE,
   max_distance_abs = 3,
   max_distance_rel = 0.2,
   resources = load_taxonomic_resources()
@@ -18,26 +17,29 @@ align_taxa(
 
 \item{output}{(optional) The name of the file to save the results to.}
 
-\item{fuzzy_matching}{An option to turn off fuzzy matching.}
-
 \item{max_distance_abs}{The absolute distance in substitution space.}
 
 \item{max_distance_rel}{The relative distance in substitution space.}
 
-\item{resources}{the taxonomic resources used to allign the taxa names. this defaults to loading from a local cache, but this is slow}
+\item{resources}{the taxonomic resources used to align the taxa names. Loading this can be slow, 
+so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.}
 }
 \value{
 A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
 }
 \description{
-This function uses APC & APNI to find taxonomic alignments for a list of names.
+This function uses Australian Plant Census (APC) & the Australian Plant Name Index (APNI) to find taxonomic alignments for a list of names.
 }
 \examples{
-align_taxa(c("Poa annua", "Abies alba"), output = "taxa_alignments.csv")
+align_taxa(c("Poa annua", "Abies alba"))
 
 }
 \seealso{
-\code{\link{default_version}} for the default value of the \code{ver} parameter.
+\code{\link{load_taxonomic_resources}}
+
+Other taxonomic alignment functions: 
+\code{\link{create_taxonomic_update_lookup}()},
+\code{\link{update_taxonomy}()}
 }
 \concept{taxonomic alignment functions}
 \keyword{APC,}

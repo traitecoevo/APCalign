@@ -4,12 +4,16 @@
 #'
 #' This function processes the geographic data available in the current or any version of the Australian Plant Census and returns state level diversity for native, introduced and more complicated species origins.
 #'
-#' @param resources the taxonomic resources to make the summary statistics. this defaults to default_version().  call load_taxonomic_resources seperately to greatly speed this function up.
+#'
+#' @family diversity methods
+#' @param resources the taxonomic resources required to make the summary statistics.  Loading this can be slow, so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.
 #'
 #' @return A data frame with columns representing each state and rows representing each species. The values in each cell represent the origin of the species in that state.
 #'
 #' @import dplyr
 #' @import stringr
+#'
+#' @seealso \code{\link{load_taxonomic_resources}} 
 #'
 #' @examples
 #' create_species_state_origin_matrix()
@@ -97,15 +101,18 @@ create_species_state_origin_matrix <-
 
 
 
-#' Calculate state-level diversity for native, introduced, and more complicated species origins
+#' Calculate Australian plant state-level diversity for native, introduced, and more complicated species origins
 #'
 #' This function calculates state-level diversity for native, introduced, and more complicated species origins based on the geographic data available in the current Australian Plant Census.
-#'
+#' 
+#' @family diversity methods
 #' @param state A character string indicating the Australian state or territory to calculate the diversity for. Default is "NSW". Possible values are "NSW", "NT", "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI", "MDI", "CoI", "CSI", and "AR".
-#' @param resources the taxonomic resources to make the summary statistics. this defaults to default_version().  call load_taxonomic_resources seperately to greatly speed this function up.
+#' @param resources the taxonomic resources required to make the summary statistics.  loading this can be slow, so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.
 #'
 #' @return A tibble of diversity counts for the specified state or territory, including native, introduced, and more complicated species origins.
 #' The tibble has three columns: "origin" indicating the origin of the species, "state" indicating the Australian state or territory, and "num_species" indicating the number of species for that origin and state.
+#'
+#' @seealso \code{\link{load_taxonomic_resources}} 
 #'
 #' @export
 #'

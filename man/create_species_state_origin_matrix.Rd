@@ -7,7 +7,7 @@
 create_species_state_origin_matrix(resources = load_taxonomic_resources())
 }
 \arguments{
-\item{resources}{the taxonomic resources to make the summary statistics. this defaults to default_version().  call load_taxonomic_resources seperately to greatly speed this function up.}
+\item{resources}{the taxonomic resources required to make the summary statistics.  Loading this can be slow, so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.}
 }
 \value{
 A data frame with columns representing each state and rows representing each species. The values in each cell represent the origin of the species in that state.
@@ -19,3 +19,10 @@ This function processes the geographic data available in the current or any vers
 create_species_state_origin_matrix()
 
 }
+\seealso{
+\code{\link{load_taxonomic_resources}}
+
+Other diversity methods: 
+\code{\link{state_diversity_counts}()}
+}
+\concept{diversity methods}

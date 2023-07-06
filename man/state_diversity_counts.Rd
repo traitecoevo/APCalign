@@ -2,7 +2,7 @@
 % Please edit documentation in R/state_diversity.R
 \name{state_diversity_counts}
 \alias{state_diversity_counts}
-\title{Calculate state-level diversity for native, introduced, and more complicated species origins}
+\title{Calculate Australian plant state-level diversity for native, introduced, and more complicated species origins}
 \usage{
 state_diversity_counts(
   state = c("NSW", "NT", "Qld", "WA", "ChI", "NSW", "SA", "Vic", "Tas", "ACT", "NI",
@@ -13,7 +13,7 @@ state_diversity_counts(
 \arguments{
 \item{state}{A character string indicating the Australian state or territory to calculate the diversity for. Default is "NSW". Possible values are "NSW", "NT", "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI", "MDI", "CoI", "CSI", and "AR".}
 
-\item{resources}{the taxonomic resources to make the summary statistics. this defaults to default_version().  call load_taxonomic_resources seperately to greatly speed this function up.}
+\item{resources}{the taxonomic resources required to make the summary statistics.  loading this can be slow, so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.}
 }
 \value{
 A tibble of diversity counts for the specified state or territory, including native, introduced, and more complicated species origins.
@@ -25,3 +25,10 @@ This function calculates state-level diversity for native, introduced, and more 
 \examples{
  \dontrun{state_diversity_counts(state = "NSW")}
 }
+\seealso{
+\code{\link{load_taxonomic_resources}}
+
+Other diversity methods: 
+\code{\link{create_species_state_origin_matrix}()}
+}
+\concept{diversity methods}
