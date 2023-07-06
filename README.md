@@ -112,7 +112,6 @@ create_taxonomic_update_lookup(
     "Commersonia rosea",
     "Baksia integrifolia"
   ),
-  fuzzy_matching = TRUE,
   resources = resources_0029
 )
 #> # A tibble: 4 × 5
@@ -121,7 +120,7 @@ create_taxonomic_update_lookup(
 #> 1 Banksia integrifo… Banksia int… Banksia… match_06. Aut… accepted              
 #> 2 Acacia longifolia  Acacia long… Acacia … match_06. Aut… accepted              
 #> 3 Commersonia rosea  Commersonia… Androca… match_06. Aut… basionym              
-#> 4 Baksia integrifol… Banksia int… Banksia… match_07_fuzz… accepted              
+#> 4 Baksia integrifol… Banksia int… Banksia… match_15_fuzz… accepted              
 #> # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name
 ```
 
@@ -143,7 +142,6 @@ raw_data <- tibble(
 )
 
 lookup <- create_taxonomic_update_lookup(raw_data$original_name,
-  fuzzy_matching = TRUE,
   resources = resources_0029
 )
 
@@ -154,7 +152,7 @@ left_join(raw_data, lookup)
 #> 1 Banksia integrifolia NA         Banksia integrifolia Banksia i… match_06. Aut…
 #> 2 Acacia longifolia    NA         Acacia longifolia    Acacia lo… match_06. Aut…
 #> 3 Commersonia rosea    NA         Commersonia rosea    Androcalv… match_06. Aut…
-#> 4 Baksia integrifolia  NA         Banksia integrifolia Banksia i… match_07_fuzz…
+#> 4 Baksia integrifolia  NA         Banksia integrifolia Banksia i… match_15_fuzz…
 #> # ℹ 1 more variable: taxonomic_status_of_aligned_name <chr>
 ```
 

@@ -93,7 +93,6 @@ create_taxonomic_update_lookup(
     "Commersonia rosea",
     "Baksia integrifolia"
   ),
-  fuzzy_matching = TRUE,
   resources = resources_0029
 )
 ```
@@ -115,7 +114,6 @@ raw_data <- tibble(
 )
 
 lookup <- create_taxonomic_update_lookup(raw_data$original_name,
-  fuzzy_matching = TRUE,
   resources = resources_0029
 )
 
