@@ -15,6 +15,7 @@
 #'
 #' @import dplyr
 #' @import stringr
+#' @export
 #'
 #' @seealso \code{\link{load_taxonomic_resources}}
 #'
