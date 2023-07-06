@@ -1,16 +1,17 @@
 
 
 
-#' Find taxonomic alignments for a list of names to a version of the Australian Plant Census (APC)
+
+#' Find taxonomic alignments for a list of names to a version of the Australian Plant Census (APC) through standardizing formatting and checking for spelling issues
 #'
 #' This function uses Australian Plant Census (APC) & the Australian Plant Name Index (APNI) to find taxonomic alignments for a list of names.
 #'
 #' @param original_name A list of names to query for taxonomic alignments.
 #' @param output (optional) The name of the file to save the results to.
-#' @param max_distance_abs The absolute distance in substitution space.
-#' @param max_distance_rel The relative distance in substitution space.
-#' @param resources the taxonomic resources used to align the taxa names. Loading this can be slow, 
-#' so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.
+#' @param max_distance_abs The absolute distance in substitution space for the fuzzy matching.
+#' @param max_distance_rel The relative distance in substitution space for the fuzzy matching.
+#' @param resources the taxonomic resources used to align the taxa names. Loading this can be slow,
+#' so call \code{\link{load_taxonomic_resources}} separately to greatly speed this function up and pass the resources in.
 #'
 #' @return A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
 #' @export
@@ -24,7 +25,7 @@
 #' @keywords taxonomic alignments, APC, APNI, flora resource
 #'
 #' @seealso
-#' \code{\link{load_taxonomic_resources}} 
+#' \code{\link{load_taxonomic_resources}}
 #'
 #' @family taxonomic alignment functions
 #'
@@ -34,8 +35,7 @@ align_taxa <- function(original_name,
                        output = NULL,
                        max_distance_abs = 3,
                        max_distance_rel = 0.2,
-                       resources = load_taxonomic_resources()
-                       ) {
+                       resources = load_taxonomic_resources()) {
   message("Checking alignments of ", length(original_name), " taxa\n")
   
   if (!is.null(output) && file.exists(output)) {
@@ -67,12 +67,12 @@ align_taxa <- function(original_name,
   
   # create list, will have two elements: tocheck, checked
   taxa <- list()
-
+  
   taxa[["tocheck"]] <-
     dplyr::bind_rows(
       taxa_raw,
       tibble::tibble(
-        original_name = subset(original_name, !original_name %in% taxa_raw$original_name) %>% unique(),
+        original_name = subset(original_name,!original_name %in% taxa_raw$original_name) %>% unique(),
         cleaned_name = NA_character_,
         stripped_name = NA_character_,
         stripped_name2 = NA_character_,
@@ -101,15 +101,15 @@ align_taxa <- function(original_name,
         known = FALSE
       )
     )
-
+  
   if (all(taxa$tocheck$checked)) {
     message("  - all taxa are already checked, yay!")
-      return(invisible(taxa$tocheck))
+    return(invisible(taxa$tocheck))
   }
-
+  
   # move all checked taxa to "checked"
   taxa <- redistribute(taxa)
-
+  
   # check unknown taxa
   message(
     "  -> ",
@@ -124,7 +124,7 @@ align_taxa <- function(original_name,
     crayon::blue(sum(!taxa$tocheck$checked)),
     " taxa yet to be checked"
   )
-
+  
   # do the actual matching
   taxa <- match_taxa(taxa, resources)
   
@@ -141,11 +141,9 @@ align_taxa <- function(original_name,
 
 # function moves taxa from tocheck to checked
 redistribute <- function(data) {
-  data[["checked"]] <- dplyr::bind_rows(
-    data[["checked"]],
-    data[["tocheck"]] %>% dplyr::filter(checked)
-  )
-
+  data[["checked"]] <- dplyr::bind_rows(data[["checked"]],
+                                        data[["tocheck"]] %>% dplyr::filter(checked))
+  
   data[["tocheck"]] <-
     data[["tocheck"]] %>% dplyr::filter(!checked)
   data
@@ -189,7 +187,7 @@ redistribute <- function(data) {
 #' }
 #'
 #' @seealso load_taxonomic_resources
-#' 
+#'
 #' @export
 #'
 #' @examples
@@ -357,11 +355,11 @@ update_taxonomy <- function(aligned_names,
 #' @return A character vector of stripped taxonomic names, with subtaxa designations, special
 #' characters, and extra whitespace removed, and all letters converted to lowercase.
 #'
-#' 
+#'
 #'
 #' @examples
-#' strip_names(c("Abies lasiocarpa subsp. lasiocarpa", 
-#'               "Quercus kelloggii", 
+#' strip_names(c("Abies lasiocarpa subsp. lasiocarpa",
+#'               "Quercus kelloggii",
 #'               "Pinus contorta var. latifolia"))
 #'
 #' @noRd
@@ -417,9 +415,9 @@ strip_names_2 <- function(x) {
 #'
 #'
 #' @examples
-#' standardise_names(c("Abies alba Mill.", 
-#'                     "Quercus suber", 
-#'                     "Eucalyptus sp.", 
+#' standardise_names(c("Abies alba Mill.",
+#'                     "Quercus suber",
+#'                     "Eucalyptus sp.",
 #'                     "Agave americana var. marginata"))
 #' @noRd
 standardise_names <- function(taxon_names) {
@@ -487,14 +485,14 @@ standardise_names <- function(taxon_names) {
 #' @param resources These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using \code{\link{load_taxonomic_resources}} seperately and pass the data in.
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @export
-#' 
-#' @seealso \code{\link{load_taxonomic_resources}} 
+#'
+#' @seealso \code{\link{load_taxonomic_resources}}
 #' @examples
 #' resources <- load_taxonomic_resources()
-#' create_taxonomic_update_lookup(c("Eucalyptus regnans", 
+#' create_taxonomic_update_lookup(c("Eucalyptus regnans",
 #'                                  "Acacia melanoxylon",
 #'                                  "Banksia integrifolia",
-#'                                  "Not a species"), 
+#'                                  "Not a species"),
 #'                                  resources=resources)
 #'
 create_taxonomic_update_lookup <-
@@ -502,9 +500,8 @@ create_taxonomic_update_lookup <-
            stable_or_current_data = "stable",
            version = default_version(),
            full = FALSE,
-           resources = load_taxonomic_resources(stable_or_current_data=stable_or_current_data,version = version)
-           ) {
-
+           resources = load_taxonomic_resources(stable_or_current_data =
+                                                  stable_or_current_data, version = version)) {
     aligned_data <-
       unique(taxa) %>%
       align_taxa(resources = resources)
@@ -519,12 +516,21 @@ create_taxonomic_update_lookup <-
                        multiple = "first") %>% # todo: consider implications
       dplyr::filter(!is.na(taxonIDClean)) %>%
       dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
-      dplyr::rename(canonical_name = canonicalName) 
+      dplyr::rename(canonical_name = canonicalName)
     
     if (full == TRUE) {
       return(aligned_species_list)
     }
     if (full == FALSE) {
-      return(dplyr::select(aligned_species_list, original_name, aligned_name, apc_name=canonical_name, aligned_reason, taxonomic_status_of_aligned_name = taxonomicStatusClean ))
+      return(
+        dplyr::select(
+          aligned_species_list,
+          original_name,
+          aligned_name,
+          apc_name = canonical_name,
+          aligned_reason,
+          taxonomic_status_of_aligned_name = taxonomicStatusClean
+        )
+      )
     }
   }

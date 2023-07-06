@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataset_access.R
 \name{load_taxonomic_resources}
 \alias{load_taxonomic_resources}
-\title{Load taxonomic resources}
+\title{Load taxonomic resources from either stable or current versions of APC and APNI}
 \usage{
 load_taxonomic_resources(
   stable_or_current_data = "stable",

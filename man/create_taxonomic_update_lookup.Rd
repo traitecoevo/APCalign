@@ -32,10 +32,10 @@ This function takes a list of Australian plant species that needs to be reconcil
 }
 \examples{
 resources <- load_taxonomic_resources()
-create_taxonomic_update_lookup(c("Eucalyptus regnans", 
+create_taxonomic_update_lookup(c("Eucalyptus regnans",
                                  "Acacia melanoxylon",
                                  "Banksia integrifolia",
-                                 "Not a species"), 
+                                 "Not a species"),
                                  resources=resources)
 
 }

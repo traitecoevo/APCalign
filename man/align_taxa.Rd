@@ -2,7 +2,7 @@
 % Please edit documentation in R/clean_names.R
 \name{align_taxa}
 \alias{align_taxa}
-\title{Find taxonomic alignments for a list of names to a version of the Australian Plant Census (APC)}
+\title{Find taxonomic alignments for a list of names to a version of the Australian Plant Census (APC) through standardizing formatting and checking for spelling issues}
 \usage{
 align_taxa(
   original_name,
@@ -17,12 +17,12 @@ align_taxa(
 
 \item{output}{(optional) The name of the file to save the results to.}
 
-\item{max_distance_abs}{The absolute distance in substitution space.}
+\item{max_distance_abs}{The absolute distance in substitution space for the fuzzy matching.}
 
-\item{max_distance_rel}{The relative distance in substitution space.}
+\item{max_distance_rel}{The relative distance in substitution space for the fuzzy matching.}
 
-\item{resources}{the taxonomic resources used to align the taxa names. Loading this can be slow, 
-so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.}
+\item{resources}{the taxonomic resources used to align the taxa names. Loading this can be slow,
+so call \code{\link{load_taxonomic_resources}} separately to greatly speed this function up and pass the resources in.}
 }
 \value{
 A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.

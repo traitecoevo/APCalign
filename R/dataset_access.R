@@ -103,7 +103,7 @@ dataset_get <- function(version = default_version(),
 }
 
 
-#' Load taxonomic resources
+#' Load taxonomic resources from either stable or current versions of APC and APNI
 #'
 #' Loads taxonomic resources into the global environment. This function accesses taxonomic data from a dataset using the provided version number or the default version. The loaded data contains two lists: APC and APNI, which contain taxonomic information about plant species in Australia. The function creates several data frames by filtering and selecting data from the loaded lists.
 #'
