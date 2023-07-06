@@ -2,7 +2,7 @@
 % Please edit documentation in R/state_diversity.R
 \name{native_anywhere_in_australia}
 \alias{native_anywhere_in_australia}
-\title{Check If Species Is Native Anywhere In Australia}
+\title{Check if a vector of species are native anywhere in Australia}
 \usage{
 native_anywhere_in_australia(species, resources = load_taxonomic_resources())
 }
@@ -19,10 +19,17 @@ A tibble with two columns: `species`, which is the same as the input `species`,
 \description{
 This function checks if the given species is native anywhere in Australia.
 It creates a lookup table from taxonomic resources, and checks if the species
-is listed as native in that table.
+is listed as native in that table. Note that this will not detect within Australia invasives, 
+e.g. if a species is from Western Australia and is invasive on the east coast.
 }
 \examples{
 resources<-load_taxonomic_resources()
 native_anywhere_in_australia("Eucalyptus globulus")
 native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources=resources)
 }
+\seealso{
+Other diversity methods: 
+\code{\link{create_species_state_origin_matrix}()},
+\code{\link{state_diversity_counts}()}
+}
+\concept{diversity methods}

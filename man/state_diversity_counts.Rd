@@ -26,5 +26,9 @@ This function calculates state-level diversity for native, introduced, and more 
 }
 \seealso{
 \code{\link{load_taxonomic_resources}}
+
+Other diversity methods: 
+\code{\link{create_species_state_origin_matrix}()},
+\code{\link{native_anywhere_in_australia}()}
 }
 \concept{diversity methods}

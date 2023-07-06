@@ -21,7 +21,6 @@
 #' @examples
 #' create_species_state_origin_matrix()
 #'
-#' @noRd
 create_species_state_origin_matrix <-
   function(resources = load_taxonomic_resources()) {
     apc_species <-
@@ -176,12 +175,14 @@ get_apc_genus_family_lookup <-
   }
 
 
-#' Check If Species Is Native Anywhere In Australia
+#' Check if a vector of species are native anywhere in Australia
 #'
 #' This function checks if the given species is native anywhere in Australia.
 #' It creates a lookup table from taxonomic resources, and checks if the species
-#' is listed as native in that table.
+#' is listed as native in that table. Note that this will not detect within Australia invasives, 
+#' e.g. if a species is from Western Australia and is invasive on the east coast.  
 #'
+#' @family diversity methods
 #' @param species A character string representing the binomial or common name of the species.
 #' @param resources An optional list of taxonomic resources to use for the lookup.
 #'        If not provided, the function will load default taxonomic resources using the `load_taxonomic_resources()` function.
