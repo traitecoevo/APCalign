@@ -1,5 +1,5 @@
 resources_current<-load_taxonomic_resources(type="current")
-resources <- load_taxonomic_resources(version = "0.0.2.9000")
+resources<-load_taxonomic_resources(version = "0.0.2.9000")
 
 test_that("align_taxa() works no fuzzy", {
   expect_equal(nrow(align_taxa(original_name=c("Dryandra preissii","Banksia acuminata"),
@@ -34,3 +34,8 @@ test_that("state_diversity() works",{
   nsw_species_counts<-state_diversity_counts(state = "NSW", resources = resources)
   expect_true(sum(nsw_species_counts$num_species)>7000 & sum(nsw_species_counts$num_species)<10000)
 })
+
+test_that("weird hybrid symbols work",{
+  expect_equal(nrow(align_taxa(c("Platanus × acerifolia", "Platanus × hispanica"), resources = resources)), 2)
+})
+

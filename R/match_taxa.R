@@ -396,6 +396,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # the default is set to only allow changes of up to 3 characters & no more than 20% of the total string length
   # the first letter of each word (up to 3 words) must match
   for (i in 1:nrow(taxa$tocheck)) {
+      taxa$tocheck$stripped_name[i]<-standardise_names(taxa$tocheck$stripped_name[i]) #will adding here to maybe fix bug
       taxa$tocheck$fuzzy_match_cleaned_APC[i] <- fuzzy_match(taxa$tocheck$stripped_name[i], resources$`APC list (accepted)`$stripped_canonical, 3, 0.2, n_allowed = 1)
   }
 
