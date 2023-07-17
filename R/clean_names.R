@@ -269,7 +269,8 @@ update_taxonomy <- function(aligned_names,
         NA
       )
     ) %>%
-    dplyr::slice(1) %>%
+    #dplyr::slice(1:5) %>%
+    dplyr::filter(taxonomicStatusClean!="misapplied")%>%
     dplyr::ungroup() %>%
     dplyr::select(
       aligned_name,
@@ -286,7 +287,8 @@ update_taxonomy <- function(aligned_names,
       subclass,
       taxonDistribution,
       ccAttributionIRI
-    )
+    ) %>%
+    distinct()
   
   taxa_APC <-
     taxa_out %>% dplyr::filter(!is.na(taxonIDClean)) %>%
@@ -513,7 +515,7 @@ create_taxonomic_update_lookup <-
       aligned_data %>% dplyr::select(original_name, aligned_name, aligned_reason) %>%
       dplyr::left_join(aligned_species_list_tmp,
                        by = c("aligned_name"),
-                       multiple = "first") %>% # todo: consider implications
+                       multiple = "all") %>% # todo: consider implications
       dplyr::filter(!is.na(taxonIDClean)) %>%
       dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
       dplyr::rename(canonical_name = canonicalName)
