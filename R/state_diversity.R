@@ -171,7 +171,7 @@ state_diversity_counts <- function(state,
 #' @noRd
 get_apc_genus_family_lookup <-
   function(resources = load_taxonomic_resources()) {
-    apc_s <- filter(resourcesAPC,
+    apc_s <- filter(resources$APC,
                     taxonRank == "Species")
     tibble(genus = word(apc_s$scientificName, 1, 1),
            family = apc_s$family) %>%
