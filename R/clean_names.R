@@ -2,6 +2,7 @@
 
 
 
+
 #' Find taxonomic alignments for a list of names to a version of the Australian Plant Census (APC) through standardizing formatting and checking for spelling issues
 #'
 #' This function uses Australian Plant Census (APC) & the Australian Plant Name Index (APNI) to find taxonomic alignments for a list of names.
@@ -72,7 +73,7 @@ align_taxa <- function(original_name,
     dplyr::bind_rows(
       taxa_raw,
       tibble::tibble(
-        original_name = subset(original_name,!original_name %in% taxa_raw$original_name) %>% unique(),
+        original_name = subset(original_name, !original_name %in% taxa_raw$original_name) %>% unique(),
         cleaned_name = NA_character_,
         stripped_name = NA_character_,
         stripped_name2 = NA_character_,
@@ -270,7 +271,7 @@ update_taxonomy <- function(aligned_names,
       )
     ) %>%
     #dplyr::slice(1:5) %>%
-    dplyr::filter(taxonomicStatusClean!="misapplied")%>%
+    dplyr::filter(taxonomicStatusClean != "misapplied") %>%
     dplyr::ungroup() %>%
     dplyr::select(
       aligned_name,
@@ -532,7 +533,35 @@ create_taxonomic_update_lookup <-
           apc_name = canonical_name,
           aligned_reason,
           taxonomic_status_of_aligned_name = taxonomicStatusClean
-        )
+        ) %>%
+          distinct()
       )
     }
   }
+
+
+#not working yet
+find_mrct <- function(taxa,
+                      stable_or_current_data = "stable",
+                      version = default_version(),
+                      resources = load_taxonomic_resources(stable_or_current_data =
+                                                             stable_or_current_data, version = version)) {
+  only_taxa_of_interest <-
+    dplyr::filter(resources$APC, resources$APC$canonicalName %in% taxa)
+  if (length(unique(only_taxa_of_interest$canonicalName)) == 1)
+    return(only_taxa_of_interest$canonicalName[1])
+  if (length(unique(stringr::word(
+    only_taxa_of_interest$canonicalName, 1, 2
+  ))) == 1)
+    return(stringr::word(only_taxa_of_interest$canonicalName, 1, 2))
+  if (length(unique(stringr::word(
+    only_taxa_of_interest$canonicalName, 1, 1
+  ))) == 1)
+    return(paste0(
+      stringr::word(only_taxa_of_interest$canonicalName[1], 1, 1),
+      " sp."
+    ))
+  if (length(unique(only_taxa_of_interest$family)) == 1)
+    return(only_taxa_of_interest$family[1])
+  return("plants")
+}
