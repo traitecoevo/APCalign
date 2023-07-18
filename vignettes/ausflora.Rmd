@@ -1,0 +1,41 @@
+---
+title: "Introduction to ausflora"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ausflora}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+When working with species data, it is important to verify your taxonomic names with an authoritative list and correct any out-of-date names. The ausflora package simplifies this process: 
+
+- By accessing up-to-date taxonomic information from the [Australian Plant Census](https://biodiversity.org.au/nsl/services/search/taxonomy) and the [Australia Plant Name Index](https://biodiversity.org.au/nsl/services/search/names).
+- 
+
+
+ausflora is currently not on CRAN. You can install its current developmental version using
+
+```{r install}
+# install.packages("remotes")
+remotes::install_github("traitecoevo/ausflora")
+```
+
+Once its installed, we can load it into R using
+
+```{r setup}
+library(ausflora)
+```
+
+To demonstrate how to use ausflora, we will use an example dataset `XX` which is documented in ?XX
+
+```{r}
+
+```
+
