@@ -32,6 +32,7 @@ dataset_access_function <- function(version=default_version(), path=NULL,
   }
   if(type=="current"){
     APC <- readr::read_csv("https://biodiversity.org.au/nsl/services/export/taxonCsv",
+                           n_max=110000,
                            col_types = 
                              readr::cols(
                                .default = readr::col_character(),
@@ -40,6 +41,7 @@ dataset_access_function <- function(version=default_version(), path=NULL,
                                created = readr::col_datetime(format = ""),
                                modified = readr::col_datetime(format = "")))
     APNI <- readr::read_csv("https://biodiversity.org.au/nsl/services/export/namesCsv",
+                            n_max=140000,
                             col_types = 
                               readr::cols(
                                 .default = readr::col_character(),
@@ -79,21 +81,21 @@ default_version <- function() {
   "0.0.2.9000"
 }
 
-
+#' @noRd
 dataset_get <- function(version = default_version(),
                         path = tools::R_user_dir("ausflora")) {
     #APC
     url <- paste0("https://github.com/traitecoevo/ausflora/releases/download/",
                   version,"/apc.parquet")
     apc_hash <- contentid::register(url)
-    apc_file <- contentid::resolve(apc_hash, store=TRUE, path=path)
+    apc_file <- contentid::resolve(apc_hash, store=TRUE, dir=path)
     APC <- arrow::read_parquet(apc_file)
     
     #APNI
     url <- paste0("https://github.com/traitecoevo/ausflora/releases/download/",
                   version,"/apni.parquet")
     apni_hash <- contentid::register(url)
-    apni_file <- contentid::resolve(apni_hash,store=TRUE,path=path)
+    apni_file <- contentid::resolve(apni_hash,store=TRUE, dir=path)
     APNI <- arrow::read_parquet(apni_file)
     
     #combine
