@@ -14,15 +14,16 @@ knitr::opts_chunk$set(
 )
 ```
 
-When working with species data, it is important to verify your taxonomic names with an authoritative list and correct any out-of-date names. The ausflora package simplifies this process: 
+When working with species data, it is important to verify your taxonomic names with an authoritative list and correct any out-of-date names. The ausflora package simplifies this process by: 
 
-- By accessing up-to-date taxonomic information from the [Australian Plant Census](https://biodiversity.org.au/nsl/services/search/taxonomy) and the [Australia Plant Name Index](https://biodiversity.org.au/nsl/services/search/names).
-- 
+- Accessing up-to-date taxonomic information from the [Australian Plant Census](https://biodiversity.org.au/nsl/services/search/taxonomy) and the [Australia Plant Name Index](https://biodiversity.org.au/nsl/services/search/names).
+- Aligning authoritative names to your taxonomic names using our [algorithm]() 
+- Updating your taxonomic names in a transparent manner
 
 
 ausflora is currently not on CRAN. You can install its current developmental version using
 
-```{r install}
+```{r install, eval=FALSE}
 # install.packages("remotes")
 remotes::install_github("traitecoevo/ausflora")
 ```
@@ -33,7 +34,47 @@ Once its installed, we can load it into R using
 library(ausflora)
 ```
 
-To demonstrate how to use ausflora, we will use an example dataset `XX` which is documented in ?XX
+To demonstrate how to use ausflora, we will use an example dataset `gbif_lite` which is documented in ?gbif_lite
+
+```{r}
+dim(gbif_lite)
+
+gbif_lite
+```
+
+## Retrieve taxonomic resources
+
+The first step is to retrieve the entire APC and APNI name databases and store them locally as taxonomic resources.  We achieve this using  `load_taxonomic_resources()`. 
+
+There are two versions of the APC and APNI databases that you can retrieve with the `stable_or_current_data `argument. Calling 
+
+- `stable`  will retrieve the recently archived version of the databases from our [GitHub releases](). This is set as the default option. 
+- `current` will retrieve the up-to-date databases directly from the APC and APNI website.
+
+Note that the databases are quite large so the initial retrieval will take a few minutes. Once the taxonomic resources have been stored locally, subsequent retrievals will take less time. Check out our [Resource Caching]() article to learn more about how the APC and APNIC databases are accessed, stored and retrieved.
+
+```{r}
+resources <- load_taxonomic_resources(stable_or_current_data = "stable")
+current_resources <- load_taxonomic_resources(stable_or_current_data = "current")
+
+```
+
+## Align taxa to APNI
+
+
+```{r}
+library(tidyverse)
+
+gbif_lite |> 
+  tidyr::drop_na(species) |>  
+  dplyr::pull(species) |> 
+  align_taxa(resources = resources)
+```
+
+
+Now we can query our taxonomic list again the relevant taxonomic resources we retrieved using `create_taxonomic_update_lookup()`. This function will: 
+
+- 
 
 ```{r}
 
