@@ -11,8 +11,8 @@ load_taxonomic_resources(
 )
 }
 \arguments{
-\item{stable_or_current_data}{Type of dataset to access. The default is "stable", which loads the 
-dataset from a github archived file. If set to "current", the dataset will be loaded from 
+\item{stable_or_current_data}{Type of dataset to access. The default is "stable", which loads the
+dataset from a github archived file. If set to "current", the dataset will be loaded from
 a URL which is the cutting edge version, but this may change at any time without notice.}
 
 \item{version}{The version number of the dataset to use. Defaults to the default version.}
