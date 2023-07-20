@@ -525,7 +525,7 @@ create_taxonomic_update_lookup <-
     
     if(one_to_many=="collapse_to_higher_taxon") {
       aligned_species_list %>%
-        group_by(aligned_name,original_name) %>%
+        group_by(original_name,aligned_name) %>%
         summarise(apc_names=find_mrct(canonical_name,resources=resources),
                   aligned_reason=paste(unique(aligned_reason),collapse = " and "),
                   taxonomicStatus=paste(unique(taxonomicStatusClean),collapse = " and "),
