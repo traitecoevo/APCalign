@@ -14,7 +14,10 @@ test_that("create_taxonomic_update_lookup() works with full", {
       "Hibbertia sp.",
       "Athrotaxis laxiflolia",
       "Genoplesium insigne",
-      "Polypogon viridis"
+      "Polypogon viridis",
+      "Acacia aneura",
+      "Acacia paraneura",
+      "Galactia striata"
     ),
     resources = resources,
     full = TRUE
@@ -37,7 +40,8 @@ test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon"
                 "Hibbertia sp.",
                 "Athrotaxis laxiflolia",
                 "Genoplesium insigne",
-                "Polypogon viridis"
+                "Polypogon viridis",
+                "Acacia aneura"
               ),
               one_to_many = "collapse_to_higher_taxon",
               resources = resources
