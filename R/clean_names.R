@@ -2,6 +2,7 @@
 
 
 
+
 #' Find taxonomic alignments for a list of names to a version of the Australian Plant Census (APC) through standardizing formatting and checking for spelling issues
 #'
 #' This function uses Australian Plant Census (APC) & the Australian Plant Name Index (APNI) to find taxonomic alignments for a list of names.
@@ -36,6 +37,8 @@ align_taxa <- function(original_name,
                        max_distance_abs = 3,
                        max_distance_rel = 0.2,
                        resources = load_taxonomic_resources()) {
+  original_name <- unique(original_name[!is.na(original_name)])
+  
   message("Checking alignments of ", length(original_name), " taxa\n")
   
   if (!is.null(output) && file.exists(output)) {
@@ -72,7 +75,7 @@ align_taxa <- function(original_name,
     dplyr::bind_rows(
       taxa_raw,
       tibble::tibble(
-        original_name = subset(original_name,!original_name %in% taxa_raw$original_name) %>% unique(),
+        original_name = subset(original_name, !original_name %in% taxa_raw$original_name) %>% unique(),
         cleaned_name = NA_character_,
         stripped_name = NA_character_,
         stripped_name2 = NA_character_,

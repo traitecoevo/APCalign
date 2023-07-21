@@ -42,3 +42,9 @@ test_that("weird hybrid symbols work",{
   expect_equal(nrow(align_taxa(c("Platanus × acerifolia", "Platanus × hispanica"), resources = resources)), 2)
 })
 
+
+test_that("handles NAs",{
+  expect_equal(nrow(align_taxa(c("Acacia aneura",NA), resources = resources)), 1)
+  expect_equal(nrow(create_taxonomic_update_lookup(c("Acacia aneura",NA), resources = resources)), 1)
+})
+
