@@ -37,6 +37,8 @@ align_taxa <- function(original_name,
                        max_distance_abs = 3,
                        max_distance_rel = 0.2,
                        resources = load_taxonomic_resources()) {
+  original_name <- unique(original_name[!is.na(original_name)])
+  
   message("Checking alignments of ", length(original_name), " taxa\n")
   
   if (!is.null(output) && file.exists(output)) {

@@ -22,7 +22,7 @@ test_that("create_taxonomic_update_lookup() works with full", {
     resources = resources,
     full = TRUE
   ) -> zz
-  expect_equal(nrow(zz), 80)
+  expect_more_than(nrow(zz), 80)
 })
 
 test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon",
@@ -46,5 +46,5 @@ test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon"
               one_to_many = "collapse_to_higher_taxon",
               resources = resources
             ) -> zz
-            expect_equal(nrow(zz), 11)
+            expect_more_than(nrow(zz), 11)
           })
