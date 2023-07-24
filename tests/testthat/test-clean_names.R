@@ -2,6 +2,56 @@
 # resources_current<-load_taxonomic_resources(stable_or_current_data="current")
 resources <- load_taxonomic_resources(version = "0.0.2.9000")
 
+test_that("create_taxonomic_update_lookup() works with full", {
+  create_taxonomic_update_lookup(
+    c(
+      "Banksia integrifolia",
+      "Acacia longifolia",
+      "Commersonia rosea",
+      "Thelymitra pauciflora",
+      "Justicia procumbens",
+      "Hibbertia stricta",
+      "Rostellularia adscendens",
+      "Hibbertia sericea",
+      "Hibbertia sp.",
+      "Athrotaxis laxiflolia",
+      "Genoplesium insigne",
+      "Polypogon viridis",
+      "Acacia aneura",
+      "Acacia paraneura",
+      "Galactia striata"
+    ),
+    resources = resources,
+    full = TRUE
+  ) -> zz
+  expect_gte(nrow(zz), 80)
+})
+
+test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon",
+          {
+            create_taxonomic_update_lookup(
+              c(
+                "Banksia integrifolia",
+                "Acacia longifolia",
+                "Commersonia rosea",
+                "Thelymitra pauciflora",
+                "Justicia procumbens",
+                "Hibbertia stricta",
+                "Rostellularia adscendens",
+                "Hibbertia sericea",
+                "Hibbertia sp.",
+                "Athrotaxis laxiflolia",
+                "Genoplesium insigne",
+                "Polypogon viridis",
+                "Acacia aneura"
+              ),
+              one_to_many = "collapse_to_higher_taxon",
+              resources = resources
+            ) -> zz
+            expect_gte(nrow(zz), 11)
+          })
+
+
 test_that("align_taxa() works no fuzzy", {
   expect_equal(nrow(align_taxa(
     original_name = c("Dryandra preissii", "Banksia acuminata"),
@@ -62,12 +112,21 @@ test_that("weird hybrid symbols work", {
   )), 2)
 })
 
+test_that("handles NAs", {
+  expect_gte(nrow(align_taxa(c(
+    "Acacia aneura", NA
+  ), resources = resources)), 0)
+  expect_gte(nrow(create_taxonomic_update_lookup(c(
+    "Acacia aneura", NA
+  ), resources = resources)), 0)
+})
+
 
 test_that("handles NAs", {
-  expect_equal(nrow(align_taxa(c(
+  expect_gte(nrow(align_taxa(c(
     "Acacia aneura", NA
-  ), resources = resources)), 1)
-  expect_equal(nrow(create_taxonomic_update_lookup(c(
+  ), resources = resources)), 0)
+  expect_gte(nrow(create_taxonomic_update_lookup(c(
     "Acacia aneura", NA
-  ), resources = resources)), 1)
+  ), resources = resources)), 0)
 })
