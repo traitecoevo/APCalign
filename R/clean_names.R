@@ -3,6 +3,7 @@
 
 
 
+
 #' Find taxonomic alignments for a list of names to a version of the Australian Plant Census (APC) through standardizing formatting and checking for spelling issues
 #'
 #' This function uses Australian Plant Census (APC) & the Australian Plant Name Index (APNI) to find taxonomic alignments for a list of names.
@@ -75,7 +76,7 @@ align_taxa <- function(original_name,
     dplyr::bind_rows(
       taxa_raw,
       tibble::tibble(
-        original_name = subset(original_name, !original_name %in% taxa_raw$original_name) %>% unique(),
+        original_name = subset(original_name,!original_name %in% taxa_raw$original_name) %>% unique(),
         cleaned_name = NA_character_,
         stripped_name = NA_character_,
         stripped_name2 = NA_character_,
@@ -485,8 +486,8 @@ standardise_names <- function(taxon_names) {
 #'
 #' @param taxa A list of Australian plant species that needs to be reconciled with current taxonomy.
 #' @param stable_or_current_data either "stable" for a consistent version, or "current" for the leading edge version.
-#' @param version The version number of the dataset to use. Default is \code{"0.0.1.9000"}.
-#' @param one_to_many How to handle one_to_many taxonomic matches.  Default is "return_all".  The other option is "collapse_to_higher_taxon".  
+#' @param version The version number of the dataset to use. 
+#' @param one_to_many How to handle one_to_many taxonomic matches.  Default is "return_all".  The other options are "collapse_to_higher_taxon" and "most likely species". Most likely species defaults to the original_name if that name is accepted by the APC.
 #' @param full logical for whether the full lookup table is returned or just the two key columns
 #' @param resources These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using \code{\link{load_taxonomic_resources}} seperately and pass the data in.
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
@@ -509,6 +510,19 @@ create_taxonomic_update_lookup <-
            full = FALSE,
            resources = load_taxonomic_resources(stable_or_current_data =
                                                   stable_or_current_data, version = version)) {
+    valid_inputs <-
+      c("return_all",
+        "collapse_to_higher_taxon",
+        "most_likely_species")
+    if (!one_to_many %in% valid_inputs)
+      stop(
+        paste(
+          "Invalid input:",
+          input_char,
+          ". Valid inputs are 'return_all', 'collapse_to_higher_taxon', or 'most_likely_species'."
+        )
+      )
+    
     aligned_data <-
       unique(taxa) %>%
       align_taxa(resources = resources)
@@ -516,26 +530,41 @@ create_taxonomic_update_lookup <-
     aligned_species_list_tmp <-
       aligned_data$aligned_name %>% update_taxonomy(resources = resources)
     
-    aligned_species_list <-
-      aligned_data %>% dplyr::select(original_name, aligned_name, aligned_reason) %>%
-      dplyr::left_join(aligned_species_list_tmp,
-                       by = c("aligned_name"),
-                       multiple = "all") %>% 
-      dplyr::filter(!is.na(taxonIDClean)) %>%
-      dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
-      dplyr::rename(canonical_name = canonicalName)
+    #should really be a function, but i'm not smart enough to see how to handle the outputs being different and the early return
+    if (one_to_many %in% c("return_all", "collapse_to_higher_taxon")) {
+      aligned_species_list <-
+        aligned_data %>% dplyr::select(original_name, aligned_name, aligned_reason) %>%
+        dplyr::left_join(aligned_species_list_tmp,
+                         by = c("aligned_name"),
+                         multiple = "all") %>%
+        dplyr::filter(!is.na(taxonIDClean)) %>%
+        dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
+        dplyr::rename(canonical_name = canonicalName)
+    }
     
-    if(one_to_many=="collapse_to_higher_taxon") {
+    if (one_to_many == c("most_likely_species")) {
+      aligned_species_list <-
+        aligned_data %>% dplyr::select(original_name, aligned_name, aligned_reason) %>%
+        dplyr::left_join(aligned_species_list_tmp,
+                         by = c("aligned_name"),
+                         multiple = "first") %>%
+        dplyr::filter(!is.na(taxonIDClean)) %>%
+        dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
+        dplyr::rename(canonical_name = canonicalName)
+    }
+    
+    if (one_to_many == "collapse_to_higher_taxon") {
       aligned_species_list %>%
-        group_by(original_name,aligned_name) %>%
-        summarise(apc_names=find_mrct(canonical_name,resources=resources),
-                  aligned_reason=paste(unique(aligned_reason),collapse = " and "),
-                  taxonomicStatus=paste(unique(taxonomicStatusClean),collapse = " and "),
-                  source=paste(unique(source),collapse = " and "),
-                  number_of_collapsed_taxa=n()
-                  ) -> test
-      return(test) 
-    } 
+        group_by(original_name, aligned_name) %>%
+        summarise(
+          apc_names = find_mrct(canonical_name, resources = resources),
+          aligned_reason = paste(unique(aligned_reason), collapse = " and "),
+          taxonomicStatus = paste(unique(taxonomicStatusClean), collapse = " and "),
+          source = paste(unique(source), collapse = " and "),
+          number_of_collapsed_taxa = n()
+        ) -> test
+      return(test)
+    }
     
     if (full == TRUE) {
       return(aligned_species_list)
@@ -550,12 +579,30 @@ create_taxonomic_update_lookup <-
           aligned_reason,
           taxonomic_status_of_aligned_name = taxonomicStatusClean
         ) %>%
-          distinct()
+          distinct() #may not be necessary
       )
     }
   }
 
 
+
+test_input <- function(input_char) {
+  valid_inputs <-
+    c("return_all",
+      "collapse_to_higher_taxon",
+      "most_likely_species")
+  if (!input_char %in% valid_inputs) {
+    stop(
+      paste(
+        "Invalid input:",
+        input_char,
+        ". Valid inputs are 'return_all', 'collapse_to_higher_taxon', or 'most_likely_species'."
+      )
+    )
+  } else {
+    return(TRUE)
+  }
+}
 
 
 
@@ -567,20 +614,24 @@ find_mrct <- function(taxa,
                                                              stable_or_current_data, version = version)) {
   only_taxa_of_interest <-
     dplyr::filter(resources$APC, resources$APC$canonicalName %in% taxa)
-  if (length(unique(only_taxa_of_interest$canonicalName)) == 1) #all the same
+  if (length(unique(only_taxa_of_interest$canonicalName)) == 1)
+    #all the same
     return(only_taxa_of_interest$canonicalName[1])
   if (length(unique(stringr::word(
     only_taxa_of_interest$canonicalName, 1, 2
-  ))) == 1) #all species the same; different supspecific taxa
+  ))) == 1)
+    #all species the same; different supspecific taxa
     return(stringr::word(only_taxa_of_interest$canonicalName[1], 1, 2))
   if (length(unique(stringr::word(
     only_taxa_of_interest$canonicalName, 1, 1
-  ))) == 1) #all genera the same but different species 
+  ))) == 1)
+    #all genera the same but different species
     return(paste0(
       stringr::word(only_taxa_of_interest$canonicalName[1], 1, 1),
       " sp."
     ))
-  if (length(unique(only_taxa_of_interest$family)) == 1) #all family the same but different genera 
+  if (length(unique(only_taxa_of_interest$family)) == 1)
+    #all family the same but different genera
     return(only_taxa_of_interest$family[1])
   return("plants")
 }
