@@ -23,20 +23,20 @@ If specified, the output will be saved in a CSV file with the given name.}
 \value{
 A tibble with updated taxonomy for the specified plant names. The tibble contains the following columns:
 \itemize{
-  \item \code{aligned_name}: the input plant name.
-  \item \code{source}: the source of the updated taxonomic information (APC or APNI).
-  \item \code{taxonIDClean}: the unique identifier for the updated taxon.
-  \item \code{taxonomicStatusClean}: the taxonomic status of the updated taxon.
-  \item \code{alternativeTaxonomicStatusClean}: the alternative taxonomic status for the input name, if any.
-  \item \code{acceptedNameUsageID}: the unique identifier for the accepted name of the input name.
-  \item \code{canonicalName}: the accepted scientific name for the input name.
-  \item \code{scientificNameAuthorship}: the authorship information for the accepted name.
-  \item \code{taxonRank}: the taxonomic rank of the accepted name.
-  \item \code{taxonomicStatus}: the taxonomic status of the accepted name.
-  \item \code{family}: the family of the accepted name.
-  \item \code{subclass}: the subclass of the accepted name.
-  \item \code{taxonDistribution}: the distribution of the accepted name.
-  \item \code{ccAttributionIRI}: the Creative Commons Attribution International Rights URI of the accepted name.
+\item \code{aligned_name}: the input plant name.
+\item \code{source}: the source of the updated taxonomic information (APC or APNI).
+\item \code{taxonIDClean}: the unique identifier for the updated taxon.
+\item \code{taxonomicStatusClean}: the taxonomic status of the updated taxon.
+\item \code{alternativeTaxonomicStatusClean}: the alternative taxonomic status for the input name, if any.
+\item \code{acceptedNameUsageID}: the unique identifier for the accepted name of the input name.
+\item \code{canonicalName}: the accepted scientific name for the input name.
+\item \code{scientificNameAuthorship}: the authorship information for the accepted name.
+\item \code{taxonRank}: the taxonomic rank of the accepted name.
+\item \code{taxonomicStatus}: the taxonomic status of the accepted name.
+\item \code{family}: the family of the accepted name.
+\item \code{subclass}: the subclass of the accepted name.
+\item \code{taxonDistribution}: the distribution of the accepted name.
+\item \code{ccAttributionIRI}: the Creative Commons Attribution International Rights URI of the accepted name.
 }
 }
 \description{
