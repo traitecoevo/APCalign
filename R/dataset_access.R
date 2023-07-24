@@ -103,7 +103,7 @@ dataset_get <- function(version = default_version(),
       "/apc.parquet"
     )
   apc_hash <- contentid::register(url)
-  apc_file <- contentid::resolve(apc_hash, store = TRUE, dir = path)
+  apc_file <- contentid::resolve(apc_hash, store = TRUE, path = path)
   APC <- arrow::read_parquet(apc_file)
   
   #APNI
@@ -114,7 +114,7 @@ dataset_get <- function(version = default_version(),
       "/apni.parquet"
     )
   apni_hash <- contentid::register(url)
-  apni_file <- contentid::resolve(apni_hash, store = TRUE, dir = path)
+  apni_file <- contentid::resolve(apni_hash, store = TRUE, path = path)
   APNI <- arrow::read_parquet(apni_file)
   
   #combine
