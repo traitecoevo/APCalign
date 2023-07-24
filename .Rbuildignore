@@ -7,3 +7,4 @@ ignore/
 ^codecov\.yml$
 ^\.github$
 ^todo.md
+^vignettes/articles$
