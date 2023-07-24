@@ -26,6 +26,8 @@ Imports:
     arrow,
     crayon
 Suggests:
+    janitor
+    tidyr
     covr,
     knitr,
     rmarkdown,
