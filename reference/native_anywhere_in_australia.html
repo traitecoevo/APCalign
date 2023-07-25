@@ -26,8 +26,24 @@ e.g. if a species is from Western Australia and is invasive on the east coast.">
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
+  <a href="../articles/ausflora.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/caching.html">Caching in ausflora</a>
+    </li>
+    <li>
+      <a href="../articles/taxmatch.html">Name matching in ausflora</a>
+    </li>
+  </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -61,15 +77,15 @@ e.g. if a species is from Western Australia and is invasive on the east coast.</
 
 <dt>resources</dt>
 <dd><p>An optional list of taxonomic resources to use for the lookup.
-If not provided, the function will load default taxonomic resources using the `load_taxonomic_resources()` function.</p></dd>
+If not provided, the function will load default taxonomic resources using the <code><a href="load_taxonomic_resources.html">load_taxonomic_resources()</a></code> function.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>A tibble with two columns: `species`, which is the same as the input `species`,
-        and `native_anywhere_in_aus`, a logical vector indicating whether each species is native anywhere in Australia.</p>
+<p>A tibble with two columns: <code>species</code>, which is the same as the input <code>species</code>,
+and <code>native_anywhere_in_aus</code>, a logical vector indicating whether each species is native anywhere in Australia.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
