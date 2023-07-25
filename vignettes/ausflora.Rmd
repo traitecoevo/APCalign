@@ -173,11 +173,12 @@ You can control the degree of fuzzy matching using the arguments `max_distance_a
 <!-- Difference between cleaned and stripped and stripped name2 -->
 
 ```{r align names}
-library(tidyverse)
+library(dplyr)
+library(tidyr)
 
 aligned_gbif_taxa <- gbif_lite |> 
-  tidyr::drop_na(species) |>  
-  dplyr::pull(species) |> 
+  drop_na(species) |>  
+  pull(species) |> 
   align_taxa(resources = resources)
 
 aligned_gbif_taxa
