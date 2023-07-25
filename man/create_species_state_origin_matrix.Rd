@@ -18,6 +18,8 @@ This function processes the geographic data available in the current or any vers
 \examples{
 create_species_state_origin_matrix()
 
+
+
 }
 \seealso{
 \code{\link{load_taxonomic_resources}}
