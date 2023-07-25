@@ -537,7 +537,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
       aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
       aligned_reason = paste0(
-        "match_06. Automatic alignment with synonymous term among accepted canonical names in APC (",
+        "match_06. Automatic alignment with accepted canonical names in APC (",
         Sys.Date(),
         ")"
       ),

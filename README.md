@@ -47,7 +47,7 @@ create_taxonomic_update_lookup(
 #> # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name
 ```
 
-`create_taxonomic_update_lookup` (1) provides updates where appropiate,
+`create_taxonomic_update_lookup` (1) provides updates where appropriate,
 (2) returns same name where there is a match to an accepted name, and
 (3) returns nothing for names the function doesn’t find a match. The
 returned dataframe is designed to be set up to call `left_join` with
@@ -101,8 +101,8 @@ create_taxonomic_update_lookup(
 #> # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name
 ```
 
-If you’ve got potential misspellings in your data, turn on fuzzy
-matching, and a putative spelling fix will be returned.
+If you’ve got potential misspellings in your data a putative spelling
+fix will be returned, along with a column that explains the change:
 
 ``` r
 create_taxonomic_update_lookup(
@@ -126,8 +126,8 @@ create_taxonomic_update_lookup(
 
 ### How to link
 
-To link the lookup back to the original data, use `left_join` (or one of
-the other join functions):
+To link the taxonomic lookup back to the original data, use `left_join`
+(or one of the other join functions):
 
 ``` r
 library(tidyverse, quietly = TRUE)
@@ -145,7 +145,7 @@ lookup <- create_taxonomic_update_lookup(raw_data$original_name,
   resources = resources_0029
 )
 
-left_join(raw_data, lookup)
+dplyr::left_join(raw_data, lookup)
 #> # A tibble: 4 × 6
 #>   original_name        other_data aligned_name         apc_name   aligned_reason
 #>   <chr>                <lgl>      <chr>                <chr>      <chr>         
@@ -163,9 +163,10 @@ For more experienced users, run two steps in workflow…
 1.  `align_taxa`: …find best alignment with name in APNI. Name may not
     be current. This does the best possible effort to match phrase names
     and subspecific taxa which often have alternative formatting. This
-    function also searches for potential spelling mistakes.
+    function also searches for small spelling or gender mistakes.
 2.  `update_taxonomy`: …update APNI taxa to specified (or current)
-    version of APC. This will
+    version of APC. This will use the general synonymy published by the
+    APC to attempt to sync the taxon names to a specific list.
 
 This will do spelling and formatting fixes but not taxonomic updates:
 
@@ -202,7 +203,7 @@ update_taxonomy(aligned$aligned_name)
 ```
 
 Both functions are called by `create_taxonomic_update_lookup` so if you
-want the combined functionality it’s better to use
+want the combined functionality it’s faster/easier to use
 `create_taxonomic_update_lookup`.
 
 ### Saving outputs
