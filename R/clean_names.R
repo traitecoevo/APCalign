@@ -569,24 +569,19 @@ get_updated_species_list <-
       aligned_data$aligned_name %>% update_taxonomy(resources = resources, output = output)
     
     if (one_to_many %in% c("return_all", "collapse_to_higher_taxon")) {
-      aligned_data %>%
-        dplyr::select(original_name, aligned_name, aligned_reason) %>%
-        dplyr::left_join(aligned_species_list_tmp,
-                         by = c("aligned_name"),
-                         multiple = "all") %>%
-        dplyr::filter(!is.na(taxonIDClean)) %>%
-        dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
-        dplyr::rename(canonical_name = canonicalName)
+      multiple = "all"
     } else {
-      aligned_data %>%
-        dplyr::select(original_name, aligned_name, aligned_reason) %>%
-        dplyr::left_join(aligned_species_list_tmp,
-                         by = c("aligned_name"),
-                         multiple = "first") %>%
-        dplyr::filter(!is.na(taxonIDClean)) %>%
-        dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
-        dplyr::rename(canonical_name = canonicalName)
+      multiple = "first"
     }
+
+    aligned_data %>%
+      dplyr::select(original_name, aligned_name, aligned_reason) %>%
+      dplyr::left_join(aligned_species_list_tmp,
+                        by = c("aligned_name"),
+                        multiple = multiple) %>%
+      dplyr::filter(!is.na(taxonIDClean)) %>%
+      dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
+      dplyr::rename(canonical_name = canonicalName)
   }
 
 
