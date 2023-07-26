@@ -10,11 +10,11 @@ native_anywhere_in_australia(species, resources = load_taxonomic_resources())
 \item{species}{A character string representing the binomial or common name of the species.}
 
 \item{resources}{An optional list of taxonomic resources to use for the lookup.
-If not provided, the function will load default taxonomic resources using the `load_taxonomic_resources()` function.}
+If not provided, the function will load default taxonomic resources using the \code{load_taxonomic_resources()} function.}
 }
 \value{
-A tibble with two columns: `species`, which is the same as the input `species`,
-        and `native_anywhere_in_aus`, a logical vector indicating whether each species is native anywhere in Australia.
+A tibble with two columns: \code{species}, which is the same as the input \code{species},
+and \code{native_anywhere_in_aus}, a logical vector indicating whether each species is native anywhere in Australia.
 }
 \description{
 This function checks if the given species is native anywhere in Australia.
