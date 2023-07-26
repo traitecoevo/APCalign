@@ -1,3 +1,5 @@
+#
+#
 # currently not testing the current option as the webhosting seems unreliable for that dataset
 # resources_current<-load_taxonomic_resources(stable_or_current_data="current")
 
@@ -23,8 +25,10 @@ test_that("create_taxonomic_update_lookup() works with full", {
     ),
     resources = resources,
     full = TRUE
-  ) -> zz
-  expect_gte(nrow(zz), 80)
+  ) -> current_result
+  #write_csv(current_result,"consistency_lookup.csv")
+  past_result <- read_csv("consistency_lookup.csv")
+  expect_equal(past_result,current_result)
 })
 
 test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon",
