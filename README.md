@@ -8,7 +8,7 @@ coverage](https://codecov.io/gh/traitecoevo/ausflora/branch/master/graph/badge.s
 [![R-CMD-check](https://github.com/traitecoevo/ausflora/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/traitecoevo/ausflora/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-# ausflora <img src="inst/figures/ausflora_hex2.png" align="right" width="120"/>
+# ausflora <img src="man/figures/ausflora_hex2.png" align="right" width="120"/>
 
 A R package for aligning and updating taxonomic names from the
 [Australian Plant Census
