@@ -81,8 +81,9 @@ Now we can query our taxonomic names against the taxonomic resources we just ret
 
 - Align your taxonomic names to APNI and APC using our [fuzzy matching algorithm](taxmatch.html)
 - Update taxonomic names to APC accepted name.
+- Returns NA for names where a match cannot be found
 
-If you would like to learn more, take a look at the section [Closer look at name standardisation with 'ausflora'](#closer-look)
+If you would like to learn more about each of these step, take a look at the section [Closer look at name standardisation with 'ausflora'](#closer-look)
 
 ```{r}
 library(dplyr)
@@ -109,6 +110,7 @@ left_join(update_gbif_names,  # Left joining updated taxon names back to origina
          aligned_reason, infraspecificepithet:decimalLatitude) |> 
   print(n = 6)
 ```
+
 
 ## Plant established status across states/territories
 
@@ -157,22 +159,18 @@ update_gbif_names |>
 
 `create_taxonomic_update_lookup` is a simple, wrapper, function for novice users that want to quickly check and standardise taxon names. For more experienced users, you can take a look at the sub functions `align_taxa()` and `update_taxonomy()` to see how taxon names are processed, aligned and updated.
 
+![](../man/figures/standardise_taxonomy_workflow.png)
+
 ### Aligning names to APNI and APC
 
 This function will:
 
 -   Clean up your taxonomic names <!-- (Getting rid of trailing whitespaces, case correction) -->
--   Align your taxonomic names using our [fuzzy matching algorithm]()
+-   Find best alignment with APNI to your taxonomic name using our [fuzzy matching algorithm](taxmatch.html)
 
 You can control the degree of fuzzy matching using the arguments `max_distance_abs` and `max_distance_rel`
 
-<!-- Should the summary be updating during alignment?  -->
-
-<!-- 0 names already matched; 0 names checked but without a match; 121 taxa yet to be checked -->
-
-<!-- What do all these columns do? -->
-
-<!-- Difference between cleaned and stripped and stripped name2 -->
+Note that the `aligned_name` may not be current. This does the best possible effort to match phrase names and subspecific taxa which often have alternative formatting.  This function also searches for small spelling or gender mistakes. 
 
 ```{r align names}
 library(dplyr)
@@ -198,6 +196,9 @@ aligned_gbif_taxa |>
 ```
 
 ### Update taxonomic names to alignments
+
+`update_taxonomy()` will update APNI taxa to specified (or current) version of APC. It will use the general synonymy published by the APC to attempt to sync the taxon names to a specific list. The function will also add other relevant taxonomy columns in the output
+
 
 ```{r update names}
 updated_gbif_taxa <- aligned_gbif_taxa |> 

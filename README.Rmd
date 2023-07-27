@@ -25,9 +25,12 @@ library(ausflora)
 
 # ausflora <img src="man/figures/ausflora_hex2.png" align="right" width="120"/>
 
-A  R package for aligning and updating taxonomic names from the [Australian Plant Census (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy)
+'ausflora' uses the [Australian Plant Census (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and [Australian Plant Name Index](https://biodiversity.org.au/nsl/services/search/names) to standardise Australian plant taxon names. 'ausflora' also supplies information about
+the established status of plant taxa across different states/territories.
 
-## Installation 
+## Installation
+
+'ausflora' is current not on CRAN. Install the current development version: 
 
 ```{r install, eval= FALSE}
 # install.packages("remotes")
@@ -43,114 +46,26 @@ Generating a look-up table can be done with just one function
 ```{r,message=FALSE}
 resources <- load_taxonomic_resources()
 
-create_taxonomic_update_lookup(
-  c(
+create_taxonomic_update_lookup( 
+  taxa = c(
     "Banksia integrifolia",
     "Acacia longifolia",
     "Commersonia rosea"
-  ),
+    ),
   resources = resources
 )
 ```
 
-`create_taxonomic_update_lookup` (1) provides updates where appropriate, (2) returns same name where there is a match to an accepted name, and (3) returns nothing for names the function doesn't find a match.  The returned dataframe is designed to be  set up to call `left_join` with your dataset. 
+## Learn more
 
-This is the core functionality.  Now for some more features--to see the full taxonomic information use `full=TRUE`
-
-```{r, message=FALSE}
-create_taxonomic_update_lookup(
-  c(
-    "Banksia integrifolia",
-    "Acacia longifolia",
-    "Commersonia rosea"
-  ),
-  full = TRUE,
-  resources = resources
-)
-```
-
-To make a reproducible workflow, specify the version number in your code. without this the underlying taxonomic data may change.  
-
-```{r,message=FALSE}
-resources_0029 <- load_taxonomic_resources(version = "0.0.2.9000")
-create_taxonomic_update_lookup(
-  c(
-    "Banksia integrifolia",
-    "Acacia longifolia",
-    "Commersonia rosea"
-  ),
-  resources = resources_0029
-)
-```
-
-If you've got potential misspellings in your data a putative spelling fix will be returned, along with a column that explains the change:
-
-```{r, message=FALSE}
-create_taxonomic_update_lookup(
-  c(
-    "Banksia integrifolia",
-    "Acacia longifolia",
-    "Commersonia rosea",
-    "Baksia integrifolia"
-  ),
-  resources = resources_0029
-)
-```
-
-### How to link
-
-To link the taxonomic lookup back to the original data, use `left_join` (or one of the other join functions):
-
-```{r, message=FALSE}
-library(tidyverse, quietly = TRUE)
-raw_data <- tibble(
-  original_name = c(
-    "Banksia integrifolia",
-    "Acacia longifolia",
-    "Commersonia rosea",
-    "Baksia integrifolia"
-  ),
-  other_data = NA
-)
-
-lookup <- create_taxonomic_update_lookup(raw_data$original_name,
-  resources = resources_0029
-)
-
-dplyr::left_join(raw_data, lookup)
-```
-
-### More detailed queires
-
-For more experienced users, run two steps in workflow...
-
-1. `align_taxa`: ...find best alignment with name in APNI. Name may not be current.  This does the best possible effort to match phrase names and subspecific taxa which often have alternative formatting.  This function also searches for small spelling or gender mistakes. 
-2. `update_taxonomy`: ...update APNI taxa to specified (or current) version of APC.  This will use the general synonymy published by the APC to attempt to sync the taxon names to a specific list.  
+Highly recommend looking at our [Getting Started](https://traitecoevo.github.io/ausflora/articles/ausflora.html) vignette to learn about how to use 'ausflora'. You can also learn more about our [taxa matching algorithim](https://traitecoevo.github.io/ausflora/articles/taxmatch.html) and how [APC/APNI data is cached](https://traitecoevo.github.io/ausflora/articles/caching.html) behind-the-scenes.
 
 
-This will do spelling and formatting fixes but not taxonomic updates:
-```{r}
-aligned <- align_taxa(
-  c(
-    "Banksia integrifolia",
-    "Acacia longifolia",
-    "Commersonia rosea",
-    "Baksia integrifolia"
-  ),
-  resources = resources
-)
-```
+## Found a bug? 
 
-This will do the taxonomic update:
-```{r}
-update_taxonomy(aligned$aligned_name)
-```
-Both functions are called by `create_taxonomic_update_lookup` so if you want the combined functionality it's faster/easier to use `create_taxonomic_update_lookup`.
+Did you come across an unexpected taxon name change? Elusive error you can't debug - [submit an issue](https://github.com/traitecoevo/ausflora/issues) and we will try our best to help
 
-### Saving outputs
+## Comments and contributions
 
-
-```{r}
-# add more here
-```
+We welcome any comments and contributions to the package, start by [submit an issue](https://github.com/traitecoevo/ausflora/issues) and we can take it from there!
 
