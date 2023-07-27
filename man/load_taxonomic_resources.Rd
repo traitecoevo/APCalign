@@ -27,6 +27,5 @@ Loads taxonomic resources into the global environment. This function accesses ta
 }
 \examples{
 load_taxonomic_resources(stable_or_current_data="stable",version="0.0.2.9000")
-\donttest{ load_taxonomic_resources(stable_or_current_data="current")}
 
 }
