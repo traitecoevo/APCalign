@@ -256,7 +256,7 @@ update_gbif_names |>
 
 ### Aligning names to APNI and APC
 
-This function will:
+`align_taxa()` function will:
 
 -   Clean up your taxonomic names <!-- (Getting rid of trailing whitespaces, case correction) -->
 -   Find best alignment with APNI to your taxonomic name using our [fuzzy matching algorithm](taxmatch.html)

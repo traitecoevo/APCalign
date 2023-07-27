@@ -8,4 +8,18 @@ navbar:
   structure:
     left:  [intro, reference, articles]
     right: [search, github]
-
+reference:
+- subtitle: Standardise plant taxon names
+- contents:
+  - load_taxonomic_resources
+  - create_taxonomic_update_lookup
+  - align_taxa
+  - update_taxonomy
+- subtitle: Established status across states/territories
+- contents:
+  - create_species_state_origin_matrix
+  - state_diversity_counts
+  - native_anywhere_in_australia
+- title: Data
+- contents:
+  - gbif_lite
