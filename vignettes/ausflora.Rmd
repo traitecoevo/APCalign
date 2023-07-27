@@ -58,13 +58,13 @@ stable_start_time <- Sys.time()
 stable_resources <- load_taxonomic_resources(stable_or_current_data = "stable")
 stable_end_time <-  Sys.time()
 
-current_start_time <- Sys.time()
-current_resources <- load_taxonomic_resources(stable_or_current_data = "current")
-current_end_time <-  Sys.time()
+#current_start_time <- Sys.time()
+#current_resources <- load_taxonomic_resources(stable_or_current_data = "current")
+#current_end_time <-  Sys.time()
 
 # Compare times
 stable_end_time - stable_start_time
-current_end_time - current_start_time
+#current_end_time - current_start_time
 ```
 
 For a more reproducible workflow, we recommend specifying the exact `stable` version you want to use.
