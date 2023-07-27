@@ -19,8 +19,6 @@
 ##'
 ##' @examples
 ##'
-##' # Load the current version of the dataset direct from the APC website
-##'  \dontrun{dataset_access_function(type = "current")}
 ##'
 ##' # Load the a stable version of the dataset
 ##' dataset_access_function(version="0.0.2.9000",type = "stable")
@@ -140,7 +138,6 @@ dataset_get <- function(version = default_version(),
 #'
 #' @examples
 #' load_taxonomic_resources(stable_or_current_data="stable",version="0.0.2.9000")
-#' \donttest{ load_taxonomic_resources(stable_or_current_data="current")}
 #'
 #' @importFrom dplyr filter select mutate distinct arrange
 #' @importFrom crayon red

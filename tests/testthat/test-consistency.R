@@ -28,6 +28,8 @@ test_that("create_taxonomic_update_lookup() works with full", {
   ) -> current_result
   #write_csv(current_result,"consistency_lookup.csv")
   past_result <- read_csv("consistency_lookup.csv")
+  past_result<-select(past_result,-aligned_reason) #because this has a date in it
+  current_result<-select(current_result,-aligned_reason) #because this has a date in it
   expect_equal(past_result,current_result)
 })
 

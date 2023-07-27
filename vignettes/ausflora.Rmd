@@ -52,7 +52,7 @@ There are two versions of the APC and APNI databases that you can retrieve with 
 
 Note that the databases are quite large so the initial retrieval of `stable` versions will take a few minutes. Once the taxonomic resources have been stored locally, subsequent retrievals will take less time. Retrieving `current` resources will always take longer since it is. Check out our [Resource Caching]() article to learn more about how the APC and APNIC databases are accessed, stored and retrieved.
 
-```{r load resources}
+```{r load resources, eval=FALSE}
 # Benchmarking the retrieval of `stable` or `current` resources
 stable_start_time <- Sys.time()
 stable_resources <- load_taxonomic_resources(stable_or_current_data = "stable")
