@@ -67,7 +67,8 @@
 <span>  one_to_many <span class="op">=</span> <span class="st">"return_all"</span>,</span>
 <span>  full <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>stable_or_current_data <span class="op">=</span> <span class="va">stable_or_current_data</span>,</span>
-<span>    version <span class="op">=</span> <span class="va">version</span><span class="op">)</span></span>
+<span>    version <span class="op">=</span> <span class="va">version</span><span class="op">)</span>,</span>
+<span>  output <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -86,7 +87,7 @@
 
 
 <dt>one_to_many</dt>
-<dd><p>How to handle one_to_many taxonomic matches.  Default is "return_all".  The other options are "collapse_to_higher_taxon" and "most likely species". Most likely species defaults to the original_name if that name is accepted by the APC.</p></dd>
+<dd><p>How to handle one_to_many taxonomic matches.  Default is "return_all".  The other options are "collapse_to_higher_taxon" and "most_likely_species". most_likely_species defaults to the original_name if that name is accepted by the APC; this will be right for certain species subsets, but make errors in other cases, use with caution.</p></dd>
 
 
 <dt>full</dt>
@@ -94,7 +95,11 @@
 
 
 <dt>resources</dt>
-<dd><p>These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using <code><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></code> seperately and pass the data in.</p></dd>
+<dd><p>These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using <code><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></code> separately and pass the data in.</p></dd>
+
+
+<dt>output</dt>
+<dd><p>file path to save the intermediate output to</p></dd>
 
 </dl></div>
     <div id="value">

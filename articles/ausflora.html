@@ -154,19 +154,15 @@ and retrieved.</p>
 <code class="sourceCode R"><span><span class="co"># Benchmarking the retrieval of `stable` or `current` resources</span></span>
 <span><span class="va">stable_start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">stable_resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>stable_or_current_data <span class="op">=</span> <span class="st">"stable"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading resources......done</span></span>
 <span><span class="va">stable_end_time</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">current_start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">current_resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>stable_or_current_data <span class="op">=</span> <span class="st">"current"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading resources......done</span></span>
 <span><span class="va">current_end_time</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Compare times</span></span>
 <span><span class="va">stable_end_time</span> <span class="op">-</span> <span class="va">stable_start_time</span></span>
-<span><span class="co">#&gt; Time difference of 23.99406 secs</span></span>
-<span><span class="va">current_end_time</span> <span class="op">-</span> <span class="va">current_start_time</span></span>
-<span><span class="co">#&gt; Time difference of 38.54503 secs</span></span></code></pre></div>
+<span><span class="va">current_end_time</span> <span class="op">-</span> <span class="va">current_start_time</span></span></code></pre></div>
 <p>For a more reproducible workflow, we recommend specifying the exact
 <code>stable</code> version you want to use.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -338,9 +334,9 @@ particular state/territory using
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">apc_name</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># Extracting this APC accepted name</span></span>
 <span>  <span class="fu"><a href="../reference/native_anywhere_in_australia.html">native_anywhere_in_australia</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 2</span></span></span>
-<span><span class="co">#&gt;   species               native_anywhere_in_aus</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>                 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Lophostemon confertus TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt;   species             native_anywhere_in_aus</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>                 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Passiflora aurantia TRUE</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="closer-look-at-name-standardisation-with-ausflora">Closer look at name standardisation with ‘ausflora’<a class="anchor" aria-label="anchor" href="#closer-look-at-name-standardisation-with-ausflora"></a>
