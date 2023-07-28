@@ -9,6 +9,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+![](data_providers.png)
+
 ## Australian Plant Cenus (APC)
 
 The [Australian Plant Cenus (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) is national database of accepted taxonomic names for [Australian vascular plants](https://bie.ala.org.au/species/NZOR-6-33408). The APC includes information on synonyms, and misapplications of them, as well as established status (native/introduced) and distribution across states and territories. 

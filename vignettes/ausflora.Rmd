@@ -15,8 +15,6 @@ When working with biodiversity data, it is important to verify  taxonomic names 
 -   Aligning authoritative names to your taxonomic names using our [fuzzy matching algorithm](taxmatch.html)
 -   Updating your taxonomic names in a transparent, reproducible manner
 
-![]
-
 ## Installation
 
 ausflora is currently not on CRAN. You can install its current developmental version using
