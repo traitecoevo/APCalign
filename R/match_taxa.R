@@ -1,3 +1,68 @@
+#' Standardise Taxon Names
+#'
+#' This function standardises taxon names by performing a series of text substitutions to remove common inconsistencies in taxonomic nomenclature. The function takes a character vector of taxon names as input and returns a character vector of standardised taxon names as output.
+#'
+#' @param taxon_names A character vector of taxon names that need to be standardised.
+#'
+#' @return A character vector of standardised taxon names.
+#'
+#'
+#' @examples
+#' standardise_names(c("Abies alba Mill.",
+#'                     "Quercus suber",
+#'                     "Eucalyptus sp.",
+#'                     "Agave americana var. marginata"))
+#' @noRd
+standardise_names <- function(taxon_names) {
+  f <- function(x, find, replace) {
+    gsub(find, replace, x, perl = TRUE)
+  }
+  
+  taxon_names %>%
+    ## for hybrid markers
+    stringi::stri_trans_general("Any-Latin; Latin-ASCII") %>%
+    f("\\*", "x") %>%
+    ## Weird formatting
+    f("[\\n\\t]", " ") %>%
+    
+    ## Capitalise first letter
+    f("^([a-z])", "\\U\\1") %>%
+    
+    ## sp. not sp or spp
+    f("\\ssp(\\s|$)", " sp.\\1") %>%
+    f("\\sspp.(\\s|$)", " sp.\\1") %>%
+    f("\\sspp(\\s|$)", " sp.\\1") %>%
+    f("\\sspp(\\s|$)", " sp.\\1") %>%
+    
+    ## subsp. not ssp, ssp., subsp or sub sp.
+    f("\\sssp(\\s|$)", " subsp.\\1") %>%
+    f("\\sssp.(\\s|$)", " subsp.\\1") %>%
+    f("\\ssubsp(\\s|$)", " subsp.\\1") %>%
+    f("\\ssub sp.(\\s|$)", " subsp.\\1") %>%
+    
+    ## var. not var
+    f("\\svar(\\s|$)", " var.\\1") %>%
+    
+    ## aff. not affin, aff, affn
+    f("\\saffin(\\s|$)", " aff.\\1") %>%
+    f("\\saff(\\s|$)", " aff.\\1") %>%
+    f("\\saffn(\\s|$)", " aff.\\1") %>%
+    
+    ## f. not forma
+    f("\\sforma(\\s|$)", " f.\\1") %>%
+    
+    ## remove " ms" if present
+    f("\\sms(\\s|$)", "\\1") %>%
+    
+    ## remove " s.l" or " s.s." if present
+    f("\\ssl(\\s|$)", "\\1") %>%
+    f("\\ss\\.l\\.(\\s|$)", "\\1") %>%
+    f("\\sss(\\s|$)", "") %>%
+    f("\\ss\\.s\\.(\\s|$)", "\\1") %>%
+    
+    ## clean white space
+    stringr::str_squish()
+}
 
 
 # do the actual matching
