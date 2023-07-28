@@ -23,87 +23,69 @@
 #' @examples
 #' create_species_state_origin_matrix()
 #'
-create_species_state_origin_matrix <-
-  function(resources = load_taxonomic_resources()) {
-    apc_species <-
-      dplyr::filter(resources$APC,
-                    taxonRank == "Species" &
-                      taxonomicStatus == "accepted")
-    #seperate the states
-    sep_state_data <-
-      stringr::str_split(unique(apc_species$taxonDistribution), ",")
-    
-    #get unique places
-    all_codes <- unique(stringr::str_trim(unlist(sep_state_data)))
-    apc_places <-
-      unique(stringr::word(all_codes[!is.na(all_codes)], 1, 1))
-    
-    #make a table to fill in
-    data.frame(col.names = apc_places)
-    species_df <-
-      dplyr::tibble(species = apc_species$scientificName)
-    for (i in 1:length(apc_places)) {
-      species_df <-
-        dplyr::bind_cols(species_df, NA, .name_repair = "minimal")
-    }
-    names(species_df) <- c("species", apc_places)
-    
-    #look for all possible entries after each state
-    state_parse_and_add_column <-
-      function(species_df, state, apc_species) {
-        # print(all_codes[grepl(state,all_codes)]) # checking for weird ones
-        species_df[, state] <- dplyr::case_when(
-          grepl(
-            paste0("\\b", state, " \\(uncertain origin\\)"),
-            apc_species$taxonDistribution
-          ) ~ "uncertain origin",
-          grepl(
-            paste0("\\b", state, " \\(naturalised\\)"),
-            apc_species$taxonDistribution
-          ) ~ "naturalised",
-          grepl(
-            paste0("\\b", state, " \\(doubtfully naturalised\\)"),
-            apc_species$taxonDistribution
-          ) ~ "doubtfully naturalised",
-          grepl(
-            paste0("\\b", state, " \\(native and naturalised\\)"),
-            apc_species$taxonDistribution
-          ) ~ "native and naturalised",
-          grepl(
-            paste0("\\b", state, " \\(formerly naturalised\\)"),
-            apc_species$taxonDistribution
-          ) ~ "formerly naturalised",
-          grepl(
-            paste0("\\b", state, " \\(presumed extinct\\)"),
-            apc_species$taxonDistribution
-          ) ~ "presumed extinct",
-          grepl(
-            paste0("\\b", state, " \\(native and doubtfully naturalised\\)"),
-            apc_species$taxonDistribution
-          ) ~ "native and doubtfully naturalised",
-          grepl(
-            paste0("\\b", state, " \\(native and uncertain origin\\)"),
-            apc_species$taxonDistribution
-          ) ~ "native and uncertain origin",
-          grepl(paste0("\\b", state), apc_species$taxonDistribution) ~ "native",
-          #no entry = native, it's important this is last in the list
-          TRUE ~ "not present"
-        )
-        return(species_df)
-      }
-    
-    #bug checking
-    #species_df<-state_parse_and_add_column(species_df,"LHI",apc_species)
-    #species_df<-state_parse_and_add_column(species_df,"HI",apc_species)
-    
-    #go through the states one by one
-    for (i in 1:length(apc_places)) {
-      species_df <-
-        state_parse_and_add_column(species_df, apc_places[i], apc_species)
-    }
-    return(species_df)
-  }
+#'
+#'
+create_species_state_origin_matrix <- function(resources = load_taxonomic_resources()) {
+  apc_species <- filter_data_to_accepted_species(resources)
+  sep_state_data <- separate_states(apc_species)
+  apc_places <- identify_places(sep_state_data)
+  species_df <- create_species_df(apc_places, apc_species)
+  result_df <- parse_states(species_df, apc_places, apc_species)
+  return(result_df)
+}
 
+#' @noRd
+filter_data_to_accepted_species <- function(resources) {
+  dplyr::filter(resources$APC,
+                taxonRank == "Species" &
+                  taxonomicStatus == "accepted")
+}
+
+#' @noRd
+separate_states <- function(data) {
+  stringr::str_split(unique(data$taxonDistribution), ",")
+}
+
+#' @noRd
+identify_places <- function(sep_state_data) {
+  all_codes <- unique(stringr::str_trim(unlist(sep_state_data)))
+  unique(stringr::word(all_codes[!is.na(all_codes)], 1, 1))
+}
+
+#' @noRd
+create_species_df <- function(apc_places, apc_species) {
+  species_df <- dplyr::tibble(species = apc_species$scientificName)
+  for (i in 1:length(apc_places)) {
+    species_df <- dplyr::bind_cols(species_df, NA, .name_repair = "minimal")
+  }
+  names(species_df) <- c("species", apc_places)
+  return(species_df)
+}
+
+#' @noRd
+state_parse_and_add_column <- function(species_df, state, apc_species) {
+  species_df[, state] <- dplyr::case_when(
+    grepl(paste0("\\b", state, " \\(uncertain origin\\)"), apc_species$taxonDistribution) ~ "uncertain origin",
+    grepl(paste0("\\b", state, " \\(naturalised\\)"), apc_species$taxonDistribution) ~ "naturalised",
+    grepl(paste0("\\b", state, " \\(doubtfully naturalised\\)"), apc_species$taxonDistribution) ~ "doubtfully naturalised",
+    grepl(paste0("\\b", state, " \\(native and naturalised\\)"), apc_species$taxonDistribution) ~ "native and naturalised",
+    grepl(paste0("\\b", state, " \\(formerly naturalised\\)"), apc_species$taxonDistribution) ~ "formerly naturalised",
+    grepl(paste0("\\b", state, " \\(presumed extinct\\)"), apc_species$taxonDistribution) ~ "presumed extinct",
+    grepl(paste0("\\b", state, " \\(native and doubtfully naturalised\\)"), apc_species$taxonDistribution) ~ "native and doubtfully naturalised",
+    grepl(paste0("\\b", state, " \\(native and uncertain origin\\)"), apc_species$taxonDistribution) ~ "native and uncertain origin",
+    grepl(paste0("\\b", state), apc_species$taxonDistribution) ~ "native",
+    TRUE ~ "not present"
+  )
+  return(species_df)
+}
+
+#' @noRd
+parse_states <- function(species_df, apc_places, apc_species) {
+  for (i in 1:length(apc_places)) {
+    species_df <- state_parse_and_add_column(species_df, apc_places[i], apc_species)
+  }
+  return(species_df)
+}
 
 
 
