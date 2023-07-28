@@ -30,7 +30,7 @@ the established status of plant taxa across different states/territories.
 
 ## Installation
 
-'ausflora' is current not on CRAN. Install the current development version: 
+'ausflora' is current not on CRAN. Install the currently development version: 
 
 ```{r install, eval= FALSE}
 # install.packages("remotes")

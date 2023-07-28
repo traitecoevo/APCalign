@@ -98,7 +98,7 @@ resources <- load_taxonomic_resources(stable_or_current_data = "stable", version
 
 ## Standardise plant taxon names
 
-Now we can query our taxonomic names against the taxonomic resources we just retrieved using `create_taxonomic_update_lookup()`. This is an all-in-one function will:
+Now we can query our taxonomic names against the taxonomic resources we just retrieved using `create_taxonomic_update_lookup()`. This is an all-in-one function that will:
 
 - Align your taxonomic names to APNI and APC using our [fuzzy matching algorithm](taxmatch.html)
 - Update taxonomic names to APC accepted name.
