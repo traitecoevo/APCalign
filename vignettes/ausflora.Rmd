@@ -1,5 +1,5 @@
 ---
-title: "Introduction to ausflora"
+title: "ausflora"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{ausflora}
@@ -7,91 +7,128 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+
 
 When working with biodiversity data, it is important to verify  taxonomic names with an authoritative list and correct any out-of-date names. The 'ausflora' package simplifies this process by:
 
 -   Accessing up-to-date taxonomic information from the [Australian Plant Census](https://biodiversity.org.au/nsl/services/search/taxonomy) and the [Australia Plant Name Index](https://biodiversity.org.au/nsl/services/search/names).
--   Aligning authoritative names to your taxonomic names using our [algorithm]()
--   Updating your taxonomic names in a transparent manner
+-   Aligning authoritative names to your taxonomic names using our [fuzzy matching algorithm](taxmatch.html)
+-   Updating your taxonomic names in a transparent, reproducible manner
+
+## Installation
 
 ausflora is currently not on CRAN. You can install its current developmental version using
 
-```{r install, eval=FALSE}
+
+```r
 # install.packages("remotes")
 remotes::install_github("traitecoevo/ausflora")
-```
 
-Once its installed, we can load it into R using
-
-```{r setup}
 library(ausflora)
 ```
 
-To demonstrate how to use ausflora, we will use an example dataset `gbif_lite` which is documented in ?gbif_lite
+To demonstrate how to use 'ausflora', we will use an example dataset `gbif_lite` which is documented in `?gbif_lite`
 
-```{r example data}
+
+```r
 dim(gbif_lite)
+#> [1] 129   7
 
-gbif_lite
+gbif_lite |> print(n = 6)
+#> # A tibble: 129 × 7
+#>   species           infraspecificepithet taxonrank decimalLongitude decimalLatitude scientificname verbatimscientificname
+#>   <chr>             <chr>                <chr>                <dbl>           <dbl> <chr>          <chr>                 
+#> 1 Tetratheca cilia… <NA>                 SPECIES               145.           -37.4 Tetratheca ci… Tetratheca ciliata    
+#> 2 Peganum harmala   <NA>                 SPECIES               139.           -33.3 Peganum harma… Peganum harmala       
+#> 3 Calotis multicau… <NA>                 SPECIES               115.           -24.3 Calotis multi… Calotis multicaulis   
+#> 4 Leptospermum tri… <NA>                 SPECIES               151.           -34.0 Leptospermum … Leptospermum trinervi…
+#> 5 Lepidosperma lat… <NA>                 SPECIES               142.           -37.3 Lepidosperma … Lepidosperma laterale 
+#> 6 Enneapogon polyp… <NA>                 SPECIES               129.           -17.8 Enneapogon po… Enneapogon polyphyllus
+#> # ℹ 123 more rows
 ```
 
 ## Retrieve taxonomic resources
 
 The first step is to retrieve the entire APC and APNI name databases and store them locally as taxonomic resources. We achieve this using `load_taxonomic_resources()`.
 
-There are two versions of the APC and APNI databases that you can retrieve with the `stable_or_current_data`argument. Calling:
+There are two versions of the databases that you can retrieve with the `stable_or_current_data` argument. Calling:
 
--   `stable` will retrieve the recently archived version of the databases from our [GitHub releases](https://github.com/traitecoevo/ausflora/releases). This is set as the default option.
+-   `stable` will retrieve the most recent, archived version of the databases from our [GitHub releases](https://github.com/traitecoevo/ausflora/releases). This is set as the default option.
 -   `current` will retrieve the up-to-date databases directly from the APC and APNI website.
 
-Note that the databases are quite large so the initial retrieval of `stable` versions will take a few minutes. Once the taxonomic resources have been stored locally, subsequent retrievals will take less time. Retrieving `current` resources will always take longer since it is. Check out our [Resource Caching]() article to learn more about how the APC and APNIC databases are accessed, stored and retrieved.
+Note that the databases are quite large so the initial retrieval of `stable` versions will take a few minutes. Once the taxonomic resources have been stored locally, subsequent retrievals will take less time. Retrieving `current` resources will always take longer since it is. Check out our [Resource Caching](caching.html) article to learn more about how the APC and APNIC databases are accessed, stored and retrieved.
 
-```{r load resources, eval=FALSE}
+
+```r
 # Benchmarking the retrieval of `stable` or `current` resources
 stable_start_time <- Sys.time()
 stable_resources <- load_taxonomic_resources(stable_or_current_data = "stable")
+#> Loading resources......done
 stable_end_time <-  Sys.time()
 
 current_start_time <- Sys.time()
 current_resources <- load_taxonomic_resources(stable_or_current_data = "current")
+#> Loading resources...
+#> Warning: The following named parsers don't match the column names: autonym, hybrid, cultivar, formula, scientific,
+#> nomInval, nomIlleg, namePublishedInYear, taxonRankSortOrder, created, modified
+#> Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
+#>   dat <- vroom(...)
+#>   problems(dat)
+#> Error in `dplyr::filter()`:
+#> ℹ In argument: `nameElement != "sp."`.
+#> Caused by error:
+#> ! object 'nameElement' not found
+#> ...done
 current_end_time <-  Sys.time()
 
 # Compare times
 stable_end_time - stable_start_time
+#> Time difference of 15.61847 secs
 current_end_time - current_start_time
+#> Time difference of 11.74267 secs
 ```
 
 For a more reproducible workflow, we recommend specifying the exact `stable` version you want to use.
 
-```{r}
+
+```r
 resources <- load_taxonomic_resources(stable_or_current_data = "stable", version = "0.0.2.9000")
+#> Loading resources......done
 ```
 
 ## Standardise plant taxon names
 
-Now we can query our taxonomic names against the taxonomic resources we just retrieved using `create_taxonomic_update_lookup()`. This all-in-one function will:
+Now we can query our taxonomic names against the taxonomic resources we just retrieved using `create_taxonomic_update_lookup()`. This is an all-in-one function that will:
 
-- Align your taxonomic names to APNI and APC using our [fuzzy matching algorithm]()
+- Align your taxonomic names to APNI and APC using our [fuzzy matching algorithm](taxmatch.html)
 - Update taxonomic names to APC accepted name.
+- Returns NA for names where a match cannot be found
 
-If you would like to learn more, take a look at the section "Closer look at name standardisation with 'ausflora'"
+If you would like to learn more about each of these step, take a look at the section [Closer look at name standardisation with 'ausflora'](#closer-look)
 
-```{r}
+
+```r
 library(dplyr)
 library(tidyr)
 
 update_gbif_names <- gbif_lite |> 
-  drop_na(species) |> # This step is temporary bug
   pull(species) |> 
   create_taxonomic_update_lookup(resources = resources)
+#> Checking alignments of 121 taxa
+#>   -> 0 names already matched; 0 names checked but without a match; 121 taxa yet to be checked
 
-update_gbif_names
+update_gbif_names |> print(n = 6)
+#> # A tibble: 144 × 5
+#>   original_name           aligned_name            apc_name                aligned_reason           taxonomic_status_of_…¹
+#>   <chr>                   <chr>                   <chr>                   <chr>                    <chr>                 
+#> 1 Tetratheca ciliata      Tetratheca ciliata      Tetratheca ciliata      match_06. Automatic ali… accepted              
+#> 2 Peganum harmala         Peganum harmala         Peganum harmala         match_06. Automatic ali… accepted              
+#> 3 Calotis multicaulis     Calotis multicaulis     Calotis multicaulis     match_06. Automatic ali… accepted              
+#> 4 Calotis multicaulis     Calotis multicaulis     Calotis plumulifera     match_06. Automatic ali… pro parte misapplied  
+#> 5 Leptospermum trinervium Leptospermum trinervium Leptospermum trinervium match_06. Automatic ali… accepted              
+#> 6 Lepidosperma laterale   Lepidosperma laterale   Lepidosperma laterale   match_06. Automatic ali… accepted              
+#> # ℹ 138 more rows
+#> # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name
 ```
 
 The `original_name` is the taxon name used in your original data.
@@ -100,13 +137,32 @@ The `apc_name` is the currently, accepted taxon name used by the Australian Plan
 
 We recommend joining the output of `create_taxonomic_update_lookup()` back to your original data so all names
 
-```{r}
+
+```r
 gbif_lite |> 
 left_join(update_gbif_names,  # Left joining updated taxon names back to original data 
           by = join_by(species == original_name)) |> 
   select(species, ends_with("name"), # Rearranging naming columns
-         aligned_reason, infraspecificepithet:decimalLatitude)
+         aligned_reason, infraspecificepithet:decimalLatitude) |> 
+  print(n = 6)
+#> Warning in left_join(gbif_lite, update_gbif_names, by = join_by(species == : Detected an unexpected many-to-many relationship between `x` and `y`.
+#> ℹ Row 3 of `x` matches multiple rows in `y`.
+#> ℹ Row 12 of `y` matches multiple rows in `x`.
+#> ℹ If a many-to-many relationship is expected, set `relationship = "many-to-many"` to silence this warning.
+#> # A tibble: 154 × 11
+#>   species               scientificname verbatimscientificname aligned_name apc_name taxonomic_status_of_…¹ aligned_reason
+#>   <chr>                 <chr>          <chr>                  <chr>        <chr>    <chr>                  <chr>         
+#> 1 Tetratheca ciliata    Tetratheca ci… Tetratheca ciliata     Tetratheca … Tetrath… accepted               match_06. Aut…
+#> 2 Peganum harmala       Peganum harma… Peganum harmala        Peganum har… Peganum… accepted               match_06. Aut…
+#> 3 Calotis multicaulis   Calotis multi… Calotis multicaulis    Calotis mul… Calotis… accepted               match_06. Aut…
+#> 4 Calotis multicaulis   Calotis multi… Calotis multicaulis    Calotis mul… Calotis… pro parte misapplied   match_06. Aut…
+#> 5 Leptospermum trinerv… Leptospermum … Leptospermum trinervi… Leptospermu… Leptosp… accepted               match_06. Aut…
+#> 6 Lepidosperma laterale Lepidosperma … Lepidosperma laterale  Lepidosperm… Lepidos… accepted               match_06. Aut…
+#> # ℹ 148 more rows
+#> # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name
+#> # ℹ 4 more variables: infraspecificepithet <chr>, taxonrank <chr>, decimalLongitude <dbl>, decimalLatitude <dbl>
 ```
+
 
 ## Plant established status across states/territories
 
@@ -114,16 +170,28 @@ left_join(update_gbif_names,  # Left joining updated taxon names back to origina
 
 We can access the established status data by state/territory using `create_species_state_origin_matrix()`
 
-```{r}
+
+```r
 # Retrieve status data by state/territory 
 status_matrix <- create_species_state_origin_matrix(resources = resources)
 
-status_matrix
+status_matrix |> print(n = 6)
+#> # A tibble: 26,243 × 19
+#>   species     NT    Qld   WA    ChI   NSW   SA    Vic   Tas   ACT   NI    LHI   MI    HI    MDI   CoI   CSI   AR    CaI  
+#>   <chr>       <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr>
+#> 1 Cycas angu… nati… nati… not … not … not … not … not … not … not … not … not … not … not … not … not … not … not … not …
+#> 2 Cycas aren… nati… not … not … not … not … not … not … not … not … not … not … not … not … not … not … not … not … not …
+#> 3 Cycas arms… nati… not … not … not … not … not … not … not … not … not … not … not … not … not … not … not … not … not …
+#> 4 Cycas arnh… nati… not … not … not … not … not … not … not … not … not … not … not … not … not … not … not … not … not …
+#> 5 Cycas bade… not … nati… not … not … not … not … not … not … not … not … not … not … not … not … not … not … not … not …
+#> 6 Cycas basa… not … not … nati… not … not … not … not … not … not … not … not … not … not … not … not … not … not … not …
+#> # ℹ 26,237 more rows
 ```
 
 Here is a breakdown of all possible values for `origin` 
 
-```{r}
+
+```r
 library(purrr)
 library(janitor)
 
@@ -132,47 +200,71 @@ status_matrix |>
   select(-species) |> 
   flatten_chr() |> 
   tabyl()
+#>  flatten_chr(select(status_matrix, -species))      n      percent
+#>                        doubtfully naturalised   1120 2.371003e-03
+#>                          formerly naturalised    277 5.863998e-04
+#>                                        native  40336 8.538997e-02
+#>             native and doubtfully naturalised      9 1.905270e-05
+#>                        native and naturalised    136 2.879075e-04
+#>                   native and uncertain origin      2 4.233933e-06
+#>                                   naturalised   8765 1.855521e-02
+#>                                   not present 421606 8.925258e-01
+#>                              presumed extinct    101 2.138136e-04
+#>                              uncertain origin     22 4.657327e-05
 ```
 
-The formal definitions of the various established status can be found at XX. 
+<!-- The formal definitions of the various established status can be found at XX.  -->
 
-You can get the breakdown of species by established status for a particular state/territory using `state_diversity_counts()`
+You can also obtain the breakdown of species by established status for a particular state/territory using `state_diversity_counts()`
 
-```{r}
+
+```r
 state_diversity_counts("NSW", resources = resources)
+#> # A tibble: 7 × 3
+#>   origin                            state num_species
+#>   <chr>                             <chr> <table[1d]>
+#> 1 doubtfully naturalised            NSW     93       
+#> 2 formerly naturalised              NSW      8       
+#> 3 native                            NSW   5958       
+#> 4 native and doubtfully naturalised NSW      2       
+#> 5 native and naturalised            NSW     34       
+#> 6 naturalised                       NSW   1580       
+#> 7 presumed extinct                  NSW      8
 ```
 
-You can also quickly check if a plant taxa is a native using `native_anywhere_in_australia()`
+Using the established status data and state/territory information, we can check if a plant taxa is a native using `native_anywhere_in_australia()`
 
-```{r}
+
+```r
 update_gbif_names |> 
   sample_n(1) |>  # Choosing a random species
   pull(apc_name) |> # Extracting this APC accepted name
-  native_anywhere_in_australia(resources = resources)
+  native_anywhere_in_australia(resources = resources) 
+#> # A tibble: 1 × 2
+#>   species              native_anywhere_in_aus
+#>   <chr>                <lgl>                 
+#> 1 Parkinsonia aculeata FALSE
 ```
 
-## Closer look at name standardisation with 'ausflora'
+## Closer look at name standardisation with 'ausflora' {#closer-look}
 
 `create_taxonomic_update_lookup` is a simple, wrapper, function for novice users that want to quickly check and standardise taxon names. For more experienced users, you can take a look at the sub functions `align_taxa()` and `update_taxonomy()` to see how taxon names are processed, aligned and updated.
 
+![](../man/figures/standardise_taxonomy_workflow.png)
+
 ### Aligning names to APNI and APC
 
-This function will:
+`align_taxa()` function will:
 
 -   Clean up your taxonomic names <!-- (Getting rid of trailing whitespaces, case correction) -->
--   Align your taxonomic names using our [fuzzy matching algorithm]()
+-   Find best alignment with APNI to your taxonomic name using our [fuzzy matching algorithm](taxmatch.html)
 
 You can control the degree of fuzzy matching using the arguments `max_distance_abs` and `max_distance_rel`
 
-<!-- Should the summary be updating during alignment?  -->
+Note that the `aligned_name` may not be current. This does the best possible effort to match phrase names and subspecific taxa which often have alternative formatting.  This function also searches for small spelling or gender mistakes. 
 
-<!-- 0 names already matched; 0 names checked but without a match; 121 taxa yet to be checked -->
 
-<!-- What do all these columns do? -->
-
-<!-- Difference between cleaned and stripped and stripped name2 -->
-
-```{r align names}
+```r
 library(dplyr)
 library(tidyr)
 
@@ -180,27 +272,73 @@ aligned_gbif_taxa <- gbif_lite |>
   drop_na(species) |>  
   pull(species) |> 
   align_taxa(resources = resources)
+#> Checking alignments of 121 taxa
+#>   -> 0 names already matched; 0 names checked but without a match; 121 taxa yet to be checked
 
-aligned_gbif_taxa
+aligned_gbif_taxa |> print(n = 6)
+#> # A tibble: 121 × 28
+#>   original_name      cleaned_name aligned_name source known checked stripped_name stripped_name2 trinomial binomial genus
+#>   <chr>              <chr>        <chr>        <chr>  <lgl> <lgl>   <chr>         <chr>          <chr>     <chr>    <chr>
+#> 1 Tetratheca ciliata Tetratheca … Tetratheca … <NA>   TRUE  TRUE    tetratheca c… tetratheca ci… <NA>      tetrath… Tetr…
+#> 2 Peganum harmala    Peganum har… Peganum har… <NA>   TRUE  TRUE    peganum harm… peganum harma… <NA>      peganum… Pega…
+#> 3 Calotis multicaul… Calotis mul… Calotis mul… <NA>   TRUE  TRUE    calotis mult… calotis multi… <NA>      calotis… Calo…
+#> 4 Leptospermum trin… Leptospermu… Leptospermu… <NA>   TRUE  TRUE    leptospermum… leptospermum … <NA>      leptosp… Lept…
+#> 5 Lepidosperma late… Lepidosperm… Lepidosperm… <NA>   TRUE  TRUE    lepidosperma… lepidosperma … <NA>      lepidos… Lepi…
+#> 6 Enneapogon polyph… Enneapogon … Enneapogon … <NA>   TRUE  TRUE    enneapogon p… enneapogon po… <NA>      enneapo… Enne…
+#> # ℹ 115 more rows
+#> # ℹ 17 more variables: aligned_reason <chr>, fuzzy_match_genus <chr>, fuzzy_match_genus_known <chr>,
+#> #   fuzzy_match_genus_APNI <chr>, fuzzy_match_binomial <chr>, fuzzy_match_binomial_APC_known <chr>,
+#> #   fuzzy_match_trinomial <chr>, fuzzy_match_trinomial_known <chr>, fuzzy_match_cleaned_APC <chr>,
+#> #   fuzzy_match_cleaned_APC_known <chr>, fuzzy_match_cleaned_APNI <chr>, fuzzy_match_cleaned_APC_imprecise <chr>,
+#> #   fuzzy_match_cleaned_APC_known_imprecise <chr>, fuzzy_match_cleaned_APNI_imprecise <chr>, taxonomic_ref <chr>,
+#> #   taxonomic_resolution <chr>, still_to_match <chr>
 ```
 
 For every `aligned_name`, `align_taxa()` will provide a `aligned_reason` which you can review as a table of counts:
 
-```{r align reason}
+
+```r
 library(janitor)
 
 aligned_gbif_taxa |> 
   pull(aligned_reason) |> 
   tabyl() |> 
-  tibble()
+  tibble() 
+#> # A tibble: 5 × 3
+#>   `pull(aligned_gbif_taxa, aligned_reason)`                                                                     n percent
+#>   <chr>                                                                                                     <int>   <dbl>
+#> 1 match_06. Automatic alignment with accepted canonical names in APC (2023-07-27)                             112 0.926  
+#> 2 match_06. Automatic alignment with synonymous term among known canonical names APC (2023-07-27)               6 0.0496 
+#> 3 match_08. Automatic alignment with synonymous name in APNI (2023-07-27)                                       1 0.00826
+#> 4 match_14. Automatic alignment with species-level canonical name in APC accepted when notes are ignored (…     1 0.00826
+#> 5 match_20. Rewording name to be recognised as genus rank, with genus accepted by APC (2023-07-27)              1 0.00826
 ```
 
 ### Update taxonomic names to alignments
 
-```{r update names}
+`update_taxonomy()` will update APNI taxa to specified (or current) version of APC. It will use the general synonymy published by the APC to attempt to sync the taxon names to a specific list. The function will also add other relevant taxonomy columns in the output
+
+
+
+```r
 updated_gbif_taxa <- aligned_gbif_taxa |> 
   pull(aligned_name) |> 
   update_taxonomy(resources = resources)
+
+updated_gbif_taxa |> print(n = 6)
+#> # A tibble: 148 × 14
+#>   aligned_name        source taxonIDClean   taxonomicStatusClean alternativeTaxonomic…¹ acceptedNameUsageID canonicalName
+#>   <chr>               <chr>  <chr>          <chr>                <chr>                  <chr>               <chr>        
+#> 1 Acacia aneura       APC    https://id.bi… accepted             misapplied | pro part… https://id.biodive… Acacia aneura
+#> 2 Acacia aneura       APC    https://id.bi… pro parte misapplied misapplied | pro part… https://id.biodive… Acacia minyu…
+#> 3 Acacia aneura       APC    https://id.bi… pro parte misapplied misapplied | pro part… https://id.biodive… Acacia paran…
+#> 4 Acacia flavescens   APC    https://id.bi… accepted             <NA>                   https://id.biodive… Acacia flave…
+#> 5 Acacia gladiiformis APC    https://id.bi… accepted             misapplied             https://id.biodive… Acacia gladi…
+#> 6 Acacia melanoxylon  APC    https://id.bi… accepted             misapplied             https://id.biodive… Acacia melan…
+#> # ℹ 142 more rows
+#> # ℹ abbreviated name: ¹​alternativeTaxonomicStatusClean
+#> # ℹ 7 more variables: scientificNameAuthorship <chr>, taxonRank <chr>, taxonomicStatus <chr>, family <chr>,
+#> #   subclass <chr>, taxonDistribution <chr>, ccAttributionIRI <chr>
 ```
 
 

@@ -34,6 +34,13 @@ the established status of plant taxa across different states/territories.
 If you have any questions, comments or suggestions, please
 submit an issue at our \href{https://github.com/traitecoevo/ausflora/issues}{GitHub repository}
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://traitecoevo.github.io/ausflora/}
+}
+
+}
 \author{
 \strong{Maintainer}: Daniel Falster \email{daniel.falster@unsw.edu.au} (\href{https://orcid.org/0002-9814-092X}{ORCID})
 

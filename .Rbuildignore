@@ -8,3 +8,6 @@ ignore/
 ^\.github$
 ^todo.md
 ^vignettes/articles$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

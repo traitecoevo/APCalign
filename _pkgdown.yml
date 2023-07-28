@@ -1,0 +1,43 @@
+url: https://traitecoevo.github.io/ausflora/
+template:
+  bootstrap: 5
+  bootswatch: litera
+
+navbar:
+  bg: light
+  type: light
+  structure:
+    left:  [intro, reference, articles]
+    right: [search, github]
+  components:
+    articles:
+      text: Articles
+      menu:
+      - text: "Data providers"
+      - text: APC and APNI
+        href: articles/data-providers.html
+      - text: "Data caching"
+      - text: How is APC/APNI stored in ausflora? 
+        href: 'articles/caching.html'
+      - text: -------
+      - text: "Taxon matching"
+      - text: Our fuzzy matching algorithim
+        href: articles/taxmatch.html
+
+reference:
+- subtitle: Standardise plant taxon names
+- contents:
+  - load_taxonomic_resources
+  - create_taxonomic_update_lookup
+  - align_taxa
+  - update_taxonomy
+- subtitle: Established status across states/territories
+- contents:
+  - create_species_state_origin_matrix
+  - state_diversity_counts
+  - native_anywhere_in_australia
+- title: Data
+- contents:
+  - gbif_lite
+
+  
