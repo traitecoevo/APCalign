@@ -1,57 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/articles/ausflora.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/articles/ausflora.html</loc>
   </url>
   <url>
-    <loc>/articles/caching.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/articles/caching.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/articles/data-providers.html</loc>
   </url>
   <url>
-    <loc>/articles/taxmatch.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/articles/index.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/articles/taxmatch.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/authors.html</loc>
   </url>
   <url>
-    <loc>/reference/align_taxa.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/index.html</loc>
   </url>
   <url>
-    <loc>/reference/ausflora.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/reference/align_taxa.html</loc>
   </url>
   <url>
-    <loc>/reference/create_species_state_origin_matrix.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/reference/ausflora.html</loc>
   </url>
   <url>
-    <loc>/reference/create_taxonomic_update_lookup.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/reference/create_species_state_origin_matrix.html</loc>
   </url>
   <url>
-    <loc>/reference/gbif_lite.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/reference/create_taxonomic_update_lookup.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/reference/gbif_lite.html</loc>
   </url>
   <url>
-    <loc>/reference/load_taxonomic_resources.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/native_anywhere_in_australia.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/reference/load_taxonomic_resources.html</loc>
   </url>
   <url>
-    <loc>/reference/state_diversity_counts.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/reference/native_anywhere_in_australia.html</loc>
   </url>
   <url>
-    <loc>/reference/update_taxonomy.html</loc>
+    <loc>https://traitecoevo.github.io/ausflora/reference/state_diversity_counts.html</loc>
+  </url>
+  <url>
+    <loc>https://traitecoevo.github.io/ausflora/reference/update_taxonomy.html</loc>
   </url>
 </urlset>
