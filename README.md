@@ -8,7 +8,7 @@ coverage](https://codecov.io/gh/traitecoevo/ausflora/branch/master/graph/badge.s
 [![R-CMD-check](https://github.com/traitecoevo/ausflora/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/traitecoevo/ausflora/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-# ausflora <img src="man/figures/ausflora_hex2.png" align="right" width="120"/>
+# APCalign <img src="man/figures/APCalign_hex.png" align="right" width="120"/>
 
 ‘ausflora’ uses the [Australian Plant Census
 (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and
@@ -20,7 +20,7 @@ states/territories.
 
 ## Installation
 
-‘ausflora’ is current not on CRAN. Install the current development
+‘ausflora’ is current not on CRAN. Install the currently development
 version:
 
 ``` r
@@ -54,11 +54,15 @@ create_taxonomic_update_lookup(
 #> # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name
 ```
 
-## Further reading
+## Learn more
 
-Highly recommend looking at our [Getting Started]() vignette to learn
-about how to use ‘ausflora’. You can also learn more about our [taxa
-matching algorithim]() and how [APC/APNI data is cached]()
+Highly recommend looking at our [Getting
+Started](https://traitecoevo.github.io/ausflora/articles/ausflora.html)
+vignette to learn about how to use ‘ausflora’. You can also learn more
+about our [taxa matching
+algorithim](https://traitecoevo.github.io/ausflora/articles/taxmatch.html)
+and how [APC/APNI data is
+cached](https://traitecoevo.github.io/ausflora/articles/caching.html)
 behind-the-scenes.
 
 ## Found a bug?

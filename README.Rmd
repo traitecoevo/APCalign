@@ -23,7 +23,7 @@ library(ausflora)
 [![R-CMD-check](https://github.com/traitecoevo/ausflora/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/traitecoevo/ausflora/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-# ausflora <img src="man/figures/ausflora_hex2.png" align="right" width="120"/>
+# APCalign <img src="man/figures/APCalign_hex.png" align="right" width="120"/>
 
 'ausflora' uses the [Australian Plant Census (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and [Australian Plant Name Index](https://biodiversity.org.au/nsl/services/search/names) to standardise Australian plant taxon names. 'ausflora' also supplies information about
 the established status of plant taxa across different states/territories.

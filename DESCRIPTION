@@ -1,4 +1,4 @@
-Package: ausflora
+Package: APCalign
 Title: An interface to the Australian Plant Census data for taxonomy fixing and diversity counting
 Version: 0.0.2.9000
 Authors@R: 
