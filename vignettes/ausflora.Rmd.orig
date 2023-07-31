@@ -1,8 +1,8 @@
 ---
-title: "ausflora"
+title: "APCalign"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ausflora}
+  %\VignetteIndexEntry{APCalign}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,12 +13,12 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-library(ausflora)
+library(APCalign)
 
-# knitr::knit("vignettes/ausflora.Rmd.orig", output = "vignettes/ausflora.Rmd")
+# knitr::knit("vignettes/APCalign.Rmd.orig", output = "vignettes/APCalign.Rmd")
 ```
 
-When working with biodiversity data, it is important to verify  taxonomic names with an authoritative list and correct any out-of-date names. The 'ausflora' package simplifies this process by:
+When working with biodiversity data, it is important to verify  taxonomic names with an authoritative list and correct any out-of-date names. The 'APCalign' package simplifies this process by:
 
 -   Accessing up-to-date taxonomic information from the [Australian Plant Census](https://biodiversity.org.au/nsl/services/search/taxonomy) and the [Australia Plant Name Index](https://biodiversity.org.au/nsl/services/search/names).
 -   Aligning authoritative names to your taxonomic names using our [fuzzy matching algorithm](taxmatch.html)
@@ -28,16 +28,16 @@ When working with biodiversity data, it is important to verify  taxonomic names 
 
 ## Installation
 
-ausflora is currently not on CRAN. You can install its current developmental version using
+APCalign is currently not on CRAN. You can install its current developmental version using
 
 ```{r install, eval=FALSE}
 # install.packages("remotes")
-remotes::install_github("traitecoevo/ausflora")
+remotes::install_github("traitecoevo/APCalign")
 
-library(ausflora)
+library(APCalign)
 ```
 
-To demonstrate how to use 'ausflora', we will use an example dataset `gbif_lite` which is documented in `?gbif_lite`
+To demonstrate how to use 'APCalign', we will use an example dataset `gbif_lite` which is documented in `?gbif_lite`
 
 ```{r example data}
 dim(gbif_lite)
@@ -51,7 +51,7 @@ The first step is to retrieve the entire APC and APNI name databases and store t
 
 There are two versions of the databases that you can retrieve with the `stable_or_current_data` argument. Calling:
 
--   `stable` will retrieve the most recent, archived version of the databases from our [GitHub releases](https://github.com/traitecoevo/ausflora/releases). This is set as the default option.
+-   `stable` will retrieve the most recent, archived version of the databases from our [GitHub releases](https://github.com/traitecoevo/APCalign/releases). This is set as the default option.
 -   `current` will retrieve the up-to-date databases directly from the APC and APNI website.
 
 Note that the databases are quite large so the initial retrieval of `stable` versions will take a few minutes. Once the taxonomic resources have been stored locally, subsequent retrievals will take less time. Retrieving `current` resources will always take longer since it is. Check out our [Resource Caching](caching.html) article to learn more about how the APC and APNIC databases are accessed, stored and retrieved.
@@ -85,7 +85,7 @@ Now we can query our taxonomic names against the taxonomic resources we just ret
 - Update taxonomic names to APC accepted name.
 - Returns NA for names where a match cannot be found
 
-If you would like to learn more about each of these step, take a look at the section [Closer look at name standardisation with 'ausflora'](#closer-look)
+If you would like to learn more about each of these step, take a look at the section [Closer look at name standardisation with 'APCalign'](#closer-look)
 
 ```{r}
 library(dplyr)
@@ -116,7 +116,7 @@ left_join(update_gbif_names,  # Left joining updated taxon names back to origina
 
 ## Plant established status across states/territories
 
-'ausflora' can also provide the state/territory distribution for established status (native/introduced) from the APC.
+'APCalign' can also provide the state/territory distribution for established status (native/introduced) from the APC.
 
 We can access the established status data by state/territory using `create_species_state_origin_matrix()`
 
@@ -157,7 +157,7 @@ update_gbif_names |>
   native_anywhere_in_australia(resources = resources) 
 ```
 
-## Closer look at name standardisation with 'ausflora' {#closer-look}
+## Closer look at name standardisation with 'APCalign' {#closer-look}
 
 `create_taxonomic_update_lookup` is a simple, wrapper, function for novice users that want to quickly check and standardise taxon names. For more experienced users, you can take a look at the sub functions `align_taxa()` and `update_taxonomy()` to see how taxon names are processed, aligned and updated.
 

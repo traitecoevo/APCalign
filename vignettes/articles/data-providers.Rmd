@@ -15,13 +15,13 @@ knitr::opts_chunk$set(
 
 The [Australian Plant Cenus (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) is national database of accepted taxonomic names for [Australian vascular plants](https://bie.ala.org.au/species/NZOR-6-33408). The APC includes information on synonyms, and misapplications of them, as well as established status (native/introduced) and distribution across states and territories. 
 
-'ausflora' will first use the APC to align your taxonomic names to ones that exist in the database.
+'APCalign' will first use the APC to align your taxonomic names to ones that exist in the database.
 
 ## Australian Plant Index (APNI)
 
 The [Australian Plant Index (APNI)](https://www.anbg.gov.au/apni/) is a database containing names of Australian plants and their use in scientific literature. It is primarily used by the botanical community for standardising synonyms. Importantly, APNI does not provide recommendation of taxonomy or nomenclature, this is where the APC comes in. 
 
-'ausflora' uses APNI when an alignment cannot be found in the APC.
+'APCalign' uses APNI when an alignment cannot be found in the APC.
 
 ## Data standards and meta-data
 Data from both APNI and APC are formatted according to the [Darwin Core standard](https://dwc.tdwg.org/terms/), a widely used format for many databases. 
