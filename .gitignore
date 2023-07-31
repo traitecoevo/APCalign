@@ -9,3 +9,5 @@ ignore/
 output/
 inst/doc
 docs
+/doc/
+/Meta/
