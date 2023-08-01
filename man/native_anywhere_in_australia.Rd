@@ -19,13 +19,14 @@ and \code{native_anywhere_in_aus}, a logical vector indicating whether each spec
 \description{
 This function checks if the given species is native anywhere in Australia.
 It creates a lookup table from taxonomic resources, and checks if the species
-is listed as native in that table. Note that this will not detect within-Australia invasives,
+is listed as native in that table. Note that this will not detect within Australia invasives,
 e.g. if a species is from Western Australia and is invasive on the east coast.
 For the complete matrix of species by states that also represents within-Australia invasions,
 use \link{create_species_state_origin_matrix}.
 }
 \examples{
-native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"))
+
+native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources=resources)
 }
 \seealso{
 Other diversity methods: 
