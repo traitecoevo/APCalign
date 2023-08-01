@@ -258,7 +258,7 @@ dataset_get <- function(version = default_version(),
   #APC
   url <-
     paste0(
-      "https://github.com/traitecoevo/APCalign/releases/download/",
+      "https://github.com/traitecoevo/ausflora/releases/download/",
       version,
       "/apc.parquet"
     )
@@ -269,10 +269,11 @@ dataset_get <- function(version = default_version(),
   #APNI
   url <-
     paste0(
-      "https://github.com/traitecoevo/APCalign/releases/download/",
+      "https://github.com/traitecoevo/ausflora/releases/download/",
       version,
       "/apni.parquet"
     )
+    
   apni_hash <- contentid::register(url)
   apni_file <- contentid::resolve(apni_hash, store = TRUE, path = path)
   APNI <- arrow::read_parquet(apni_file)
