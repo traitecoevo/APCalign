@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(ausflora)
+library(APCalign)
 
-test_check("ausflora")
+test_check("APCalign")
