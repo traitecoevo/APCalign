@@ -75,7 +75,7 @@ test_that("align_taxa() works with fuzzy", {
 
 test_that("align_taxa() works with longer list", {
   species_list <-
-    readr::read_csv(system.file("extdata", "species.csv", package = "ausflora"),
+    readr::read_csv(system.file("extdata", "species.csv", package = "APCalign"),
                     show_col_types = FALSE)
   expect_equal(nrow(
     aligned_data <- align_taxa(species_list$name,

@@ -1,48 +1,51 @@
 ---
-title: "ausflora"
+title: "APCalign"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ausflora}
+  %\VignetteIndexEntry{APCalign}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
 
-library(ausflora)
 
-# knitr::knit("vignettes/ausflora.Rmd.orig", output = "vignettes/ausflora.Rmd")
-```
-
-When working with biodiversity data, it is important to verify  taxonomic names with an authoritative list and correct any out-of-date names. The 'ausflora' package simplifies this process by:
+When working with biodiversity data, it is important to verify  taxonomic names with an authoritative list and correct any out-of-date names. The 'APCalign' package simplifies this process by:
 
 -   Accessing up-to-date taxonomic information from the [Australian Plant Census](https://biodiversity.org.au/nsl/services/search/taxonomy) and the [Australia Plant Name Index](https://biodiversity.org.au/nsl/services/search/names).
 -   Aligning authoritative names to your taxonomic names using our [fuzzy matching algorithm](taxmatch.html)
 -   Updating your taxonomic names in a transparent, reproducible manner
 
-![]
-
 ## Installation
 
-ausflora is currently not on CRAN. You can install its current developmental version using
+'APCalign' is currently not on CRAN. You can install its current developmental version using
 
-```{r install, eval=FALSE}
+
+```r
 # install.packages("remotes")
-remotes::install_github("traitecoevo/ausflora")
+remotes::install_github("traitecoevo/APCalign")
 
-library(ausflora)
+library(APCalign)
 ```
 
-To demonstrate how to use 'ausflora', we will use an example dataset `gbif_lite` which is documented in `?gbif_lite`
+To demonstrate how to use 'APCalign', we will use an example dataset `gbif_lite` which is documented in `?gbif_lite`
 
-```{r example data}
+
+```r
 dim(gbif_lite)
+#> [1] 129   7
 
 gbif_lite |> print(n = 6)
+#> # A tibble: 129 × 7
+#>   species              infraspecificepithet taxonrank decimalLongitude decimalLatitude scientificname
+#>   <chr>                <chr>                <chr>                <dbl>           <dbl> <chr>         
+#> 1 Tetratheca ciliata   <NA>                 SPECIES               145.           -37.4 Tetratheca ci…
+#> 2 Peganum harmala      <NA>                 SPECIES               139.           -33.3 Peganum harma…
+#> 3 Calotis multicaulis  <NA>                 SPECIES               115.           -24.3 Calotis multi…
+#> 4 Leptospermum triner… <NA>                 SPECIES               151.           -34.0 Leptospermum …
+#> 5 Lepidosperma latera… <NA>                 SPECIES               142.           -37.3 Lepidosperma …
+#> 6 Enneapogon polyphyl… <NA>                 SPECIES               129.           -17.8 Enneapogon po…
+#> # ℹ 123 more rows
+#> # ℹ 1 more variable: verbatimscientificname <chr>
 ```
 
 ## Retrieve taxonomic resources
@@ -51,30 +54,49 @@ The first step is to retrieve the entire APC and APNI name databases and store t
 
 There are two versions of the databases that you can retrieve with the `stable_or_current_data` argument. Calling:
 
--   `stable` will retrieve the most recent, archived version of the databases from our [GitHub releases](https://github.com/traitecoevo/ausflora/releases). This is set as the default option.
+-   `stable` will retrieve the most recent, archived version of the databases from our [GitHub releases](https://github.com/traitecoevo/APCalign/releases). This is set as the default option.
 -   `current` will retrieve the up-to-date databases directly from the APC and APNI website.
 
 Note that the databases are quite large so the initial retrieval of `stable` versions will take a few minutes. Once the taxonomic resources have been stored locally, subsequent retrievals will take less time. Retrieving `current` resources will always take longer since it is. Check out our [Resource Caching](caching.html) article to learn more about how the APC and APNIC databases are accessed, stored and retrieved.
 
-```{r load resources}
+
+```r
 # Benchmarking the retrieval of `stable` or `current` resources
 stable_start_time <- Sys.time()
 stable_resources <- load_taxonomic_resources(stable_or_current_data = "stable")
+#> Loading resources...
+#> Warning: https://github.com/traitecoevo/APCalign/releases/download/0.0.2.9000/apc.parquet had error
+#> code 404
+#> Warning in contentid::resolve(apc_hash, store = TRUE, path = path): No sources found for
+#> hash://sha256/7326ca5e7eb1e115959f840583e25cd4605667b46d8edacc20ccb637f8c6e982
+#> Error: IOError: Failed to open local file 'NA'. Detail: [errno 2] No such file or directory
+#> ...done
 stable_end_time <-  Sys.time()
 
 current_start_time <- Sys.time()
 current_resources <- load_taxonomic_resources(stable_or_current_data = "current")
+#> Loading resources......done
 current_end_time <-  Sys.time()
 
 # Compare times
 stable_end_time - stable_start_time
+#> Time difference of 2.50855 secs
 current_end_time - current_start_time
+#> Time difference of 17.48739 secs
 ```
 
 For a more reproducible workflow, we recommend specifying the exact `stable` version you want to use.
 
-```{r}
+
+```r
 resources <- load_taxonomic_resources(stable_or_current_data = "stable", version = "0.0.2.9000")
+#> Loading resources...
+#> Warning: https://github.com/traitecoevo/APCalign/releases/download/0.0.2.9000/apc.parquet had error
+#> code 404
+#> Warning in contentid::resolve(apc_hash, store = TRUE, path = path): No sources found for
+#> hash://sha256/7326ca5e7eb1e115959f840583e25cd4605667b46d8edacc20ccb637f8c6e982
+#> Error: IOError: Failed to open local file 'NA'. Detail: [errno 2] No such file or directory
+#> ...done
 ```
 
 ## Standardise plant taxon names
@@ -85,17 +107,28 @@ Now we can query our taxonomic names against the taxonomic resources we just ret
 - Update taxonomic names to APC accepted name.
 - Returns NA for names where a match cannot be found
 
-If you would like to learn more about each of these step, take a look at the section [Closer look at name standardisation with 'ausflora'](#closer-look)
+If you would like to learn more about each of these step, take a look at the section [Closer look at name standardisation with 'APCalign'](#closer-look)
 
-```{r}
+
+```r
 library(dplyr)
 library(tidyr)
 
 update_gbif_names <- gbif_lite |> 
   pull(species) |> 
   create_taxonomic_update_lookup(resources = resources)
+#> Checking alignments of 121 taxa
+#>   -> 0 names already matched; 0 names checked but without a match; 121 taxa yet to be checked
+#> Error in `dplyr::mutate()`:
+#> ℹ In argument: `fuzzy_match_genus = fuzzy_match_genera(genus,
+#>   resources$genera_accepted$canonicalName)`.
+#> Caused by error in `purrr::map_chr()` at APCalign/R/match_taxa.R:9:4:
+#> ℹ In index: 1.
+#> Caused by error in `utils::adist()`:
+#> ! object 'resources' not found
 
 update_gbif_names |> print(n = 6)
+#> Error in print(update_gbif_names, n = 6): object 'update_gbif_names' not found
 ```
 
 The `original_name` is the taxon name used in your original data.
@@ -104,32 +137,38 @@ The `apc_name` is the currently, accepted taxon name used by the Australian Plan
 
 We recommend joining the output of `create_taxonomic_update_lookup()` back to your original data so all names
 
-```{r}
+
+```r
 gbif_lite |> 
 left_join(update_gbif_names,  # Left joining updated taxon names back to original data 
           by = join_by(species == original_name)) |> 
   select(species, ends_with("name"), # Rearranging naming columns
          aligned_reason, infraspecificepithet:decimalLatitude) |> 
   print(n = 6)
+#> Error in is.data.frame(y): object 'update_gbif_names' not found
 ```
 
 
 ## Plant established status across states/territories
 
-'ausflora' can also provide the state/territory distribution for established status (native/introduced) from the APC.
+'APCalign' can also provide the state/territory distribution for established status (native/introduced) from the APC.
 
 We can access the established status data by state/territory using `create_species_state_origin_matrix()`
 
-```{r}
+
+```r
 # Retrieve status data by state/territory 
 status_matrix <- create_species_state_origin_matrix(resources = resources)
+#> Error in dplyr::filter(resources$APC, taxonRank == "Species" & taxonomicStatus == : object 'resources' not found
 
 status_matrix |> print(n = 6)
+#> Error in print(status_matrix, n = 6): object 'status_matrix' not found
 ```
 
 Here is a breakdown of all possible values for `origin` 
 
-```{r}
+
+```r
 library(purrr)
 library(janitor)
 
@@ -138,26 +177,31 @@ status_matrix |>
   select(-species) |> 
   flatten_chr() |> 
   tabyl()
+#> Error in select(status_matrix, -species): object 'status_matrix' not found
 ```
 
 <!-- The formal definitions of the various established status can be found at XX.  -->
 
 You can also obtain the breakdown of species by established status for a particular state/territory using `state_diversity_counts()`
 
-```{r}
+
+```r
 state_diversity_counts("NSW", resources = resources)
+#> Error in dplyr::filter(resources$APC, taxonRank == "Species" & taxonomicStatus == : object 'resources' not found
 ```
 
 Using the established status data and state/territory information, we can check if a plant taxa is a native using `native_anywhere_in_australia()`
 
-```{r}
+
+```r
 update_gbif_names |> 
   sample_n(1) |>  # Choosing a random species
   pull(apc_name) |> # Extracting this APC accepted name
   native_anywhere_in_australia(resources = resources) 
+#> Error in dplyr::filter(resources$APC, taxonRank == "Species" & taxonomicStatus == : object 'resources' not found
 ```
 
-## Closer look at name standardisation with 'ausflora' {#closer-look}
+## Closer look at name standardisation with 'APCalign' {#closer-look}
 
 `create_taxonomic_update_lookup` is a simple, wrapper, function for novice users that want to quickly check and standardise taxon names. For more experienced users, you can take a look at the sub functions `align_taxa()` and `update_taxonomy()` to see how taxon names are processed, aligned and updated.
 
@@ -174,7 +218,8 @@ You can control the degree of fuzzy matching using the arguments `max_distance_a
 
 Note that the `aligned_name` may not be current. This does the best possible effort to match phrase names and subspecific taxa which often have alternative formatting.  This function also searches for small spelling or gender mistakes. 
 
-```{r align names}
+
+```r
 library(dplyr)
 library(tidyr)
 
@@ -182,19 +227,31 @@ aligned_gbif_taxa <- gbif_lite |>
   drop_na(species) |>  
   pull(species) |> 
   align_taxa(resources = resources)
+#> Checking alignments of 121 taxa
+#>   -> 0 names already matched; 0 names checked but without a match; 121 taxa yet to be checked
+#> Error in `dplyr::mutate()`:
+#> ℹ In argument: `fuzzy_match_genus = fuzzy_match_genera(genus,
+#>   resources$genera_accepted$canonicalName)`.
+#> Caused by error in `purrr::map_chr()` at APCalign/R/match_taxa.R:9:4:
+#> ℹ In index: 1.
+#> Caused by error in `utils::adist()`:
+#> ! object 'resources' not found
 
 aligned_gbif_taxa |> print(n = 6)
+#> Error in print(aligned_gbif_taxa, n = 6): object 'aligned_gbif_taxa' not found
 ```
 
 For every `aligned_name`, `align_taxa()` will provide a `aligned_reason` which you can review as a table of counts:
 
-```{r align reason}
+
+```r
 library(janitor)
 
 aligned_gbif_taxa |> 
   pull(aligned_reason) |> 
   tabyl() |> 
   tibble() 
+#> Error in pull(aligned_gbif_taxa, aligned_reason): object 'aligned_gbif_taxa' not found
 ```
 
 ### Update taxonomic names to alignments
@@ -202,12 +259,15 @@ aligned_gbif_taxa |>
 `update_taxonomy()` will update APNI taxa to specified (or current) version of APC. It will use the general synonymy published by the APC to attempt to sync the taxon names to a specific list. The function will also add other relevant taxonomy columns in the output
 
 
-```{r update names}
+
+```r
 updated_gbif_taxa <- aligned_gbif_taxa |> 
   pull(aligned_name) |> 
   update_taxonomy(resources = resources)
+#> Error in pull(aligned_gbif_taxa, aligned_name): object 'aligned_gbif_taxa' not found
 
 updated_gbif_taxa |> print(n = 6)
+#> Error in print(updated_gbif_taxa, n = 6): object 'updated_gbif_taxa' not found
 ```
 
 

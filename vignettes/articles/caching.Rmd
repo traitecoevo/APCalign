@@ -1,5 +1,5 @@
 ---
-title: "Caching in ausflora"
+title: "Caching in APCalign"
 ---
 
 ```{r, include = FALSE}
@@ -10,5 +10,5 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(ausflora)
+library(APCalign)
 ```

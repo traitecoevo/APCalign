@@ -254,7 +254,7 @@ default_version <- function() {
 
 #' @noRd
 dataset_get <- function(version = default_version(),
-                        path = tools::R_user_dir("ausflora")) {
+                        path = tools::R_user_dir("APCalign")) {
   #APC
   url <-
     paste0(
@@ -273,6 +273,7 @@ dataset_get <- function(version = default_version(),
       version,
       "/apni.parquet"
     )
+    
   apni_hash <- contentid::register(url)
   apni_file <- contentid::resolve(apni_hash, store = TRUE, path = path)
   APNI <- arrow::read_parquet(apni_file)

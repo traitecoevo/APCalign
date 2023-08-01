@@ -1,4 +1,4 @@
-url: https://traitecoevo.github.io/ausflora/
+url: https://traitecoevo.github.io/APCalign/
 template:
   bootstrap: 5
   bootswatch: litera
@@ -17,7 +17,7 @@ navbar:
       - text: APC and APNI
         href: articles/data-providers.html
       - text: "Data caching"
-      - text: How is APC/APNI stored in ausflora? 
+      - text: How is APC/APNI stored in APCalign? 
         href: 'articles/caching.html'
       - text: -------
       - text: "Taxon matching"
@@ -40,4 +40,4 @@ reference:
 - contents:
   - gbif_lite
 
-  
+
