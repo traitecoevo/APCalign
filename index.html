@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="An interface to the Australian Plant Census data for taxonomy fixing and diversity counting. The two use cases are 1) an Australian plant taxa name list that needs to be updated to current taxonomy and 2) current APC approved diversity counts per state and current accepted splits between native and introduced taxa.">
-<title>An interface to the Australian Plant Census data for taxonomy fixing and diversity counting • ausflora</title>
+<title>An interface to the Australian Plant Census data for taxonomy fixing and diversity counting • APCalign</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -24,7 +24,7 @@
 
     <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
     
-    <a class="navbar-brand me-2" href="index.html">ausflora</a>
+    <a class="navbar-brand me-2" href="index.html">APCalign</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9000</small>
 
@@ -36,7 +36,7 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
-  <a class="nav-link" href="articles/ausflora.html">Get started</a>
+  <a class="nav-link" href="articles/APCalign.html">Get started</a>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
@@ -47,7 +47,7 @@
     <h6 class="dropdown-header" data-toc-skip>Data providers</h6>
     <a class="dropdown-item" href="articles/data-providers.html">APC and APNI</a>
     <h6 class="dropdown-header" data-toc-skip>Data caching</h6>
-    <a class="dropdown-item" href="articles/caching.html">How is APC/APNI stored in ausflora?</a>
+    <a class="dropdown-item" href="articles/caching.html">How is APC/APNI stored in APCalign?</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Taxon matching</h6>
     <a class="dropdown-item" href="articles/taxmatch.html">Our fuzzy matching algorithim</a>
@@ -67,18 +67,18 @@
 <div class="row">
   <main id="main" class="col-md-9">
 <div class="section level1">
-<div class="page-header"><h1 id="ausflora-">ausflora <img src="reference/figures/ausflora_hex2.png" align="right" width="120"><a class="anchor" aria-label="anchor" href="#ausflora-"></a>
+<div class="page-header"><h1 id="apcalign-">APCalign <img src="reference/figures/APCalign_hex.png" align="right" width="120"><a class="anchor" aria-label="anchor" href="#apcalign-"></a>
 </h1></div>
-<p>‘ausflora’ uses the <a href="https://biodiversity.org.au/nsl/services/search/taxonomy" class="external-link">Australian Plant Census (APC)</a> and <a href="https://biodiversity.org.au/nsl/services/search/names" class="external-link">Australian Plant Name Index</a> to standardise Australian plant taxon names. ‘ausflora’ also supplies information about the established status of plant taxa across different states/territories.</p>
+<p>‘APCalign’ uses the <a href="https://biodiversity.org.au/nsl/services/search/taxonomy" class="external-link">Australian Plant Census (APC)</a> and <a href="https://biodiversity.org.au/nsl/services/search/names" class="external-link">Australian Plant Name Index</a> to standardise Australian plant taxon names. ‘APCalign’ also supplies information about the established status of plant taxa across different states/territories.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>‘ausflora’ is current not on CRAN. Install the current development version:</p>
+<p>‘APCalign’ is current not on CRAN. Install the currently development version:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="co"># remotes::install_github("traitecoevo/ausflora")</span></span>
+<span><span class="co"># remotes::install_github("traitecoevo/APCalign")</span></span>
 <span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://traitecoevo.github.io/ausflora/">ausflora</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://traitecoevo.github.io/APCalign/">APCalign</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="a-quick-demo">A quick demo<a class="anchor" aria-label="anchor" href="#a-quick-demo"></a>
@@ -104,19 +104,19 @@
 <span><span class="co">#&gt; # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="further-reading">Further reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
+<h2 id="learn-more">Learn more<a class="anchor" aria-label="anchor" href="#learn-more"></a>
 </h2>
-<p>Highly recommend looking at our <a href="">Getting Started</a> vignette to learn about how to use ‘ausflora’. You can also learn more about our <a href="">taxa matching algorithim</a> and how <a href="">APC/APNI data is cached</a> behind-the-scenes.</p>
+<p>Highly recommend looking at our <a href="https://traitecoevo.github.io/APCalign/articles/APCalign.html">Getting Started</a> vignette to learn about how to use ‘APCalign’. You can also learn more about our <a href="https://traitecoevo.github.io/APCalign/articles/taxmatch.html">taxa matching algorithim</a> and how <a href="https://traitecoevo.github.io/APCalign/articles/caching.html">APC/APNI data is cached</a> behind-the-scenes.</p>
 </div>
 <div class="section level2">
 <h2 id="found-a-bug">Found a bug?<a class="anchor" aria-label="anchor" href="#found-a-bug"></a>
 </h2>
-<p>Did you come across an unexpected taxon name change? Elusive error you can’t debug - <a href="https://github.com/traitecoevo/ausflora/issues" class="external-link">submit an issue</a> and we will try our best to help</p>
+<p>Did you come across an unexpected taxon name change? Elusive error you can’t debug - <a href="https://github.com/traitecoevo/APCalign/issues" class="external-link">submit an issue</a> and we will try our best to help</p>
 </div>
 <div class="section level2">
 <h2 id="comments-and-contributions">Comments and contributions<a class="anchor" aria-label="anchor" href="#comments-and-contributions"></a>
 </h2>
-<p>We welcome any comments and contributions to the package, start by <a href="https://github.com/traitecoevo/ausflora/issues" class="external-link">submit an issue</a> and we can take it from there!</p>
+<p>We welcome any comments and contributions to the package, start by <a href="https://github.com/traitecoevo/APCalign/issues" class="external-link">submit an issue</a> and we can take it from there!</p>
 </div>
 </div>
 
@@ -133,7 +133,7 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing ausflora</a></li>
+<li><a href="authors.html#citation">Citing APCalign</a></li>
 </ul>
 </div>
 
@@ -148,8 +148,8 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg"></a></li>
-<li><a href="https://app.codecov.io/gh/traitecoevo/ausflora?branch=master" class="external-link"><img src="https://codecov.io/gh/traitecoevo/ausflora/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
-<li><a href="https://github.com/traitecoevo/ausflora/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/traitecoevo/ausflora/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/traitecoevo/APCalign?branch=master" class="external-link"><img src="https://codecov.io/gh/traitecoevo/APCalign/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://github.com/traitecoevo/APCalign/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/traitecoevo/APCalign/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
