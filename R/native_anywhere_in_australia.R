@@ -16,7 +16,8 @@
 #' @export
 #' @examples
 #' 
-#' native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources=resources)
+#' native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"))
+#'
 
 native_anywhere_in_australia <-
   function(species, resources = load_taxonomic_resources()) {

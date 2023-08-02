@@ -26,7 +26,8 @@ use \link{create_species_state_origin_matrix}.
 }
 \examples{
 
-native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources=resources)
+native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"))
+
 }
 \seealso{
 Other diversity methods: 
