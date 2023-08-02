@@ -1,6 +1,6 @@
 Package: APCalign
 Title: A R Interface to the Australian Plant Census and Australian Plant Name Index for Taxonomy Fixing and Diversity Counting
-Version: 0.0.1
+Version: 0.1.0
 Authors@R: 
     person(given = "Daniel",
            family = "Falster",
