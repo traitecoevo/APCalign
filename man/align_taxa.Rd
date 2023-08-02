@@ -42,9 +42,3 @@ Other taxonomic alignment functions:
 \code{\link{update_taxonomy}()}
 }
 \concept{taxonomic alignment functions}
-\keyword{APC,}
-\keyword{APNI,}
-\keyword{alignments,}
-\keyword{flora}
-\keyword{resource}
-\keyword{taxonomic}
