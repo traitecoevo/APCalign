@@ -18,7 +18,6 @@
 #' @importFrom readr read_csv cols col_logical col_character
 #' @importFrom tibble tibble
 #'
-#' @keywords taxonomic alignments, APC, APNI, flora resource
 #'
 #' @seealso
 #' \code{\link{load_taxonomic_resources}}
