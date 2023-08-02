@@ -42,7 +42,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Daniel Falster \email{daniel.falster@unsw.edu.au} (\href{https://orcid.org/0002-9814-092X}{ORCID})
+\strong{Maintainer}: Daniel Falster \email{daniel.falster@unsw.edu.au} (\href{https://orcid.org/0000-0002-9814-092X}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}
