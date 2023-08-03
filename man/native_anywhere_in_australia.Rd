@@ -7,7 +7,7 @@
 native_anywhere_in_australia(species, resources = load_taxonomic_resources())
 }
 \arguments{
-\item{species}{A character string representing the binomial or common name of the species.}
+\item{species}{A character string representing the binomial for the species.}
 
 \item{resources}{An optional list of taxonomic resources to use for the lookup.
 If not provided, the function will load default taxonomic resources using the \code{load_taxonomic_resources()} function.}
@@ -25,7 +25,7 @@ For the complete matrix of species by states that also represents within-Austral
 use \link{create_species_state_origin_matrix}.
 }
 \examples{
-\donttest{ native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"))}
+\donttest{native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata","Banksis notaspecies"))}
 }
 \seealso{
 Other diversity methods: 
