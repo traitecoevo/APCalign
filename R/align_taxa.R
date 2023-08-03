@@ -13,7 +13,7 @@
 #' @export
 #'
 #' @examples
-#' align_taxa(c("Poa annua", "Abies alba"))
+#' \donttest{align_taxa(c("Poa annua", "Abies alba"))}
 #'
 #' @importFrom readr read_csv cols col_logical col_character
 #' @importFrom tibble tibble
