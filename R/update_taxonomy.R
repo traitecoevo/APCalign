@@ -41,11 +41,7 @@
 #' @examples
 #' # Update taxonomy for two plant names and print the result
 #' \donttest{update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"))}
-#'
-#' # Update taxonomy for two plant names and save the result to a CSV file
-#' \donttest{
-#' update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"), output = "updated_taxonomy.csv")
-#' }
+
 update_taxonomy <- function(aligned_names,
                             output = NULL,
                             resources = load_taxonomic_resources()) {

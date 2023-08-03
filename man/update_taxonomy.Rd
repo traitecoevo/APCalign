@@ -47,11 +47,6 @@ to their current accepted name.
 \examples{
 # Update taxonomy for two plant names and print the result
 \donttest{update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"))}
-
-# Update taxonomy for two plant names and save the result to a CSV file
-\donttest{
-update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"), output = "updated_taxonomy.csv")
-}
 }
 \seealso{
 load_taxonomic_resources
