@@ -28,8 +28,8 @@ create_taxonomic_update_lookup <- function(taxa,
                                            version = default_version(),
                                            one_to_many = "return_all",
                                            full = FALSE,
-                                           resources = load_taxonomic_resources(stable_or_current_data = 
-                                                                                  stable_or_current_data, 
+                                           resources = load_taxonomic_resources(stable_or_current_data =
+                                                                                  stable_or_current_data,
                                                                                 version = version),
                                            output = NULL) {
   validate_one_to_many_input(one_to_many)
@@ -83,7 +83,10 @@ get_aligned_data <- function(taxa, resources) {
 #' Wrapper for update_taxonomy that either summarizes to one species or returns all matches
 #' @noRd
 get_updated_species_list <-
-  function(aligned_data, resources, one_to_many, output) {
+  function(aligned_data,
+           resources,
+           one_to_many,
+           output) {
     aligned_species_list_tmp <-
       aligned_data$aligned_name %>% update_taxonomy(resources = resources, output = output)
     
@@ -102,20 +105,43 @@ get_updated_species_list <-
       dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
       dplyr::rename(canonical_name = canonicalName) -> updated_df
     
-    failed_to_update<-filter(aligned_data,!aligned_name %in% updated_df$aligned_name & known==TRUE &checked==TRUE)
+    failed_to_update <-
+      filter(
+        aligned_data,
+        !aligned_name %in% updated_df$aligned_name &
+          known == TRUE & checked == TRUE
+      )
     
-    if(nrow(failed_to_update)==0) return(updated_df)
+    if (nrow(failed_to_update) == 0)
+      return(updated_df)
     
     # this could be improved with some thought, but may need to modify align_taxa to get more information out at this stage
-    failed_to_update_ss<-select(failed_to_update,original_name,aligned_name,aligned_reason) %>%
-                                mutate(source="known_name_but_not_apc_accepted",
-                                taxonIDClean=NA,taxonomicStatusClean="known_name_but_not_apc_accepted",
-                                alternativeTaxonomicStatusClean=NA,acceptedNameUsageID=NA,
-                                canonical_name=NA,scientificNameAuthorship=NA,taxonRank=NA, #to do
-                                taxonomicStatus=NA,family=NA,subclass=NA,taxonDistribution=NA,
-                                ccAttributionIRI=NA,genus=NA
-                                )
-    return(bind_rows(updated_df,failed_to_update_ss))
+    failed_to_update_ss <-
+      select(failed_to_update,
+             original_name,
+             aligned_name,
+             aligned_reason) %>%
+      mutate(
+        source = "known_name_but_not_apc_accepted",
+        taxonIDClean = NA,
+        taxonomicStatusClean = "known_name_but_not_apc_accepted",
+        alternativeTaxonomicStatusClean = NA,
+        acceptedNameUsageID = NA,
+        canonical_name = NA,
+        scientificNameAuthorship = NA,
+        taxonRank = NA,
+        #to do
+        taxonomicStatus = NA,
+        family = NA,
+        subclass = NA,
+        taxonDistribution = NA,
+        ccAttributionIRI = NA,
+        genus = NA
+      )
+    if (nrow(updated_df) == 0) {
+      return(failed_to_update_ss)
+    }
+    return(bind_rows(updated_df, failed_to_update_ss))
   }
 
 
@@ -138,8 +164,8 @@ collapse_to_higher_taxon <-
 find_mrct <- function(taxa,
                       stable_or_current_data = "stable",
                       version = default_version(),
-                      resources = load_taxonomic_resources(stable_or_current_data = 
-                                                             stable_or_current_data, 
+                      resources = load_taxonomic_resources(stable_or_current_data =
+                                                             stable_or_current_data,
                                                            version = version)) {
   # Filter the resources data to only include the taxa of interest
   relevant_taxa <-
