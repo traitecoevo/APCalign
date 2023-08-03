@@ -7,8 +7,6 @@
 align_taxa(
   original_name,
   output = NULL,
-  max_distance_abs = 3,
-  max_distance_rel = 0.2,
   resources = load_taxonomic_resources()
 )
 }
@@ -16,10 +14,6 @@ align_taxa(
 \item{original_name}{A list of names to query for taxonomic alignments.}
 
 \item{output}{(optional) The name of the file to save the results to.}
-
-\item{max_distance_abs}{The absolute distance in substitution space for the fuzzy matching.}
-
-\item{max_distance_rel}{The relative distance in substitution space for the fuzzy matching.}
 
 \item{resources}{the taxonomic resources used to align the taxa names. Loading this can be slow,
 so call \code{\link{load_taxonomic_resources}} separately to greatly speed this function up and pass the resources in.}
