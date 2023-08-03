@@ -117,9 +117,26 @@ test_that("handles NAs", {
   ), resources = resources)), 0)
 })
 
+test_that("handles weird strings", {
+  test_strings <- c("", "''", "'", "          ", "\t", "\n", "stuff with      ",
+                    "test'string'withquotes", 
+                    "!@#$%^&*()_+", 
+                    rep("abc", times=10000),
+                    "print('whoops no cleaning')",
+                    "Doesthislook likeaspeciesi",
+                    "Doesn'tlook likeaspeciesi",
+                    "Banksia  serrata"
+  )
+  expect_equal(nrow(create_taxonomic_update_lookup(test_strings,resources=resources)),1)
+})
+
+
+
+
 test_that("handles APNI taxa and genus level IDs",{
   zz<-create_taxonomic_update_lookup(c("Acacia sp.", "Dendropanax amplifolius",
                                       "Acanthopanax divaricatum", "Eucalyptus sp."), resources=resources)
   expect_gte(nrow(zz), 4)
 })
+
 
