@@ -116,3 +116,19 @@ test_that("handles NAs", {
     "Acacia aneura", NA
   ), resources = resources)), 0)
 })
+
+test_that("handles weird strings", {
+  test_strings <- c("", "''", "'", "          ", "\t", "\n", "stuff with      ",
+                    "test'string'withquotes", 
+                    "!@#$%^&*()_+", 
+                    rep("abc", times=10000),
+                    "print('whoops no cleaning')",
+                    "Doesthislook likeaspeciesi",
+                    "Doesn'tlook likeaspeciesi",
+                    "Banksia  serrata"
+  )
+  expect_equal(nrow(create_taxonomic_update_lookup(test_strings,resources=resources)),1)
+})
+
+
+
