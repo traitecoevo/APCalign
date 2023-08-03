@@ -16,13 +16,13 @@
 #'
 #' @seealso \code{\link{load_taxonomic_resources}}
 #' @examples
-#' resources <- load_taxonomic_resources()
+#' \donttest{resources <- load_taxonomic_resources()
 #' create_taxonomic_update_lookup(c("Eucalyptus regnans",
 #'                                  "Acacia melanoxylon",
 #'                                  "Banksia integrifolia",
 #'                                  "Not a species"),
 #'                                  resources=resources)
-#'
+#'}
 create_taxonomic_update_lookup <- function(taxa,
                                            stable_or_current_data = "stable",
                                            version = default_version(),

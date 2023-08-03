@@ -25,9 +25,7 @@ For the complete matrix of species by states that also represents within-Austral
 use \link{create_species_state_origin_matrix}.
 }
 \examples{
-
-native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"))
-
+\donttest{ native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"))}
 }
 \seealso{
 Other diversity methods: 

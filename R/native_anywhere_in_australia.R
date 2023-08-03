@@ -15,9 +15,7 @@
 #'         and `native_anywhere_in_aus`, a logical vector indicating whether each species is native anywhere in Australia.
 #' @export
 #' @examples
-#' 
-#' native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"))
-#'
+#' \donttest{ native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"))}
 
 native_anywhere_in_australia <-
   function(species, resources = load_taxonomic_resources()) {

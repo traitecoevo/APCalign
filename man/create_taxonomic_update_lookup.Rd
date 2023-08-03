@@ -37,13 +37,13 @@ A lookup table containing the original species names, the aligned species names,
 This function takes a list of Australian plant species that needs to be reconciled with current taxonomy and generates a lookup table to help fix the taxonomy. The lookup table contains the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 }
 \examples{
-resources <- load_taxonomic_resources()
+\donttest{resources <- load_taxonomic_resources()
 create_taxonomic_update_lookup(c("Eucalyptus regnans",
                                  "Acacia melanoxylon",
                                  "Banksia integrifolia",
                                  "Not a species"),
                                  resources=resources)
-
+}
 }
 \seealso{
 \code{\link{load_taxonomic_resources}}

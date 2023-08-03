@@ -16,7 +16,7 @@ A data frame with columns representing each state and rows representing each spe
 This function processes the geographic data available in the current or any version of the Australian Plant Census and returns state level diversity for native, introduced and more complicated species origins.
 }
 \examples{
-create_species_state_origin_matrix()
+\donttest{create_species_state_origin_matrix()}
 
 
 

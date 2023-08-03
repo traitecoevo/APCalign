@@ -14,7 +14,7 @@
 #' @export
 #'
 #' @examples
-#'  \dontrun{state_diversity_counts(state = "NSW")}
+#'  \donttest{state_diversity_counts(state = "NSW")}
 state_diversity_counts <- function(state,
                                    resources = load_taxonomic_resources(version = default_version())) {
   valid_inputs <- c(
