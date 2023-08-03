@@ -100,7 +100,21 @@ get_updated_species_list <-
                        multiple = multiple) %>%
       dplyr::filter(!is.na(taxonIDClean)) %>%
       dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
-      dplyr::rename(canonical_name = canonicalName)
+      dplyr::rename(canonical_name = canonicalName) -> updated_df
+    
+    failed_to_update<-filter(aligned_data,!aligned_name %in% updated_df$aligned_name & known==TRUE &checked==TRUE)
+    
+    if(nrow(failed_to_update)==0) return(updated_df)
+    
+    failed_to_update_ss<-select(failed_to_update,original_name,aligned_name,aligned_reason) %>%
+                                mutate(source="known_name_but_not_apc_accepted",
+                                taxonIDClean=NA,taxonomicStatusClean="known_name_but_not_apc_accepted",
+                                alternativeTaxonomicStatusClean=NA,acceptedNameUsageID=NA,
+                                canonical_name=NA,scientificNameAuthorship=NA,taxonRank="FIX THIS!", #to do
+                                taxonomicStatus="FIX THIS!",family=NA,subclass=NA,taxonDistribution=NA,
+                                ccAttributionIRI=NA,genus=NA
+                                )
+    return(bind_rows(updated_df,failed_to_update_ss))
   }
 
 
