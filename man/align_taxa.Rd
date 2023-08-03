@@ -31,7 +31,7 @@ A tibble with columns: original_name, cleaned_name, aligned_name, source, known,
 This function uses Australian Plant Census (APC) & the Australian Plant Name Index (APNI) to find taxonomic alignments for a list of names.
 }
 \examples{
-align_taxa(c("Poa annua", "Abies alba"))
+\donttest{align_taxa(c("Poa annua", "Abies alba"))}
 
 }
 \seealso{
@@ -42,9 +42,3 @@ Other taxonomic alignment functions:
 \code{\link{update_taxonomy}()}
 }
 \concept{taxonomic alignment functions}
-\keyword{APC,}
-\keyword{APNI,}
-\keyword{alignments,}
-\keyword{flora}
-\keyword{resource}
-\keyword{taxonomic}

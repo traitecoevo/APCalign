@@ -1,13 +1,14 @@
 Package: APCalign
-Title: An interface to the Australian Plant Census data for taxonomy fixing and diversity counting
-Version: 0.0.2.9000
-Authors@R: 
-    person(given = "Daniel",
-           family = "Falster",
-           role = c("aut", "cre"),
-           email = "daniel.falster@unsw.edu.au",
-           comment = c(ORCID = "0002-9814-092X"))
-Description: An interface to the Australian Plant Census data for taxonomy fixing and diversity counting. The two use cases are 1) an Australian plant taxa name list that needs to be updated to current taxonomy and 2) current APC approved diversity counts per state and current accepted splits between native and introduced taxa.
+Title: A R Interface to the Australian Plant Census and Australian Plant Name Index for Taxonomy Fixing and Diversity Counting
+Version: 0.1.0
+Authors@R: c(
+  person(given = "Daniel", family = "Falster", role = c("aut", "cre", "cph"), email = "daniel.falster@unsw.edu.au", comment = c(ORCID = "0000-0002-9814-092X")),
+  person(given = "Elizabeth", family = "Wenk", role = c("aut", "ctb"), email = "e.wenk@unsw.edu.au", comment = c(ORCID = "0000-0001-5640-5910")),
+  person(given = "Will", family = "Cornwell", role = c("aut", "ctb"), email = "w.cornwell@unsw.edu.au", comment = c(ORCID = "0000-0003-4080-4073")),
+  person(given = "Fonti", family = "Kar", role = c("aut", "ctb"), email = "f.kar@unsw.edu.au", comment = c(ORCID = "0000-0002-2760-3974")),
+  person(given = "Carl", family=  "Boettiger", role = c("ctb"), email = "cboettig@gmail.com", comment = c(ORCID = "0000-0002-1642-628X"))
+    )
+Description: The process of standardising taxon names is necessary when working with biodiversity data. 'APCalign' uses the Australian Plant Name Index (APNI) and the Australian Plant Census (APC) to align and update plant taxon names to current, accepted standards. 'APCalign' can also supply information about the established status of plant taxa across different states/territories.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en

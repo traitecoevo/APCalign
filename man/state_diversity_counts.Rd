@@ -22,7 +22,7 @@ The tibble has three columns: "origin" indicating the origin of the species, "st
 This function calculates state-level diversity for native, introduced, and more complicated species origins based on the geographic data available in the current Australian Plant Census.
 }
 \examples{
- \dontrun{state_diversity_counts(state = "NSW")}
+ \donttest{state_diversity_counts(state = "NSW")}
 }
 \seealso{
 \code{\link{load_taxonomic_resources}}

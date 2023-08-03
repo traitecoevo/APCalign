@@ -15,7 +15,7 @@
 #' @seealso \code{\link{load_taxonomic_resources}}
 #'
 #' @examples
-#' create_species_state_origin_matrix()
+#' \donttest{create_species_state_origin_matrix()}
 #'
 #'
 #'
