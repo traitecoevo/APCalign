@@ -258,7 +258,7 @@ dataset_get <- function(version = default_version(),
   #APC
   url <-
     paste0(
-      "https://github.com/traitecoevo/ausflora/releases/download/",
+      "https://github.com/traitecoevo/APCalign/releases/download/",
       version,
       "/apc.parquet"
     )
@@ -269,7 +269,7 @@ dataset_get <- function(version = default_version(),
   #APNI
   url <-
     paste0(
-      "https://github.com/traitecoevo/ausflora/releases/download/",
+      "https://github.com/traitecoevo/APCalign/releases/download/",
       version,
       "/apni.parquet"
     )
