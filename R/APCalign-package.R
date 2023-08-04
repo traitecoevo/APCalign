@@ -50,6 +50,7 @@ utils::globalVariables(
     "fuzzy_match_genus_APNI",
     "fuzzy_match_genus_known",
     "genus",
+    "known",
     "my_order",
     "nameElement", 
     "nameType",
