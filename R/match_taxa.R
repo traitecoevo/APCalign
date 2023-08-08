@@ -1,14 +1,31 @@
-# do the actual matching
+#' Match taxonomic names to accepted names in list
+#' 
+#' This function attempts to match input strings to a list of allowable taxonomic names.
+#' It cycles through more than 20 different string patterns, sequentially searching for additional match patterns.
+#' It identifies string patterns in input names that suggest a name can only be aligned to a genus (hybrids that are not accepted names; graded species; taxa not identified to species).
+#' It prioritises matches that do not require fuzzy matching (i.e. synonyms, orthographic variants) over those that do.
+#' If prioritises matches to taxa in the APC over names in the APNI.
+#' 
+#' @param taxa The list of taxa requiring checking
+#'
+#' @param resources The list(s) of accepted names to check against
+#' @param dataset_id A dataset or other identifier XXXX
+#'
 #' @noRd
 match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
+
+  ## replace NA's with a new string XXXX @dfalster, I'm confused, because you only give a single parameter when you use this function. And I created the "zzzz zzzz" previously because matches didn't work when there were NA's
   update_na_with <- function(current, new) {
     ifelse(is.na(current), new, current)
   }
   
+  ## A function that specifies particular fuzzy matching conditions (for the function fuzzy_match) when matching is being done at the genus level.
   fuzzy_match_genera <- function(x, y) {
     purrr::map_chr(x, ~ fuzzy_match(.x, y, 2, 0.35, n_allowed = 1))
   }
   
+  ## In the tocheck dataframe, add columns with manipulated versions of the string to match
+  ## Various stripped versions of the string to match, versions with 1, 2 and 3 words (genus, binomial, trinomial), and fuzzy-matched genera are propagated.
   taxa$tocheck <- taxa$tocheck %>%
     dplyr::mutate(
       cleaned_name = cleaned_name %>%
@@ -28,13 +45,19 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
         fuzzy_match_genera(genus, resources$genera_APNI$canonicalName)
     )
   
+  ## XXXX @dfalster 2 things in the code above. There will still be NA's (I think) which breaks processes later and there also needs to be a line of code to remove duplicates trinomial, binomial's
+  ## I had this line of code (& related others) before which is now gone and I assume it was because duplication was later causing issues:
+  ## binomial = base::replace(binomial, duplicated(binomial), "zzzz zzzz")
+  
+  
+  ## Taxa that have been checked as moved to taxa$checked
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_01, `genus sp.` matches, across all lists simultaneously
-  # for names where the final "word" is `sp` or `spp`, immediately indicate it can only be aligned to `taxonomic_resolution = "genus"` (or family)
-  # first match against known genera in any resource
+  # match_01: Genus-level resolution
+  # Exact matches of APC-accepted genera for names where the final "word" is `sp` or `spp`
+  # Aligned name includes dataset_id (or other identifier) to indicate this `genus sp.` taxon is specific to this dataset/location
   
   i <-
     (
@@ -53,7 +76,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       taxonomic_resolution = "genus",
       aligned_name = paste0(resources$genera_all$cleaned_name[ii], " sp. [", dataset_id, "]"),
       aligned_reason = paste0(
-        "match_01. Rewording taxon with ending with `sp.` to indicate a genus-level alignment with `",
+        "Exact match of taxon name ending with `sp.` to an APC-accepted genus ",
         taxonomic_ref,
         "` name (",
         Sys.Date(),
@@ -61,19 +84,24 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       ),
       checked = TRUE,
       known = TRUE,
-      still_to_match = "match_01"
+      still_to_match = "match_01_exact_genus_accepted"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
+  
+  ## @dfalster, why is this code being repeated?
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_01_fuzzy_accepted, `genus sp.` matches, across all lists simultaneously
-  # for names where the final "word" is `sp` or `spp`, if it doesn't exactly match a genus name, try fuzzy matches with APC accepted genera
+  # match_01: Genus-level resolution
+  # Fuzzy matches of APC accepted genera for names where the final "word" is `sp` or `spp` and 
+  # there isn't an exact match to an APC accepted genus name
+  # Aligned name includes dataset_id (or other identifier) to indicate this `genus sp.` taxon is specific to this dataset/location
+  
   i <-
     (
       stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
@@ -92,21 +120,23 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       taxonomic_resolution = "genus",
       aligned_name = paste0(resources$genera_all$cleaned_name[ii], " sp. [", dataset_id, "]"),
       aligned_reason = paste0(
-        "match_01_fuzzy. Fuzzy match of name ending with `sp.` to an APC accepted genus (",
+        "Fuzzy match of taxon name ending with `sp.` to an APC-accepted genus (",
         Sys.Date(),
         ")"
       ),
       known = TRUE,
       checked = TRUE,
-      still_to_match = "match_01_fuzzy_accepted"
+      still_to_match = "match_01_fuzzy_genus_accepted"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_01_fuzzy_known, `genus sp.` matches, across all lists simultaneously
-  # for names where the final "word" is `sp` or `spp`, if it doesn't exactly match a genus name, try fuzzy matches with APC known genera
+  # match_01: Genus-level resolution
+  # Fuzzy matches of APC known genera for names where the final "word" is `sp` or `spp` and 
+  # there isn't an exact match to an APC known genus name
+  # Aligned name includes dataset_id (or other identifier) to indicate this `genus sp.` taxon is specific to this dataset/location
   i <-
     (
       stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
@@ -130,21 +160,22 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
         "]"
       ),
       aligned_reason = paste0(
-        "match_01_fuzzy. Fuzzy match of name ending with `sp.` to an APC known genus (",
+        "Fuzzy match of taxon name ending with `sp.` to an APC-known genus (",
         Sys.Date(),
         ")"
       ),
       known = TRUE,
       checked = TRUE,
-      still_to_match = "match_01_fuzzy_known"
+      still_to_match = "match_01_fuzzy_genus_known"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_02, `family sp.` matches
-  # for names where the final "word" is `sp` or `spp`, that do not match to a genus, see if they instead match to a family
+  # match_02: Family-level resolution
+  # Exact matches of APC-accepted family for names where the final "word" is `sp` or `spp` and which have not been matched to a genus
+  # Aligned name includes dataset_id (or other identifier) to indicate this `family sp.` taxon is specific to this dataset/location
   i <-
     (
       stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
@@ -158,23 +189,25 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       taxonomic_resolution = "family",
       aligned_name = paste0(genus, " sp. [", dataset_id, "]"),
       aligned_reason = paste0(
-        "match_02. Rewording taxon with ending with `sp.` to indicate a family-level alignment with `APC accepted` name (",
+        "Exact match of taxon name ending with `sp.` to an APC-accepted family (",
         Sys.Date(),
         ")"
       ),
       known = TRUE,
       checked = TRUE,
-      still_to_match = "match_02"
+      still_to_match = "match_02_exact_family_accepted"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_03, `genus species_A -- species_B` (intergrade) matches with all genera (APC, APNI)
-  # for names where a double hyphen indicates the plant is an intergrade, automatically align to genus
+  # XXXX @dfalster should we add fuzzy family matches? I haven't so far.
+  
+  # match_03: Intergrade matches
+  # Exact match to APC-accepted or APNI-listed genus for taxon names where a double hyphen indicates the plant is an intergrade
+  # For taxon names fitting pattern, `genus species_A -- species_B` (intergrade) automatically align to genus,
   # since this is the highest taxon rank that can be attached to the plant name
-  # first consider perfect matches within either APC or APNI
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- ") &
     taxa$tocheck$genus %in% resources$genera_all$canonicalName
@@ -195,7 +228,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
         "]"
       ),
       aligned_reason = paste0(
-        "match_03. Rewording taxon that are intergrades between two taxa and genus aligns with `",
+        "Exact genus match of taxon name that indicates an intergrade between two taxa. Genus aligns with `",
         taxonomic_ref,
         "` genus (",
         Sys.Date(),
@@ -203,15 +236,18 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       ),
       known = TRUE,
       checked = TRUE,
-      still_to_match = "match_03"
+      still_to_match = "match_03_intergrade_accepted_or_known_genus"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_03_fuzzy_accepted, `genus species_A -- species_B` (intergrade) matches with fuzzy-matched genus (APC accepted)
-  # next consider fuzzy matches to `APC accepted` genera
+  # match_03: Intergrade matches, APC-accepted fuzzy
+  # Fuzzy match to APC-accepted genus for taxon names where a double hyphen indicates the plant is an intergrade.
+  # For taxon names fitting pattern, `genus species_A -- species_B` (intergrade) automatically align to genus,
+  # since this is the highest taxon rank that can be attached to the plant name.
+  
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- ") &
     taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$canonicalName
@@ -221,21 +257,23 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       taxonomic_resolution = "genus",
       aligned_name = paste0(fuzzy_match_genus, " sp. [", cleaned_name, "; ", dataset_id, "]"),
       aligned_reason = paste0(
-        "match_03_fuzzy. Rewording taxon that are intergrades between two taxa to indicate a genus-level alignment with APC accepted genus via fuzzy match (",
+        "Fuzzy APC-accepted genus match of taxon name that indicates an intergrade between two taxa. Genus aligns with (",
         Sys.Date(),
         ")"
       ),
       known = TRUE,
       checked = TRUE,
-      still_to_match = "match_03_fuzzy_accepted"
+      still_to_match = "match_03_intergrade_fuzzy_accepted_genus"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_03_fuzzy_known, `genus species_A -- species_B` (intergrade) matches with fuzzy-matched genus (APC known)
-  # next consider fuzzy matches to `APC known` genera
+  # match_03: Intergrade matches, APC-known fuzzy
+  # Fuzzy match to APC-known genus for taxon names where a double hyphen indicates the plant is an intergrade.
+  # For taxon names fitting pattern, `genus species_A -- species_B` (intergrade) automatically align to genus,
+  # since this is the highest taxon rank that can be attached to the plant name.
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- ") &
     taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_accepted$canonicalName
@@ -252,21 +290,23 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
         "]"
       ),
       aligned_reason = paste0(
-        "match_03_fuzzy. Rewording taxon that are intergrades between two taxa to indicate a genus-level alignment with APC known genus via fuzzy match (",
+        "Fuzzy APC-known genus match of taxon name that indicates an intergrade between two taxa. Genus aligns with (",
         Sys.Date(),
         ")"
       ),
       known = TRUE,
       checked = TRUE,
-      still_to_match = "match_03_fuzzy_known"
+      still_to_match = "match_03_intergrade_fuzzy_known_genus"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_03_fuzzy_APNI, `genus species_A -- species_B` (intergrade) matches with fuzzy-matched genus (APNI)
-  # next consider fuzzy matches to `APNI` genera
+  # match_03: Intergrade matches, APNI-listed fuzzy
+  # Fuzzy match to APNI-listed genus for taxon names where a double hyphen indicates the plant is an intergrade.
+  # For taxon names fitting pattern, `genus species_A -- species_B` (intergrade) automatically align to genus,
+  # since this is the highest taxon rank that can be attached to the plant name.
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- ") &
     taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_accepted$canonicalName
@@ -283,22 +323,23 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
         "]"
       ),
       aligned_reason = paste0(
-        "match_03_fuzzy. Rewording taxon that are intergrades between two taxa to indicate a genus-level alignment with genus in APNI via fuzzy match (",
+        "Fuzzy APNI-listed genus match of taxon name that indicates an intergrade between two taxa. Genus aligns with (",
         Sys.Date(),
         ")"
       ),
       known = TRUE,
       checked = TRUE,
-      still_to_match = "match_03_fuzzy_APNI"
+      still_to_match = "match_03_intergrade_fuzzy_APNI_genus"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_03_x, `genus species_A -- species_B` (intergrade) matches with unmatched genus
-  # for intergrades where neither perfect nor fuzzy matches "capture" the genus,
-  # simply reformat the name and indicate the `taxon_rank = genus`
+  # match_03: Intergrade with unknown genus
+  # For taxon names fitting pattern, `genus species_A -- species_B` (intergrade) automatically align to genus,
+  # since this is the highest taxon rank that can be attached to the plant name.
+  # Neither perfect nor fuzzy matches identify the genus.
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- ") &
     !taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$canonicalName
@@ -308,15 +349,13 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       taxonomic_resolution = "genus",
       aligned_name = paste0(genus, " sp. [", cleaned_name, "; ", dataset_id, "]"),
       aligned_reason = paste0(
-        "match_03_x. Rewording taxon that are intergrades between two taxa to indicate a genus-level alignment, but genus doesn't align to `",
-        taxonomic_ref,
-        "` genus via fuzzy match (",
+        "Taxon name that indicates an intergrade between two taxa, but genus name is unknown (",
         Sys.Date(),
         ")"
       ),
       known = TRUE,
       checked = TRUE,
-      still_to_match = "match_03_x"
+      still_to_match = "match_03_intergrade_unknown_genus"
     )
   
   taxa <- redistribute(taxa)
