@@ -1,5 +1,7 @@
-# APCalign 0.1.0
+# APCalign 0.1.1
 
-# APCalign 0.0.2.9000
+* Updated Title in DESCRIPTION file
 
-* Added a `NEWS.md` file to track changes to the package.
+* Built vignette in doc/
+
+* Corrected broken links in vignette and pkgdown
