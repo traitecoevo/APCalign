@@ -7,8 +7,8 @@
 #' If prioritises matches to taxa in the APC over names in the APNI.
 #' 
 #' @param taxa The list of taxa requiring checking
-#'
-#' @param resources The list(s) of accepted names to check against
+#
+#' @param resources The list(s) of accepted names to check against, loaded through the function `load_taxonomic_resources()`
 #' @param dataset_id A dataset or other identifier XXXX
 #'
 #' @noRd
@@ -44,11 +44,6 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       fuzzy_match_genus_APNI =
         fuzzy_match_genera(genus, resources$genera_APNI$canonicalName)
     )
-  
-  ## XXXX @dfalster 2 things in the code above. There will still be NA's (I think) which breaks processes later and there also needs to be a line of code to remove duplicates trinomial, binomial's
-  ## I had this line of code (& related others) before which is now gone and I assume it was because duplication was later causing issues:
-  ## binomial = base::replace(binomial, duplicated(binomial), "zzzz zzzz")
-  
   
   ## Taxa that have been checked as moved to taxa$checked
   taxa <- redistribute(taxa)
@@ -87,12 +82,6 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       still_to_match = "match_01_exact_genus_accepted"
     )
   
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
-  
-  ## @dfalster, why is this code being repeated?
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
