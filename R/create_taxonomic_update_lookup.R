@@ -49,9 +49,10 @@ create_taxonomic_update_lookup <- function(taxa,
         updated_species_list,
         original_name,
         aligned_name,
-        apc_name = canonical_name,
+        updated_name = canonical_name,
+        author = scientificNameAuthorship,
         aligned_reason,
-        taxonomic_status_of_aligned_name = taxonomicStatusClean
+        updated_reason = taxonomicStatusClean
       ) %>%
         distinct()
     )
