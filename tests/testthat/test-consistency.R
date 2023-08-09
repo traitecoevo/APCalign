@@ -124,3 +124,9 @@ test_that("handles NAs", {
     "Acacia aneura", NA
   ), resources = resources)), 0)
 })
+
+
+test_that("genus level ids", {
+  aliged_nms <- align_taxa(c("Acacia sp.", "Eucalyptus sp."), resources = resources) |> pull(aligned_name)
+  expect_false(any(str_detect(aliged_nms, "NA sp.")))
+})
