@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">APCalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,7 +96,8 @@ names. The ‘APCalign’ package simplifies this process by:</p>
 <li>Accessing up-to-date taxonomic information from the <a href="https://biodiversity.org.au/nsl/services/search/taxonomy" class="external-link">Australian
 Plant Census</a> and the <a href="https://biodiversity.org.au/nsl/services/search/names" class="external-link">Australia
 Plant Name Index</a>.</li>
-<li>Aligning authoritative names to your taxonomic names using our <a href="taxmatch.html">fuzzy matching algorithm</a>
+<li>Aligning authoritative names to your taxonomic names using our <a href="https://traitecoevo.github.io/APCalign/articles/taxmatch.html">fuzzy
+matching algorithm</a>
 </li>
 <li>Updating your taxonomic names in a transparent, reproducible
 manner</li>
@@ -152,20 +153,14 @@ from the APC and APNI website.</li>
 <code>stable</code> versions will take a few minutes. Once the taxonomic
 resources have been stored locally, subsequent retrievals will take less
 time. Retrieving <code>current</code> resources will always take longer
-since it is. Check out our <a href="caching.html">Resource Caching</a>
-article to learn more about how the APC and APNIC databases are
-accessed, stored and retrieved.</p>
+since it is. Check out our <a href="https://traitecoevo.github.io/APCalign/articles/caching.html">Resource
+Caching</a> article to learn more about how the APC and APNIC databases
+are accessed, stored and retrieved.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Benchmarking the retrieval of `stable` or `current` resources</span></span>
 <span><span class="va">stable_start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">stable_resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>stable_or_current_data <span class="op">=</span> <span class="st">"stable"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading resources...</span></span>
-<span><span class="co">#&gt; Warning: https://github.com/traitecoevo/APCalign/releases/download/0.0.2.9000/apc.parquet had error</span></span>
-<span><span class="co">#&gt; code 404</span></span>
-<span><span class="co">#&gt; Warning in contentid::resolve(apc_hash, store = TRUE, path = path): No sources found for</span></span>
-<span><span class="co">#&gt; hash://sha256/7326ca5e7eb1e115959f840583e25cd4605667b46d8edacc20ccb637f8c6e982</span></span>
-<span><span class="co">#&gt; Error: IOError: Failed to open local file 'NA'. Detail: [errno 2] No such file or directory</span></span>
-<span><span class="co">#&gt; ...done</span></span>
+<span><span class="co">#&gt; Loading resources......done</span></span>
 <span><span class="va">stable_end_time</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">current_start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -175,20 +170,14 @@ accessed, stored and retrieved.</p>
 <span></span>
 <span><span class="co"># Compare times</span></span>
 <span><span class="va">stable_end_time</span> <span class="op">-</span> <span class="va">stable_start_time</span></span>
-<span><span class="co">#&gt; Time difference of 2.50855 secs</span></span>
+<span><span class="co">#&gt; Time difference of 26.66634 secs</span></span>
 <span><span class="va">current_end_time</span> <span class="op">-</span> <span class="va">current_start_time</span></span>
-<span><span class="co">#&gt; Time difference of 17.48739 secs</span></span></code></pre></div>
+<span><span class="co">#&gt; Time difference of 54.33515 secs</span></span></code></pre></div>
 <p>For a more reproducible workflow, we recommend specifying the exact
 <code>stable</code> version you want to use.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>stable_or_current_data <span class="op">=</span> <span class="st">"stable"</span>, version <span class="op">=</span> <span class="st">"0.0.2.9000"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading resources...</span></span>
-<span><span class="co">#&gt; Warning: https://github.com/traitecoevo/APCalign/releases/download/0.0.2.9000/apc.parquet had error</span></span>
-<span><span class="co">#&gt; code 404</span></span>
-<span><span class="co">#&gt; Warning in contentid::resolve(apc_hash, store = TRUE, path = path): No sources found for</span></span>
-<span><span class="co">#&gt; hash://sha256/7326ca5e7eb1e115959f840583e25cd4605667b46d8edacc20ccb637f8c6e982</span></span>
-<span><span class="co">#&gt; Error: IOError: Failed to open local file 'NA'. Detail: [errno 2] No such file or directory</span></span>
-<span><span class="co">#&gt; ...done</span></span></code></pre></div>
+<span><span class="co">#&gt; Loading resources......done</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="standardise-plant-taxon-names">Standardise plant taxon names<a class="anchor" aria-label="anchor" href="#standardise-plant-taxon-names"></a>
@@ -197,7 +186,8 @@ accessed, stored and retrieved.</p>
 we just retrieved using <code><a href="../reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup()</a></code>.
 This is an all-in-one function will:</p>
 <ul>
-<li>Align your taxonomic names to APNI and APC using our <a href="taxmatch.html">fuzzy matching algorithm</a>
+<li>Align your taxonomic names to APNI and APC using our <a href="https://traitecoevo.github.io/APCalign/articles/taxmatch.html">fuzzy
+matching algorithm</a>
 </li>
 <li>Update taxonomic names to APC accepted name.</li>
 <li>Returns NA for names where a match cannot be found</li>
@@ -214,16 +204,19 @@ standardisation with ‘APCalign’</a></p>
 <span>  <span class="fu"><a href="../reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Checking alignments of 121 taxa</span></span>
 <span><span class="co">#&gt;   -&gt; 0 names already matched; 0 names checked but without a match; 121 taxa yet to be checked</span></span>
-<span><span class="co">#&gt; Error in `dplyr::mutate()`:</span></span>
-<span><span class="co">#&gt; ℹ In argument: `fuzzy_match_genus = fuzzy_match_genera(genus,</span></span>
-<span><span class="co">#&gt;   resources$genera_accepted$canonicalName)`.</span></span>
-<span><span class="co">#&gt; Caused by error in `purrr::map_chr()` at APCalign/R/match_taxa.R:9:4:</span></span>
-<span><span class="co">#&gt; ℹ In index: 1.</span></span>
-<span><span class="co">#&gt; Caused by error in `utils::adist()`:</span></span>
-<span><span class="co">#&gt; ! object 'resources' not found</span></span>
 <span></span>
 <span><span class="va">update_gbif_names</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in print(update_gbif_names, n = 6): object 'update_gbif_names' not found</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 146 × 5</span></span>
+<span><span class="co">#&gt;   original_name           aligned_name            apc_name      aligned_reason taxonomic_status_of_…¹</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                   &lt;chr&gt;                   &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt;                 </span></span>
+<span><span class="co">#&gt; 1 Tetratheca ciliata      Tetratheca ciliata      Tetratheca c… match_06. Aut… accepted              </span></span>
+<span><span class="co">#&gt; 2 Peganum harmala         Peganum harmala         Peganum harm… match_06. Aut… accepted              </span></span>
+<span><span class="co">#&gt; 3 Calotis multicaulis     Calotis multicaulis     Calotis mult… match_06. Aut… accepted              </span></span>
+<span><span class="co">#&gt; 4 Calotis multicaulis     Calotis multicaulis     Calotis plum… match_06. Aut… pro parte misapplied  </span></span>
+<span><span class="co">#&gt; 5 Leptospermum trinervium Leptospermum trinervium Leptospermum… match_06. Aut… accepted              </span></span>
+<span><span class="co">#&gt; 6 Lepidosperma laterale   Lepidosperma laterale   Lepidosperma… match_06. Aut… accepted              </span></span>
+<span><span class="co">#&gt; # ℹ 140 more rows</span></span>
+<span><span class="co">#&gt; # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name</span></span></code></pre></div>
 <p>The <code>original_name</code> is the taxon name used in your
 original data. The <code>aligned_name</code> is the taxon name we used
 to link with the APC to identify any synonyms. The <code>apc_name</code>
@@ -239,7 +232,19 @@ so all names</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">species</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with</a></span><span class="op">(</span><span class="st">"name"</span><span class="op">)</span>, <span class="co"># Rearranging naming columns</span></span>
 <span>         <span class="va">aligned_reason</span>, <span class="va">infraspecificepithet</span><span class="op">:</span><span class="va">decimalLatitude</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in is.data.frame(y): object 'update_gbif_names' not found</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 154 × 11</span></span>
+<span><span class="co">#&gt;   species          scientificname verbatimscientificname aligned_name apc_name taxonomic_status_of_…¹</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;            &lt;chr&gt;          &lt;chr&gt;                  &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;                 </span></span>
+<span><span class="co">#&gt; 1 Tetratheca cili… Tetratheca ci… Tetratheca ciliata     Tetratheca … Tetrath… accepted              </span></span>
+<span><span class="co">#&gt; 2 Peganum harmala  Peganum harma… Peganum harmala        Peganum har… Peganum… accepted              </span></span>
+<span><span class="co">#&gt; 3 Calotis multica… Calotis multi… Calotis multicaulis    Calotis mul… Calotis… accepted              </span></span>
+<span><span class="co">#&gt; 4 Calotis multica… Calotis multi… Calotis multicaulis    Calotis mul… Calotis… pro parte misapplied  </span></span>
+<span><span class="co">#&gt; 5 Leptospermum tr… Leptospermum … Leptospermum trinervi… Leptospermu… Leptosp… accepted              </span></span>
+<span><span class="co">#&gt; 6 Lepidosperma la… Lepidosperma … Lepidosperma laterale  Lepidosperm… Lepidos… accepted              </span></span>
+<span><span class="co">#&gt; # ℹ 148 more rows</span></span>
+<span><span class="co">#&gt; # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name</span></span>
+<span><span class="co">#&gt; # ℹ 5 more variables: aligned_reason &lt;chr&gt;, infraspecificepithet &lt;chr&gt;, taxonrank &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   decimalLongitude &lt;dbl&gt;, decimalLatitude &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="plant-established-status-across-statesterritories">Plant established status across states/territories<a class="anchor" aria-label="anchor" href="#plant-established-status-across-statesterritories"></a>
@@ -251,10 +256,19 @@ established status (native/introduced) from the APC.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Retrieve status data by state/territory </span></span>
 <span><span class="va">status_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_species_state_origin_matrix.html">create_species_state_origin_matrix</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in dplyr::filter(resources$APC, taxonRank == "Species" &amp; taxonomicStatus == : object 'resources' not found</span></span>
 <span></span>
 <span><span class="va">status_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in print(status_matrix, n = 6): object 'status_matrix' not found</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 26,243 × 19</span></span>
+<span><span class="co">#&gt;   species   NT    Qld   WA    ChI   NSW   SA    Vic   Tas   ACT   NI    LHI   MI    HI    MDI   CoI  </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span><span class="co">#&gt; 1 Cycas an… nati… nati… not … not … not … not … not … not … not … not … not … not … not … not … not …</span></span>
+<span><span class="co">#&gt; 2 Cycas ar… nati… not … not … not … not … not … not … not … not … not … not … not … not … not … not …</span></span>
+<span><span class="co">#&gt; 3 Cycas ar… nati… not … not … not … not … not … not … not … not … not … not … not … not … not … not …</span></span>
+<span><span class="co">#&gt; 4 Cycas ar… nati… not … not … not … not … not … not … not … not … not … not … not … not … not … not …</span></span>
+<span><span class="co">#&gt; 5 Cycas ba… not … nati… not … not … not … not … not … not … not … not … not … not … not … not … not …</span></span>
+<span><span class="co">#&gt; 6 Cycas ba… not … not … nati… not … not … not … not … not … not … not … not … not … not … not … not …</span></span>
+<span><span class="co">#&gt; # ℹ 26,237 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 3 more variables: CSI &lt;chr&gt;, AR &lt;chr&gt;, CaI &lt;chr&gt;</span></span></code></pre></div>
 <p>Here is a breakdown of all possible values for
 <code>origin</code></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -266,14 +280,33 @@ established status (native/introduced) from the APC.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">species</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">flatten_chr</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/tabyl.html" class="external-link">tabyl</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in select(status_matrix, -species): object 'status_matrix' not found</span></span></code></pre></div>
+<span><span class="co">#&gt;  flatten_chr(select(status_matrix, -species))      n      percent</span></span>
+<span><span class="co">#&gt;                        doubtfully naturalised   1120 2.371003e-03</span></span>
+<span><span class="co">#&gt;                          formerly naturalised    277 5.863998e-04</span></span>
+<span><span class="co">#&gt;                                        native  40336 8.538997e-02</span></span>
+<span><span class="co">#&gt;             native and doubtfully naturalised      9 1.905270e-05</span></span>
+<span><span class="co">#&gt;                        native and naturalised    136 2.879075e-04</span></span>
+<span><span class="co">#&gt;                   native and uncertain origin      2 4.233933e-06</span></span>
+<span><span class="co">#&gt;                                   naturalised   8765 1.855521e-02</span></span>
+<span><span class="co">#&gt;                                   not present 421606 8.925258e-01</span></span>
+<span><span class="co">#&gt;                              presumed extinct    101 2.138136e-04</span></span>
+<span><span class="co">#&gt;                              uncertain origin     22 4.657327e-05</span></span></code></pre></div>
 <!-- The formal definitions of the various established status can be found at XX.  -->
 <p>You can also obtain the breakdown of species by established status
 for a particular state/territory using
 <code><a href="../reference/state_diversity_counts.html">state_diversity_counts()</a></code></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/state_diversity_counts.html">state_diversity_counts</a></span><span class="op">(</span><span class="st">"NSW"</span>, resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in dplyr::filter(resources$APC, taxonRank == "Species" &amp; taxonomicStatus == : object 'resources' not found</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 7 × 3</span></span>
+<span><span class="co">#&gt;   origin                            state num_species</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                             &lt;chr&gt; &lt;table[1d]&gt;</span></span>
+<span><span class="co">#&gt; 1 doubtfully naturalised            NSW     93       </span></span>
+<span><span class="co">#&gt; 2 formerly naturalised              NSW      8       </span></span>
+<span><span class="co">#&gt; 3 native                            NSW   5958       </span></span>
+<span><span class="co">#&gt; 4 native and doubtfully naturalised NSW      2       </span></span>
+<span><span class="co">#&gt; 5 native and naturalised            NSW     34       </span></span>
+<span><span class="co">#&gt; 6 naturalised                       NSW   1580       </span></span>
+<span><span class="co">#&gt; 7 presumed extinct                  NSW      8</span></span></code></pre></div>
 <p>Using the established status data and state/territory information, we
 can check if a plant taxa is a native using
 <code><a href="../reference/native_anywhere_in_australia.html">native_anywhere_in_australia()</a></code></p>
@@ -282,7 +315,10 @@ can check if a plant taxa is a native using
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample_n.html" class="external-link">sample_n</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span>  <span class="co"># Choosing a random species</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">apc_name</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># Extracting this APC accepted name</span></span>
 <span>  <span class="fu"><a href="../reference/native_anywhere_in_australia.html">native_anywhere_in_australia</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span> </span>
-<span><span class="co">#&gt; Error in dplyr::filter(resources$APC, taxonRank == "Species" &amp; taxonomicStatus == : object 'resources' not found</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 1 × 2</span></span>
+<span><span class="co">#&gt;   species             native_anywhere_in_aus               </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;                                </span></span>
+<span><span class="co">#&gt; 1 Hibbertia australis considered native to Australia by APC</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="closer-look">Closer look at name standardisation with ‘APCalign’<a class="anchor" aria-label="anchor" href="#closer-look"></a>
@@ -301,7 +337,8 @@ to see how taxon names are processed, aligned and updated.</p>
 <li>Clean up your taxonomic names
 <!-- (Getting rid of trailing whitespaces, case correction) -->
 </li>
-<li>Find best alignment with APNI to your taxonomic name using our <a href="taxmatch.html">fuzzy matching algorithm</a>
+<li>Find best alignment with APNI to your taxonomic name using our <a href="https://traitecoevo.github.io/APCalign/articles/taxmatch.html">fuzzy
+matching algorithm</a>
 </li>
 </ul>
 <p>You can control the degree of fuzzy matching using the arguments
@@ -320,16 +357,24 @@ small spelling or gender mistakes.</p>
 <span>  <span class="fu"><a href="../reference/align_taxa.html">align_taxa</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Checking alignments of 121 taxa</span></span>
 <span><span class="co">#&gt;   -&gt; 0 names already matched; 0 names checked but without a match; 121 taxa yet to be checked</span></span>
-<span><span class="co">#&gt; Error in `dplyr::mutate()`:</span></span>
-<span><span class="co">#&gt; ℹ In argument: `fuzzy_match_genus = fuzzy_match_genera(genus,</span></span>
-<span><span class="co">#&gt;   resources$genera_accepted$canonicalName)`.</span></span>
-<span><span class="co">#&gt; Caused by error in `purrr::map_chr()` at APCalign/R/match_taxa.R:9:4:</span></span>
-<span><span class="co">#&gt; ℹ In index: 1.</span></span>
-<span><span class="co">#&gt; Caused by error in `utils::adist()`:</span></span>
-<span><span class="co">#&gt; ! object 'resources' not found</span></span>
 <span></span>
 <span><span class="va">aligned_gbif_taxa</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in print(aligned_gbif_taxa, n = 6): object 'aligned_gbif_taxa' not found</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 121 × 28</span></span>
+<span><span class="co">#&gt;   original_name cleaned_name aligned_name source known checked stripped_name stripped_name2 trinomial</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt;  &lt;lgl&gt; &lt;lgl&gt;   &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt;    </span></span>
+<span><span class="co">#&gt; 1 Tetratheca c… Tetratheca … Tetratheca … &lt;NA&gt;   TRUE  TRUE    tetratheca c… tetratheca ci… &lt;NA&gt;     </span></span>
+<span><span class="co">#&gt; 2 Peganum harm… Peganum har… Peganum har… &lt;NA&gt;   TRUE  TRUE    peganum harm… peganum harma… &lt;NA&gt;     </span></span>
+<span><span class="co">#&gt; 3 Calotis mult… Calotis mul… Calotis mul… &lt;NA&gt;   TRUE  TRUE    calotis mult… calotis multi… &lt;NA&gt;     </span></span>
+<span><span class="co">#&gt; 4 Leptospermum… Leptospermu… Leptospermu… &lt;NA&gt;   TRUE  TRUE    leptospermum… leptospermum … &lt;NA&gt;     </span></span>
+<span><span class="co">#&gt; 5 Lepidosperma… Lepidosperm… Lepidosperm… &lt;NA&gt;   TRUE  TRUE    lepidosperma… lepidosperma … &lt;NA&gt;     </span></span>
+<span><span class="co">#&gt; 6 Enneapogon p… Enneapogon … Enneapogon … &lt;NA&gt;   TRUE  TRUE    enneapogon p… enneapogon po… &lt;NA&gt;     </span></span>
+<span><span class="co">#&gt; # ℹ 115 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 19 more variables: binomial &lt;chr&gt;, genus &lt;chr&gt;, aligned_reason &lt;chr&gt;, fuzzy_match_genus &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   fuzzy_match_genus_known &lt;chr&gt;, fuzzy_match_genus_APNI &lt;chr&gt;, fuzzy_match_binomial &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   fuzzy_match_binomial_APC_known &lt;chr&gt;, fuzzy_match_trinomial &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   fuzzy_match_trinomial_known &lt;chr&gt;, fuzzy_match_cleaned_APC &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   fuzzy_match_cleaned_APC_known &lt;chr&gt;, fuzzy_match_cleaned_APNI &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   fuzzy_match_cleaned_APC_imprecise &lt;chr&gt;, fuzzy_match_cleaned_APC_known_imprecise &lt;chr&gt;, …</span></span></code></pre></div>
 <p>For every <code>aligned_name</code>, <code><a href="../reference/align_taxa.html">align_taxa()</a></code> will
 provide a <code>aligned_reason</code> which you can review as a table of
 counts:</p>
@@ -340,7 +385,14 @@ counts:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">aligned_reason</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/tabyl.html" class="external-link">tabyl</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span><span class="op">)</span> </span>
-<span><span class="co">#&gt; Error in pull(aligned_gbif_taxa, aligned_reason): object 'aligned_gbif_taxa' not found</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 5 × 3</span></span>
+<span><span class="co">#&gt;   `pull(aligned_gbif_taxa, aligned_reason)`                                                 n percent</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                                                                                 &lt;int&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 match_06. Automatic alignment with accepted canonical names in APC (2023-08-09)         112 0.926  </span></span>
+<span><span class="co">#&gt; 2 match_06. Automatic alignment with synonymous term among known canonical names APC (…     6 0.0496 </span></span>
+<span><span class="co">#&gt; 3 match_08. Automatic alignment with synonymous name in APNI (2023-08-09)                   1 0.00826</span></span>
+<span><span class="co">#&gt; 4 match_14. Automatic alignment with species-level canonical name in APC accepted when…     1 0.00826</span></span>
+<span><span class="co">#&gt; 5 match_20. Rewording name to be recognised as genus rank, with genus accepted by APC …     1 0.00826</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="update-taxonomic-names-to-alignments">Update taxonomic names to alignments<a class="anchor" aria-label="anchor" href="#update-taxonomic-names-to-alignments"></a>
@@ -353,10 +405,22 @@ function will also add other relevant taxonomy columns in the output</p>
 <code class="sourceCode R"><span><span class="va">updated_gbif_taxa</span> <span class="op">&lt;-</span> <span class="va">aligned_gbif_taxa</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">aligned_name</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/update_taxonomy.html">update_taxonomy</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in pull(aligned_gbif_taxa, aligned_name): object 'aligned_gbif_taxa' not found</span></span>
 <span></span>
 <span><span class="va">updated_gbif_taxa</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in print(updated_gbif_taxa, n = 6): object 'updated_gbif_taxa' not found</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 148 × 14</span></span>
+<span><span class="co">#&gt;   aligned_name    source taxonIDClean taxonomicStatusClean alternativeTaxonomic…¹ acceptedNameUsageID</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;                &lt;chr&gt;                  &lt;chr&gt;              </span></span>
+<span><span class="co">#&gt; 1 Acacia aneura   APC    https://id.… accepted             misapplied | pro part… https://id.biodive…</span></span>
+<span><span class="co">#&gt; 2 Acacia aneura   APC    https://id.… pro parte misapplied misapplied | pro part… https://id.biodive…</span></span>
+<span><span class="co">#&gt; 3 Acacia aneura   APC    https://id.… pro parte misapplied misapplied | pro part… https://id.biodive…</span></span>
+<span><span class="co">#&gt; 4 Acacia flavesc… APC    https://id.… accepted             &lt;NA&gt;                   https://id.biodive…</span></span>
+<span><span class="co">#&gt; 5 Acacia gladiif… APC    https://id.… accepted             misapplied             https://id.biodive…</span></span>
+<span><span class="co">#&gt; 6 Acacia melanox… APC    https://id.… accepted             misapplied             https://id.biodive…</span></span>
+<span><span class="co">#&gt; # ℹ 142 more rows</span></span>
+<span><span class="co">#&gt; # ℹ abbreviated name: ¹​alternativeTaxonomicStatusClean</span></span>
+<span><span class="co">#&gt; # ℹ 8 more variables: canonicalName &lt;chr&gt;, scientificNameAuthorship &lt;chr&gt;, taxonRank &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   taxonomicStatus &lt;chr&gt;, family &lt;chr&gt;, subclass &lt;chr&gt;, taxonDistribution &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   ccAttributionIRI &lt;chr&gt;</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
