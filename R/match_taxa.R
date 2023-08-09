@@ -45,7 +45,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
     stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp")
   
   ii <-
-    match(taxa$tocheck[i, "genus"], resources$genera_all$canonicalName)
+    match(taxa$tocheck[i,]$genus, resources$genera_all$canonicalName)
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
