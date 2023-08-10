@@ -37,6 +37,7 @@ load_taxonomic_resources <-
     
     APC_tmp <-
       taxonomic_resources$APC %>%
+      dplyr::arrange(taxonomicStatus) %>%
       dplyr::filter(taxonRank %in% c("Subspecies", "Species", "Forma", "Varietas")) %>%
       dplyr::select(canonicalName,
                     scientificName,
