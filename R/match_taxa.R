@@ -1,6 +1,8 @@
 # do the actual matching
 #' @noRd
 match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
+
+  ## replace NA's with a new string
   update_na_with <- function(current, new) {
     ifelse(is.na(current), new, current)
   }
@@ -15,7 +17,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
         update_na_with(standardise_names(original_name)),
       stripped_name = stripped_name %>%
         update_na_with(strip_names(original_name)),
-      stripped_name2 = stripped_name %>%
+      stripped_name2 = stripped_name2 %>%
         update_na_with(strip_names_2(original_name)),
       trinomial = stringr::word(stripped_name2, start = 1, end = 3),
       binomial = stringr::word(stripped_name2, start = 1, end = 2),
@@ -164,19 +166,20 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       ),
       known = TRUE,
       checked = TRUE,
-      still_to_match = "match_02"
+      still_to_match = "match_02a_exact_family_accepted"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_03, `genus species_A -- species_B` (intergrade) matches with all genera (APC, APNI)
-  # for names where a double hyphen indicates the plant is an intergrade, automatically align to genus
+  # match_03a: Intergrade taxon
+  # Exact match to APC-accepted or APNI-listed genus for taxon names where a double hyphen indicates the plant is an intergrade.
+  # For taxon names the fitting pattern, `genus species_A -- species_B` (intergrade) automatically align to genus,
   # since this is the highest taxon rank that can be attached to the plant name
   # first consider perfect matches within either APC or APNI
   i <-
-    stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- ") &
+    stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- |\\--") &
     taxa$tocheck$genus %in% resources$genera_all$canonicalName
   
   ii <-
@@ -203,7 +206,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       ),
       known = TRUE,
       checked = TRUE,
-      still_to_match = "match_03"
+      still_to_match = "match_03a_intergrade_accepted_or_known_genus"
     )
   
   taxa <- redistribute(taxa)
@@ -521,11 +524,11 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # match_06_accepted, `APC accepted` synonyms
   # see if the name matches an APC accepted taxon name once filler words and punctuation are removed
   i <-
-    taxa$tocheck$stripped_name2 %in% resources$`APC list (accepted)`$stripped_canonical
+    taxa$tocheck$stripped_name %in% resources$`APC list (accepted)`$stripped_canonical
   
   ii <-
     match(
-      taxa$tocheck[i,]$stripped_name2,
+      taxa$tocheck[i,]$stripped_name,
       resources$`APC list (accepted)`$stripped_canonical
     )
   
@@ -551,11 +554,11 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # match_06_known, `APC known names`, synonyms
   # see if the name matches an APC known taxon name once filler words and punctuation are removed
   i <-
-    taxa$tocheck$stripped_name2 %in% resources$`APC list (known names)`$stripped_canonical
+    taxa$tocheck$stripped_name %in% resources$`APC list (known names)`$stripped_canonical
   
   ii <-
     match(
-      taxa$tocheck[i,]$stripped_name2,
+      taxa$tocheck[i,]$stripped_name,
       resources$`APC list (known names)`$stripped_canonical
     )
   
@@ -583,7 +586,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # the first letter of each word (up to 3 words) must match
   for (i in 1:nrow(taxa$tocheck)) {
     taxa$tocheck$stripped_name[i] <-
-      standardise_names(taxa$tocheck$stripped_name[i]) #will adding here to maybe fix bug
+      standardise_names(taxa$tocheck$stripped_name[i]) %>% tolower()
     taxa$tocheck$fuzzy_match_cleaned_APC[i] <-
       fuzzy_match(
         taxa$tocheck$stripped_name[i],
@@ -626,6 +629,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # the default is set to only allow changes of up to 3 characters & no more than 20% of the total string length
   # the first letter of each word (up to 3 words) must match
   for (i in 1:nrow(taxa$tocheck)) {
+    taxa$tocheck$stripped_name[i] <-
+      standardise_names(taxa$tocheck$stripped_name[i]) %>% tolower()
+    
     taxa$tocheck$fuzzy_match_cleaned_APC_known[i] <-
       fuzzy_match(
         taxa$tocheck$stripped_name[i],
@@ -858,6 +864,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # the input taxon name is now allowed to differ by `APC accepted` names by 5 characters & up to 25% of the string length
   # it is important to separate the more constrained and imprecise fuzzy matches, because it is the imprecise matches that require careful review
   for (i in 1:nrow(taxa$tocheck)) {
+    taxa$tocheck$stripped_name[i] <-
+      standardise_names(taxa$tocheck$stripped_name[i]) %>% tolower()
+    
     taxa$tocheck$fuzzy_match_cleaned_APC_imprecise[i] <-
       fuzzy_match(
         taxa$tocheck$stripped_name[i],
@@ -899,6 +908,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # the input taxon name is now allowed to differ by `APC known` names by 5 characters & up to 25% of the string length
   # it is important to separate the more constrained and imprecise fuzzy matches, because it is the imprecise matches that require careful review
   for (i in 1:nrow(taxa$tocheck)) {
+    taxa$tocheck$stripped_name[i] <-
+      standardise_names(taxa$tocheck$stripped_name[i]) %>% tolower()
+    
     taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise[i] <-
       fuzzy_match(
         taxa$tocheck$stripped_name[i],
