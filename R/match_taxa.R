@@ -1,12 +1,18 @@
 # do the actual matching
 #' @noRd
-match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
+match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   update_na_with <- function(current, new) {
     ifelse(is.na(current), new, current)
   }
   
   fuzzy_match_genera <- function(x, y) {
     purrr::map_chr(x, ~ fuzzy_match(.x, y, 2, 0.35, n_allowed = 1))
+  }
+
+  if(APNI == TRUE) {
+    resources$genera_all2 <- resources$genera_all
+  } else {
+    resources$genera_all2 <- resources$genera_all %>% filter(taxonomic_ref != "APNI")
   }
   
   taxa$tocheck <- taxa$tocheck %>%
@@ -41,17 +47,17 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
         stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$")
     ) &
-    taxa$tocheck$genus %in% resources$genera_all$canonicalName &
+    taxa$tocheck$genus %in% resources$genera_all2$canonicalName &
     stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp")
   
   ii <-
-    match(taxa$tocheck[i,]$genus, resources$genera_all$canonicalName)
+    match(taxa$tocheck[i,]$genus, resources$genera_all2$canonicalName)
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = resources$genera_all$taxonomic_ref[ii],
+      taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
       taxonomic_resolution = "genus",
-      aligned_name = paste0(resources$genera_all$cleaned_name[ii], " sp. [", dataset_id, "]"),
+      aligned_name = paste0(resources$genera_all2$cleaned_name[ii], " sp. [", dataset_id, "]"),
       aligned_reason = paste0(
         "match_01. Rewording taxon with ending with `sp.` to indicate a genus-level alignment with `",
         taxonomic_ref,
@@ -79,18 +85,18 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
         stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$")
     ) &
-    taxa$tocheck$fuzzy_match_genus %in% resources$genera_all$canonicalName &
+    taxa$tocheck$fuzzy_match_genus %in% resources$genera_all2$canonicalName &
     stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp")
   
   ii <-
     match(taxa$tocheck[i,]$fuzzy_match_genus,
-          resources$genera_all$canonicalName)
+          resources$genera_all2$canonicalName)
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = resources$genera_all$taxonomic_ref[ii],
+      taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
       taxonomic_resolution = "genus",
-      aligned_name = paste0(resources$genera_all$cleaned_name[ii], " sp. [", dataset_id, "]"),
+      aligned_name = paste0(resources$genera_all2$cleaned_name[ii], " sp. [", dataset_id, "]"),
       aligned_reason = paste0(
         "match_01_fuzzy. Fuzzy match of name ending with `sp.` to an APC accepted genus (",
         Sys.Date(),
@@ -112,7 +118,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
         stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$")
     ) &
-    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_all$canonicalName &
+    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_all2$canonicalName &
     stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp")
   
   ii <-
@@ -121,7 +127,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = resources$genera_all$taxonomic_ref[ii],
+      taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
       taxonomic_resolution = "genus",
       aligned_name = paste0(
         word(resources$genera_known$acceptedNameUsage[ii], 1),
@@ -177,17 +183,17 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # first consider perfect matches within either APC or APNI
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- ") &
-    taxa$tocheck$genus %in% resources$genera_all$canonicalName
+    taxa$tocheck$genus %in% resources$genera_all2$canonicalName
   
   ii <-
-    match(taxa$tocheck[i,]$genus, resources$genera_all$canonicalName)
+    match(taxa$tocheck[i,]$genus, resources$genera_all2$canonicalName)
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = resources$genera_all$taxonomic_ref[ii],
+      taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
       taxonomic_resolution = "genus",
       aligned_name = paste0(
-        resources$genera_all$cleaned_name[ii],
+        resources$genera_all2$cleaned_name[ii],
         " sp. [",
         cleaned_name,
         "; ",
@@ -332,17 +338,17 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       stringr::str_detect(taxa$tocheck$cleaned_name, "[:alpha:]\\/") |
         stringr::str_detect(taxa$tocheck$cleaned_name, "\\s\\/")
     ) &
-    taxa$tocheck$genus %in% resources$genera_all$canonicalName
+    taxa$tocheck$genus %in% resources$genera_all2$canonicalName
   
   ii <-
-    match(taxa$tocheck[i,]$genus, resources$genera_all$canonicalName)
+    match(taxa$tocheck[i,]$genus, resources$genera_all2$canonicalName)
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = resources$genera_all$taxonomic_ref[ii],
+      taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
       taxonomic_resolution = "genus",
       aligned_name = paste0(
-        resources$genera_all$cleaned_name[ii],
+        resources$genera_all2$cleaned_name[ii],
         " sp. [",
         cleaned_name,
         "; ",
@@ -665,31 +671,33 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   
   # match_08_APNI, `APNI names`, synonyms
   # see if the name matches a taxon name listed in the APNI once filler words and punctuation are removed
-  i <-
-    taxa$tocheck$stripped_name2 %in% resources$`APNI names`$stripped_canonical2
-  
-  ii <-
-    match(taxa$tocheck[i,]$stripped_name2,
-          resources$`APNI names`$stripped_canonical2)
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
-      aligned_name = resources$`APNI names`$canonicalName[ii],
-      aligned_reason = paste0(
-        "match_08. Automatic alignment with synonymous name in APNI (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      still_to_match = "match_08_APNI"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
+  if (APNI == TRUE) {
+    i <-
+      taxa$tocheck$stripped_name2 %in% resources$`APNI names`$stripped_canonical2
+    
+    ii <-
+      match(taxa$tocheck[i,]$stripped_name2,
+            resources$`APNI names`$stripped_canonical2)
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
+        aligned_name = resources$`APNI names`$canonicalName[ii],
+        aligned_reason = paste0(
+          "match_08. Automatic alignment with synonymous name in APNI (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        still_to_match = "match_08_APNI"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
+  }
+
   # match_09, `genus aff. species` matches with accepted genus
   # for names where "aff" indicates the taxon has an affinity to another taxon, but isn't the other taxon, automatically align to genus
   # since this is the highest taxon rank that can be attached to the plant name
@@ -701,17 +709,17 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       stringr::str_detect(taxa$tocheck$cleaned_name, "[Aa]ff[\\.\\s]") |
         stringr::str_detect(taxa$tocheck$cleaned_name, " affinis ")
     ) &
-    taxa$tocheck$genus %in% resources$genera_all$canonicalName
+    taxa$tocheck$genus %in% resources$genera_all2$canonicalName
   
   ii <-
-    match(taxa$tocheck[i,]$genus, resources$genera_all$canonicalName)
+    match(taxa$tocheck[i,]$genus, resources$genera_all2$canonicalName)
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = resources$genera_all$taxonomic_ref[ii],
+      taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
       taxonomic_resolution = "genus",
       aligned_name = paste0(
-        resources$genera_all$cleaned_name[ii],
+        resources$genera_all2$cleaned_name[ii],
         " sp. [",
         cleaned_name,
         "; ",
@@ -1379,144 +1387,152 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # this is because names exclusively in the APNI are often misspellings of APC accepted/known taxa and
   # these alignments might actually align a taxon that is on the APC to an APNI name
   # this is especially true for phrase names with lots of syntax options
-  for (i in 1:nrow(taxa$tocheck)) {
-    taxa$tocheck$fuzzy_match_cleaned_APNI[i] <-
-      fuzzy_match(
-        taxa$tocheck$stripped_name[i],
-        resources$`APNI names`$stripped_canonical,
-        3,
-        0.2,
-        n_allowed = 1
+  if (APNI == TRUE) {
+    for (i in 1:nrow(taxa$tocheck)) {
+      taxa$tocheck$fuzzy_match_cleaned_APNI[i] <-
+        fuzzy_match(
+          taxa$tocheck$stripped_name[i],
+          resources$`APNI names`$stripped_canonical,
+          3,
+          0.2,
+          n_allowed = 1
+        )
+    }
+    
+    i <-
+      taxa$tocheck$fuzzy_match_cleaned_APNI %in% resources$`APNI names`$stripped_canonical
+    
+    ii <-
+      match(
+        taxa$tocheck[i,]$fuzzy_match_cleaned_APNI,
+        resources$`APNI names`$stripped_canonical
       )
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
+        aligned_name = resources$`APNI names`$canonicalName[ii],
+        aligned_reason = paste0(
+          "match_16_fuzzy. Fuzzy alignment with canonical name in APNI (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        still_to_match = "match_16_fuzzy_APNI"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
   }
-  
-  i <-
-    taxa$tocheck$fuzzy_match_cleaned_APNI %in% resources$`APNI names`$stripped_canonical
-  
-  ii <-
-    match(
-      taxa$tocheck[i,]$fuzzy_match_cleaned_APNI,
-      resources$`APNI names`$stripped_canonical
-    )
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
-      aligned_name = resources$`APNI names`$canonicalName[ii],
-      aligned_reason = paste0(
-        "match_16_fuzzy. Fuzzy alignment with canonical name in APNI (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      still_to_match = "match_16_fuzzy_APNI"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
+
   # match_17_fuzzy_APNI, `APNI names`, less precise fuzzy matches
   # follow the main APNI fuzzy match, by a second, less precise fuzzy match
   # it is important to separate them, because it is the imprecise matches that require careful review
-  for (i in 1:nrow(taxa$tocheck)) {
-    taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise[i] <-
-      fuzzy_match(
-        taxa$tocheck$cleaned_name[i],
-        resources$`APNI names`$canonicalName,
-        5,
-        0.25,
-        n_allowed = 1
+  if (APNI == TRUE) {
+    for (i in 1:nrow(taxa$tocheck)) {
+      taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise[i] <-
+        fuzzy_match(
+          taxa$tocheck$cleaned_name[i],
+          resources$`APNI names`$canonicalName,
+          5,
+          0.25,
+          n_allowed = 1
+        )
+    }
+    
+    i <-
+      taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise %in% resources$`APNI names`$canonicalName
+    
+    ii <-
+      match(
+        taxa$tocheck[i,]$fuzzy_match_cleaned_APNI_imprecise,
+        resources$`APNI names`$canonicalName
       )
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
+        aligned_name = resources$`APNI names`$canonicalName[ii],
+        aligned_reason = paste0(
+          "match_17_fuzzy. Imprecise fuzzy alignment with canonical name in APNI (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        still_to_match = "match_17_fuzzy_APNI"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
   }
-  
-  i <-
-    taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise %in% resources$`APNI names`$canonicalName
-  
-  ii <-
-    match(
-      taxa$tocheck[i,]$fuzzy_match_cleaned_APNI_imprecise,
-      resources$`APNI names`$canonicalName
-    )
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
-      aligned_name = resources$`APNI names`$canonicalName[ii],
-      aligned_reason = paste0(
-        "match_17_fuzzy. Imprecise fuzzy alignment with canonical name in APNI (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      still_to_match = "match_17_fuzzy_APNI"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
+
   # match_18_APNI, `APNI` trinomial matches
   # sometimes the submitted name is a valid trinomial + notes
   # such names will only be picked up by matches considering only the first three words of the stripped name
   # this match also does a good job matching phrase names
   # here we match to names listed on the APNI
-  i <-
-    taxa$tocheck$trinomial %in% resources$`APNI names`$trinomial
-  
-  ii <-
-    match(taxa$tocheck[i,]$trinomial, resources$`APNI names`$trinomial)
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
-      aligned_name = resources$`APNI names`$canonicalName[ii],
-      aligned_reason = paste0(
-        "match_18. Automatic alignment with infraspecific canonical name in APNI when notes are ignored (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      still_to_match = "match_18_APNI"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
+  if (APNI == TRUE) {
+    i <-
+      taxa$tocheck$trinomial %in% resources$`APNI names`$trinomial
+    
+    ii <-
+      match(taxa$tocheck[i,]$trinomial, resources$`APNI names`$trinomial)
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
+        aligned_name = resources$`APNI names`$canonicalName[ii],
+        aligned_reason = paste0(
+          "match_18. Automatic alignment with infraspecific canonical name in APNI when notes are ignored (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        still_to_match = "match_18_APNI"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
+  }
+
   # match_19_APNI, `APNI` binomial matches
   # sometimes the submitted name is a valid binomial + notes
   # or a valid binomial + invalid infra-specific epithet.
   # such names will only be picked up by matches considering only the first three words of the stripped name
   # this match also does a good job matching phrase names
   # here we match to names listed on the APNI
-  i <-
-    taxa$tocheck$binomial %in% resources$`APNI names`$binomial
-  
-  ii <-
-    match(taxa$tocheck[i,]$binomial, resources$`APNI names`$binomial)
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
-      aligned_name = resources$`APNI names`$canonicalName[ii],
-      aligned_reason = paste0(
-        "match_19. Automatic alignment with species-level canonical name in APNI when notes are ignored (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      still_to_match = "match_19_APNI"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
+  if (APNI == TRUE) {
+    i <-
+      taxa$tocheck$binomial %in% resources$`APNI names`$binomial
+    
+    ii <-
+      match(taxa$tocheck[i,]$binomial, resources$`APNI names`$binomial)
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
+        aligned_name = resources$`APNI names`$canonicalName[ii],
+        aligned_reason = paste0(
+          "match_19. Automatic alignment with species-level canonical name in APNI when notes are ignored (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        still_to_match = "match_19_APNI"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
+  }
+
   # match_20_accepted. For remaining taxa, see if first word is an `APC accepted` genus.
   # The `taxon name` itself is reformatted so the second word becomes `sp.` with the original name in brackets.
   i <-
