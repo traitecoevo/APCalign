@@ -12,6 +12,8 @@
 #' @param resources These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using \code{\link{load_taxonomic_resources}} separately and pass the data in.
 #' @param output file path to save the intermediate output to
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
+#' @details
+#' `updated_reason` represents the taxonomic status of the aligned name
 #' @export
 #'
 #' @seealso \code{\link{load_taxonomic_resources}}
@@ -49,9 +51,11 @@ create_taxonomic_update_lookup <- function(taxa,
         updated_species_list,
         original_name,
         aligned_name,
-        apc_name = canonical_name,
+        accepted_name = canonical_name,
+        taxon_rank = taxonRank,
+        author = scientificNameAuthorship,
         aligned_reason,
-        taxonomic_status_of_aligned_name = taxonomicStatusClean
+        updated_reason = taxonomicStatusClean
       ) %>%
         distinct()
     )
