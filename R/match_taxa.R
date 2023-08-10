@@ -567,7 +567,35 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
+
+  # match_05b: Scientific name matches
+  # Taxon names that are an APC-known scientific name, with authorship.
+
+  i <-
+    taxa$tocheck$original_name %in% resources$`APC list (known names)`$scientificName
   
+  ii <-
+    match(taxa$tocheck[i,]$original_name,
+          resources$`APC list (known names)`$scientificName)
+  
+  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+    mutate(
+      taxonomic_resolution = resources$`APC list (known names)`$taxonRank[ii],
+      aligned_name = resources$`APC list (known names)`$canonicalName[ii],
+      aligned_reason = paste0(
+        "Exact match of taxon name to an APC-known scientific name (including authorship) (",
+        Sys.Date(),
+        ")"
+      ),
+      known = TRUE,
+      checked = TRUE,
+      alignment_code = "match_05b_known_scientific_name_with_authorship"
+    )
+  
+  taxa <- redistribute(taxa)
+  if (nrow(taxa$tocheck) == 0)
+    return(taxa)
+
   # match_06a: APC-accepted canonical name
   # Taxon names that are exact matches to APC-accepted canonical names, once filler words and punctuation are removed.
   i <-
