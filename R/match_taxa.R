@@ -1172,7 +1172,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
-      aligned_name = resources$`APC list (accepted)`$canonicalName[ii],ment_code
+      aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
       aligned_reason = paste0(
         "Exact match of the first three words of the taxon name to an APC-accepted canonical name (",
         Sys.Date(),
