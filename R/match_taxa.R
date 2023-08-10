@@ -14,7 +14,7 @@
 #' @noRd
 match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
 
-  ## replace NA's with a new string XXXX @dfalster, I'm confused, because you only give a single parameter when you use this function. And I created the "zzzz zzzz" previously because matches didn't work when there were NA's
+## replace NA's with a new string
   update_na_with <- function(current, new) {
     ifelse(is.na(current), new, current)
   }
@@ -192,8 +192,6 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
-  
-  # XXXX @dfalster should we add fuzzy family matches? I haven't so far.
   
   # match_03a: Intergrade taxon
   # Exact match to APC-accepted or APNI-listed genus for taxon names where a double hyphen indicates the plant is an intergrade.
