@@ -1,6 +1,6 @@
 # do the actual matching
 #' @noRd
-match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
+match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3, fuzzy_rel_dist = 0.2, imprecise_matches = FALSE) {
   update_na_with <- function(current, new) {
     ifelse(is.na(current), new, current)
   }
@@ -588,8 +588,8 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       fuzzy_match(
         taxa$tocheck$stripped_name[i],
         resources$`APC list (accepted)`$stripped_canonical,
-        3,
-        0.2,
+        fuzzy_abs_dist,
+        fuzzy_rel_dist,
         n_allowed = 1
       )
   }
@@ -630,8 +630,8 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       fuzzy_match(
         taxa$tocheck$stripped_name[i],
         resources$`APC list (known names)`$stripped_canonical,
-        3,
-        0.2,
+        fuzzy_abs_dist,
+        fuzzy_rel_dist,
         n_allowed = 1
       )
   }
@@ -857,85 +857,89 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # now begin a second round of fuzzy matches, with less restrictive matching rules
   # the input taxon name is now allowed to differ by `APC accepted` names by 5 characters & up to 25% of the string length
   # it is important to separate the more constrained and imprecise fuzzy matches, because it is the imprecise matches that require careful review
-  for (i in 1:nrow(taxa$tocheck)) {
-    taxa$tocheck$fuzzy_match_cleaned_APC_imprecise[i] <-
-      fuzzy_match(
-        taxa$tocheck$stripped_name[i],
-        resources$`APC list (accepted)`$stripped_canonical,
-        5,
-        0.25,
-        n_allowed = 1
+  if (imprecise_matches == TRUE) {
+    for (i in 1:nrow(taxa$tocheck)) {
+      taxa$tocheck$fuzzy_match_cleaned_APC_imprecise[i] <-
+        fuzzy_match(
+          taxa$tocheck$stripped_name[i],
+          resources$`APC list (accepted)`$stripped_canonical,
+          5,
+          0.25,
+          n_allowed = 1
+        )
+    }
+    
+    i <-
+      taxa$tocheck$fuzzy_match_cleaned_APC_imprecise %in% resources$`APC list (accepted)`$stripped_canonical
+    
+    ii <-
+      match(
+        taxa$tocheck[i,]$fuzzy_match_cleaned_APC_imprecise,
+        resources$`APC list (accepted)`$stripped_canonical
       )
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
+        aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
+        aligned_reason = paste0(
+          "match_10_fuzzy. Imprecise fuzzy alignment with accepted canonical name in APC (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        still_to_match = "match_10_fuzzy_accepted"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
   }
-  
-  i <-
-    taxa$tocheck$fuzzy_match_cleaned_APC_imprecise %in% resources$`APC list (accepted)`$stripped_canonical
-  
-  ii <-
-    match(
-      taxa$tocheck[i,]$fuzzy_match_cleaned_APC_imprecise,
-      resources$`APC list (accepted)`$stripped_canonical
-    )
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
-      aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
-      aligned_reason = paste0(
-        "match_10_fuzzy. Imprecise fuzzy alignment with accepted canonical name in APC (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      still_to_match = "match_10_fuzzy_accepted"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
+
   # match_10_fuzzy_known, `APC known names`, imprecise fuzzy matches
   # the input taxon name is now allowed to differ by `APC known` names by 5 characters & up to 25% of the string length
   # it is important to separate the more constrained and imprecise fuzzy matches, because it is the imprecise matches that require careful review
-  for (i in 1:nrow(taxa$tocheck)) {
-    taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise[i] <-
-      fuzzy_match(
-        taxa$tocheck$stripped_name[i],
-        resources$`APC list (known names)`$stripped_canonical,
-        5,
-        0.25,
-        n_allowed = 1
+  if (imprecise_matches == TRUE) {
+    for (i in 1:nrow(taxa$tocheck)) {
+      taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise[i] <-
+        fuzzy_match(
+          taxa$tocheck$stripped_name[i],
+          resources$`APC list (known names)`$stripped_canonical,
+          5,
+          0.25,
+          n_allowed = 1
+        )
+    }
+    
+    i <-
+      taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise %in% resources$`APC list (known names)`$stripped_canonical
+    
+    ii <-
+      match(
+        taxa$tocheck[i,]$fuzzy_match_cleaned_APC_known_imprecise,
+        resources$`APC list (known names)`$stripped_canonical
       )
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_resolution = resources$`APC list (known names)`$taxonRank[ii],
+        aligned_name = resources$`APC list (known names)`$canonicalName[ii],
+        aligned_reason = paste0(
+          "match_10_fuzzy. Imprecise fuzzy alignment with known canonical name in APC (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        still_to_match = "match_10_fuzzy_known"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
   }
-  
-  i <-
-    taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise %in% resources$`APC list (known names)`$stripped_canonical
-  
-  ii <-
-    match(
-      taxa$tocheck[i,]$fuzzy_match_cleaned_APC_known_imprecise,
-      resources$`APC list (known names)`$stripped_canonical
-    )
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_resolution = resources$`APC list (known names)`$taxonRank[ii],
-      aligned_name = resources$`APC list (known names)`$canonicalName[ii],
-      aligned_reason = paste0(
-        "match_10_fuzzy. Imprecise fuzzy alignment with known canonical name in APC (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      still_to_match = "match_10_fuzzy_known"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
+
   # match_11, detect `genus species X genus species`, indicating hybrid & match accepted genus
   # for names where a stand-alone x (" x ") indicates taxon is a hybrid, automatically align to genus
   # since this is the highest taxon rank that can be attached to the plant name
@@ -1146,8 +1150,8 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
         fuzzy_match(
           taxa$tocheck$trinomial[i],
           resources$`APC list (accepted)`$trinomial,
-          3,
-          0.2,
+          fuzzy_abs_dist,
+          fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1187,8 +1191,8 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
         fuzzy_match(
           taxa$tocheck$trinomial[i],
           resources$`APC list (known names)`$trinomial,
-          3,
-          0.2,
+          fuzzy_abs_dist,
+          fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1297,8 +1301,8 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
         fuzzy_match(
           taxa$tocheck$binomial[i],
           resources$`APC list (accepted)`$binomial,
-          3,
-          0.2,
+          fuzzy_abs_dist,
+          fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1340,8 +1344,8 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
         fuzzy_match(
           taxa$tocheck$binomial[i],
           resources$`APC list (known names)`$binomial,
-          3,
-          0.2,
+          fuzzy_abs_dist,
+          fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1384,8 +1388,8 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       fuzzy_match(
         taxa$tocheck$stripped_name[i],
         resources$`APNI names`$stripped_canonical,
-        3,
-        0.2,
+        fuzzy_abs_dist,
+        fuzzy_rel_dist,
         n_allowed = 1
       )
   }
@@ -1420,44 +1424,46 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # match_17_fuzzy_APNI, `APNI names`, less precise fuzzy matches
   # follow the main APNI fuzzy match, by a second, less precise fuzzy match
   # it is important to separate them, because it is the imprecise matches that require careful review
-  for (i in 1:nrow(taxa$tocheck)) {
-    taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise[i] <-
-      fuzzy_match(
-        taxa$tocheck$cleaned_name[i],
-        resources$`APNI names`$canonicalName,
-        5,
-        0.25,
-        n_allowed = 1
+  if (imprecise_matches == TRUE) {
+    for (i in 1:nrow(taxa$tocheck)) {
+      taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise[i] <-
+        fuzzy_match(
+          taxa$tocheck$cleaned_name[i],
+          resources$`APNI names`$canonicalName,
+          5,
+          0.25,
+          n_allowed = 1
+        )
+    }
+    
+    i <-
+      taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise %in% resources$`APNI names`$canonicalName
+    
+    ii <-
+      match(
+        taxa$tocheck[i,]$fuzzy_match_cleaned_APNI_imprecise,
+        resources$`APNI names`$canonicalName
       )
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
+        aligned_name = resources$`APNI names`$canonicalName[ii],
+        aligned_reason = paste0(
+          "match_17_fuzzy. Imprecise fuzzy alignment with canonical name in APNI (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        still_to_match = "match_17_fuzzy_APNI"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
   }
-  
-  i <-
-    taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise %in% resources$`APNI names`$canonicalName
-  
-  ii <-
-    match(
-      taxa$tocheck[i,]$fuzzy_match_cleaned_APNI_imprecise,
-      resources$`APNI names`$canonicalName
-    )
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
-      aligned_name = resources$`APNI names`$canonicalName[ii],
-      aligned_reason = paste0(
-        "match_17_fuzzy. Imprecise fuzzy alignment with canonical name in APNI (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      still_to_match = "match_17_fuzzy_APNI"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
+
   # match_18_APNI, `APNI` trinomial matches
   # sometimes the submitted name is a valid trinomial + notes
   # such names will only be picked up by matches considering only the first three words of the stripped name
