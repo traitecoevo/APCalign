@@ -1,6 +1,6 @@
 # do the actual matching
 #' @noRd
-match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
+match_taxa <- function(taxa, resources, dataset_id = NA) {
   update_na_with <- function(current, new) {
     ifelse(is.na(current), new, current)
   }
@@ -9,6 +9,8 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
     purrr::map_chr(x, ~ fuzzy_match(.x, y, 2, 0.35, n_allowed = 1))
   }
   
+  identifier_string <- ifelse(is.na(dataset_id), NA, paste0("[", dataset_id, "]"))
+
   taxa$tocheck <- taxa$tocheck %>%
     dplyr::mutate(
       cleaned_name = cleaned_name %>%
