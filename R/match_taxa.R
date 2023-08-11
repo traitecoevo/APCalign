@@ -59,10 +59,11 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   i <-
     (
       stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
-        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$")
+        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$") |
+        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]ssp$")
     ) &
     taxa$tocheck$genus %in% resources$genera_all$canonicalName &
-    stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp")
+    stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp", "ssp")
   
   ii <-
     match(taxa$tocheck[i,]$genus, resources$genera_all$canonicalName)
@@ -96,10 +97,11 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   i <-
     (
       stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
-        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$")
+        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$") |
+        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]ssp$")
     ) &
     taxa$tocheck$fuzzy_match_genus %in% resources$genera_all$canonicalName &
-    stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp")
+    stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp", "ssp")
   
   ii <-
     match(taxa$tocheck[i,]$fuzzy_match_genus,
@@ -131,10 +133,11 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   i <-
     (
       stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
-        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$")
+        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$") |
+        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]ssp$")
     ) &
     taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_all$canonicalName &
-    stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp")
+    stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp", "ssp")
   
   ii <-
     match(taxa$tocheck[i,]$fuzzy_match_genus_known,
@@ -170,10 +173,11 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   i <-
     (
       stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
-        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$")
+        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$") |
+        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]ssp$")
     ) &
     taxa$tocheck$genus %in% resources$family_accepted$canonicalName &
-    stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp")
+    stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp", "ssp")
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -238,7 +242,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # since this is the highest taxon rank that can be attached to the plant name.
   
   i <-
-    stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- ") &
+    stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- |\\--") &
     taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$canonicalName
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -265,7 +269,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # since this is the highest taxon rank that can be attached to the plant name.
 
   i <-
-    stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- ") &
+    stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- |\\--") &
     taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$canonicalName
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -299,7 +303,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # since this is the highest taxon rank that can be attached to the plant name.
 
   i <-
-    stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- ") &
+    stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- |\\--") &
     taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonicalName
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -332,7 +336,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # since this is the highest taxon rank that can be attached to the plant name.
   # Neither perfect nor fuzzy matches identify the genus.
   i <-
-    stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- ") &
+    stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- |\\--") &
     !taxa$tocheck$fuzzy_match_genus %in% resources$genera_all$canonicalName
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -1540,7 +1544,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_16_fuzzy_APNI_canonical"
+      alignment_code = "match_16a_fuzzy_APNI_canonical"
     )
   
   taxa <- redistribute(taxa)

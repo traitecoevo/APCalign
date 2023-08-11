@@ -131,7 +131,8 @@ load_taxonomic_resources <-
       ) %>%
       dplyr::filter(taxonRank %in% c("Genus")) %>%
       dplyr::filter(!canonicalName %in% taxonomic_resources$genera_accepted$canonicalName) %>%
-      dplyr::mutate(taxonomic_ref = "APC known")
+      dplyr::mutate(taxonomic_ref = "APC known") %>%
+      dplyr::distinct(canonicalName, .keep_all = TRUE)
     
     taxonomic_resources[["genera_APNI"]] <-
       taxonomic_resources$APNI %>%
@@ -142,7 +143,8 @@ load_taxonomic_resources <-
                     scientificName) %>%
       dplyr::filter(taxonRank %in% c("Genus")) %>%
       dplyr::filter(!canonicalName %in% taxonomic_resources$APC$canonicalName) %>%
-      dplyr::mutate(taxonomic_ref = "APNI")
+      dplyr::mutate(taxonomic_ref = "APNI") %>%
+      dplyr::distinct(canonicalName, .keep_all = TRUE)
     
     taxonomic_resources[["genera_all"]] <-
       dplyr::bind_rows(
