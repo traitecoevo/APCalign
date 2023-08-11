@@ -26,8 +26,8 @@ test_that("create_taxonomic_update_lookup() works with full", {
     resources = resources,
     full = TRUE
   ) -> current_result
-  #write_csv(current_result, "consistency_lookup.csv")
-  past_result <- read_csv("consistency_lookup.csv")
+  #readr::write_csv(current_result, "consistency_lookup.csv")
+  past_result <- readr::read_csv("consistency_lookup.csv")
   past_result <-
     select(past_result, -aligned_reason) #because this has a date in it
   current_result <-
