@@ -10,6 +10,7 @@
 #
 #' @param resources The list(s) of accepted names to check against, loaded through the function `load_taxonomic_resources()`
 #' @param dataset_id A dataset or other identifier XXXX
+#' @param APNI Name matches to the APNI (Australian Plant Names Index) are turned off as a default. 
 #'
 #' @noRd
 match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
