@@ -31,9 +31,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
       cleaned_name = cleaned_name %>%
         update_na_with(standardise_names(original_name)),
       stripped_name = stripped_name %>%
-        update_na_with(strip_names(original_name)),
+        update_na_with(strip_names(cleaned_name)),
       stripped_name2 = stripped_name2 %>%
-        update_na_with(strip_names_2(original_name)),
+        update_na_with(strip_names_2(cleaned_name)),
       trinomial = stringr::word(stripped_name2, start = 1, end = 3),
       binomial = stringr::word(stripped_name2, start = 1, end = 2),
       genus = stringr::word(original_name, start = 1, end = 1),
@@ -660,8 +660,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # match_07a: fuzzy match to APC-accepted canonical name
   # Fuzzy match of taxon name to an APC-accepted canonical name, once filler words and punctuation are removed.
   for (i in 1:nrow(taxa$tocheck)) {
-    taxa$tocheck$stripped_name[i] <-
-      standardise_names(taxa$tocheck$stripped_name[i]) %>% tolower()
+    taxa$tocheck$stripped_name[i]
     taxa$tocheck$fuzzy_match_cleaned_APC[i] <-
       fuzzy_match(
         taxa$tocheck$stripped_name[i],
@@ -701,10 +700,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   
   # match_07b: fuzzy match to APC-known canonical name
   # Fuzzy match of taxon name to an APC-known canonical name, once filler words and punctuation are removed.
-  for (i in 1:nrow(taxa$tocheck)) {
-    taxa$tocheck$stripped_name[i] <-
-      standardise_names(taxa$tocheck$stripped_name[i]) %>% tolower()
-    
+  for (i in 1:nrow(taxa$tocheck)) {    
     taxa$tocheck$fuzzy_match_cleaned_APC_known[i] <-
       fuzzy_match(
         taxa$tocheck$stripped_name[i],
@@ -954,9 +950,6 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # For imprecise fuzzy matches, the taxon name can differ from the `APC-accepted` names by 5 characters & up to 25% of the string length.
   # These matches require individual review and are turned off as a default.
   for (i in 1:nrow(taxa$tocheck)) {
-    taxa$tocheck$stripped_name[i] <-
-      standardise_names(taxa$tocheck$stripped_name[i]) %>% tolower()
-    
     taxa$tocheck$fuzzy_match_cleaned_APC_imprecise[i] <-
       fuzzy_match(
         taxa$tocheck$stripped_name[i],
@@ -999,9 +992,6 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX") {
   # For imprecise fuzzy matches, the taxon name can differ from the `APC -known` names by 5 characters & up to 25% of the string length.
   # These matches require individual review and are turned off as a default.
   for (i in 1:nrow(taxa$tocheck)) {
-    taxa$tocheck$stripped_name[i] <-
-      standardise_names(taxa$tocheck$stripped_name[i]) %>% tolower()
-    
     taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise[i] <-
       fuzzy_match(
         taxa$tocheck$stripped_name[i],
