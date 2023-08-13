@@ -21,23 +21,29 @@
 #' @noRd
 fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, n_allowed = 1) {
   
+  ## identify number of words in the text to match
   words_in_text <- 1 + stringr::str_count(txt," ")
   
+  ## extract first letter of first word
   txt_word1_start <- stringr::str_extract(txt, "[:alpha:]")
   
+  ## for text matches with 2 or more words, extract the first letter/digit of the second word
   if(words_in_text > 1) {
     txt_word2_start <- stringr::str_extract(word(txt,2), "[:alpha:]|[:digit:]")
   }
-  
+    
+  ## for text matches with 3 or more words, extract the first letter/digit of the third word
   if(words_in_text > 2) {
     txt_word3_start <- stringr::str_extract(word(txt,3), "[:alpha:]|[:digit:]")
   }
   
+  ## identify the number of characters that must change for the text string to match each of the possible accepted names
   distance_c <- utils::adist(txt, accepted_list, fixed=TRUE)[1,]
   
+  ## identify the minimum number of characters that must change for the text string to match a string in the list of accepted names
   min_dist_abs_c <-  min(distance_c)
   min_dist_per_c <-  min(distance_c) / stringr::str_length(txt)
-  
+
   i <- which(distance_c==min_dist_abs_c)
   
   if(
@@ -46,22 +52,29 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
     ## Within allowable number of characters (relative)
     min_dist_per_c <= max_distance_rel &
     ## Is a unique solution
-    length(i)<=n_allowed
+    length(i)<= n_allowed
   ) {
+    ## identify number of words in the matched string
     words_in_match <- 1 + stringr::str_count(accepted_list[i]," ")
     
+    ## identify the first letter of the first word in the matched string
     match_word1_start <- stringr::str_extract(accepted_list[i], "[:alpha:]")
     
+    ## identify the first letter of the second word in the matched string (if the matched string includes 2+ words)
     if(words_in_text > 1) {
       match_word2_start <- stringr::str_extract(word(accepted_list[i],2), "[:alpha:]|[:digit:]")
     }
     
+    ## identify the first letter of the third word in the matched string (if the matched string includes 3+ words)
     if(words_in_text > 2) {
       match_word3_start <- stringr::str_extract(word(accepted_list[i],3), "[:alpha:]|[:digit:]")
     }
     
     keep = FALSE
     
+    ## keep match if the first letters of the first three words (or fewer if applicable) in the string to match 
+    ## are identical to the first letters of the first three words in the matched string
+
     if(words_in_text == 1) {
       if (txt_word1_start == match_word1_start) {
         keep = TRUE }

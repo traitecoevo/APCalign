@@ -89,7 +89,7 @@ align_taxa <- function(original_name,
         fuzzy_match_cleaned_APNI_imprecise = NA_character_,
         taxonomic_ref = NA_character_,
         taxonomic_resolution = NA_character_,
-        still_to_match = "needs_match",
+        alignment_code = NA_character_,
         checked = FALSE,
         known = FALSE
       )
