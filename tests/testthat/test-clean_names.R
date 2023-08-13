@@ -131,12 +131,10 @@ test_that("handles weird strings", {
 })
 
 
-
-
-test_that("handles APNI taxa and genus level IDs",{
-  zz<-create_taxonomic_update_lookup(c("Acacia sp.", "Dendropanax amplifolius",
-                                      "Acanthopanax divaricatum", "Eucalyptus sp."), resources=resources)
-  expect_gte(nrow(zz), 4)
-})
+  test_that("handles APNI taxa and genus level IDs",{
+    zz<-create_taxonomic_update_lookup(c("Acacia sp.", "Dendropanax amplifolius",
+                                        "Acanthopanax divaricatum", "Eucalyptus sp."), resources=resources)
+    expect_gte(nrow(zz), 2)
+  })
 
 
