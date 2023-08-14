@@ -27,9 +27,10 @@
 align_taxa <- function(original_name,
                        output = NULL,
                        resources = load_taxonomic_resources()) {
-  original_name <- unique(original_name[!is.na(original_name)])
-  
-  message("Checking alignments of ", length(original_name), " taxa\n")
+
+
+
+  message("Checking alignments of ", dplyr::n_distinct(original_name, na.rm = TRUE), " taxa\n")
   
   if (!is.null(output) && file.exists(output)) {
     message("  - reading existing data from ", output)
@@ -65,7 +66,9 @@ align_taxa <- function(original_name,
     dplyr::bind_rows(
       taxa_raw,
       tibble::tibble(
-        original_name = subset(original_name, !original_name %in% taxa_raw$original_name) %>% unique(),
+        original_name = 
+          # only include new names
+          subset(original_name, !original_name %in% taxa_raw$original_name),
         cleaned_name = NA_character_,
         stripped_name = NA_character_,
         stripped_name2 = NA_character_,
@@ -93,7 +96,9 @@ align_taxa <- function(original_name,
         checked = FALSE,
         known = FALSE
       )
-    )
+    ) %>% 
+    # take unique values so each name only processed once
+    dplyr::filter(!duplicated(original_name))
   
   if (all(taxa$tocheck$checked)) {
     message("  - all taxa are already checked, yay!")
@@ -119,17 +124,26 @@ align_taxa <- function(original_name,
   )
   
   # do the actual matching
-  taxa <- match_taxa(taxa, resources)
-  
-  taxa_out <- dplyr::bind_rows(taxa) %>%
+  taxa <- 
+    match_taxa(taxa, resources) %>%
+    # reassemble
+    dplyr::bind_rows() %>%
     dplyr::mutate(known = !is.na(aligned_name))
   
+  # create output
+  taxa <-
+    # Assemble output in the order of the input
+    dplyr::tibble(original_name = original_name) %>%
+    dplyr::left_join(by = "original_name", taxa)
+  
+  ## save outputs to file, useful for caching results 
   if (!is.null(output)) {
     dir.create(dirname(output), FALSE, TRUE)
-    readr::write_csv(taxa_out, output)
+    readr::write_csv(taxa, output)
     message("  - output saved in file: ", output)
   }
-  taxa_out
+
+  return(taxa)
 }
 
 # function moves taxa from tocheck to checked

@@ -136,7 +136,7 @@ test_that("handles weird strings", {
   })
 
 
-test_that("retruns same number of rows as input, even with duplicates", {
+test_that("returns same number of rows as input, even with duplicates", {
   
   original_name = 
     c("Dryandra preissii", "Banksia acuminata", 
@@ -159,8 +159,8 @@ test_that("retruns same number of rows as input, even with duplicates", {
 
   # output should have same order as input  
   expect_equal(x1$original_name, original_name)
-  expect_equal(x2$aligned_name, original_name)
-  expect_equal(x3$aligned_name, original_name)
+  expect_equal(x2$aligned_name, x1$aligned_name)
+  expect_equal(x3$aligned_name, x1$aligned_name)
   expect_equal(x4$original_name, original_name)
 
 })

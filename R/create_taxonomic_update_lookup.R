@@ -56,8 +56,7 @@ create_taxonomic_update_lookup <- function(taxa,
         author = scientificNameAuthorship,
         aligned_reason,
         updated_reason = taxonomicStatusClean
-      ) %>%
-        distinct()
+      )
     )
   }
 }

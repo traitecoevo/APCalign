@@ -67,7 +67,7 @@ update_taxonomy <- function(aligned_names,
     )
   
   taxa_out <-
-    tibble::tibble(aligned_name = aligned_names) %>%
+    tibble::tibble(aligned_name = aligned_names %>% unique %>% sort) %>%
     # match names against names in APC list
     dplyr::left_join(
       by = "aligned_name",
@@ -99,7 +99,7 @@ update_taxonomy <- function(aligned_names,
         )
     ) %>%
     # Some species have multiple matches. We will prefer the accepted usage, but record others if they exists
-    # To do this we define the order we want variables to sort by,m with accepted at the top
+    # To do this we define the order we want variables to sort by, with accepted at the top
     dplyr::mutate(my_order =  forcats::fct_relevel(
       taxonomicStatusClean,
       subset(preferred_order, preferred_order %in%  taxonomicStatusClean)
@@ -169,24 +169,34 @@ update_taxonomy <- function(aligned_names,
     ) %>%
     dplyr::filter(!is.na(taxonIDClean))
   
+  taxa_out <- taxa_APC
+
   # if matches in APC and APNI, combine these and return
   if (nrow(taxa_APNI) > 0) {
     taxa_out <-
       dplyr::bind_rows(taxa_APC,
-                       taxa_APNI) %>%
-      dplyr::arrange(aligned_name) %>%
-      dplyr::distinct()
+                       taxa_APNI)
   }
-  # if matches only in APC, just return this
-  else {
-    taxa_out <- taxa_APC %>%
-      dplyr::arrange(aligned_name) %>%
-      dplyr::distinct()
-  }
+
+  # Assemble output in the order of the input
+  # As we may have multiple matches per species and want to maintain order within taxa, 
+  # we'll do this by nesting data before joining tables
+  taxa_out <-
+    taxa_out %>%
+    dplyr::distinct() %>%
+    tidyr::nest(.by = "aligned_name", .key = "data")
+  
+  taxa_out <- 
+    dplyr::tibble(aligned_name = aligned_names) %>%
+    dplyr::left_join(by = "aligned_name", taxa_out) %>%
+    # empty result for any species without results
+    dplyr::mutate(data = ifelse (is.null(data), dplyr::tibble(), data)) %>%
+    tidyr::unnest(.data$data)
   
   if (!is.null(output)) {
     readr::write_csv(taxa_out, output)
     message("  - output saved in file: ", output)
   }
+
   taxa_out
 }
