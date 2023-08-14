@@ -69,7 +69,13 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">align_taxa</span><span class="op">(</span></span>
 <span>  <span class="va">original_name</span>,</span>
 <span>  output <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  fuzzy_abs_dist <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  fuzzy_rel_dist <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  fuzzy_matches <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  imprecise_fuzzy_matches <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  APNI_matches <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  dataset_id <span class="op">=</span> <span class="st">"XYZ"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -86,6 +92,30 @@
 <dt>resources</dt>
 <dd><p>the taxonomic resources used to align the taxa names. Loading this can be slow,
 so call <code><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></code> separately to greatly speed this function up and pass the resources in.</p></dd>
+
+
+<dt>fuzzy_abs_dist</dt>
+<dd><p>The number of characters allowed to be different for a fuzzy match.</p></dd>
+
+
+<dt>fuzzy_rel_dist</dt>
+<dd><p>The proportion of characters allowed to be different for a fuzzy match.</p></dd>
+
+
+<dt>fuzzy_matches</dt>
+<dd><p>Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters <code>fuzzy_abs_dist</code> and <code>fuzzy_rel_dist</code></p></dd>
+
+
+<dt>imprecise_fuzzy_matches</dt>
+<dd><p>Imprecise fuzzy matches are turned off as a default.</p></dd>
+
+
+<dt>APNI_matches</dt>
+<dd><p>Name matches to the APNI (Australian Plant Names Index) are turned off as a default.</p></dd>
+
+
+<dt>dataset_id</dt>
+<dd><p>Identifier for dataset, location, or list of names.</p></dd>
 
 </dl></div>
     <div class="section level2">

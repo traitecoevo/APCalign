@@ -72,6 +72,7 @@
 <span>  version <span class="op">=</span> <span class="fu">default_version</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  one_to_many <span class="op">=</span> <span class="st">"return_all"</span>,</span>
 <span>  full <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  APNI_matches <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>stable_or_current_data <span class="op">=</span> <span class="va">stable_or_current_data</span>,</span>
 <span>    version <span class="op">=</span> <span class="va">version</span><span class="op">)</span>,</span>
 <span>  output <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -98,6 +99,10 @@
 
 <dt>full</dt>
 <dd><p>logical for whether the full lookup table is returned or just the two key columns</p></dd>
+
+
+<dt>APNI_matches</dt>
+<dd><p>Name matches to the APNI (Australian Plant Names Index) are turned off as a default.</p></dd>
 
 
 <dt>resources</dt>
