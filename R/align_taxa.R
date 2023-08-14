@@ -10,8 +10,8 @@
 #' @param fuzzy_rel_dist The proportion of characters allowed to be different for a fuzzy match. 
 #' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters `fuzzy_abs_dist` and `fuzzy_rel_dist`
 #' @param imprecise_fuzzy_matches Imprecise fuzzy matches are turned off as a default.
-#' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default. 
-#' @param dataset_id Identifier for dataset, location, or list of names.
+#' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default.
+#' @param identifier A dataset, location or other identifier, which defaults to NA.
 #'
 #' @return A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
 #' @export
@@ -39,7 +39,7 @@ align_taxa <- function(original_name,
                        fuzzy_matches = TRUE, 
                        imprecise_fuzzy_matches = FALSE, 
                        APNI_matches = FALSE,
-                       dataset_id = "XYZ") {
+                       identifier = NA) {
   original_name <- unique(original_name[!is.na(original_name)])
   
   message("Checking alignments of ", length(original_name), " taxa\n")
@@ -132,7 +132,7 @@ align_taxa <- function(original_name,
   )
   
   # do the actual matching
-  taxa <- match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches = FALSE, dataset_id)
+  taxa <- match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches = FALSE, identifier)
   
   taxa_out <- dplyr::bind_rows(taxa) %>%
     dplyr::mutate(known = !is.na(aligned_name))
