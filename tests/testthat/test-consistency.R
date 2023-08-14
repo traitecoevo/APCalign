@@ -1,7 +1,7 @@
 #
 #
 # currently not testing the current option as the webhosting seems unreliable for that dataset
-# resources_current<-load_taxonomic_resources(stable_or_current_data="current")
+# resources <-load_taxonomic_resources(stable_or_current_data="current")
 
 
 test_that("create_taxonomic_update_lookup() works with full", {
@@ -28,6 +28,7 @@ test_that("create_taxonomic_update_lookup() works with full", {
   ) -> current_result
 
   #readr::write_csv(current_result, "consistency_lookup.csv")
+
   past_result <-
     readr::read_csv("consistency_lookup.csv", show_col_types = FALSE) %>%
     dplyr::select(-aligned_reason) %>% #because this has a date in it
@@ -111,16 +112,6 @@ test_that("weird hybrid symbols work", {
     c("Platanus × acerifolia", "Platanus × hispanica"), resources = resources
   )), 2)
 })
-
-test_that("handles NAs", {
-  expect_gte(nrow(align_taxa(c(
-    "Acacia aneura", NA
-  ), resources = resources)), 0)
-  expect_gte(nrow(create_taxonomic_update_lookup(c(
-    "Acacia aneura", NA
-  ), resources = resources)), 0)
-})
-
 
 test_that("handles NAs", {
   expect_gte(nrow(align_taxa(c(

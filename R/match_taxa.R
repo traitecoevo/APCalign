@@ -9,28 +9,65 @@
 #' @param taxa The list of taxa requiring checking
 #
 #' @param resources The list(s) of accepted names to check against, loaded through the function `load_taxonomic_resources()`
-#' @param dataset_id A dataset or other identifier XXXX
-#' @param APNI Name matches to the APNI (Australian Plant Names Index) are turned off as a default. 
+#' @param fuzzy_abs_dist The number of characters allowed to be different for a fuzzy match.
+#' @param fuzzy_rel_dist The proportion of characters allowed to be different for a fuzzy match. 
+#' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters `fuzzy_abs_dist` and `fuzzy_rel_dist`
+#' @param imprecise_fuzzy_matches Imprecise fuzzy matches are turned off as a default.
+#' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default.
+#' @param identifier A dataset, location or other identifier, which defaults to NA.
 #'
 #' @noRd
-match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
+match_taxa <- function(
+    taxa, 
+    resources,
+    fuzzy_abs_dist = 3, 
+    fuzzy_rel_dist = 0.2, 
+    fuzzy_matches = TRUE, 
+    imprecise_fuzzy_matches = FALSE, 
+    APNI_matches = FALSE, 
+    identifier = NA
+  ) {
 
-## replace NA's with a new string
   update_na_with <- function(current, new) {
     ifelse(is.na(current), new, current)
   }
   
+
   ## A function that specifies particular fuzzy matching conditions (for the function fuzzy_match) when matching is being done at the genus level.
-  fuzzy_match_genera <- function(x, y) {
-    purrr::map_chr(x, ~ fuzzy_match(.x, y, 2, 0.35, n_allowed = 1))
+  if (fuzzy_matches == TRUE) {
+    fuzzy_match_genera <- function(x, y) {
+      purrr::map_chr(x, ~ fuzzy_match(.x, y, 2, 0.35, n_allowed = 1))
+    }
+  } else {  
+    fuzzy_match_genera <- function(x, y) {
+      purrr::map_chr(x, ~ fuzzy_match(.x, y, 0, 0.0, n_allowed = 1))
+    }    
   }
 
-  if (APNI == TRUE) {
+  ## set default imprecise fuzzy matching parameters
+  imprecise_fuzzy_abs_dist <- 5
+  imprecise_fuzzy_rel_dist <- 0.25
+
+  ## override all fuzzy matching parameters with absolute and relative distances of 0 if fuzzy matching is turned off
+  if (fuzzy_matches == FALSE) {
+    fuzzy_abs_dist <- 0
+    fuzzy_rel_dist <- 0
+    imprecise_fuzzy_abs_dist <- 0
+    imprecise_fuzzy_rel_dist <- 0
+  }
+
+  ## remove APNI-listed genera from resources if APNI matches are turned off (the default)
+  if (APNI_matches == TRUE) {
     resources$genera_all2 <- resources$genera_all
   } else {
     resources$genera_all2 <- resources$genera_all %>% filter(taxonomic_ref != "APNI")
   }
   
+  ## Repeatedly used identifier strings are created. 
+  ## These identifier strings are added to the aligned names of taxa that do not match to an APC or APNI species or infra-specific level name.
+  identifier_string <- ifelse(is.na(identifier), NA, paste0(" [", identifier, "]"))
+  identifier_string2 <- ifelse(is.na(identifier), NA, paste0("; ", identifier))
+
   ## In the tocheck dataframe, add columns with manipulated versions of the string to match
   ## Various stripped versions of the string to match, versions with 1, 2 and 3 words (genus, binomial, trinomial), and fuzzy-matched genera are propagated.
   taxa$tocheck <- taxa$tocheck %>%
@@ -52,8 +89,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
         fuzzy_match_genera(genus, resources$genera_APNI$canonicalName)
     )
   
+
+
   ## Taxa that have been checked are moved from `taxa$tocheck` to `taxa$checked`
-  ## These lines of code are 
+  ## These lines of code are repeated after each matching cycle to progressively move taxa from `tocheck` to `checked`
 
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
@@ -79,7 +118,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
     mutate(
       taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
       taxonomic_resolution = "genus",
-      aligned_name = paste0(resources$genera_all2$cleaned_name[ii], " sp. [", dataset_id, "]"),
+      aligned_name = ifelse(is.na(identifier_string),
+        paste0(resources$genera_all2$cleaned_name[ii], " sp."),
+        paste0(resources$genera_all2$cleaned_name[ii], " sp.", identifier_string)),
       aligned_reason = paste0(
         "Exact match of taxon name ending with `sp.` to an ",
         taxonomic_ref,
@@ -117,8 +158,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
-      taxonomic_resolution = "genus",
-      aligned_name = paste0(resources$genera_all2$cleaned_name[ii], " sp. [", dataset_id, "]"),
+      taxonomic_resolution = "genus",      
+      aligned_name = ifelse(is.na(identifier_string),
+        paste0(resources$genera_all2$cleaned_name[ii], " sp."),
+        paste0(resources$genera_all2$cleaned_name[ii], " sp.", identifier_string)),
       aligned_reason = paste0(
         "Fuzzy match of taxon name ending with `sp.` to an APC-accepted genus (",
         Sys.Date(),
@@ -154,12 +197,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
     mutate(
       taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
       taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        word(resources$genera_known$acceptedNameUsage[ii], 1),
-        " sp. [",
-        dataset_id,
-        "]"
-      ),
+      aligned_name = ifelse(is.na(identifier_string),
+        paste0(word(resources$genera_known$acceptedNameUsage[ii], 1), " sp."),
+        paste0(word(resources$genera_known$acceptedNameUsage[ii], 1), " sp.", identifier_string)),
       aligned_reason = paste0(
         "Fuzzy match of taxon name ending with `sp.` to an APC-known genus (",
         Sys.Date(),
@@ -188,8 +228,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_resolution = "family",
-      aligned_name = paste0(genus, " sp. [", dataset_id, "]"),
+      taxonomic_resolution = "family",      
+      aligned_name = ifelse(is.na(identifier_string),
+        paste0(genus, " sp."),
+        paste0(genus, " sp.", identifier_string)),
       aligned_reason = paste0(
         "Exact match of taxon name ending with `sp.` to an APC-accepted family (",
         Sys.Date(),
@@ -218,15 +260,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
-      taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        resources$genera_all2$cleaned_name[ii],
-        " sp. [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      taxonomic_resolution = "genus",      
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(resources$genera_all2$cleaned_name[ii], " sp. [", cleaned_name, "]"),
+        paste0(resources$genera_all2$cleaned_name[ii], " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Exact match to ",
         taxonomic_ref,
@@ -254,8 +291,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_resolution = "genus",
-      aligned_name = paste0(fuzzy_match_genus, " sp. [", cleaned_name, "; ", dataset_id, "]"),
+      taxonomic_resolution = "genus",     
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus, " sp. [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Fuzzy match to APC-accepted genus. Taxon name includes '--' (double dash) indicating an intergrade between two taxa and taxon can only be aligned to genus-rank (",
         Sys.Date(),
@@ -281,15 +320,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        fuzzy_match_genus_known,
-        " sp. [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      taxonomic_resolution = "genus",    
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus_known, " sp. [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus_known, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Fuzzy match to APC-known genus. Taxon name includes '--' (double dash) indicating an intergrade between two taxa and taxon can only be aligned to genus-rank (",
         Sys.Date(),
@@ -315,15 +349,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        fuzzy_match_genus_APNI,
-        " sp. [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      taxonomic_resolution = "genus",    
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Fuzzy match to APNI-listed genus. Taxon name includes '--' (double dash) indicating an intergrade between two taxa and taxon can only be aligned to genus-rank (",
         Sys.Date(),
@@ -348,8 +377,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_resolution = "genus",
-      aligned_name = paste0(genus, " sp. [", cleaned_name, "; ", dataset_id, "]"),
+      taxonomic_resolution = "genus",    
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(genus, " sp. [", cleaned_name, "]"),
+        paste0(genus, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Taxon name includes '--' (double dash) indicating an intergrade between two taxa, but exact and fuzzy matches fail to align to a genus in the APC or APNI (",
         Sys.Date(),
@@ -384,14 +415,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
     mutate(
       taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
       taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        resources$genera_all2$cleaned_name[ii],
-        " sp. [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(resources$genera_all2$cleaned_name[ii], " sp. [", cleaned_name, "]"),
+        paste0(resources$genera_all2$cleaned_name[ii], " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Exact match to ",
         taxonomic_ref,
@@ -423,8 +449,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_resolution = "genus",
-      aligned_name = paste0(fuzzy_match_genus, " sp. [", cleaned_name, "; ", dataset_id, "]"),
+      taxonomic_resolution = "genus",     
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus, " sp. [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Fuzzy match to APC-accepted genus. Taxon name includes '/' (slash) indicating an uncertain species identification but an accepted genus and taxon can only be aligned to genus-rank (",
         Sys.Date(),
@@ -454,15 +482,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        fuzzy_match_genus_known,
-        " sp. [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      taxonomic_resolution = "genus",     
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus_known, " sp. [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus_known, " sp. [", cleaned_name, identifier_string2, "]")),      
       aligned_reason = paste0(
         "Fuzzy match to APC-known genus. Taxon name includes '/' (slash) indicating an uncertain species identification but an accepted genus and taxon can only be aligned to genus-rank (",
         Sys.Date(),
@@ -492,15 +515,11 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        fuzzy_match_genus_APNI,
-        " sp. [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      taxonomic_resolution = "genus",     
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name, identifier_string2, "]")),
+      
       aligned_reason = paste0(
         "Fuzzy match to APNI-listed genus. Taxon name includes '/' (slash) indicating an uncertain species identification but an accepted genus and taxon can only be aligned to genus-rank (",
         Sys.Date(),
@@ -532,7 +551,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(genus, " sp. [", cleaned_name, "; ", dataset_id, "]"),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(genus, " sp. [", cleaned_name, "]"),
+        paste0(genus, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Taxon name includes '/' (slash) indicating an uncertain species identification but an accepted genus and taxon can only be aligned to genus-rank. Exact and fuzzy matches fail to align to a genus in the APC or APNI (",
         Sys.Date(),
@@ -540,7 +561,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_04e_indecision_fuzzy_unknown_genus"
+      alignment_code = "match_04e_indecision_unknown_genus"
     )
   
   # Note:  -- Finished with checking genus sp. above, now continue with full species
@@ -670,10 +691,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
     taxa$tocheck$stripped_name[i]
     taxa$tocheck$fuzzy_match_cleaned_APC[i] <-
       fuzzy_match(
-        taxa$tocheck$stripped_name[i],
-        resources$`APC list (accepted)`$stripped_canonical,
-        3,
-        0.2,
+        txt = taxa$tocheck$stripped_name[i],
+        accepted_list = resources$`APC list (accepted)`$stripped_canonical,
+        max_distance_abs = fuzzy_abs_dist,
+        max_distance_rel = fuzzy_rel_dist,
         n_allowed = 1
       )
   }
@@ -710,10 +731,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   for (i in 1:nrow(taxa$tocheck)) {    
     taxa$tocheck$fuzzy_match_cleaned_APC_known[i] <-
       fuzzy_match(
-        taxa$tocheck$stripped_name[i],
-        resources$`APC list (known names)`$stripped_canonical,
-        3,
-        0.2,
+        txt = taxa$tocheck$stripped_name[i],
+        accepted_list = resources$`APC list (known names)`$stripped_canonical,
+        max_distance_abs = fuzzy_abs_dist,
+        max_distance_rel = fuzzy_rel_dist,
         n_allowed = 1
       )
   }
@@ -747,7 +768,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   
   # match_08a: APNI-listed canonical name
   # Taxon names that are exact matches to APNI-listed canonical names, once filler words and punctuation are removed.
-  if (APNI == TRUE) {
+  if (APNI_matches == TRUE) {
     i <-
       taxa$tocheck$stripped_name2 %in% resources$`APNI names`$stripped_canonical2
     
@@ -795,14 +816,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
     mutate(
       taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
       taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        resources$genera_all2$cleaned_name[ii],
-        " sp. [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(resources$genera_all2$cleaned_name[ii], " sp. [", cleaned_name, "]"),
+        paste0(resources$genera_all2$cleaned_name[ii], " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Exact match to ",
         taxonomic_ref,
@@ -835,7 +851,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(fuzzy_match_genus, " sp. [", cleaned_name, "; ", dataset_id, "]"),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus, " sp. [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Fuzzy match to APC-accepted genus. Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank",
         Sys.Date(),
@@ -865,15 +883,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        fuzzy_match_genus_known,
-        " sp. [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      taxonomic_resolution = "genus",      
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus_known, " sp. [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus_known, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Fuzzy match to APC-known genus. Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank",
         Sys.Date(),
@@ -904,14 +917,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        fuzzy_match_genus_APNI,
-        " sp. [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Fuzzy match to APNI-listed genus. Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank",
         Sys.Date(),
@@ -939,7 +947,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(genus, " sp. [", cleaned_name, "; ", dataset_id, "]"),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(genus, " sp. [", cleaned_name, "]"),
+        paste0(genus, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank. Exact and fuzzy matches fail to align to a genus in the APC or APNI ",
         Sys.Date(),
@@ -958,86 +968,90 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   # Imprecise fuzzy match of taxon name to an APC-accepted canonical name, once filler words and punctuation are removed.
   # For imprecise fuzzy matches, the taxon name can differ from the `APC-accepted` names by 5 characters & up to 25% of the string length.
   # These matches require individual review and are turned off as a default.
-  for (i in 1:nrow(taxa$tocheck)) {
-    taxa$tocheck$fuzzy_match_cleaned_APC_imprecise[i] <-
-      fuzzy_match(
-        taxa$tocheck$stripped_name[i],
-        resources$`APC list (accepted)`$stripped_canonical,
-        5,
-        0.25,
-        n_allowed = 1
+  if (imprecise_fuzzy_matches == TRUE) {
+    for (i in 1:nrow(taxa$tocheck)) {
+      taxa$tocheck$fuzzy_match_cleaned_APC_imprecise[i] <-
+        fuzzy_match(
+          txt = taxa$tocheck$stripped_name[i],
+          accepted_list = resources$`APC list (accepted)`$stripped_canonical,
+          max_distance_abs = imprecise_fuzzy_abs_dist,
+          max_distance_rel = imprecise_fuzzy_rel_dist,
+          n_allowed = 1
+        )
+    }
+    
+    i <-
+      taxa$tocheck$fuzzy_match_cleaned_APC_imprecise %in% resources$`APC list (accepted)`$stripped_canonical
+    
+    ii <-
+      match(
+        taxa$tocheck[i,]$fuzzy_match_cleaned_APC_imprecise,
+        resources$`APC list (accepted)`$stripped_canonical
       )
+  
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
+        aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
+        aligned_reason = paste0(
+          "Imprecise fuzzy match of taxon name to an APC-accepted canonical name once punctuation and filler words are removed (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        alignment_code = "match_10a_imprecise_fuzzy_accepted_canonical_name"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
   }
-  
-  i <-
-    taxa$tocheck$fuzzy_match_cleaned_APC_imprecise %in% resources$`APC list (accepted)`$stripped_canonical
-  
-  ii <-
-    match(
-      taxa$tocheck[i,]$fuzzy_match_cleaned_APC_imprecise,
-      resources$`APC list (accepted)`$stripped_canonical
-    )
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
-      aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
-      aligned_reason = paste0(
-        "Imprecise fuzzy match of taxon name to an APC-accepted canonical name once punctuation and filler words are removed (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      alignment_code = "match_10a_imprecise_fuzzy_accepted_canonical_name"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
+
   # match_10b: imprecise fuzzy match
   # Imprecise fuzzy match of taxon name to an APC-known canonical name, once filler words and punctuation are removed.
   # For imprecise fuzzy matches, the taxon name can differ from the `APC -known` names by 5 characters & up to 25% of the string length.
   # These matches require individual review and are turned off as a default.
-  for (i in 1:nrow(taxa$tocheck)) {
-    taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise[i] <-
-      fuzzy_match(
-        taxa$tocheck$stripped_name[i],
-        resources$`APC list (known names)`$stripped_canonical,
-        5,
-        0.25,
-        n_allowed = 1
+  if (imprecise_fuzzy_matches == TRUE) {
+    for (i in 1:nrow(taxa$tocheck)) {
+      taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise[i] <-
+        fuzzy_match(
+          txt = taxa$tocheck$stripped_name[i],
+          accepted_list = resources$`APC list (known names)`$stripped_canonical,
+          max_distance_abs = imprecise_fuzzy_abs_dist,
+          max_distance_rel = imprecise_fuzzy_rel_dist,
+          n_allowed = 1
+        )
+    }
+      
+    i <-
+      taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise %in% resources$`APC list (known names)`$stripped_canonical
+    
+    ii <-
+      match(
+        taxa$tocheck[i,]$fuzzy_match_cleaned_APC_known_imprecise,
+        resources$`APC list (known names)`$stripped_canonical
       )
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_resolution = resources$`APC list (known names)`$taxonRank[ii],
+        aligned_name = resources$`APC list (known names)`$canonicalName[ii],
+        aligned_reason = paste0(
+          "Imprecise fuzzy match of taxon name to an APC-known canonical name once punctuation and filler words are removed (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        alignment_code = "match_10b_imprecise_fuzzy_known_canonical_name"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
   }
-  
-  i <-
-    taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise %in% resources$`APC list (known names)`$stripped_canonical
-  
-  ii <-
-    match(
-      taxa$tocheck[i,]$fuzzy_match_cleaned_APC_known_imprecise,
-      resources$`APC list (known names)`$stripped_canonical
-    )
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_resolution = resources$`APC list (known names)`$taxonRank[ii],
-      aligned_name = resources$`APC list (known names)`$canonicalName[ii],
-      aligned_reason = paste0(
-        "Imprecise fuzzy match of taxon name to an APC-known canonical name once punctuation and filler words are removed (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      alignment_code = "match_10b_imprecise_fuzzy_known_canonical_name"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
+
   # match_11a: hybrid taxa
   # Exact match to APC-accepted, APC-known, or APNI-listed genus for names where " x " indicates taxon is a hybrid.
   # Taxon names fitting this pattern that are not APC-accepted, APC-known, or APNI-listed species are automatically aligned to genus,
@@ -1051,7 +1065,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(genus, " x [", cleaned_name, "; ", dataset_id, "]"),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(genus, " x [", cleaned_name, "]"),
+        paste0(genus, " x [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Exact match to ",
         taxonomic_ref,
@@ -1081,7 +1097,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(fuzzy_match_genus, " x [", cleaned_name, "; ", dataset_id, "]"),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus, " x [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus, " x [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Fuzzy match to APC-accepted genus. Taxon name includes ' x ' indicating a hybrid taxon and taxon can only be aligned to genus-rank (",
         Sys.Date(),
@@ -1109,14 +1127,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        fuzzy_match_genus_known,
-        " x [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus_known, " x [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus_known, " x [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Fuzzy match to APC-known genus. Taxon name includes ' x ' indicating a hybrid taxon and taxon can only be aligned to genus-rank (",
         Sys.Date(),
@@ -1144,14 +1157,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        fuzzy_match_genus_APNI,
-        " x [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus_APNI, " x [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus_APNI, " x [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Fuzzy match to APNI-listed genus. Taxon name includes ' x ' indicating a hybrid taxon and taxon can only be aligned to genus-rank (",
         Sys.Date(),
@@ -1179,7 +1187,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(genus, " x [", cleaned_name, "; ", dataset_id, "]"),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(genus, " sp. [", cleaned_name, "]"),
+        paste0(genus, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Taxon name includes ' x ' indicating a hybrid taxon and taxon can only be aligned to genus-rank. Exact and fuzzy matches fail to align to a genus in the APC or APNI (",
         Sys.Date(),
@@ -1266,10 +1276,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
     if (!is.na(taxa$tocheck$trinomial[i])) {
       taxa$tocheck$fuzzy_match_trinomial[i] <-
         fuzzy_match(
-          taxa$tocheck$trinomial[i],
-          resources$`APC list (accepted)`$trinomial,
-          3,
-          0.2,
+          txt = taxa$tocheck$trinomial[i],
+          accepted_list = resources$`APC list (accepted)`$trinomial,
+          max_distance_abs = fuzzy_abs_dist,
+          max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1310,10 +1320,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
     if (!is.na(taxa$tocheck$trinomial[i])) {
       taxa$tocheck$fuzzy_match_trinomial_known[i] <-
         fuzzy_match(
-          taxa$tocheck$trinomial[i],
-          resources$`APC list (known names)`$trinomial,
-          3,
-          0.2,
+          txt = taxa$tocheck$trinomial[i],
+          accepted_list = resources$`APC list (known names)`$trinomial,
+          max_distance_abs = fuzzy_abs_dist,
+          max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1423,10 +1433,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
         is.na(taxa$tocheck$fuzzy_match_binomial[i])) {
       taxa$tocheck$fuzzy_match_binomial[i] <-
         fuzzy_match(
-          taxa$tocheck$binomial[i],
-          resources$`APC list (accepted)`$binomial,
-          3,
-          0.2,
+          txt = taxa$tocheck$binomial[i],
+          accepted_list = resources$`APC list (accepted)`$binomial,
+          max_distance_abs = fuzzy_abs_dist,
+          max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1469,10 +1479,10 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
         is.na(taxa$tocheck$fuzzy_match_binomial_APC_known[i])) {
       taxa$tocheck$fuzzy_match_binomial_APC_known[i] <-
         fuzzy_match(
-          taxa$tocheck$binomial[i],
-          resources$`APC list (known names)`$binomial,
-          3,
-          0.2,
+          txt = taxa$tocheck$binomial[i],
+          accepted_list = resources$`APC list (known names)`$binomial,
+          max_distance_abs = fuzzy_abs_dist,
+          max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1512,14 +1522,14 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   # many different string searches need to be completed on the APC-accepted and APC-known taxa (e.g. trinomial, binomial, less precise matches) first
   # to avoid incorrectly aligning an APC accepted/known taxa to an APNI name.
   # This is especially true to accurately align phrase names.
-  if (APNI == TRUE) {
+  if (APNI_matches == TRUE) {
     for (i in 1:nrow(taxa$tocheck)) {
       taxa$tocheck$fuzzy_match_cleaned_APNI[i] <-
         fuzzy_match(
-          taxa$tocheck$stripped_name[i],
-          resources$`APNI names`$stripped_canonical,
-          3,
-          0.2,
+          txt = taxa$tocheck$stripped_name[i],
+          accepted_list = resources$`APNI names`$stripped_canonical,
+          max_distance_abs = fuzzy_abs_dist,
+          max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1556,14 +1566,14 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   # Imprecise fuzzy match of taxon name to an APNI-listed canonical name, once filler words and punctuation are removed.
   # For imprecise fuzzy matches, the taxon name can differ from the `APNI-listed` names by 5 characters & up to 25% of the string length.
   # These matches require individual review and are turned off as a default.
-  if (APNI == TRUE) {
+  if (APNI_matches == TRUE & imprecise_fuzzy_matches == TRUE) {
     for (i in 1:nrow(taxa$tocheck)) {
       taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise[i] <-
         fuzzy_match(
-          taxa$tocheck$cleaned_name[i],
-          resources$`APNI names`$canonicalName,
-          5,
-          0.25,
+          txt = taxa$tocheck$cleaned_name[i],
+          accepted_list = resources$`APNI names`$canonicalName,
+          max_distance_abs = imprecise_fuzzy_abs_dist,
+          max_distance_rel = imprecise_fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1595,14 +1605,14 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
     if (nrow(taxa$tocheck) == 0)
       return(taxa)
   }
-  
+
   # match_18a: exact trinomial matches, APNI
   # Exact match of first three words of taxon name ("trinomial") to APNI-listed canonical name.
   # The purpose of matching only the first three words only to APNI-listed names is that
   # sometimes the submitted taxon name is a valid trinomial + notes and 
   # such names will only be aligned by matches considering only the first three words of the stripped name.
   # This match also does a good job aligning and correcting syntax of phrase names.
-  if (APNI == TRUE) {
+  if (APNI_matches == TRUE) {
     i <-
       taxa$tocheck$trinomial %in% resources$`APNI names`$trinomial
     
@@ -1635,7 +1645,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
     # or a valid binomial + invalid infraspecific epithet.
     # Such names will only be aligned by matches considering only the first two words of the stripped name.
     # This match also does a good job aligning and correcting syntax of phrase names.
-  if (APNI == TRUE) {
+  if (APNI_matches == TRUE) {
     i <-
       taxa$tocheck$binomial %in% resources$`APNI names`$binomial
     
@@ -1674,14 +1684,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        word(resources$genera_accepted$acceptedNameUsage[ii], 1),
-        " sp. [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(word(resources$genera_accepted$acceptedNameUsage[ii], 1), " sp. [", cleaned_name, "]"),
+        paste0(word(resources$genera_accepted$acceptedNameUsage[ii], 1), " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Exact match of the first word of the taxon name to an APC-accepted genus (",
         Sys.Date(),
@@ -1708,14 +1713,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(
-        word(resources$genera_known$acceptedNameUsage[ii], 1),
-        " sp. [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(word(resources$genera_known$acceptedNameUsage[ii], 1), " sp. [", cleaned_name, "]"),
+        paste0(word(resources$genera_known$acceptedNameUsage[ii], 1), " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Exact match of the first word of the taxon name to an APC-known genus (",
         Sys.Date(),
@@ -1733,33 +1733,28 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   # match_20c: genus-level alignment
   # Toward the end of the alignment function, see if first word of unmatched taxa is an APNI-listed genus.
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
-    if (APNI == TRUE) {
-    i <-
-      (taxa$tocheck$genus %in% resources$genera_APNI$canonicalName)
-    
-    ii <-
-      match(taxa$tocheck[i,]$genus, resources$genera_APNI$canonicalName)
-    
-    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-      mutate(
-        taxonomic_resolution = "genus",
-        aligned_name = paste0(
-          word(resources$genera_APNI$canonicalName[ii], 1),
-          " sp. [",
-          cleaned_name,
-          "; ",
-          dataset_id,
-          "]"
-        ),
-        aligned_reason = paste0(
-          "Exact match of the first word of the taxon name to an APNI-listed genus (",
-          Sys.Date(),
-          ")"
-        ),
-        known = TRUE,
-        checked = TRUE,
-        alignment_code = "match_20c_genus_exact_APNI"
-      )
+    if (APNI_matches == TRUE) {
+      i <-
+        (taxa$tocheck$genus %in% resources$genera_APNI$canonicalName)
+      
+      ii <-
+        match(taxa$tocheck[i,]$genus, resources$genera_APNI$canonicalName)
+      
+      taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+        mutate(
+          taxonomic_resolution = "genus",
+          aligned_name = ifelse(is.na(identifier_string2),
+            paste0(word(resources$genera_APNI$canonicalName[ii], 1), " sp. [", cleaned_name, "]"),
+            paste0(word(resources$genera_APNI$canonicalName[ii], 1), " sp. [", cleaned_name, identifier_string2, "]")),
+            aligned_reason = paste0(
+              "Exact match of the first word of the taxon name to an APNI-listed genus (",
+              Sys.Date(),
+              ")"
+            ),
+            known = TRUE,
+            checked = TRUE,
+            alignment_code = "match_20c_genus_exact_APNI"
+          )
     
     taxa <- redistribute(taxa)
     if (nrow(taxa$tocheck) == 0)
@@ -1769,6 +1764,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   # match_21a: family-level alignment
   # Toward the end of the alignment function, see if first word of unmatched taxa is an APC-accepted family.
   # The 'taxon name' is then reformatted  as `family sp.` with the original name in square brackets.
+
   i <-
     stringr::str_detect(word(taxa$tocheck$cleaned_name, 1), "aceae$") &
     taxa$tocheck$genus %in% resources$family_accepted$canonicalName
@@ -1776,14 +1772,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "family",
-      aligned_name = paste0(
-        word(cleaned_name, 1),
-        " sp. [",
-        cleaned_name,
-        "; ",
-        dataset_id,
-        "]"
-      ),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(word(cleaned_name, 1), " sp. [", cleaned_name, "]"),
+        paste0(word(cleaned_name, 1), " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Exact match of the first word of the taxon name to an APC-accepted family (",
         Sys.Date(),
@@ -1808,7 +1799,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(fuzzy_match_genus, " sp. [", cleaned_name, "; ", dataset_id, "]"),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus, " sp. [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Fuzzy match of the first word of the taxon name to an APC-accepted genus (",
         Sys.Date(),
@@ -1833,7 +1826,9 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", APNI = FALSE) {
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(fuzzy_match_genus, " sp. [", cleaned_name, "; ", dataset_id, "]"),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus, " sp. [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Fuzzy match of the first word of the taxon name to an APC-known genus (",
         Sys.Date(),

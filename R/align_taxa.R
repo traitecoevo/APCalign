@@ -6,6 +6,12 @@
 #' @param output (optional) The name of the file to save the results to.
 #' @param resources the taxonomic resources used to align the taxa names. Loading this can be slow,
 #' so call \code{\link{load_taxonomic_resources}} separately to greatly speed this function up and pass the resources in.
+#' @param fuzzy_abs_dist The number of characters allowed to be different for a fuzzy match.
+#' @param fuzzy_rel_dist The proportion of characters allowed to be different for a fuzzy match. 
+#' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters `fuzzy_abs_dist` and `fuzzy_rel_dist`
+#' @param imprecise_fuzzy_matches Imprecise fuzzy matches are turned off as a default.
+#' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default.
+#' @param identifier A dataset, location or other identifier, which defaults to NA.
 #'
 #' @return A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
 #' @export
@@ -24,14 +30,19 @@
 #'
 #' @rdname align_taxa
 #'
+#' 
 align_taxa <- function(original_name,
                        output = NULL,
-                       resources = load_taxonomic_resources()) {
-
-
-
-  message("Checking alignments of ", dplyr::n_distinct(original_name, na.rm = TRUE), " taxa\n")
+                       resources = load_taxonomic_resources(),
+                       fuzzy_abs_dist = 3, 
+                       fuzzy_rel_dist = 0.2, 
+                       fuzzy_matches = TRUE, 
+                       imprecise_fuzzy_matches = FALSE, 
+                       APNI_matches = FALSE,
+                       identifier = NA) {
   
+  message("Checking alignments of ", dplyr::n_distinct(original_name, na.rm = TRUE), " taxa\n")
+
   if (!is.null(output) && file.exists(output)) {
     message("  - reading existing data from ", output)
     
@@ -125,14 +136,14 @@ align_taxa <- function(original_name,
   
   # do the actual matching
   taxa <- 
-    match_taxa(taxa, resources) %>%
+    match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches = FALSE, identifier) %>%
     # reassemble
     dplyr::bind_rows() %>%
     dplyr::mutate(known = !is.na(aligned_name))
   
-  # create output
+  # Assemble output in the order of the input
+  # by joining results into a tibble with inputs as column
   taxa <-
-    # Assemble output in the order of the input
     dplyr::tibble(original_name = original_name) %>%
     dplyr::left_join(by = "original_name", taxa)
   
