@@ -10,19 +10,43 @@
 #
 #' @param resources The list(s) of accepted names to check against, loaded through the function `load_taxonomic_resources()`
 #' @param dataset_id A dataset or other identifier XXXX
+#' @param fuzzy_abs_dist The number of characters allowed to be different for a fuzzy match.
+#' @param fuzzy_rel_dist The proportion of characters allowed to be different for a fuzzy match. 
+#' @param fuzzy Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters `fuzzy_abs_dist` and `fuzzy_rel_dist`
+#' @param imprecise_matches Imprecise fuzzy matches are turned off as a default.
 #' @param APNI Name matches to the APNI (Australian Plant Names Index) are turned off as a default. 
 #'
 #' @noRd
-match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3, fuzzy_rel_dist = 0.2, imprecise_matches = FALSE, APNI = FALSE) {
+match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3, fuzzy_rel_dist = 0.2, fuzzy = TRUE, imprecise_matches = FALSE, APNI = FALSE) {
   update_na_with <- function(current, new) {
     ifelse(is.na(current), new, current)
   }
   
+
   ## A function that specifies particular fuzzy matching conditions (for the function fuzzy_match) when matching is being done at the genus level.
-  fuzzy_match_genera <- function(x, y) {
-    purrr::map_chr(x, ~ fuzzy_match(.x, y, 2, 0.35, n_allowed = 1))
+  if (fuzzy == TRUE) {
+    fuzzy_match_genera <- function(x, y) {
+      purrr::map_chr(x, ~ fuzzy_match(.x, y, 2, 0.35, n_allowed = 1))
+    }
+  } else {  
+    fuzzy_match_genera <- function(x, y) {
+      purrr::map_chr(x, ~ fuzzy_match(.x, y, 0, 0.0, n_allowed = 1))
+    }    
   }
 
+  ## set default imprecise fuzzy matching parameters
+  imprecise_fuzzy_abs_dist <- 5
+  imprecise_fuzzy_rel_dist <- 0.25
+
+  ## override all fuzzy matching parameters with absolute and relative distances of 0 if fuzzy matching is turned off
+  if (fuzzy == FALSE) {
+    fuzzy_abs_dist <- 0
+    fuzzy_rel_dist <- 0
+    imprecise_fuzzy_abs_dist <- 0
+    imprecise_fuzzy_rel_dist <- 0
+  }
+
+  ## remove APNI-listed genera from resources if APNI matches are turned off (the default)
   if (APNI == TRUE) {
     resources$genera_all2 <- resources$genera_all
   } else {
@@ -50,6 +74,8 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
         fuzzy_match_genera(genus, resources$genera_APNI$canonicalName)
     )
   
+
+
   ## Taxa that have been checked are moved from `taxa$tocheck` to `taxa$checked`
   ## These lines of code are 
 
@@ -962,8 +988,8 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
         fuzzy_match(
           taxa$tocheck$stripped_name[i],
           resources$`APC list (accepted)`$stripped_canonical,
-          5,
-          0.25,
+          imprecise_fuzzy_abs_dist,
+          imprecise_fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1006,8 +1032,8 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
         fuzzy_match(
           taxa$tocheck$stripped_name[i],
           resources$`APC list (known names)`$stripped_canonical,
-          5,
-          0.25,
+          imprecise_fuzzy_abs_dist,
+          imprecise_fuzzy_rel_dist,
           n_allowed = 1
         )
     }
