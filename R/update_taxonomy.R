@@ -109,6 +109,7 @@ update_taxonomy <- function(aligned_names,
     # record any alternative status to indicate where there was ambiguity
     dplyr::group_by(aligned_name) %>%
     dplyr::mutate(
+      # todo: move this outside function to higher level
       alternativeTaxonomicStatusClean = ifelse(
         taxonomicStatusClean[1] == "accepted",
         taxonomicStatusClean %>% unique() %>%  subset(. , . != "accepted") %>% paste0(collapse = " | ") %>% dplyr::na_if(""),
@@ -196,7 +197,9 @@ update_taxonomy <- function(aligned_names,
     # join into original list
     dplyr::left_join(by = "aligned_name", taxa_out2) %>%
     # Now unnest
-    tidyr::unnest("data")
+    tidyr::unnest("data") %>%
+    # some extra useful info
+    dplyr::mutate(genus = stringr::word(canonicalName, 1, 1))
   
   if (!is.null(output)) {
     readr::write_csv(taxa_out2, output)

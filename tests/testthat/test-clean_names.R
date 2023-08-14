@@ -150,22 +150,15 @@ test_that("returns same number of rows as input, even with duplicates", {
   x2 <-
     update_taxonomy(x1$aligned_name, resources = resources)
 
-  # Nas missing in select_taxonomy_options
-  x3 <-
-    select_taxonomy_options(x1, resources = resources, one_to_many = "most_likely_species")
-
   x4 <- create_taxonomic_update_lookup(
     taxa = original_name,
     resources = resources, one_to_many = "most_likely_species")
 
   # output should be same order and length as input
   expect_equal(x1$original_name, original_name)
-  # x3 should be in same order but may have more rows
+  # x2 should be in same order but may have more rows
   expect_equal(subset(x2$aligned_name, !duplicated(x2$aligned_name)), subset(x1$aligned_name, !duplicated(x1$aligned_name)))
   expect_gte(length(x2$aligned_name), length(x1$aligned_name))
-  # output should be same order and length as input
-  # Nas missing in select_taxonomy_options
-  expect_equal(x3$aligned_name, x1$aligned_name)
 
   expect_equal(x4$original_name, original_name)
 })

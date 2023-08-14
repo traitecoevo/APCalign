@@ -43,31 +43,62 @@ create_taxonomic_update_lookup <- function(taxa,
     align_taxa(taxa, resources = resources, APNI_matches = APNI_matches)
 
   updated_data <- 
-    update_taxonomy(aligned_data$aligned_name, resources = resources, output = output)
+    update_taxonomy(aligned_data$aligned_name, resources = resources, output = output) %>%
+    # todo: why are we renaming this?
+    dplyr::rename(canonical_name = canonicalName) %>%
+    # merge with data on alignment
+    dplyr::left_join(by = "aligned_name", 
+      aligned_data %>%
+        dplyr::select(original_name, aligned_name, aligned_reason, known),
+        .
+    ) %>%
+    dplyr::mutate(
+      # todo - why isn't this source APNI?
+      source = ifelse(known & is.na(source), "known_name_but_not_apc_accepted", source),
+      # todo - do we want to keep this?
+      taxonomicStatusClean = ifelse(known & is.na(taxonomicStatusClean), "known_name_but_not_apc_accepted", taxonomicStatusClean)
+    ) %>%
+    dplyr::select(-known)
+
+  if(one_to_many == "most_likely_species") {
+    updated_data <-  
+      updated_data %>%
+      dplyr::group_by(aligned_name) %>%
+      # todo: should this be for all outputs? Move to update_taxonomy
+      # take first species, this is most likely, based on ordering determined in update_taxonomy
+      dplyr::mutate(
+        possible_matches = sprintf("%s (%s)", canonical_name, taxonomicStatusClean) %>% paste(collapse = "; ")
+      ) %>%
+      # take first record, this is most likely as we've set a preferred order above
+      dplyr::slice(1) %>%
+      dplyr::ungroup()
+  }
+  # browser()
   
-  updated_data_out <- updated_data
- #   select_taxonomy_options(updated_data, resources, one_to_many, output)
-  
+  # todo - should this be an option here, or an extra function operating on outputs?
   if (one_to_many == "collapse_to_higher_taxon") {
-    return(collapse_to_higher_taxon(updated_data_out, resources))
+    return(collapse_to_higher_taxon(updated_data, resources))
   }
   
-  if (full == TRUE) {
-    return(updated_data_out)
-  } else {
-    return(
+  if (!full) {
+    updated_data <-
+      updated_data %>%
       dplyr::select(
-        updated_data_out,
         original_name,
         aligned_name,
+        # todo - why are we renaming these?
         accepted_name = canonical_name,
         taxon_rank = taxonRank,
         author = scientificNameAuthorship,
         aligned_reason,
         updated_reason = taxonomicStatusClean
       )
-    )
   }
+
+  # todo - should we add file caching here? Or is it enough to have in component functions
+  #  - however, results will be incomplete 
+
+  return(updated_data)
 }
 
 #' @noRd
@@ -85,69 +116,6 @@ validate_one_to_many_input <- function(one_to_many) {
       )
     )
 }
-
-#' Wrapper for update_taxonomy that either summarizes to one species or returns all matches
-#' @noRd
-select_taxonomy_options <-
-  function(updated_data,
-           resources,
-           one_to_many,
-           output= NULL) {
-    
-    if (one_to_many %in% c("return_all", "collapse_to_higher_taxon")) {
-      multiple = "all"
-    } else {
-      multiple = "first"
-    }
-    
-    aligned_data %>%
-      dplyr::select(original_name, aligned_name, aligned_reason) %>%
-      dplyr::left_join(aligned_species_list_tmp,
-                       by = c("aligned_name"),
-                       multiple = multiple) %>%
-      dplyr::filter(!is.na(taxonIDClean)) %>%
-      dplyr::mutate(genus = stringr::word(canonicalName, 1, 1)) %>%
-      dplyr::rename(canonical_name = canonicalName) -> updated_df
-    
-    failed_to_update <-
-      filter(
-        aligned_data,
-        !aligned_name %in% updated_df$aligned_name &
-          known == TRUE & checked == TRUE
-      )
-    
-    if (nrow(failed_to_update) == 0)
-      return(updated_df)
-    
-    # this could be improved with some thought, but may need to modify align_taxa to get more information out at this stage
-    failed_to_update_ss <-
-      select(failed_to_update,
-             original_name,
-             aligned_name,
-             aligned_reason) %>%
-      mutate(
-        source = "known_name_but_not_apc_accepted",
-        taxonIDClean = NA,
-        taxonomicStatusClean = "known_name_but_not_apc_accepted",
-        alternativeTaxonomicStatusClean = NA,
-        acceptedNameUsageID = NA,
-        canonical_name = NA,
-        scientificNameAuthorship = NA,
-        taxonRank = NA,
-        #to do
-        taxonomicStatus = NA,
-        family = NA,
-        subclass = NA,
-        taxonDistribution = NA,
-        ccAttributionIRI = NA,
-        genus = NA
-      )
-    if (nrow(updated_df) == 0) {
-      return(failed_to_update_ss)
-    }
-    return(bind_rows(updated_df, failed_to_update_ss))
-  }
-
 
 #' Currently only collapses to genus or all the way to plants
 #' @noRd

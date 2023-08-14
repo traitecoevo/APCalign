@@ -5,7 +5,8 @@
 
 
 test_that("create_taxonomic_update_lookup() works with full", {
-  create_taxonomic_update_lookup(
+  current_result <-
+    create_taxonomic_update_lookup(
     c(
       "Banksia integrifolia",
       "Acacia longifolia",
@@ -25,7 +26,9 @@ test_that("create_taxonomic_update_lookup() works with full", {
     ),
     resources = resources,
     full = TRUE
-  ) -> current_result
+  ) %>%
+#    dplyr::select(-aligned_reason) %>% #because this has a date in it
+    dplyr::arrange(original_name, canonical_name)
 
   #readr::write_csv(current_result, "consistency_lookup.csv")
 
@@ -34,17 +37,14 @@ test_that("create_taxonomic_update_lookup() works with full", {
     dplyr::select(-aligned_reason) %>% #because this has a date in it
     dplyr::arrange(original_name, canonical_name)
 
-  current_result <-
-    current_result %>%
-    dplyr::select(-aligned_reason) %>% #because this has a date in it
-    dplyr::arrange(original_name, canonical_name)
-
   expect_equal(past_result$original_name, current_result$original_name)
+  expect_equal(names(past_result), names(current_result))
+  expect_equal(past_result, current_result)
 })
 
 test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon",
           {
-            create_taxonomic_update_lookup(
+            original_name <-
               c(
                 "Banksia integrifolia",
                 "Acacia longifolia",
@@ -59,11 +59,15 @@ test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon"
                 "Genoplesium insigne",
                 "Polypogon viridis",
                 "Acacia aneura"
-              ),
-              one_to_many = "collapse_to_higher_taxon",
-              resources = resources
-            ) -> zz
-            expect_gte(nrow(zz), 11)
+              )
+            zz <- 
+              create_taxonomic_update_lookup(
+                original_name,
+                one_to_many = "collapse_to_higher_taxon",
+                resources = resources
+              )
+            expect_equal(nrow(zz), 13)
+            expect_equal(zz$original_name, original_name)
           })
 
 
