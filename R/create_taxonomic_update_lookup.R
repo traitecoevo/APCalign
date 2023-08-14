@@ -36,23 +36,28 @@ create_taxonomic_update_lookup <- function(taxa,
                                                                                   stable_or_current_data,
                                                                                 version = version),
                                            output = NULL) {
-  validate_one_to_many_input(one_to_many)
-  
-  aligned_data <- align_taxa(taxa, resources = resources, APNI_matches = APNI_matches)
 
-  updated_species_list <-
-    get_updated_species_list(aligned_data, resources, one_to_many, output)
+  validate_one_to_many_input(one_to_many)
+
+  aligned_data <- 
+    align_taxa(taxa, resources = resources, APNI_matches = APNI_matches)
+
+  updated_data <- 
+    update_taxonomy(aligned_data$aligned_name, resources = resources, output = output)
+  
+  updated_data_out <- updated_data
+ #   select_taxonomy_options(updated_data, resources, one_to_many, output)
   
   if (one_to_many == "collapse_to_higher_taxon") {
-    return(collapse_to_higher_taxon(updated_species_list, resources))
+    return(collapse_to_higher_taxon(updated_data_out, resources))
   }
   
   if (full == TRUE) {
-    return(updated_species_list)
+    return(updated_data_out)
   } else {
     return(
       dplyr::select(
-        updated_species_list,
+        updated_data_out,
         original_name,
         aligned_name,
         accepted_name = canonical_name,
@@ -83,13 +88,11 @@ validate_one_to_many_input <- function(one_to_many) {
 
 #' Wrapper for update_taxonomy that either summarizes to one species or returns all matches
 #' @noRd
-get_updated_species_list <-
-  function(aligned_data,
+select_taxonomy_options <-
+  function(updated_data,
            resources,
            one_to_many,
            output= NULL) {
-    aligned_species_list_tmp <-
-      aligned_data$aligned_name %>% update_taxonomy(resources = resources, output = output)
     
     if (one_to_many %in% c("return_all", "collapse_to_higher_taxon")) {
       multiple = "all"
