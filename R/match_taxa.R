@@ -1873,9 +1873,15 @@ standardise_names <- function(taxon_names) {
     ## for hybrid markers
     stringi::stri_trans_general("Any-Latin; Latin-ASCII") %>%
     f("\\*", "x") %>%
+
     ## Weird formatting
     f("[\\n\\t]", " ") %>%
+    f("[\\n\\t]", " ") %>%
     
+    ## Remove spaces before or after brackets
+    f("\\ \\)", "\\)") %>%
+    f("\\(\\ ", "\\(") %>%
+
     ## Capitalise first letter
     f("^([a-z])", "\\U\\1") %>%
     
@@ -1899,8 +1905,9 @@ standardise_names <- function(taxon_names) {
     f("\\saff(\\s|$)", " aff.\\1") %>%
     f("\\saffn(\\s|$)", " aff.\\1") %>%
     
-    ## f. not forma
+    ## f. not forma or form
     f("\\sforma(\\s|$)", " f.\\1") %>%
+    f("\\sform(\\s|$|\\.)", " f.\\1") %>%
     
     ## remove " ms" if present
     f("\\sms(\\s|$)", "\\1") %>%
