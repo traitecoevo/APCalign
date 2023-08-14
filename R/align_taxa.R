@@ -11,6 +11,7 @@
 #' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters `fuzzy_abs_dist` and `fuzzy_rel_dist`
 #' @param imprecise_fuzzy_matches Imprecise fuzzy matches are turned off as a default.
 #' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default. 
+#' @param dataset_id Identifier for dataset, location, or list of names.
 #'
 #' @return A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
 #' @export
