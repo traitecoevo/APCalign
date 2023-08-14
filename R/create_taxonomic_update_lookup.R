@@ -10,6 +10,7 @@
 #' @param one_to_many How to handle one_to_many taxonomic matches.  Default is "return_all".  The other options are "collapse_to_higher_taxon" and "most_likely_species". most_likely_species defaults to the original_name if that name is accepted by the APC; this will be right for certain species subsets, but make errors in other cases, use with caution.
 #' @param full logical for whether the full lookup table is returned or just the two key columns
 #' @param resources These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using \code{\link{load_taxonomic_resources}} separately and pass the data in.
+#' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default. 
 #' @param output file path to save the intermediate output to
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @details
@@ -30,6 +31,7 @@ create_taxonomic_update_lookup <- function(taxa,
                                            version = default_version(),
                                            one_to_many = "return_all",
                                            full = FALSE,
+                                           APNI_matches = FALSE,
                                            resources = load_taxonomic_resources(stable_or_current_data =
                                                                                   stable_or_current_data,
                                                                                 version = version),
@@ -80,7 +82,7 @@ validate_one_to_many_input <- function(one_to_many) {
 
 #' @noRd
 get_aligned_data <- function(taxa, resources) {
-  unique(taxa) %>% align_taxa(resources = resources)
+  unique(taxa) %>% align_taxa(resources = resources, APNI_matches = APNI_matches)
 }
 
 

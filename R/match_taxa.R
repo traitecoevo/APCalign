@@ -12,19 +12,29 @@
 #' @param dataset_id A dataset or other identifier XXXX
 #' @param fuzzy_abs_dist The number of characters allowed to be different for a fuzzy match.
 #' @param fuzzy_rel_dist The proportion of characters allowed to be different for a fuzzy match. 
-#' @param fuzzy Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters `fuzzy_abs_dist` and `fuzzy_rel_dist`
-#' @param imprecise_matches Imprecise fuzzy matches are turned off as a default.
-#' @param APNI Name matches to the APNI (Australian Plant Names Index) are turned off as a default. 
+#' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters `fuzzy_abs_dist` and `fuzzy_rel_dist`
+#' @param imprecise_fuzzy_matches Imprecise fuzzy matches are turned off as a default.
+#' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default. 
 #'
 #' @noRd
-match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3, fuzzy_rel_dist = 0.2, fuzzy = TRUE, imprecise_matches = FALSE, APNI = FALSE) {
+match_taxa <- function(
+    taxa, 
+    resources, 
+    dataset_id = "XXXX", 
+    fuzzy_abs_dist = 3, 
+    fuzzy_rel_dist = 0.2, 
+    fuzzy_matches = TRUE, 
+    imprecise_fuzzy_matches = FALSE, 
+    APNI_matches = FALSE
+  ) {
+
   update_na_with <- function(current, new) {
     ifelse(is.na(current), new, current)
   }
   
 
   ## A function that specifies particular fuzzy matching conditions (for the function fuzzy_match) when matching is being done at the genus level.
-  if (fuzzy == TRUE) {
+  if (fuzzy_matches == TRUE) {
     fuzzy_match_genera <- function(x, y) {
       purrr::map_chr(x, ~ fuzzy_match(.x, y, 2, 0.35, n_allowed = 1))
     }
@@ -39,7 +49,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
   imprecise_fuzzy_rel_dist <- 0.25
 
   ## override all fuzzy matching parameters with absolute and relative distances of 0 if fuzzy matching is turned off
-  if (fuzzy == FALSE) {
+  if (fuzzy_matches == FALSE) {
     fuzzy_abs_dist <- 0
     fuzzy_rel_dist <- 0
     imprecise_fuzzy_abs_dist <- 0
@@ -47,7 +57,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
   }
 
   ## remove APNI-listed genera from resources if APNI matches are turned off (the default)
-  if (APNI == TRUE) {
+  if (APNI_matches == TRUE) {
     resources$genera_all2 <- resources$genera_all
   } else {
     resources$genera_all2 <- resources$genera_all %>% filter(taxonomic_ref != "APNI")
@@ -564,7 +574,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_04e_indecision_fuzzy_unknown_genus"
+      alignment_code = "match_04e_indecision_unknown_genus"
     )
   
   # Note:  -- Finished with checking genus sp. above, now continue with full species
@@ -771,7 +781,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
   
   # match_08a: APNI-listed canonical name
   # Taxon names that are exact matches to APNI-listed canonical names, once filler words and punctuation are removed.
-  if (APNI == TRUE) {
+  if (APNI_matches == TRUE) {
     i <-
       taxa$tocheck$stripped_name2 %in% resources$`APNI names`$stripped_canonical2
     
@@ -982,7 +992,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
   # Imprecise fuzzy match of taxon name to an APC-accepted canonical name, once filler words and punctuation are removed.
   # For imprecise fuzzy matches, the taxon name can differ from the `APC-accepted` names by 5 characters & up to 25% of the string length.
   # These matches require individual review and are turned off as a default.
-  if (imprecise_matches == TRUE) {
+  if (imprecise_fuzzy_matches == TRUE) {
     for (i in 1:nrow(taxa$tocheck)) {
       taxa$tocheck$fuzzy_match_cleaned_APC_imprecise[i] <-
         fuzzy_match(
@@ -1026,7 +1036,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
   # Imprecise fuzzy match of taxon name to an APC-known canonical name, once filler words and punctuation are removed.
   # For imprecise fuzzy matches, the taxon name can differ from the `APC -known` names by 5 characters & up to 25% of the string length.
   # These matches require individual review and are turned off as a default.
-  if (imprecise_matches == TRUE) {
+  if (imprecise_fuzzy_matches == TRUE) {
     for (i in 1:nrow(taxa$tocheck)) {
       taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise[i] <-
         fuzzy_match(
@@ -1540,7 +1550,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
   # many different string searches need to be completed on the APC-accepted and APC-known taxa (e.g. trinomial, binomial, less precise matches) first
   # to avoid incorrectly aligning an APC accepted/known taxa to an APNI name.
   # This is especially true to accurately align phrase names.
-  if (APNI == TRUE) {
+  if (APNI_matches == TRUE) {
     for (i in 1:nrow(taxa$tocheck)) {
       taxa$tocheck$fuzzy_match_cleaned_APNI[i] <-
         fuzzy_match(
@@ -1584,7 +1594,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
   # Imprecise fuzzy match of taxon name to an APNI-listed canonical name, once filler words and punctuation are removed.
   # For imprecise fuzzy matches, the taxon name can differ from the `APNI-listed` names by 5 characters & up to 25% of the string length.
   # These matches require individual review and are turned off as a default.
-  if (APNI == TRUE) {
+  if (APNI_matches == TRUE & imprecise_fuzzy_matches == TRUE) {
     for (i in 1:nrow(taxa$tocheck)) {
       taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise[i] <-
         fuzzy_match(
@@ -1630,7 +1640,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
   # sometimes the submitted taxon name is a valid trinomial + notes and 
   # such names will only be aligned by matches considering only the first three words of the stripped name.
   # This match also does a good job aligning and correcting syntax of phrase names.
-  if (APNI == TRUE) {
+  if (APNI_matches == TRUE) {
     i <-
       taxa$tocheck$trinomial %in% resources$`APNI names`$trinomial
     
@@ -1663,7 +1673,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
     # or a valid binomial + invalid infraspecific epithet.
     # Such names will only be aligned by matches considering only the first two words of the stripped name.
     # This match also does a good job aligning and correcting syntax of phrase names.
-  if (APNI == TRUE) {
+  if (APNI_matches == TRUE) {
     i <-
       taxa$tocheck$binomial %in% resources$`APNI names`$binomial
     
@@ -1761,7 +1771,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
   # match_20c: genus-level alignment
   # Toward the end of the alignment function, see if first word of unmatched taxa is an APNI-listed genus.
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
-    if (APNI == TRUE) {
+    if (APNI_matches == TRUE) {
     i <-
       (taxa$tocheck$genus %in% resources$genera_APNI$canonicalName)
     
