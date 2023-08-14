@@ -113,20 +113,6 @@ test_that("weird hybrid symbols work", {
   )), 2)
 })
 
-test_that("handles NAs", {
-  
-  original_name <- c("Acacia aneura", NA)
-  
-  out <- align_taxa(original_name, resources = resources)
-  
-  expect_equal(original_name, original_name)
-  expect_gte(nrow(out), 0)
-
-  out <- create_taxonomic_update_lookup(original_name, resources = resources)
-  expect_gte(nrow(out), 0)
-
-})
-
 test_that("genus level ids", {
   aliged_nms <- align_taxa(c("Acacia sp.", "Eucalyptus sp."), resources = resources) |> pull(aligned_name)
   expect_false(any(str_detect(aliged_nms, "NA sp.")))

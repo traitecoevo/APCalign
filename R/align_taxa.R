@@ -79,7 +79,10 @@ align_taxa <- function(original_name,
       tibble::tibble(
         original_name = 
           # only include new names
-          subset(original_name, !original_name %in% taxa_raw$original_name),
+          subset(original_name, 
+            !is.na(original_name) & 
+            !original_name %in% taxa_raw$original_name
+            ),
         cleaned_name = NA_character_,
         stripped_name = NA_character_,
         stripped_name2 = NA_character_,

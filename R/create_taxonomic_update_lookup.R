@@ -68,7 +68,7 @@ create_taxonomic_update_lookup <- function(taxa,
       by = "aligned_name",
       aligned_data %>%
         dplyr::select(original_name, aligned_name, aligned_reason, known),
-      updated_data %>% filter(!is.na(aligned_name))
+      updated_data %>% filter(!is.na(aligned_name)) %>% distinct()
     ) %>%
     dplyr::mutate(
       # todo - why isn't this source APNI?
