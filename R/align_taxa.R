@@ -29,6 +29,7 @@
 #'
 #' @rdname align_taxa
 #'
+#' 
 align_taxa <- function(original_name,
                        output = NULL,
                        resources = load_taxonomic_resources(),
@@ -36,7 +37,8 @@ align_taxa <- function(original_name,
                        fuzzy_rel_dist = 0.2, 
                        fuzzy_matches = TRUE, 
                        imprecise_fuzzy_matches = FALSE, 
-                       APNI_matches = FALSE) {
+                       APNI_matches = FALSE,
+                       dataset_id = "XYZ") {
   original_name <- unique(original_name[!is.na(original_name)])
   
   message("Checking alignments of ", length(original_name), " taxa\n")
@@ -129,7 +131,7 @@ align_taxa <- function(original_name,
   )
   
   # do the actual matching
-  taxa <- match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches = FALSE)
+  taxa <- match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches = FALSE, dataset_id)
   
   taxa_out <- dplyr::bind_rows(taxa) %>%
     dplyr::mutate(known = !is.na(aligned_name))

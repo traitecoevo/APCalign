@@ -19,13 +19,13 @@
 #' @noRd
 match_taxa <- function(
     taxa, 
-    resources, 
-    dataset_id = "XXXX", 
+    resources,
     fuzzy_abs_dist = 3, 
     fuzzy_rel_dist = 0.2, 
     fuzzy_matches = TRUE, 
     imprecise_fuzzy_matches = FALSE, 
-    APNI_matches = FALSE
+    APNI_matches = FALSE, 
+    dataset_id = "ABC"
   ) {
 
   update_na_with <- function(current, new) {
@@ -87,7 +87,7 @@ match_taxa <- function(
 
 
   ## Taxa that have been checked are moved from `taxa$tocheck` to `taxa$checked`
-  ## These lines of code are 
+  ## These lines of code are repeated after each matching cycle to progressively move taxa from `tocheck` to `checked`
 
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
@@ -704,10 +704,10 @@ match_taxa <- function(
     taxa$tocheck$stripped_name[i]
     taxa$tocheck$fuzzy_match_cleaned_APC[i] <-
       fuzzy_match(
-        taxa$tocheck$stripped_name[i],
-        resources$`APC list (accepted)`$stripped_canonical,
-        fuzzy_abs_dist,
-        fuzzy_rel_dist,
+        txt = taxa$tocheck$stripped_name[i],
+        accepted_list = resources$`APC list (accepted)`$stripped_canonical,
+        max_distance_abs = fuzzy_abs_dist,
+        max_distance_rel = fuzzy_rel_dist,
         n_allowed = 1
       )
   }
@@ -744,10 +744,10 @@ match_taxa <- function(
   for (i in 1:nrow(taxa$tocheck)) {    
     taxa$tocheck$fuzzy_match_cleaned_APC_known[i] <-
       fuzzy_match(
-        taxa$tocheck$stripped_name[i],
-        resources$`APC list (known names)`$stripped_canonical,
-        fuzzy_abs_dist,
-        fuzzy_rel_dist,
+        txt = taxa$tocheck$stripped_name[i],
+        accepted_list = resources$`APC list (known names)`$stripped_canonical,
+        max_distance_abs = fuzzy_abs_dist,
+        max_distance_rel = fuzzy_rel_dist,
         n_allowed = 1
       )
   }
@@ -996,10 +996,10 @@ match_taxa <- function(
     for (i in 1:nrow(taxa$tocheck)) {
       taxa$tocheck$fuzzy_match_cleaned_APC_imprecise[i] <-
         fuzzy_match(
-          taxa$tocheck$stripped_name[i],
-          resources$`APC list (accepted)`$stripped_canonical,
-          imprecise_fuzzy_abs_dist,
-          imprecise_fuzzy_rel_dist,
+          txt = taxa$tocheck$stripped_name[i],
+          accepted_list = resources$`APC list (accepted)`$stripped_canonical,
+          max_distance_abs = imprecise_fuzzy_abs_dist,
+          max_distance_rel = imprecise_fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1040,10 +1040,10 @@ match_taxa <- function(
     for (i in 1:nrow(taxa$tocheck)) {
       taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise[i] <-
         fuzzy_match(
-          taxa$tocheck$stripped_name[i],
-          resources$`APC list (known names)`$stripped_canonical,
-          imprecise_fuzzy_abs_dist,
-          imprecise_fuzzy_rel_dist,
+          txt = taxa$tocheck$stripped_name[i],
+          accepted_list = resources$`APC list (known names)`$stripped_canonical,
+          max_distance_abs = imprecise_fuzzy_abs_dist,
+          max_distance_rel = imprecise_fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1304,10 +1304,10 @@ match_taxa <- function(
     if (!is.na(taxa$tocheck$trinomial[i])) {
       taxa$tocheck$fuzzy_match_trinomial[i] <-
         fuzzy_match(
-          taxa$tocheck$trinomial[i],
-          resources$`APC list (accepted)`$trinomial,
-          fuzzy_abs_dist,
-          fuzzy_rel_dist,
+          txt = taxa$tocheck$trinomial[i],
+          accepted_list = resources$`APC list (accepted)`$trinomial,
+          max_distance_abs = fuzzy_abs_dist,
+          max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1348,10 +1348,10 @@ match_taxa <- function(
     if (!is.na(taxa$tocheck$trinomial[i])) {
       taxa$tocheck$fuzzy_match_trinomial_known[i] <-
         fuzzy_match(
-          taxa$tocheck$trinomial[i],
-          resources$`APC list (known names)`$trinomial,
-          fuzzy_abs_dist,
-          fuzzy_rel_dist,
+          txt = taxa$tocheck$trinomial[i],
+          accepted_list = resources$`APC list (known names)`$trinomial,
+          max_distance_abs = fuzzy_abs_dist,
+          max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1461,10 +1461,10 @@ match_taxa <- function(
         is.na(taxa$tocheck$fuzzy_match_binomial[i])) {
       taxa$tocheck$fuzzy_match_binomial[i] <-
         fuzzy_match(
-          taxa$tocheck$binomial[i],
-          resources$`APC list (accepted)`$binomial,
-          fuzzy_abs_dist,
-          fuzzy_rel_dist,
+          txt = taxa$tocheck$binomial[i],
+          accepted_list = resources$`APC list (accepted)`$binomial,
+          max_distance_abs = fuzzy_abs_dist,
+          max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1507,10 +1507,10 @@ match_taxa <- function(
         is.na(taxa$tocheck$fuzzy_match_binomial_APC_known[i])) {
       taxa$tocheck$fuzzy_match_binomial_APC_known[i] <-
         fuzzy_match(
-          taxa$tocheck$binomial[i],
-          resources$`APC list (known names)`$binomial,
-          fuzzy_abs_dist,
-          fuzzy_rel_dist,
+          txt = taxa$tocheck$binomial[i],
+          accepted_list = resources$`APC list (known names)`$binomial,
+          max_distance_abs = fuzzy_abs_dist,
+          max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1554,10 +1554,10 @@ match_taxa <- function(
     for (i in 1:nrow(taxa$tocheck)) {
       taxa$tocheck$fuzzy_match_cleaned_APNI[i] <-
         fuzzy_match(
-          taxa$tocheck$stripped_name[i],
-          resources$`APNI names`$stripped_canonical,
-          fuzzy_abs_dist,
-          fuzzy_rel_dist,
+          txt = taxa$tocheck$stripped_name[i],
+          accepted_list = resources$`APNI names`$stripped_canonical,
+          max_distance_abs = fuzzy_abs_dist,
+          max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1
         )
     }
@@ -1598,10 +1598,10 @@ match_taxa <- function(
     for (i in 1:nrow(taxa$tocheck)) {
       taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise[i] <-
         fuzzy_match(
-          taxa$tocheck$cleaned_name[i],
-          resources$`APNI names`$canonicalName,
-          5,
-          0.25,
+          txt = taxa$tocheck$cleaned_name[i],
+          accepted_list = resources$`APNI names`$canonicalName,
+          max_distance_abs = imprecise_fuzzy_abs_dist,
+          max_distance_rel = imprecise_fuzzy_rel_dist,
           n_allowed = 1
         )
     }
