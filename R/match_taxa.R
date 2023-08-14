@@ -1826,7 +1826,9 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_resolution = "genus",
-      aligned_name = paste0(fuzzy_match_genus, " sp. [", cleaned_name, "; ", dataset_id, "]"),
+      aligned_name = ifelse(is.na(identifier_string2),
+        paste0(fuzzy_match_genus, " sp. [", cleaned_name, "]"),
+        paste0(fuzzy_match_genus, " sp. [", cleaned_name, identifier_string2, "]")),
       aligned_reason = paste0(
         "Fuzzy match of the first word of the taxon name to an APC-known genus (",
         Sys.Date(),

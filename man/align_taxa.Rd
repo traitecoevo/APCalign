@@ -13,7 +13,7 @@ align_taxa(
   fuzzy_matches = TRUE,
   imprecise_fuzzy_matches = FALSE,
   APNI_matches = FALSE,
-  dataset_id = "XYZ"
+  identifier = NA
 )
 }
 \arguments{
@@ -34,7 +34,7 @@ so call \code{\link{load_taxonomic_resources}} separately to greatly speed this 
 
 \item{APNI_matches}{Name matches to the APNI (Australian Plant Names Index) are turned off as a default.}
 
-\item{dataset_id}{Identifier for dataset, location, or list of names.}
+\item{identifier}{A dataset, location or other identifier, which defaults to NA.}
 }
 \value{
 A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
