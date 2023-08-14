@@ -138,7 +138,7 @@ test_that("handles weird strings", {
 
 test_that("returns same number of rows as input, even with duplicates", {
   
-  original_name = 
+  original_name <-
     c("Dryandra preissii", "Banksia acuminata", 
       "Doesthislook likeaspeciesi", "Doesthislook likeaspeciesi", 
       "Banksia acuminata", "Banksia acuminata", "Hibbertia sericea")
@@ -150,6 +150,7 @@ test_that("returns same number of rows as input, even with duplicates", {
   x2 <-
     update_taxonomy(x1$aligned_name, resources = resources)
 
+  # Nas missing in get_updated_species_list
   x3 <-
     get_updated_species_list(x1, resources = resources, one_to_many = "most_likely_species")
 
@@ -157,10 +158,14 @@ test_that("returns same number of rows as input, even with duplicates", {
     taxa = original_name,
     resources = resources, one_to_many = "most_likely_species")
 
-  # output should have same order as input  
+  # output should be same order and length as input
   expect_equal(x1$original_name, original_name)
-  expect_equal(x2$aligned_name, x1$aligned_name)
+  # x3 should be in same order but may have more rows
+  expect_equal(subset(x2$aligned_name, !duplicated(x2$aligned_name)), subset(x1$aligned_name, !duplicated(X11Font()$aligned_name)))
+  expect_gte(length(x2$aligned_name), length(x1$aligned_name))
+  # output should be same order and length as input
+  # Nas missing in get_updated_species_list
   expect_equal(x3$aligned_name, x1$aligned_name)
-  expect_equal(x4$original_name, original_name)
 
+  expect_equal(x4$original_name, original_name)
 })

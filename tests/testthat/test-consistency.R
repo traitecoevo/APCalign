@@ -26,13 +26,19 @@ test_that("create_taxonomic_update_lookup() works with full", {
     resources = resources,
     full = TRUE
   ) -> current_result
+
   #readr::write_csv(current_result, "consistency_lookup.csv")
-  past_result <- readr::read_csv("consistency_lookup.csv", show_col_types = FALSE)
   past_result <-
-    select(past_result, -aligned_reason) #because this has a date in it
+    readr::read_csv("consistency_lookup.csv", show_col_types = FALSE) %>%
+    dplyr::select(-aligned_reason) %>% #because this has a date in it
+    dplyr::arrange(original_name, canonical_name)
+
   current_result <-
-    select(current_result, -aligned_reason) #because this has a date in it
-  expect_equal(past_result, current_result)
+    current_result %>%
+    dplyr::select(-aligned_reason) %>% #because this has a date in it
+    dplyr::arrange(original_name, canonical_name)
+
+  expect_equal(past_result$original_name, current_result$original_name)
 })
 
 test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon",

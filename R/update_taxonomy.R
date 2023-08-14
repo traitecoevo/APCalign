@@ -168,35 +168,40 @@ update_taxonomy <- function(aligned_names,
       taxonomicStatus = taxonomicStatusClean
     ) %>%
     dplyr::filter(!is.na(taxonIDClean))
-  
-  taxa_out <- taxa_APC
 
   # if matches in APC and APNI, combine these and return
   if (nrow(taxa_APNI) > 0) {
     taxa_out <-
       dplyr::bind_rows(taxa_APC,
                        taxa_APNI)
+  } else {
+    taxa_out <- taxa_APC
   }
-
-  # Assemble output in the order of the input
-  # As we may have multiple matches per species and want to maintain order within taxa, 
-  # we'll do this by nesting data before joining tables
-  taxa_out <-
+  
+  # Assemble output in the order of the input `aligned_names`
+  taxa_out2 <-
     taxa_out %>%
     dplyr::distinct() %>%
+    # Bring in any missing taxa (without alignments) so output list is complete
+    dplyr::bind_rows(
+      dplyr::tibble(aligned_name = unique(aligned_names)) %>%
+        dplyr::filter(!aligned_name %in% taxa_out$aligned_name)
+    ) %>%
+    # As we may have multiple matches per species and want to maintain order within taxa,
+    # we'll do this by nesting data before joining into original list
     tidyr::nest(.by = "aligned_name", .key = "data")
   
-  taxa_out <- 
-    dplyr::tibble(aligned_name = aligned_names) %>%
-    dplyr::left_join(by = "aligned_name", taxa_out) %>%
-    # empty result for any species without results
-    dplyr::mutate(data = ifelse (is.null(data), dplyr::tibble(), data)) %>%
-    tidyr::unnest(.data$data)
+  taxa_out2 <- 
+    dplyr::tibble(aligned_name = aligned_names) %>% 
+    # join into original list
+    dplyr::left_join(by = "aligned_name", taxa_out2) %>%
+    # Now unnest
+    tidyr::unnest("data")
   
   if (!is.null(output)) {
-    readr::write_csv(taxa_out, output)
+    readr::write_csv(taxa_out2, output)
     message("  - output saved in file: ", output)
   }
-
-  taxa_out
+  
+  taxa_out2
 }
