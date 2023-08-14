@@ -45,20 +45,7 @@ create_taxonomic_update_lookup <- function(taxa,
   updated_data <- 
     update_taxonomy(aligned_data$aligned_name, resources = resources, output = output) %>%
     # todo: why are we renaming this?
-    dplyr::rename(canonical_name = canonicalName) %>%
-    # merge with data on alignment
-    dplyr::left_join(by = "aligned_name", 
-      aligned_data %>%
-        dplyr::select(original_name, aligned_name, aligned_reason, known),
-        .
-    ) %>%
-    dplyr::mutate(
-      # todo - why isn't this source APNI?
-      source = ifelse(known & is.na(source), "known_name_but_not_apc_accepted", source),
-      # todo - do we want to keep this?
-      taxonomicStatusClean = ifelse(known & is.na(taxonomicStatusClean), "known_name_but_not_apc_accepted", taxonomicStatusClean)
-    ) %>%
-    dplyr::select(-known)
+    dplyr::rename(canonical_name = canonicalName)
 
   if(one_to_many == "most_likely_species") {
     updated_data <-  
@@ -74,6 +61,22 @@ create_taxonomic_update_lookup <- function(taxa,
       dplyr::ungroup()
   }
   # browser()
+
+  updated_data <-
+    # merge with original data on alignment to preserve order
+    dplyr::left_join(
+      by = "aligned_name",
+      aligned_data %>%
+        dplyr::select(original_name, aligned_name, aligned_reason, known),
+      updated_data %>% filter(!is.na(aligned_name))
+    ) %>%
+    dplyr::mutate(
+      # todo - why isn't this source APNI?
+      source = ifelse(known & is.na(source), "known_name_but_not_apc_accepted", source),
+      # todo - do we want to keep this?
+      taxonomicStatusClean = ifelse(known & is.na(taxonomicStatusClean), "known_name_but_not_apc_accepted", taxonomicStatusClean)
+    ) %>%
+    dplyr::select(-known)
   
   # todo - should this be an option here, or an extra function operating on outputs?
   if (one_to_many == "collapse_to_higher_taxon") {
@@ -121,14 +124,24 @@ validate_one_to_many_input <- function(one_to_many) {
 #' @noRd
 collapse_to_higher_taxon <-
   function(aligned_species_list, resources) {
-    aligned_species_list %>%
-      group_by(original_name, aligned_name) %>%
-      summarise(
+    out <- 
+      aligned_species_list %>%
+      dplyr::group_by(original_name, aligned_name) %>%
+      dplyr::summarise(
         apc_names = find_mrct(canonical_name, resources = resources),
         aligned_reason = paste(unique(aligned_reason), collapse = " and "),
         taxonomicStatus = paste(unique(taxonomicStatusClean), collapse = " and "),
         source = paste(unique(source), collapse = " and "),
         number_of_collapsed_taxa = n()
+      )
+
+    # order same as inputs
+    aligned_species_list %>%
+      dplyr::select(original_name, aligned_name) %>%
+      dplyr::distinct() %>%
+      dplyr::left_join(
+        by = c("original_name", "aligned_name"),
+        out
       )
   }
 

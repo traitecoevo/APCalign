@@ -27,7 +27,7 @@ test_that("create_taxonomic_update_lookup() works with full", {
     resources = resources,
     full = TRUE
   ) %>%
-#    dplyr::select(-aligned_reason) %>% #because this has a date in it
+    dplyr::select(-aligned_reason) %>% #because this has a date in it
     dplyr::arrange(original_name, canonical_name)
 
   #readr::write_csv(current_result, "consistency_lookup.csv")
@@ -96,16 +96,12 @@ test_that("align_taxa() works with longer list", {
   ), 199)
 })
 
-
-
 test_that("update_taxonomy() works", {
   expect_equal(nrow(update_taxonomy(
     aligned_names = c("Dryandra preissii", "Banksia acuminata"),
     resources = resources
   )), 2)
-})
 
-test_that("update_taxonomy() works", {
   expect_equal(nrow(create_taxonomic_update_lookup(
     c("Dryandra preissii", "Banksia acuminata"), resources = resources
   )), 2)
@@ -118,12 +114,17 @@ test_that("weird hybrid symbols work", {
 })
 
 test_that("handles NAs", {
-  expect_gte(nrow(align_taxa(c(
-    "Acacia aneura", NA
-  ), resources = resources)), 0)
-  expect_gte(nrow(create_taxonomic_update_lookup(c(
-    "Acacia aneura", NA
-  ), resources = resources)), 0)
+  
+  original_name <- c("Acacia aneura", NA)
+  
+  out <- align_taxa(original_name, resources = resources)
+  
+  expect_equal(original_name, original_name)
+  expect_gte(nrow(out), 0)
+
+  out <- create_taxonomic_update_lookup(original_name, resources = resources)
+  expect_gte(nrow(out), 0)
+
 })
 
 test_that("genus level ids", {

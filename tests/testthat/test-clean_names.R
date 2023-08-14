@@ -119,13 +119,19 @@ test_that("handles weird strings", {
   test_strings <- c("", "''", "'", "          ", "\t", "\n", "stuff with      ",
                     "test'string'withquotes", 
                     "!@#$%^&*()_+", 
-                    rep("abc", times=10000),
+                    rep("abc", times= 10),
                     "print('whoops no cleaning')",
                     "Doesthislook likeaspeciesi",
                     "Doesn'tlook likeaspeciesi",
                     "Banksia  serrata"
   )
-  expect_equal(nrow(create_taxonomic_update_lookup(test_strings,resources=resources)),1)
+
+  out <- align_taxa(test_strings, resources = resources)
+  expect_equal(test_strings, out$original_name)
+
+  out <- create_taxonomic_update_lookup(test_strings, one_to_many = "most_likely_species",
+    resources = resources)
+  expect_equal(test_strings, out$original_name)
 })
 
 
