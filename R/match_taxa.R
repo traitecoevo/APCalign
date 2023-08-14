@@ -965,6 +965,7 @@ match_taxa <- function(taxa, resources, dataset_id = "XXXX", fuzzy_abs_dist = 3,
           5,
           0.25,
           n_allowed = 1
+        )
     }
     
     i <-
