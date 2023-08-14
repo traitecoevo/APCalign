@@ -77,8 +77,6 @@ test_that("align_taxa() works with longer list", {
   ), 199)
 })
 
-
-
 test_that("update_taxonomy() works", {
   expect_equal(nrow(update_taxonomy(
     aligned_names = c("Dryandra preissii", "Banksia acuminata"),
@@ -138,3 +136,31 @@ test_that("handles weird strings", {
   })
 
 
+test_that("retruns same number of rows as input, even with duplicates", {
+  
+  original_name = 
+    c("Dryandra preissii", "Banksia acuminata", 
+      "Doesthislook likeaspeciesi", "Doesthislook likeaspeciesi", 
+      "Banksia acuminata", "Banksia acuminata", "Hibbertia sericea")
+  
+  x1 <- align_taxa(
+    original_name = original_name,
+    resources = resources)
+
+  x2 <-
+    update_taxonomy(x1$aligned_name, resources = resources)
+
+  x3 <-
+    get_updated_species_list(x1, resources = resources, one_to_many = "most_likely_species")
+
+  x4 <- create_taxonomic_update_lookup(
+    taxa = original_name,
+    resources = resources, one_to_many = "most_likely_species")
+
+  # output should have same order as input  
+  expect_equal(x1$original_name, original_name)
+  expect_equal(x2$aligned_name, original_name)
+  expect_equal(x3$aligned_name, original_name)
+  expect_equal(x4$original_name, original_name)
+
+})

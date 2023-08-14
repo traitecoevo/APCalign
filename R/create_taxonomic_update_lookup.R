@@ -85,7 +85,7 @@ get_updated_species_list <-
   function(aligned_data,
            resources,
            one_to_many,
-           output) {
+           output= NULL) {
     aligned_species_list_tmp <-
       aligned_data$aligned_name %>% update_taxonomy(resources = resources, output = output)
     
