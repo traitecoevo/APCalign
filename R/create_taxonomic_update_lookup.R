@@ -35,7 +35,7 @@ create_taxonomic_update_lookup <- function(taxa,
                                                                                 version = version),
                                            output = NULL) {
   validate_one_to_many_input(one_to_many)
-  aligned_data <- get_aligned_data(taxa, resources)
+  aligned_data <- align_taxa(taxa, resources = resources)
   updated_species_list <-
     get_updated_species_list(aligned_data, resources, one_to_many, output)
   
@@ -76,11 +76,6 @@ validate_one_to_many_input <- function(one_to_many) {
         ". Valid inputs are 'return_all', 'collapse_to_higher_taxon', or 'most_likely_species'."
       )
     )
-}
-
-#' @noRd
-get_aligned_data <- function(taxa, resources) {
-  unique(taxa) %>% align_taxa(resources = resources)
 }
 
 
