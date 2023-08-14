@@ -37,7 +37,7 @@ create_taxonomic_update_lookup <- function(taxa,
                                                                                 version = version),
                                            output = NULL) {
   validate_one_to_many_input(one_to_many)
-  aligned_data <- get_aligned_data(taxa, resources)
+  aligned_data <- get_aligned_data(taxa, resources, APNI_matches)
   updated_species_list <-
     get_updated_species_list(aligned_data, resources, one_to_many, output)
   
@@ -81,7 +81,7 @@ validate_one_to_many_input <- function(one_to_many) {
 }
 
 #' @noRd
-get_aligned_data <- function(taxa, resources) {
+get_aligned_data <- function(taxa, resources, APNI_matches = FALSE) {
   unique(taxa) %>% align_taxa(resources = resources, APNI_matches = APNI_matches)
 }
 
