@@ -33,6 +33,7 @@ create_taxonomic_update_lookup <- function(taxa,
                                            one_to_many = "return_all",
                                            full = FALSE,
                                            APNI_matches = TRUE, 
+                                           imprecise_fuzzy_matches = FALSE, 
                                            identifier = NA_character_,
                                            resources = load_taxonomic_resources(stable_or_current_data =
                                                                                   stable_or_current_data,
@@ -42,7 +43,10 @@ create_taxonomic_update_lookup <- function(taxa,
   validate_one_to_many_input(one_to_many)
 
   aligned_data <- 
-    align_taxa(taxa, resources = resources, APNI_matches = APNI_matches, identifier = identifier)
+    align_taxa(taxa, resources = resources, 
+               APNI_matches = APNI_matches, 
+               identifier = identifier, 
+               imprecise_fuzzy_matches = imprecise_fuzzy_matches)
 
   updated_data <- 
     update_taxonomy(aligned_data$aligned_name, resources = resources, output = output) %>%
