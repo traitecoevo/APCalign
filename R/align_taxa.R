@@ -85,6 +85,9 @@ align_taxa <- function(original_name,
         trinomial = NA_character_,
         binomial = NA_character_,
         genus = NA_character_,
+        identifier_string = NA_character_,
+        identifier_string2 = NA_character_,
+        aligned_name_tmp = NA_character_,
         aligned_name = NA_character_,
         aligned_reason = NA_character_,
         fuzzy_match_genus = NA_character_,
@@ -132,7 +135,7 @@ align_taxa <- function(original_name,
   )
   
   # do the actual matching
-  taxa <- match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches = FALSE, identifier)
+  taxa <- match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches, identifier)
   
   taxa_out <- dplyr::bind_rows(taxa) %>%
     dplyr::mutate(known = !is.na(aligned_name))
