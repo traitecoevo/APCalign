@@ -1,0 +1,226 @@
+original_name,alignment_code_all_matches_TRUE,aligned_name_all_matches_TRUE,taxonomic_reference_all_matches_TRUE,taxon_rank_all_matches_TRUE
+Actinotus sp.,match_01a,Actinotus sp. [test_all_matches_TRUE],APC accepted,genus
+Actinotus spp,match_01a,Actinotus sp. [test_all_matches_TRUE],APC accepted,genus
+Actinocarpus sp,match_01a,Actinocarpus sp. [test_all_matches_TRUE],APC known,genus
+Actinocarpus spp.,match_01a,Actinocarpus sp. [test_all_matches_TRUE],APC known,genus
+Actinocladum sp.,match_01a,Actinocladum sp. [test_all_matches_TRUE],APNI,genus
+Actinocladum spp,match_01a,Actinocladum sp. [test_all_matches_TRUE],APNI,genus
+Xystidium sp,match_01a,Xystidium sp. [test_all_matches_TRUE],APNI,genus
+Zygia spp.,match_01a,Zygia sp. [test_all_matches_TRUE],APNI,genus
+Actinatus sp.,match_01b,Actinotus sp. [Actinatus sp.; test_all_matches_TRUE],APC accepted,genus
+Banksiaa sp.,match_01b,Banksia sp. [Banksiaa sp.; test_all_matches_TRUE],APC accepted,genus
+Actinocarros sp,match_01c,Actinocarpus sp. [Actinocarros sp.; test_all_matches_TRUE],APC known,genus
+Dryandraa spp.,match_01c,Dryandra sp. [Dryandraa sp.; test_all_matches_TRUE],APC known,genus
+Asteraceae sp.,match_02a,Asteraceae sp. [test_all_matches_TRUE],APC accepted,family
+Rutaceae spp,match_02a,Rutaceae sp. [test_all_matches_TRUE],APC accepted,family
+Abildgaardia odontocarpa -- Abildgaardia oxystachya,match_03a,Abildgaardia sp. [Abildgaardia odontocarpa -- Abildgaardia oxystachya; test_all_matches_TRUE],APC accepted,genus
+Banksia serrata -- Banksia ericifolia,match_03a,Banksia sp. [Banksia serrata -- Banksia ericifolia; test_all_matches_TRUE],APC accepted,genus
+Banksia serrata -- ericifolia,match_03a,Banksia sp. [Banksia serrata -- ericifolia; test_all_matches_TRUE],APC accepted,genus
+Banksia serrata--Banksia ericifolia,match_03a,Banksia sp. [Banksia serrata--Banksia ericifolia; test_all_matches_TRUE],APC accepted,genus
+Acanthocarpus fimbriatus -- Acanthocarpus mucronatus,match_03a,Acanthocarpus sp. [Acanthocarpus fimbriatus -- Acanthocarpus mucronatus; test_all_matches_TRUE],APC accepted,genus
+Acanthocarpus fimbriatus -- mucronatus,match_03a,Acanthocarpus sp. [Acanthocarpus fimbriatus -- mucronatus; test_all_matches_TRUE],APC accepted,genus
+Aporuellia abc--def,match_03a,Aporuellia sp. [Aporuellia abc--def; test_all_matches_TRUE],APC known,genus
+Dryandra abc--def,match_03a,Dryandra sp. [Dryandra abc--def; test_all_matches_TRUE],APC known,genus
+Xystidium abc--def,match_03a,Xystidium sp. [Xystidium abc--def; test_all_matches_TRUE],APNI,genus
+Zygia abc--def,match_03a,Zygia sp. [Zygia abc--def; test_all_matches_TRUE],APNI,genus
+Abildgardiia odontocarpa -- oxystachya,match_03b,Abildgaardia sp. [Abildgardiia odontocarpa -- oxystachya; test_all_matches_TRUE],APC accepted,genus
+Accanthocarpis fimbriatus -- Acanthocarpus mucronatus,match_03b,Acanthocarpus sp. [Accanthocarpis fimbriatus -- Acanthocarpus mucronatus; test_all_matches_TRUE],APC accepted,genus
+Bankseea serrata -- ericifolia,match_03b,Banksia sp. [Bankseea serrata -- ericifolia; test_all_matches_TRUE],APC accepted,genus
+Bannksia serrata -- Banksia ericifolia,match_03b,Banksia sp. [Bannksia serrata -- Banksia ericifolia; test_all_matches_TRUE],APC accepted,genus
+Aporuelliaa abc--def,match_03c,Aporuellia sp. [Aporuelliaa abc--def; test_all_matches_TRUE],APC known,genus
+Driandra abc--def,match_03c,Dryandra sp. [Driandra abc--def; test_all_matches_TRUE],APC known,genus
+Xyystidium abc--def,match_03d,Xystidium sp. [Xyystidium abc--def; test_all_matches_TRUE],APNI,genus
+Zygiaa abc--def,match_03d,Zygia sp. [Zygiaa abc--def; test_all_matches_TRUE],APNI,genus
+Abcde fgh -- ijk,match_03e,Abcde sp. [Abcde fgh -- ijk; test_all_matches_TRUE],NA,genus
+Ryandra abc--def,match_03e,Ryandra sp. [Ryandra abc--def; test_all_matches_TRUE],NA,genus
+Abildgaardia odontocarpa / Abildgaardia oxystachya,match_04a,Abildgaardia sp. [Abildgaardia odontocarpa / Abildgaardia oxystachya; test_all_matches_TRUE],APC accepted,genus
+Banksia serrata / Banksia ericifolia,match_04a,Banksia sp. [Banksia serrata / Banksia ericifolia; test_all_matches_TRUE],APC accepted,genus
+Banksia serrata / ericifolia,match_04a,Banksia sp. [Banksia serrata / ericifolia; test_all_matches_TRUE],APC accepted,genus
+Banksia serrata/Banksia ericifolia,match_04a,Banksia sp. [Banksia serrata/Banksia ericifolia; test_all_matches_TRUE],APC accepted,genus
+Acanthocarpus fimbriatus / Acanthocarpus mucronatus,match_04a,Acanthocarpus sp. [Acanthocarpus fimbriatus / Acanthocarpus mucronatus; test_all_matches_TRUE],APC accepted,genus
+Acanthocarpus fimbriatus / mucronatus,match_04a,Acanthocarpus sp. [Acanthocarpus fimbriatus / mucronatus; test_all_matches_TRUE],APC accepted,genus
+Dryandra abc / def,match_04a,Dryandra sp. [Dryandra abc / def; test_all_matches_TRUE],APC known,genus
+Aporuellia abc / def,match_04a,Aporuellia sp. [Aporuellia abc / def; test_all_matches_TRUE],APC known,genus
+Xystidium abc/def,match_04a,Xystidium sp. [Xystidium abc/def; test_all_matches_TRUE],APNI,genus
+Zygia abc/def,match_04a,Zygia sp. [Zygia abc/def; test_all_matches_TRUE],APNI,genus
+Abildgardiia odontocarpa / oxystachya,match_04b,Abildgaardia sp. [Abildgardiia odontocarpa / oxystachya; test_all_matches_TRUE],APC accepted,genus
+Accanthocarpis fimbriatus / Acanthocarpus mucronatus,match_04b,Acanthocarpus sp. [Accanthocarpis fimbriatus / Acanthocarpus mucronatus; test_all_matches_TRUE],APC accepted,genus
+Bankseea serrata / ericifolia,match_04b,Banksia sp. [Bankseea serrata / ericifolia; test_all_matches_TRUE],APC accepted,genus
+Bannksia serrata / Banksia ericifolia,match_04b,Banksia sp. [Bannksia serrata / Banksia ericifolia; test_all_matches_TRUE],APC accepted,genus
+Aporuelliaa abc / def,match_04c,Aporuellia sp. [Aporuelliaa abc / def; test_all_matches_TRUE],APC known,genus
+Drrandra abc / def,match_04c,Dryandra sp. [Drrandra abc / def; test_all_matches_TRUE],APC known,genus
+Xyystidium abc/def,match_04d,Xystidium sp. [Xyystidium abc/def; test_all_matches_TRUE],APNI,genus
+Zygiaa abc / def,match_04d,Zygia sp. [Zygiaa abc / def; test_all_matches_TRUE],APNI,genus
+Abcde fgh / ijk,match_04e,Abcde sp. [Abcde fgh / ijk; test_all_matches_TRUE],NA,genus
+Ryandra abc / def,match_04e,Ryandra sp. [Ryandra abc / def; test_all_matches_TRUE],NA,genus
+Cycas candida K.D.Hill,match_05a,Cycas candida,APC accepted,Species
+Eremophila papillata Chinnock,match_05a,Eremophila papillata,APC accepted,Species
+Acalypha indica var. australis F.M.Bailey,match_05b,Acalypha indica var. australis,APC known,Varietas
+Acanthocarpus serra F.Muell.,match_05b,Acanthocarpus serra,APC known,Species
+Dillwynia sp. C (Budawang Range),match_05b,Dillwynia sp. C (Budawang Range),APC known,Species
+Acanthocarpus sp. Cooloomia (S.D.Hopper 3301),match_06a,Acanthocarpus sp. Cooloomia (S.D.Hopper 3301),APC accepted,Species
+Banksia  serrata,match_06a,Banksia serrata,APC accepted,Species
+Eremophila oppositifolia ssp. rubra,match_06a,Eremophila oppositifolia subsp. rubra,APC accepted,Subspecies
+Eremophila oppositifolia subsp. rubra,match_06a,Eremophila oppositifolia subsp. rubra,APC accepted,Subspecies
+Leucanthemum x superbum,match_06a,Leucanthemum x superbum,APC accepted,Species
+Notelaea longifolia,match_06a,Notelaea longifolia,APC accepted,Species
+Notelaea longifolia f longifolia,match_06a,Notelaea longifolia f. longifolia,APC accepted,Forma
+Notelaea longifolia f. intermedia,match_06a,Notelaea longifolia f. intermedia,APC accepted,Forma
+Notelaea longifolia f. longifolia,match_06a,Notelaea longifolia f. longifolia,APC accepted,Forma
+Notelaea longifolia form. longifolia,match_06a,Notelaea longifolia f. longifolia,APC accepted,Forma
+Notelaea longifolia forma longifolia,match_06a,Notelaea longifolia f. longifolia,APC accepted,Forma
+Onopordum acanthium x Onopordum illyricum,match_06a,Onopordum acanthium x Onopordum illyricum,APC accepted,Species
+Ranunculus pentandrus,match_06a,Ranunculus pentandrus,APC accepted,Species
+Ranunculus pentandrus v  pentandrus,match_06a,Ranunculus pentandrus var. pentandrus,APC accepted,Varietas
+Ranunculus pentandrus var pentandrus,match_06a,Ranunculus pentandrus var. pentandrus,APC accepted,Varietas
+Ranunculus pentandrus var. pentandrus,match_06a,Ranunculus pentandrus var. pentandrus,APC accepted,Varietas
+Thynninorchis huntiana,match_06a,Thynninorchis huntiana,APC accepted,Species
+Acaena x ovina,match_06a,Acaena x ovina,APC accepted,Species
+Acalypha indica australis,match_06b,Acalypha indica var. australis,APC known,Varietas
+Acalypha indica var. australis,match_06b,Acalypha indica var. australis,APC known,Varietas
+Aceratium megalospermum var. coriaceum,match_06b,Aceratium megalospermum var. coriaceum,APC known,Varietas
+Achneria brevifolia,match_06b,Achneria brevifolia,APC known,Species
+Dillwynia sp. C ( Budawang Range ),match_06b,Dillwynia sp. C (Budawang Range),APC known,Species
+Aceeena x ovinaa,match_07a,Acaena x ovina,APC accepted,Species
+Aceena x ovina,match_07a,Acaena x ovina,APC accepted,Species
+Banksia  serrate,match_07a,Banksia serrata,APC accepted,Species
+Eremophila opositifolia ssp. rubra,match_07a,Eremophila oppositifolia subsp. rubra,APC accepted,Subspecies
+Eremophila opositifoliia subsp. rubra,match_07a,Eremophila oppositifolia subsp. rubra,APC accepted,Subspecies
+Hemigenia sp. Tallering (H. Pringle 3323),match_07a,Hemigenia sp. Tallering (H.Pringle 3323),APC accepted,Species
+Hemigenia sp. Tallering (H.Pringle 33223),match_07a,Hemigenia sp. Tallering (H.Pringle 3323),APC accepted,Species
+Hemigeniia sp. Tallering (H.Pringle 3323),match_07a,Hemigenia sp. Tallering (H.Pringle 3323),APC accepted,Species
+Notelaea longifoliaa forma longifoliaa,match_07a,Notelaea longifolia f. longifolia,APC accepted,Forma
+Onopordum acanthium x Onnopordum illyricum,match_07a,Onopordum acanthium x Onopordum illyricum,APC accepted,Species
+Ranunculus pentandra var pentandru,match_07a,Ranunculus pentandrus var. pentandrus,APC accepted,Varietas
+Thunbergia annua,match_07a,Thunbergia alata,APC accepted,Species
+Thynninorchis huntianaa,match_07a,Thynninorchis huntiana,APC accepted,Species
+Acalyffa indice australis,match_07b,Acalypha indica var. australis,APC known,Varietas
+Acalypha indice australis,match_07b,Acalypha indica var. australis,APC known,Varietas
+Acalypha inndica var. australis,match_07b,Acalypha indica var. australis,APC known,Varietas
+Achneriia brevifoliaa,match_07b,Achneria brevifolia,APC known,Species
+Dillwinnia sp. C ( Budawang Range ),match_07b,Dillwynia sp. C (Budawang Range),APC known,Species
+Acanthus ebracteatus subsp. ebracteatus,match_08a,Acanthus ebracteatus subsp. ebracteatus,APNI,Subspecies
+Acanthus ilicifolius var. typica,match_08a,Acanthus ilicifolius var. typica,APNI,Varietas
+Asystasia sp. (Newcastle Bay),match_08a,Asystasia sp. (Newcastle Bay),APNI,Species
+Blechum pyramidatum,match_08a,Blechum pyramidatum,APNI,Species
+Daviesia sp. ( Wadbilliga NP - Deua NP ),match_08a,Daviesia sp. (Wadbilliga NP - Deua NP),APNI,Species
+Dillwynia sp. ( Gibralter Range ),match_08a,Dillwynia sp. (Gibralter Range),APNI,Species
+Dillwynia sp. (Gibralter Range),match_08a,Dillwynia sp. (Gibralter Range),APNI,Species
+Jasminum sp (Beechmont G.Holmes AQ633577),match_08a,Jasminum sp. (Beechmont G.Holmes AQ633577),APNI,Species
+Thunbergia alata var. arnhemica,match_08a,Thunbergia alata var. arnhemica,APNI,Varietas
+Abildgaardia aff odontocarpa,match_09a,Abildgaardia sp. [Abildgaardia aff. odontocarpa; test_all_matches_TRUE],APC accepted,genus
+Acanthocarpus aff. fimbriatus,match_09a,Acanthocarpus sp. [Acanthocarpus aff. fimbriatus; test_all_matches_TRUE],APC accepted,genus
+Acanthocarpus affinis fimbriatus,match_09a,Acanthocarpus sp. [Acanthocarpus affinis fimbriatus; test_all_matches_TRUE],APC accepted,genus
+Banksia aff serrata,match_09a,Banksia sp. [Banksia aff. serrata; test_all_matches_TRUE],APC accepted,genus
+Banksia aff. serrata,match_09a,Banksia sp. [Banksia aff. serrata; test_all_matches_TRUE],APC accepted,genus
+Banksia affinis serrata,match_09a,Banksia sp. [Banksia affinis serrata; test_all_matches_TRUE],APC accepted,genus
+Aporuellia aff abc,match_09a,Aporuellia sp. [Aporuellia aff. abc; test_all_matches_TRUE],APC known,genus
+Dryandra aff def,match_09a,Dryandra sp. [Dryandra aff. def; test_all_matches_TRUE],APC known,genus
+Xystidium aff. def,match_09a,Xystidium sp. [Xystidium aff. def; test_all_matches_TRUE],APNI,genus
+Zygia affinis def,match_09a,Zygia sp. [Zygia affinis def; test_all_matches_TRUE],APNI,genus
+Abildgardiia aff odontocarpa,match_09b,Abildgaardia sp. [Abildgardiia aff. odontocarpa; test_all_matches_TRUE],APC accepted,genus
+Accanthocarpis aff fimbriatus,match_09b,Acanthocarpus sp. [Accanthocarpis aff. fimbriatus; test_all_matches_TRUE],APC accepted,genus
+Bankseea aff. serrata,match_09b,Banksia sp. [Bankseea aff. serrata; test_all_matches_TRUE],APC accepted,genus
+Bannksia affinis serrata,match_09b,Banksia sp. [Bannksia affinis serrata; test_all_matches_TRUE],APC accepted,genus
+Aporuelliaa aff def,match_09c,Aporuellia sp. [Aporuelliaa aff. def; test_all_matches_TRUE],APC known,genus
+Drrandra affinis def,match_09c,Dryandra sp. [Drrandra affinis def; test_all_matches_TRUE],APC known,genus
+Xyystidium aff. abc,match_09d,Xystidium sp. [Xyystidium aff. abc; test_all_matches_TRUE],APNI,genus
+Zygiaa aff. abc,match_09d,Zygia sp. [Zygiaa aff. abc; test_all_matches_TRUE],APNI,genus
+Abcde affinis fgh,match_09e,Abcde sp. [Abcde affinis fgh; test_all_matches_TRUE],NA,genus
+Rryandra aff def,match_09e,Rryandra sp. [Rryandra aff. def; test_all_matches_TRUE],NA,genus
+Acalypha indica var. aus,match_10a,Acalypha indica,APC accepted,Species
+Aceeena x ovinaaa,match_10a,Acaena x ovina,APC accepted,Species
+Banksiia  serrratte,match_10a,Banksia serrata,APC accepted,Species
+Eremoophila opppositifolia ssp. rubraaa,match_10a,Eremophila oppositifolia subsp. rubra,APC accepted,Subspecies
+Eremophillaa oppositifoliia subsp. rrubra,match_10a,Eremophila oppositifolia subsp. rubra,APC accepted,Subspecies
+Hemigenia sp. Tallering (H.Pringle),match_10a,Hemigenia sp. Tallering (H.Pringle 3323),APC accepted,Species
+Thynninorchisss huntianaaaa,match_10a,Thynninorchis huntiana,APC accepted,Species
+Acalyffa indice australiss,match_10b,Acalypha indica var. australis,APC known,Varietas
+Accalypha inndicaa var. australiss,match_10b,Acalypha indica var. australis,APC known,Varietas
+Aceratiumm meggalospermumm var. coriaceumm,match_10b,Aceratium megalospermum var. coriaceum,APC known,Varietas
+Abildgaardia odontocarpa x Abildgaardia oxystachya,match_11a,Abildgaardia x [Abildgaardia odontocarpa x Abildgaardia oxystachya; test_all_matches_TRUE],APC accepted,genus
+Acanthocarpus fimbriatus x Acanthocarpus mucronatus,match_11a,Acanthocarpus x [Acanthocarpus fimbriatus x Acanthocarpus mucronatus; test_all_matches_TRUE],APC accepted,genus
+Acanthocarpus fimbriatus x mucronatus,match_11a,Acanthocarpus x [Acanthocarpus fimbriatus x mucronatus; test_all_matches_TRUE],APC accepted,genus
+Banksia serrata x Banksia ericifolia,match_11a,Banksia x [Banksia serrata x Banksia ericifolia; test_all_matches_TRUE],APC accepted,genus
+Banksia serrata x ericifolia,match_11a,Banksia x [Banksia serrata x ericifolia; test_all_matches_TRUE],APC accepted,genus
+Thynninorchis x huntiana,match_11a,Thynninorchis x [Thynninorchis x huntiana; test_all_matches_TRUE],APC accepted,genus
+Aporuellia abc x def,match_11a,Aporuellia x [Aporuellia abc x def; test_all_matches_TRUE],APC known,genus
+Dryandra abc x def,match_11a,Dryandra x [Dryandra abc x def; test_all_matches_TRUE],APC known,genus
+Xystidium abc x Xystidium def,match_11a,Xystidium x [Xystidium abc x Xystidium def; test_all_matches_TRUE],APNI,genus
+Zygia abc x def,match_11a,Zygia x [Zygia abc x def; test_all_matches_TRUE],APNI,genus
+Abildgardiia odontocarpa x oxystachya,match_11b,Abildgaardia x [Abildgardiia odontocarpa x oxystachya; test_all_matches_TRUE],APC accepted,genus
+Accanthocarpis fimbriatus x Acanthocarpus mucronatus,match_11b,Acanthocarpus x [Accanthocarpis fimbriatus x Acanthocarpus mucronatus; test_all_matches_TRUE],APC accepted,genus
+Bankseea serrata x ericifolia,match_11b,Banksia x [Bankseea serrata x ericifolia; test_all_matches_TRUE],APC accepted,genus
+Bannksia serrata x Banksia ericifolia,match_11b,Banksia x [Bannksia serrata x Banksia ericifolia; test_all_matches_TRUE],APC accepted,genus
+Aporuelliaa abc x def,match_11c,Aporuellia x [Aporuelliaa abc x def; test_all_matches_TRUE],APC known,genus
+Drrandra x def,match_11c,Dryandra x [Drrandra x def; test_all_matches_TRUE],APC known,genus
+Xyystidium x def,match_11d,Xystidium x [Xyystidium x def; test_all_matches_TRUE],APNI,genus
+Zygiaa abc x Zygia def,match_11d,Zygia x [Zygiaa abc x Zygia def; test_all_matches_TRUE],APNI,genus
+Abcde fgh x ijk,match_11e,Abcde x [Abcde fgh x ijk; test_all_matches_TRUE],NA,genus
+Ryandra abc x def,match_11e,Ryandra x [Ryandra abc x def; test_all_matches_TRUE],NA,genus
+Baeckea sp. murchison river,match_12a,Baeckea sp. Murchison River (M.E.Trudgen 12009),APC accepted,Species
+Eremophila oppositifolia rubra (needle leaves),match_12a,Eremophila oppositifolia subsp. rubra,APC accepted,Subspecies
+Eremophila oppositifolia rubra early collection,match_12a,Eremophila oppositifolia subsp. rubra,APC accepted,Subspecies
+Eremophila oppositifolia ssp. rubra needle leaves,match_12a,Eremophila oppositifolia subsp. rubra,APC accepted,Subspecies
+Ranunculus pentandrus var. pentandrus (flooded area),match_12a,Ranunculus pentandrus var. pentandrus,APC accepted,Varietas
+Acalypha indica var. australis (double check),match_12b,Acalypha indica var. australis,APC known,Varietas
+Aceratium megalospermum var. coriaceum (top of hill),match_12b,Aceratium megalospermum var. coriaceum,APC known,Varietas
+Eremophila opositifolia rubra early collection,match_13a,Eremophila oppositifolia subsp. rubra,APC accepted,Subspecies
+Ranunculus pentandrus var. pentand (flooded area),match_13a,Ranunculus pentandrus var. pentandrus,APC accepted,Varietas
+Acalypha indica var. austral. (double check),match_13b,Acalypha indica var. australis,APC known,Varietas
+Aceratiuum megalospermum var. coriaceuum (top of hill),match_13b,Aceratium megalospermum var. coriaceum,APC known,Varietas
+Acanthocarpus sp. cooloomia,match_14a,Acanthocarpus sp. Cooloomia (S.D.Hopper 3301),APC accepted,Species
+Acanthus ebracteatus subsp. ebracteatussss,match_14a,Acanthus ebracteatus,APC accepted,Species
+Aceratium megalospermum var. might be coriaceum,match_14a,Aceratium megalospermum,APC accepted,Species
+Banksia paludosa (key to subspecies),match_14a,Banksia paludosa,APC accepted,Species
+Banksia plagiocarpa (giant plants),match_14a,Banksia plagiocarpa,APC accepted,Species
+Hemigenia sp. Tallering (H. Pringle),match_14a,Hemigenia sp. Tallering (H.Pringle 3323),APC accepted,Species
+Hemigenia sp. Tallering Pringle,match_14a,Hemigenia sp. Tallering (H.Pringle 3323),APC accepted,Species
+Leucopogon sp. murchison,match_14a,Leucopogon sp. Murchison (R.J.Cranfield 9224),APC accepted,Species
+Notelaea longifolia f. iongifolia,match_14a,Notelaea longifolia,APC accepted,Species
+Schoenus sp. murchison,match_14a,Schoenus sp. Murchison (K.L.Wilson 2647),APC accepted,Species
+Senna sp. austin,match_14a,Senna sp. Austin (A.Strid 20210),APC accepted,Species
+Thunbergia alata (probably var. arnhemica),match_14a,Thunbergia alata,APC accepted,Species
+Thunbergia alata var. arnhemica (uncertain),match_14a,Thunbergia alata,APC accepted,Species
+Achneria brevifolia (collected in May),match_14b,Achneria brevifolia,APC known,Species
+Dryandra octotriginta (update name),match_14b,Dryandra octotriginta,APC known,Species
+Acanthus illlicifoliuss var. typicaa,match_15a,Acanthus ilicifolius,APC accepted,Species
+Banksia paludose (key to subspecies),match_15a,Banksia paludosa,APC accepted,Species
+Bannksia plagiocarpa (giant plants),match_15a,Banksia plagiocarpa,APC accepted,Species
+Thunbergia annua (growing as biennial),match_15a,Thunbergia alata,APC accepted,Species
+Achneriia brevifoliia (collected in May),match_15b,Achneria brevifolia,APC known,Species
+Dryandra octotrigginta (update name),match_15b,Dryandra octotriginta,APC known,Species
+Blechumm pyramidatum,match_16a,Blechum pyramidatum,APNI,Species
+Jasminum sp (Beechmont G. Holmes AQ633577),match_16a,Jasminum sp. (Beechmont G.Holmes AQ633577),APNI,Species
+Jasminum sp (Beechmont G.Holms AQ633577),match_16a,Jasminum sp. (Beechmont G.Holmes AQ633577),APNI,Species
+Jasminum sp (Beechmontte G.Holmes AQ633577),match_16a,Jasminum sp. (Beechmont G.Holmes AQ633577),APNI,Species
+Blechummm pyramidatummm,match_17a,Blechum pyramidatum,APNI,Species
+Jasminummm sp (Beeechmontte G.Holmes AQ633577),match_17a,Jasminum sp. (Beechmont G.Holmes AQ633577),APNI,Species
+Dillwynia sp. (Gibralter Range) (phrase name),match_18a,Dillwynia sp. (Gibralter Range),APNI,Species
+Jasminum sp (Beechmont G.Holmes),match_18a,Jasminum sp. (Beechmont G.Holmes AQ633577),APNI,Species
+Dillwynia sp. (Gibralter) (phrase name),match_19a,Dillwynia sp. (Gibralter Range),APNI,Species
+Jasminum sp (Beechmont),match_19a,Jasminum sp. (Beechmont G.Holmes AQ633577),APNI,Species
+Actinotus,match_20a,Actinotus sp. [Actinotus; test_all_matches_TRUE],APC accepted,genus
+Asystasia,match_20a,Asystasia sp. [Asystasia; test_all_matches_TRUE],APC accepted,genus
+Asystasia - pink flower,match_20a,Asystasia sp. [Asystasia - pink flower; test_all_matches_TRUE],APC accepted,genus
+Asystasia (voucher),match_20a,Asystasia sp. [Asystasia (voucher); test_all_matches_TRUE],APC accepted,genus
+Banksia serrataxBanksia ericifolia,match_20a,Banksia sp. [Banksia serrataxBanksia ericifolia; test_all_matches_TRUE],APC accepted,genus
+Barleria maybe alba,match_20a,Barleria sp. [Barleria maybe alba; test_all_matches_TRUE],APC accepted,genus
+Dillwynia sp. 3 ( Budawang Range ),match_20a,Dillwynia sp. [Dillwynia sp. 3 (Budawang Range); test_all_matches_TRUE],APC accepted,genus
+Actinocarpus,match_20b,Actinocarpus sp. [Actinocarpus; test_all_matches_TRUE],APC known,genus
+Dilwynia sp. 3 ( Budawang Range ),match_20b,Dilwynia sp. [Dilwynia sp. 3 (Budawang Range); test_all_matches_TRUE],APC known,genus
+Dryandra,match_20b,Dryandra sp. [Dryandra; test_all_matches_TRUE],APC known,genus
+Actinocladum,match_20c,Actinocladum sp. [Actinocladum; test_all_matches_TRUE],APNI,genus
+Xystidium is very interesting,match_20c,Xystidium sp. [Xystidium is very interesting; test_all_matches_TRUE],APNI,genus
+Zygia outlier genus,match_20c,Zygia sp. [Zygia outlier genus; test_all_matches_TRUE],APNI,genus
+Poaceae (purple stems),match_21a,Poaceae sp. [Poaceae (purple stems); test_all_matches_TRUE],APC accepted,family
+Rutaceae (an unknown species),match_21a,Rutaceae sp. [Rutaceae (an unknown species); test_all_matches_TRUE],APC accepted,family
+Assystasia - pink flower,match_22a,Asystasia sp. [Assystasia - pink flower; test_all_matches_TRUE],APC accepted,genus
+Baarleria maybe alba,match_22a,Barleria sp. [Baarleria maybe alba; test_all_matches_TRUE],APC accepted,genus
+Bankssia serrataxBanksia ericifolia,match_22a,Banksia sp. [Bankssia serrataxBanksia ericifolia; test_all_matches_TRUE],APC accepted,genus
+Achneriia crevifoliaa,match_22b,Achneria sp. [Achneriia crevifoliaa; test_all_matches_TRUE],APC known,genus
+Actinocarpos,match_22b,Actinocarpus sp. [Actinocarpos; test_all_matches_TRUE],APC known,genus
+Drryandra,match_22b,Dryandra sp. [Drryandra; test_all_matches_TRUE],APC known,genus
+Dryandraa,match_22b,Dryandra sp. [Dryandraa; test_all_matches_TRUE],APC known,genus
+Actiniladum sp.,NA,NA,NA,NA
+Ecalypha indica australis,NA,NA,NA,NA
