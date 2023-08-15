@@ -25,7 +25,7 @@ match_taxa <- function(
     fuzzy_matches = TRUE, 
     imprecise_fuzzy_matches = FALSE, 
     APNI_matches = FALSE, 
-    identifier = NA
+    identifier = NA_character_
 ) {
   
   update_na_with <- function(current, new) {
@@ -67,8 +67,8 @@ match_taxa <- function(
   ## These identifier strings are added to the aligned names of taxa that do not match to an APC or APNI species or infra-specific level name.
   taxa$tocheck <- taxa$tocheck %>%
     dplyr::mutate(
-      identifier_string = ifelse(is.na(identifier), NA, paste0(" [", identifier, "]")),
-      identifier_string2 = ifelse(is.na(identifier), NA, paste0("; ", identifier))
+      identifier_string = ifelse(is.na(identifier), NA_character_, paste0(" [", identifier, "]")),
+      identifier_string2 = ifelse(is.na(identifier), NA_character_, paste0("; ", identifier))
     )
   
   ## In the tocheck dataframe, add columns with manipulated versions of the string to match
@@ -410,7 +410,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = NA,
+      taxonomic_ref = NA_character_,
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -600,7 +600,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = NA,
+      taxonomic_ref = NA_character_,
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -1031,7 +1031,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = NA,
+      taxonomic_ref = NA_character_,
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -1296,7 +1296,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = NA,
+      taxonomic_ref = NA_character_,
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " x [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -2010,9 +2010,16 @@ match_taxa <- function(
     )
   
   taxa <- redistribute(taxa)
+
+  taxa$tocheck <- taxa$tocheck %>%
+    dplyr::select(-identifier_string, -identifier_string2)
+  
+  taxa$checked <- taxa$checked %>%
+    dplyr::select(-identifier_string, -identifier_string2)
+  
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
-  
+
   return(taxa)
 }
 
