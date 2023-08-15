@@ -39,7 +39,7 @@ align_taxa <- function(original_name,
                        fuzzy_matches = TRUE, 
                        imprecise_fuzzy_matches = FALSE, 
                        APNI_matches = FALSE,
-                       identifier = NA) {
+                       identifier = NA_character_) {
   
   message("Checking alignments of ", dplyr::n_distinct(original_name, na.rm = TRUE), " taxa\n")
 
@@ -139,7 +139,7 @@ align_taxa <- function(original_name,
   
   # do the actual matching
   taxa <- 
-    match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches = FALSE, identifier) %>%
+    match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches, identifier) %>%
     # reassemble
     dplyr::bind_rows() %>%
     dplyr::mutate(known = !is.na(aligned_name))

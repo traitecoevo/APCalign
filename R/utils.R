@@ -20,7 +20,10 @@
 strip_names <- function(taxon_names) {
   taxon_names %>%
     stringr::str_replace_all("\\.", "") %>%
+    stringr::str_replace_all("\\ \\)", "") %>%
+    stringr::str_replace_all("\\(\\ ", "") %>%
     stringr::str_replace_all("[:punct:]", " ") %>%
+    stringr::str_replace_all("\\,", "") %>%
     stringr::str_replace_all(" var |var$", " ") %>%
     stringr::str_replace_all(" subsp |subsp$", " ") %>%
     stringr::str_replace_all(" v ", " ") %>%

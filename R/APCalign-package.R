@@ -71,6 +71,9 @@ utils::globalVariables(
     "taxonomicStatus",
     "taxonomicStatusClean",
     "taxonomic_ref",
-    "trinomial"
+    "trinomial",
+    "aligned_name_tmp",
+    "identifier_string",
+    "identifier_string2"
   )
 )
