@@ -68,7 +68,8 @@ match_taxa <- function(
   taxa$tocheck <- taxa$tocheck %>%
     dplyr::mutate(
       identifier_string = ifelse(is.na(identifier), NA_character_, paste0(" [", identifier, "]")),
-      identifier_string2 = ifelse(is.na(identifier), NA_character_, paste0("; ", identifier))
+      identifier_string2 = ifelse(is.na(identifier), NA_character_, paste0("; ", identifier)),
+      aligned_name_tmp = NA_character_
     )
   
   ## In the tocheck dataframe, add columns with manipulated versions of the string to match
@@ -2010,15 +2011,12 @@ match_taxa <- function(
     )
   
   taxa <- redistribute(taxa)
-
-  taxa$tocheck <- taxa$tocheck %>%
-    dplyr::select(-identifier_string, -identifier_string2)
-  
-  taxa$checked <- taxa$checked %>%
-    dplyr::select(-identifier_string, -identifier_string2)
   
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
+
+  taxa$tocheck <- taxa$tocheck %>% dplyr::select(-identifier_string, -identifier_string2, -aligned_name_tmp)
+  taxa$checked <- taxa$checked %>% dplyr::select(-identifier_string, -identifier_string2, -aligned_name_tmp)
 
   return(taxa)
 }
