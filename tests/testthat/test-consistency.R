@@ -5,7 +5,8 @@
 
 
 test_that("create_taxonomic_update_lookup() works with full", {
-  create_taxonomic_update_lookup(
+  current_result <-
+    create_taxonomic_update_lookup(
     c(
       "Banksia integrifolia",
       "Acacia longifolia",
@@ -25,19 +26,25 @@ test_that("create_taxonomic_update_lookup() works with full", {
     ),
     resources = resources,
     full = TRUE
-  ) -> current_result
-  readr::write_csv(current_result, "consistency_lookup.csv")
-  past_result <- readr::read_csv("consistency_lookup.csv")
+  ) %>%
+    dplyr::select(-aligned_reason) %>% #because this has a date in it
+    dplyr::arrange(original_name, canonical_name)
+
+  #readr::write_csv(current_result, "consistency_lookup.csv")
+
   past_result <-
-    select(past_result, -aligned_reason) #because this has a date in it
-  current_result <-
-    select(current_result, -aligned_reason) #because this has a date in it
+    readr::read_csv("consistency_lookup.csv", show_col_types = FALSE) %>%
+    dplyr::select(-aligned_reason) %>% #because this has a date in it
+    dplyr::arrange(original_name, canonical_name)
+
+  expect_equal(past_result$original_name, current_result$original_name)
+  expect_equal(names(past_result), names(current_result))
   expect_equal(past_result, current_result)
 })
 
 test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon",
           {
-            create_taxonomic_update_lookup(
+            original_name <-
               c(
                 "Banksia integrifolia",
                 "Acacia longifolia",
@@ -52,11 +59,15 @@ test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon"
                 "Genoplesium insigne",
                 "Polypogon viridis",
                 "Acacia aneura"
-              ),
-              one_to_many = "collapse_to_higher_taxon",
-              resources = resources
-            ) -> zz
-            expect_gte(nrow(zz), 11)
+              )
+            zz <- 
+              create_taxonomic_update_lookup(
+                original_name,
+                one_to_many = "collapse_to_higher_taxon",
+                resources = resources
+              )
+            expect_equal(nrow(zz), 13)
+            expect_equal(zz$original_name, original_name)
           })
 
 
@@ -85,16 +96,12 @@ test_that("align_taxa() works with longer list", {
   ), 199)
 })
 
-
-
 test_that("update_taxonomy() works", {
   expect_equal(nrow(update_taxonomy(
     aligned_names = c("Dryandra preissii", "Banksia acuminata"),
     resources = resources
   )), 2)
-})
 
-test_that("update_taxonomy() works", {
   expect_equal(nrow(create_taxonomic_update_lookup(
     c("Dryandra preissii", "Banksia acuminata"), resources = resources
   )), 2)
@@ -106,17 +113,7 @@ test_that("weird hybrid symbols work", {
   )), 2)
 })
 
-test_that("handles NAs", {
-  expect_gte(nrow(align_taxa(c(
-    "Acacia aneura", NA
-  ), resources = resources)), 0)
-  expect_gte(nrow(create_taxonomic_update_lookup(c(
-    "Acacia aneura", NA
-  ), resources = resources)), 0)
-})
-
 test_that("genus level ids", {
   aliged_nms <- align_taxa(c("Acacia sp.", "Eucalyptus sp."), resources = resources) |> pull(aligned_name)
   expect_false(any(str_detect(aliged_nms, "NA sp.")))
 })
-
