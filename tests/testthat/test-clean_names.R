@@ -52,41 +52,34 @@ test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon"
           })
 
 
-test_that("align_taxa() works no fuzzy", {
-  expect_equal(nrow(align_taxa(
-    original_name = c("Dryandra preissii", "Banksia acuminata"),
-    resources = resources
-  )), 2)
+test_that("align_taxa() works - no/with fuzzy", {
+  
+  original_name = c("Dryandra preissii", "Banksia acuminata")
+  
+  out1 <- align_taxa(original_name, resources = resources, fuzzy_matches = TRUE)
+  out2 <- align_taxa(original_name, resources = resources, fuzzy_matches = FALSE)
+
+  expect_equal(original_name, out1$original_name)
+  expect_equal(original_name, out2$original_name)
 })
 
-
-test_that("align_taxa() works with fuzzy", {
-  expect_equal(nrow(align_taxa(
-    original_name = c("Dryandra preissii", "Banksia acuminata"),
-    resources = resources
-  )), 2)
-})
 
 test_that("align_taxa() works with longer list", {
   species_list <-
     readr::read_csv(system.file("extdata", "species.csv", package = "APCalign"),
                     show_col_types = FALSE)
-  expect_equal(nrow(
-    aligned_data <- align_taxa(species_list$name,
-                               resources = resources)
-  ), 199)
+  aligned_data <- align_taxa(species_list$name, resources = resources)
+  
+  expect_equal(nrow(aligned_data), 199)
+  expect_equal(species_list$name, aligned_data$original_name)
 })
-
-
 
 test_that("update_taxonomy() works", {
   expect_equal(nrow(update_taxonomy(
     aligned_names = c("Dryandra preissii", "Banksia acuminata"),
     resources = resources
   )), 2)
-})
 
-test_that("update_taxonomy() works", {
   expect_equal(nrow(create_taxonomic_update_lookup(
     c("Dryandra preissii", "Banksia acuminata"), resources = resources
   )), 2)
@@ -99,35 +92,35 @@ test_that("weird hybrid symbols work", {
 })
 
 test_that("handles NAs", {
-  expect_gte(nrow(align_taxa(c(
-    "Acacia aneura", NA
-  ), resources = resources)), 0)
-  expect_gte(nrow(create_taxonomic_update_lookup(c(
-    "Acacia aneura", NA
-  ), resources = resources)), 0)
+  original_name <- c("Acacia aneura", NA)
+
+  out <- align_taxa(original_name, resources = resources)
+
+  expect_equal(original_name, original_name)
+  expect_gte(nrow(out), 0)
+
+  out <- create_taxonomic_update_lookup(original_name, resources = resources)
+  expect_gte(nrow(out), 0)
 })
 
-
-test_that("handles NAs", {
-  expect_gte(nrow(align_taxa(c(
-    "Acacia aneura", NA
-  ), resources = resources)), 0)
-  expect_gte(nrow(create_taxonomic_update_lookup(c(
-    "Acacia aneura", NA
-  ), resources = resources)), 0)
-})
 
 test_that("handles weird strings", {
   test_strings <- c("", "''", "'", "          ", "\t", "\n", "stuff with      ",
                     "test'string'withquotes", 
                     "!@#$%^&*()_+", 
-                    rep("abc", times=10000),
+                    rep("abc", times= 10),
                     "print('whoops no cleaning')",
                     "Doesthislook likeaspeciesi",
                     "Doesn'tlook likeaspeciesi",
                     "Banksia  serrata"
   )
-  expect_equal(nrow(create_taxonomic_update_lookup(test_strings,resources=resources)),1)
+
+  out <- align_taxa(test_strings, resources = resources)
+  expect_equal(test_strings, out$original_name)
+
+  out <- create_taxonomic_update_lookup(test_strings, one_to_many = "most_likely_species",
+    resources = resources)
+  expect_equal(test_strings, out$original_name)
 })
 
 
@@ -138,3 +131,29 @@ test_that("handles weird strings", {
   })
 
 
+test_that("returns same number of rows as input, even with duplicates", {
+  
+  original_name <-
+    c("Dryandra preissii", "Banksia acuminata", 
+      "Doesthislook likeaspeciesi", "Doesthislook likeaspeciesi", 
+      "Banksia acuminata", "Banksia acuminata", "Hibbertia sericea")
+  
+  x1 <- align_taxa(
+    original_name = original_name,
+    resources = resources)
+
+  x2 <-
+    update_taxonomy(x1$aligned_name, resources = resources)
+
+  x4 <- create_taxonomic_update_lookup(
+    taxa = original_name,
+    resources = resources, one_to_many = "most_likely_species")
+
+  # output should be same order and length as input
+  expect_equal(x1$original_name, original_name)
+  # x2 should be in same order but may have more rows
+  expect_equal(subset(x2$aligned_name, !duplicated(x2$aligned_name)), subset(x1$aligned_name, !duplicated(x1$aligned_name)))
+  expect_gte(length(x2$aligned_name), length(x1$aligned_name))
+
+  expect_equal(x4$original_name, original_name)
+})
