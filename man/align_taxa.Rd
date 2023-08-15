@@ -13,7 +13,7 @@ align_taxa(
   fuzzy_matches = TRUE,
   imprecise_fuzzy_matches = FALSE,
   APNI_matches = FALSE,
-  identifier = NA
+  identifier = NA_character_
 )
 }
 \arguments{
