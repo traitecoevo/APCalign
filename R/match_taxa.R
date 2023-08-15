@@ -371,34 +371,35 @@ match_taxa <- function(
   # Fuzzy match to APNI-listed genus for taxon names where a double hyphen indicates the plant is an intergrade.
   # For taxon names fitting the pattern, `genus species_A -- species_B` (intergrade) automatically align to genus,
   # since this is the highest taxon rank that can be attached to the plant name.
-  
-  i <-
-    stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- |\\--") &
-    taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonicalName
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate( 
-      taxonomic_ref = "APNI",
-      taxonomic_resolution = "genus", 
-      aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name),
-      aligned_name = ifelse(is.na(identifier_string2),
-                            paste0(aligned_name_tmp, "]"),
-                            paste0(aligned_name_tmp, identifier_string2, "]")
-      ),
-      aligned_reason = paste0(
-        "Fuzzy match to APNI-listed genus. Taxon name includes '--' (double dash) indicating an intergrade between two taxa and taxon can only be aligned to genus-rank (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      alignment_code = "match_03d_intergrade_fuzzy_APNI_genus"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
+  if (APNI_matches == TRUE) {
+    i <-
+      stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- |\\--") &
+      taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonicalName
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate( 
+        taxonomic_ref = "APNI",
+        taxonomic_resolution = "genus", 
+        aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name),
+        aligned_name = ifelse(is.na(identifier_string2),
+                              paste0(aligned_name_tmp, "]"),
+                              paste0(aligned_name_tmp, identifier_string2, "]")
+        ),
+        aligned_reason = paste0(
+          "Fuzzy match to APNI-listed genus. Taxon name includes '--' (double dash) indicating an intergrade between two taxa and taxon can only be aligned to genus-rank (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        alignment_code = "match_03d_intergrade_fuzzy_APNI_genus"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
+  }
+
   # match_03e: Intergrade with unknown genus
   # For taxon names fitting the pattern, `genus species_A -- species_B` (intergrade) automatically align to genus,
   # since this is the highest taxon rank that can be attached to the plant name.
@@ -551,37 +552,38 @@ match_taxa <- function(
   # and can only identify the taxon to genus.
   # For taxon names fitting the pattern, `genus species_A / species_B` ("indecision") automatically align to genus,
   # since this is the highest taxon rank that can be attached to the plant name.
-  
-  i <-
-    (
-      stringr::str_detect(taxa$tocheck$cleaned_name, "[:alpha:]\\/") |
-        stringr::str_detect(taxa$tocheck$cleaned_name, "\\s\\/")
-    ) &
-    taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonicalName
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_ref = "APNI",
-      taxonomic_resolution = "genus",     
-      aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name),
-      aligned_name = ifelse(is.na(identifier_string2),
-                            paste0(aligned_name_tmp, "]"),
-                            paste0(aligned_name_tmp, identifier_string2, "]")
-      ),
-      aligned_reason = paste0(
-        "Fuzzy match to APNI-listed genus. Taxon name includes '/' (slash) indicating an uncertain species identification but an accepted genus and taxon can only be aligned to genus-rank (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      alignment_code = "match_04d_indecision_fuzzy_APNI_genus"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
+  if (APNI_matches == TRUE) {
+    i <-
+      (
+        stringr::str_detect(taxa$tocheck$cleaned_name, "[:alpha:]\\/") |
+          stringr::str_detect(taxa$tocheck$cleaned_name, "\\s\\/")
+      ) &
+      taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonicalName
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_ref = "APNI",
+        taxonomic_resolution = "genus",     
+        aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name),
+        aligned_name = ifelse(is.na(identifier_string2),
+                              paste0(aligned_name_tmp, "]"),
+                              paste0(aligned_name_tmp, identifier_string2, "]")
+        ),
+        aligned_reason = paste0(
+          "Fuzzy match to APNI-listed genus. Taxon name includes '/' (slash) indicating an uncertain species identification but an accepted genus and taxon can only be aligned to genus-rank (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        alignment_code = "match_04d_indecision_fuzzy_APNI_genus"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
+  }
+
   # match_04e: Genus species_A / species_B
   # For taxon names fitting the pattern, `genus species_A / species_B` ("indecision") automatically align to genus,
   # since this is the highest taxon rank that can be attached to the plant name.
@@ -981,36 +983,38 @@ match_taxa <- function(
   # since this is the highest taxon rank that can be attached to the plant name.
   # This alignment can only be made after exact matches of complete taxon names to APC/APNI + fuzzy matches to APC are complete,
   # because there are APC/APNI phrase names that include "sp. aff.".
-  i <-
-    (
-      stringr::str_detect(taxa$tocheck$cleaned_name, "[Aa]ff[\\.\\s]") |
-        stringr::str_detect(taxa$tocheck$cleaned_name, " affinis ")
-    ) &
-    taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonicalName
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_ref = "APNI",
-      taxonomic_resolution = "genus",
-      aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name),
-      aligned_name = ifelse(is.na(identifier_string2),
-                            paste0(aligned_name_tmp, "]"),
-                            paste0(aligned_name_tmp, identifier_string2, "]")
-      ),
-      aligned_reason = paste0(
-        "Fuzzy match to APNI-listed genus. Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      alignment_code = "match_09d_species_affinis_APNI_fuzzy"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
+  if (APNI_matches == TRUE) {
+    i <-
+      (
+        stringr::str_detect(taxa$tocheck$cleaned_name, "[Aa]ff[\\.\\s]") |
+          stringr::str_detect(taxa$tocheck$cleaned_name, " affinis ")
+      ) &
+      taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonicalName
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_ref = "APNI",
+        taxonomic_resolution = "genus",
+        aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name),
+        aligned_name = ifelse(is.na(identifier_string2),
+                              paste0(aligned_name_tmp, "]"),
+                              paste0(aligned_name_tmp, identifier_string2, "]")
+        ),
+        aligned_reason = paste0(
+          "Fuzzy match to APNI-listed genus. Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        alignment_code = "match_09d_species_affinis_APNI_fuzzy"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
+  }
+
   # match_09e: `genus aff. species` taxa
   # Taxon names where "aff" indicates the taxon has an affinity to another taxon, but isn't the other taxon, 
   # when an exact or fuzzy genus-level match to APC & APNI genera cannot be made.
@@ -1251,32 +1255,34 @@ match_taxa <- function(
   # since this is the highest taxon rank that can be attached to the plant name.
   # This alignment can only be made after exact matches of complete taxon names to APC/APNI + fuzzy matches to APC are complete,
   # because there are hybrid taxa listed in both APC & APNI.
-  i <-
-    stringr::str_detect(taxa$tocheck$cleaned_name, " [xX] ") &
-    taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonicalName
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_ref = "APNI",
-      taxonomic_resolution = "genus",
-      aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " x [", cleaned_name),
-      aligned_name = ifelse(is.na(identifier_string2),
-                            paste0(aligned_name_tmp, "]"),
-                            paste0(aligned_name_tmp, identifier_string2, "]")
-      ),
-      aligned_reason = paste0(
-        "Fuzzy match to APNI-listed genus. Taxon name includes ' x ' indicating a hybrid taxon and taxon can only be aligned to genus-rank (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      alignment_code = "match_11d_hybrid_taxon_APNI_fuzzy"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
+  if (APNI_matches == TRUE) {
+    i <-
+      stringr::str_detect(taxa$tocheck$cleaned_name, " [xX] ") &
+      taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonicalName
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_ref = "APNI",
+        taxonomic_resolution = "genus",
+        aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " x [", cleaned_name),
+        aligned_name = ifelse(is.na(identifier_string2),
+                              paste0(aligned_name_tmp, "]"),
+                              paste0(aligned_name_tmp, identifier_string2, "]")
+        ),
+        aligned_reason = paste0(
+          "Fuzzy match to APNI-listed genus. Taxon name includes ' x ' indicating a hybrid taxon and taxon can only be aligned to genus-rank (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        alignment_code = "match_11d_hybrid_taxon_APNI_fuzzy"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
+  }
   
   # match_11e: hybrid taxa
   # Taxon names where " x " indicates taxon is a hybrid, but an exact or fuzzy genus-level match to APC & APNI genera cannot be made.
