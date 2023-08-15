@@ -10,7 +10,8 @@ create_taxonomic_update_lookup(
   version = default_version(),
   one_to_many = "return_all",
   full = FALSE,
-  APNI_matches = FALSE,
+  APNI_matches = TRUE,
+  identifier = NA_character_,
   resources = load_taxonomic_resources(stable_or_current_data = stable_or_current_data,
     version = version),
   output = NULL
@@ -28,6 +29,8 @@ create_taxonomic_update_lookup(
 \item{full}{logical for whether the full lookup table is returned or just the two key columns}
 
 \item{APNI_matches}{Name matches to the APNI (Australian Plant Names Index) are turned off as a default.}
+
+\item{identifier}{A dataset, location or other identifier, which defaults to NA.}
 
 \item{resources}{These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using \code{\link{load_taxonomic_resources}} separately and pass the data in.}
 

@@ -24,7 +24,7 @@ match_taxa <- function(
     fuzzy_rel_dist = 0.2, 
     fuzzy_matches = TRUE, 
     imprecise_fuzzy_matches = FALSE, 
-    APNI_matches = FALSE, 
+    APNI_matches = TRUE, 
     identifier = NA_character_
 ) {
   
