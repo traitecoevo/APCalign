@@ -123,11 +123,11 @@ test_that("handles weird strings", {
   expect_equal(test_strings, out$original_name)
 })
 
-
+# todo revisit this test output again once genus alignments updated. Right now the APNI list includes both APNI taxa and all genus-level names
   test_that("handles APNI taxa and genus level IDs",{
     zz<-create_taxonomic_update_lookup(c("Acacia sp.", "Dendropanax amplifolius",
-                                        "Acanthopanax divaricatum", "Eucalyptus sp."), resources=resources)
-    expect_gte(nrow(zz), 2)
+                                        "Acanthopanax divaricatum", "Eucalyptus sp."), resources = resources)
+    expect_gte(nrow(zz), 4)
   })
 
 

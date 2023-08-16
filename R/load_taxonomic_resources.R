@@ -54,7 +54,10 @@ load_taxonomic_resources <-
       higher_classification = higherClassification,
       nomenclatural_code = nomenclaturalCode,
       dataset_name = datasetName
-      )
+      ) %>%
+    mutate(
+      genus = stringr::word(canonical_name, 1)
+    )
 
   taxonomic_resources$APNI <- taxonomic_resources$APNI %>%
     rename(
@@ -69,7 +72,10 @@ load_taxonomic_resources <-
       nomenclatural_code = nomenclaturalCode,
       dataset_name = datasetName,
       name_element = nameElement
-      )
+      ) %>%
+    mutate(
+      genus = stringr::word(canonical_name, 1)
+    )
 
     APC_tmp <-
       taxonomic_resources$APC %>%
@@ -81,7 +87,8 @@ load_taxonomic_resources <-
                     taxon_ID,
                     scientific_name_ID,
                     name_type,
-                    taxon_rank) %>%
+                    taxon_rank,
+                    genus) %>%
       dplyr::mutate(
         stripped_canonical = strip_names(canonical_name),
         ## Todo: rename stripped_canonical2, state purpose
@@ -106,11 +113,11 @@ load_taxonomic_resources <-
       APC_tmp %>%
       dplyr::filter(taxonomic_status == "accepted") %>%
       dplyr::mutate(taxonomic_reference = "APC accepted")
+    
     taxonomic_resources[["APC list (known names)"]] <-
       APC_tmp %>%
       dplyr::filter(taxonomic_status != "accepted") %>%
       dplyr::mutate(taxonomic_reference= "APC known")
-    
     
     # Repeated from above - bionomial, tronomials etc
     taxonomic_resources[["APNI names"]] <-
@@ -140,7 +147,6 @@ load_taxonomic_resources <-
       dplyr::arrange(canonical_name)
     
     ## Todo: do we need all this, or only genera_all
-    
     taxonomic_resources[["genera_accepted"]] <-
       taxonomic_resources$APC %>%
       dplyr::select(
@@ -151,7 +157,8 @@ load_taxonomic_resources <-
         taxon_ID,
         scientific_name_ID,
         name_type,
-        taxon_rank
+        taxon_rank,
+        genus
       ) %>%
       dplyr::filter(taxon_rank %in% c("Genus"), taxonomic_status == "accepted") %>%
       dplyr::mutate(taxonomic_reference= "APC accepted")
@@ -166,7 +173,8 @@ load_taxonomic_resources <-
         taxon_ID,
         scientific_name_ID,
         name_type,
-        taxon_rank
+        taxon_rank,
+        genus
       ) %>%
       dplyr::filter(taxon_rank %in% c("Genus")) %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$genera_accepted$canonical_name) %>%
@@ -181,7 +189,8 @@ load_taxonomic_resources <-
         taxonomic_status,
         scientific_name_ID,
         name_type,
-        taxon_rank
+        taxon_rank,
+        genus
       ) %>%
       dplyr::filter(taxon_rank %in% c("Genus")) %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$APC$canonical_name) %>%

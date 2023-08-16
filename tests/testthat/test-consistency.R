@@ -27,14 +27,14 @@ test_that("create_taxonomic_update_lookup() works with full", {
     resources = resources,
     full = TRUE
   ) %>%
-    dplyr::select(-aligned_reason) %>% #because this has a date in it
+    #dplyr::select(-aligned_reason) %>% #because this has a date in it
     dplyr::arrange(original_name, canonical_name)
 
   #readr::write_csv(current_result, "consistency_lookup.csv")
 
   past_result <-
     readr::read_csv("consistency_lookup.csv", show_col_types = FALSE) %>%
-    dplyr::select(-aligned_reason) %>% #because this has a date in it
+    #dplyr::select(-aligned_reason) %>% #because this has a date in it
     dplyr::arrange(original_name, canonical_name)
 
   expect_equal(past_result$original_name, current_result$original_name)
@@ -71,7 +71,7 @@ test_that("taxon name alignment matches and updates work as expected", {
 
   expect_equal(archived_values$aligned_name, current_match_align_values$aligned_name)
   expect_equal(archived_values$taxon_rank, current_match_align_values$taxon_rank)
-  expect_equal(archived_values$taxonomic_reference, current_match_align_values$taxonomic_ref)
+  expect_equal(archived_values$taxonomic_reference, current_match_align_values$taxonomic_reference)
   expect_equal(archived_values$alignment_code, 
                 stringr::str_extract(current_match_align_values$alignment_code, "match_[:digit:][:digit:][:alpha:]"))     
 

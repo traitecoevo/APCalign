@@ -24,11 +24,12 @@
 #'   \item \code{taxonomic_status_clean}: the taxonomic status of the updated taxon.
 #'   \item \code{alternative_taxonomic_status_clean}: the alternative taxonomic status for the input name, if any.
 #'   \item \code{accepted_name_usage_ID}: the unique identifier for the accepted name of the input name.
-#'   \item \code{canonical_name}: the accepted scientific name for the input name.
-#'   \item \code{scientific_name_authorship}: the authorship information for the accepted name.
-#'   \item \code{taxon_rank}: the taxonomic rank of the accepted name.
-#'   \item \code{taxonomic_status}: the taxonomic status of the accepted name.
-#'   \item \code{family}: the family of the accepted name.
+#'   \item \code{canonical_name}: the accepted (or known) scientific name for the input name.
+#'   \item \code{scientific_name_authorship}: the authorship information for the accepted (or known) name.
+#'   \item \code{taxon_rank}: the taxonomic rank of the accepted (or known) name.
+#'   \item \code{taxonomic_status}: the taxonomic status of the accepted (or known) name.
+#'   \item \code{genus}: the genus of the accepted (or known) name.
+#'   \item \code{family}: the family of the accepted (or known) name.
 #'   \item \code{subclass}: the subclass of the accepted name.
 #'   \item \code{taxon_distribution}: the distribution of the accepted name.
 #'   \item \code{taxon_ID}: an identifier for a specific taxon concept.
@@ -95,6 +96,7 @@ update_taxonomy <- function(aligned_names,
           canonical_name,
           taxonomic_status,
           scientific_name_authorship,
+          #genus,
           family,
           subclass,
           taxon_distribution,
@@ -125,6 +127,7 @@ update_taxonomy <- function(aligned_names,
     # I've just added the NA replacement as a placeholder
     dplyr::mutate(taxonomic_status_clean = ifelse(is.na(taxonomic_status_clean), "APNI_value", taxonomic_status_clean)) %>%
     dplyr::filter(taxonomic_status_clean != "misapplied") %>%
+    dplyr::mutate(taxonomic_status_clean = ifelse(taxonomic_status_clean == "APNI_value", NA, taxonomic_status_clean)) %>%
     dplyr::ungroup() %>%
     dplyr::select(
       aligned_name,
@@ -138,6 +141,7 @@ update_taxonomy <- function(aligned_names,
       scientific_name_ID,
       taxon_rank,
       taxonomic_status,
+      #genus,
       family,
       subclass,
       taxon_distribution,
@@ -156,10 +160,13 @@ update_taxonomy <- function(aligned_names,
     dplyr::select(aligned_name) %>%
     dplyr::left_join(
       by = "aligned_name",
+      # XXX there are 350 names that match this pattern in APNI and they are designated as `Species` rank, not `Genus` rank, so not clear why they are filtered out
+      # XXX this is part of the reason filtering/matching should use `taxon_rank` more
       resources$APNI %>% dplyr::filter(name_element != "sp.") %>%
         dplyr::select(
           aligned_name = canonical_name,
           scientific_name_ID,
+          #genus,
           family,
           taxon_rank,
           taxonomic_status
@@ -181,7 +188,7 @@ update_taxonomy <- function(aligned_names,
     dplyr::filter(!is.na(scientific_name_ID))
 
   # if matches in APC and APNI, combine these and return
-  if (nrow(taxa_APNI) > 0) {
+  if (nrow(taxa_APNI) > 0 & nrow(taxa_APC) > 0) {
     taxa_out <-
       dplyr::bind_rows(taxa_APC,
                        taxa_APNI)
