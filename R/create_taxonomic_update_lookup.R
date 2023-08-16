@@ -43,9 +43,7 @@ create_taxonomic_update_lookup <- function(taxa,
     align_taxa(taxa, resources = resources, APNI_matches = APNI_matches)
 
   updated_data <- 
-    update_taxonomy(aligned_data$aligned_name, resources = resources, output = output) %>%
-    # todo: why are we renaming this?
-    dplyr::rename(canonical_name = canonicalName)
+    update_taxonomy(aligned_data$aligned_name, resources = resources, output = output)
 
   if(one_to_many == "most_likely_species") {
     updated_data <-  
@@ -54,7 +52,7 @@ create_taxonomic_update_lookup <- function(taxa,
       # todo: should this be for all outputs? Move to update_taxonomy
       # take first species, this is most likely, based on ordering determined in update_taxonomy
       dplyr::mutate(
-        possible_matches = sprintf("%s (%s)", canonical_name, taxonomicStatusClean) %>% paste(collapse = "; ")
+        possible_matches = sprintf("%s (%s)", canonical_name, taxonomic_status_clean) %>% paste(collapse = "; ")
       ) %>%
       # take first record, this is most likely as we've set a preferred order above
       dplyr::slice(1) %>%
@@ -74,7 +72,7 @@ create_taxonomic_update_lookup <- function(taxa,
       # todo - why isn't this source APNI?
       source = ifelse(known & is.na(source), "known_name_but_not_apc_accepted", source),
       # todo - do we want to keep this?
-      taxonomicStatusClean = ifelse(known & is.na(taxonomicStatusClean), "known_name_but_not_apc_accepted", taxonomicStatusClean)
+      taxonomic_status_clean = ifelse(known & is.na(taxonomic_status_clean), "known_name_but_not_apc_accepted", taxonomic_status_clean)
     ) %>%
     dplyr::select(-known)
   
@@ -91,10 +89,10 @@ create_taxonomic_update_lookup <- function(taxa,
         aligned_name,
         # todo - why are we renaming these?
         accepted_name = canonical_name,
-        taxon_rank = taxonRank,
-        author = scientificNameAuthorship,
+        taxon_rank,
+        author = scientific_name_authorship,
         aligned_reason,
-        updated_reason = taxonomicStatusClean
+        updated_reason = taxonomic_status_clean
       )
   }
 
@@ -130,7 +128,7 @@ collapse_to_higher_taxon <-
       dplyr::summarise(
         apc_names = find_mrct(canonical_name, resources = resources),
         aligned_reason = paste(unique(aligned_reason), collapse = " and "),
-        taxonomicStatus = paste(unique(taxonomicStatusClean), collapse = " and "),
+        taxonomic_status = paste(unique(taxonomic_status_clean), collapse = " and "),
         source = paste(unique(source), collapse = " and "),
         number_of_collapsed_taxa = n()
       )
@@ -154,10 +152,10 @@ find_mrct <- function(taxa,
                                                            version = version)) {
   # Filter the resources data to only include the taxa of interest
   relevant_taxa <-
-    dplyr::filter(resources$APC, resources$APC$canonicalName %in% taxa)
+    dplyr::filter(resources$APC, resources$APC$canonical_name %in% taxa)
   
   # Check different scenarios to find the most recent common taxon
-  unique_canonical_names <- unique(relevant_taxa$canonicalName)
+  unique_canonical_names <- unique(relevant_taxa$canonical_name)
   unique_genus_species <-
     unique(stringr::word(unique_canonical_names, 1, 2))
   unique_genus <-

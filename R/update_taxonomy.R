@@ -21,13 +21,13 @@
 #'   \item \code{aligned_name}: the input plant name.
 #'   \item \code{source}: the source of the updated taxonomic information (APC or APNI).
 #'   \item \code{taxonIDClean}: the unique identifier for the updated taxon.
-#'   \item \code{taxonomicStatusClean}: the taxonomic status of the updated taxon.
-#'   \item \code{alternativeTaxonomicStatusClean}: the alternative taxonomic status for the input name, if any.
-#'   \item \code{acceptedNameUsageID}: the unique identifier for the accepted name of the input name.
-#'   \item \code{canonicalName}: the accepted scientific name for the input name.
-#'   \item \code{scientificNameAuthorship}: the authorship information for the accepted name.
-#'   \item \code{taxonRank}: the taxonomic rank of the accepted name.
-#'   \item \code{taxonomicStatus}: the taxonomic status of the accepted name.
+#'   \item \code{taxonomic_status_clean}: the taxonomic status of the updated taxon.
+#'   \item \code{alternative_taxonomic_status_clean}: the alternative taxonomic status for the input name, if any.
+#'   \item \code{accepted_name_usage_ID}: the unique identifier for the accepted name of the input name.
+#'   \item \code{canonical_name}: the accepted scientific name for the input name.
+#'   \item \code{scientific_name_authorship}: the authorship information for the accepted name.
+#'   \item \code{taxon_rank}: the taxonomic rank of the accepted name.
+#'   \item \code{taxonomic_status}: the taxonomic status of the accepted name.
 #'   \item \code{family}: the family of the accepted name.
 #'   \item \code{subclass}: the subclass of the accepted name.
 #'   \item \code{taxonDistribution}: the distribution of the accepted name.
@@ -71,38 +71,38 @@ update_taxonomy <- function(aligned_names,
     # match names against names in APC list
     dplyr::left_join(
       by = "aligned_name",
-      resources$APC %>% dplyr::filter(!grepl("sp\\.$", canonicalName)) %>%
+      resources$APC %>% dplyr::filter(!grepl("sp\\.$", canonical_name)) %>%
         dplyr::select(
-          aligned_name = canonicalName,
+          aligned_name = canonical_name,
           taxonIDClean = taxonID,
-          taxonomicStatusClean = taxonomicStatus,
-          acceptedNameUsageID
+          taxonomic_status_clean = taxonomic_status,
+          accepted_name_usage_ID
         )
     ) %>%
     dplyr::distinct() %>%
     dplyr::mutate(source = ifelse(!is.na(taxonIDClean), "APC", NA)) %>%
     # Now find accepted names for each name in the list (sometimes they are the same)
     dplyr::left_join(
-      by = "acceptedNameUsageID",
+      by = "accepted_name_usage_ID",
       resources$APC %>%
-        dplyr::filter(taxonomicStatus == "accepted") %>%
+        dplyr::filter(taxonomic_status == "accepted") %>%
         dplyr::select(
-          acceptedNameUsageID,
-          canonicalName,
-          taxonomicStatus,
-          scientificNameAuthorship,
+          accepted_name_usage_ID,
+          canonical_name,
+          taxonomic_status,
+          scientific_name_authorship,
           family,
           subclass,
           taxonDistribution,
-          taxonRank,
+          taxon_rank,
           ccAttributionIRI
         )
     ) %>%
     # Some species have multiple matches. We will prefer the accepted usage, but record others if they exists
     # To do this we define the order we want variables to sort by, with accepted at the top
     dplyr::mutate(my_order =  forcats::fct_relevel(
-      taxonomicStatusClean,
-      subset(preferred_order, preferred_order %in%  taxonomicStatusClean)
+      taxonomic_status_clean,
+      subset(preferred_order, preferred_order %in%  taxonomic_status_clean)
     )) %>%
     dplyr::arrange(aligned_name, my_order) %>%
     # For each species, keep the first record (accepted if present) and
@@ -110,26 +110,26 @@ update_taxonomy <- function(aligned_names,
     dplyr::group_by(aligned_name) %>%
     dplyr::mutate(
       # todo: move this outside function to higher level
-      alternativeTaxonomicStatusClean = ifelse(
-        taxonomicStatusClean[1] == "accepted",
-        taxonomicStatusClean %>% unique() %>%  subset(. , . != "accepted") %>% paste0(collapse = " | ") %>% dplyr::na_if(""),
+      alternative_taxonomic_status_clean = ifelse(
+        taxonomic_status_clean[1] == "accepted",
+        taxonomic_status_clean %>% unique() %>%  subset(. , . != "accepted") %>% paste0(collapse = " | ") %>% dplyr::na_if(""),
         NA
       )
     ) %>%
     #dplyr::slice(1:5) %>%
-    dplyr::filter(taxonomicStatusClean != "misapplied") %>%
+    dplyr::filter(taxonomic_status_clean != "misapplied") %>%
     dplyr::ungroup() %>%
     dplyr::select(
       aligned_name,
       source,
       taxonIDClean,
-      taxonomicStatusClean,
-      alternativeTaxonomicStatusClean,
-      acceptedNameUsageID,
-      canonicalName,
-      scientificNameAuthorship,
-      taxonRank,
-      taxonomicStatus,
+      taxonomic_status_clean,
+      alternative_taxonomic_status_clean,
+      accepted_name_usage_ID,
+      canonical_name,
+      scientific_name_authorship,
+      taxon_rank,
+      taxonomic_status,
       family,
       subclass,
       taxonDistribution,
@@ -144,16 +144,16 @@ update_taxonomy <- function(aligned_names,
   # Now check against APNI for any species not found in APC
   taxa_APNI <-
     taxa_out %>%
-    dplyr::filter(is.na(canonicalName))  %>%
+    dplyr::filter(is.na(canonical_name))  %>%
     dplyr::select(aligned_name) %>%
     dplyr::left_join(
       by = "aligned_name",
       resources$APNI %>% dplyr::filter(nameElement != "sp.") %>%
         dplyr::select(
-          aligned_name = canonicalName,
-          taxonIDClean = scientificNameID,
+          aligned_name = canonical_name,
+          scientific_name_ID,
           family,
-          taxonRank
+          taxon_rank
         )
     ) %>%
     dplyr::group_by(aligned_name) %>%
@@ -164,9 +164,9 @@ update_taxonomy <- function(aligned_names,
     dplyr::ungroup() %>%
     dplyr::mutate(
       source = ifelse(is.na(taxonIDClean), NA, "APNI"),
-      canonicalName = ifelse(is.na(taxonIDClean), NA, aligned_name),
-      taxonomicStatusClean = ifelse(is.na(taxonIDClean), "unknown", "unplaced"),
-      taxonomicStatus = taxonomicStatusClean
+      canonical_name = ifelse(is.na(taxonIDClean), NA, aligned_name),
+      taxonomic_status_clean = ifelse(is.na(taxonIDClean), "unknown", "unplaced"),
+      taxonomic_status = taxonomic_status_clean
     ) %>%
     dplyr::filter(!is.na(taxonIDClean))
 
@@ -199,7 +199,7 @@ update_taxonomy <- function(aligned_names,
     # Now unnest
     tidyr::unnest("data") %>%
     # some extra useful info
-    dplyr::mutate(genus = stringr::word(canonicalName, 1, 1))
+    dplyr::mutate(genus = stringr::word(canonical_name, 1, 1))
   
   if (!is.null(output)) {
     readr::write_csv(taxa_out2, output)

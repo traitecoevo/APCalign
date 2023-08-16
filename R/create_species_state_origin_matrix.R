@@ -31,8 +31,8 @@ create_species_state_origin_matrix <- function(resources = load_taxonomic_resour
 #' @noRd
 filter_data_to_accepted_species <- function(resources) {
   dplyr::filter(resources$APC,
-                taxonRank == "Species" &
-                  taxonomicStatus == "accepted")
+                taxon_rank == "Species" &
+                  taxonomic_status == "accepted")
 }
 
 #' @noRd
@@ -48,7 +48,7 @@ identify_places <- function(sep_state_data) {
 
 #' @noRd
 create_species_df <- function(apc_places, apc_species) {
-  species_df <- dplyr::tibble(species = apc_species$scientificName)
+  species_df <- dplyr::tibble(species = apc_species$scientific_name)
   for (i in 1:length(apc_places)) {
     species_df <- dplyr::bind_cols(species_df, NA, .name_repair = "minimal")
   }
