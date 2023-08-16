@@ -42,19 +42,24 @@ test_that("create_taxonomic_update_lookup() works with full", {
   expect_equal(past_result, current_result)
 })
 
-test_that("taxon name alignment matches in match_taxa() and align_taxa() work as expected", {
+test_that("taxon name alignment matches and updates work as expected", {
 
-  archived_test_matches_alignments <- 
-    readr::read_csv("test_matches_alignments.csv", show_col_types = FALSE) %>%
+  archived_values <- 
+    readr::read_csv("test_matches_alignments_updates.csv", show_col_types = FALSE) %>%
     dplyr::select(
-      original_name, alignment_code_all_matches_TRUE, 
-      aligned_name_all_matches_TRUE, taxon_rank_all_matches_TRUE, taxonomic_reference_all_matches_TRUE
+      original_name, 
+      alignment_code = alignment_code_all_matches_TRUE, 
+      aligned_name = aligned_name_all_matches_TRUE,
+      taxon_rank = taxon_rank_all_matches_TRUE,
+      taxonomic_reference = taxonomic_reference_all_matches_TRUE,
+      updated_name,
+      updated_name_passes
     ) %>%
-    dplyr::arrange(original_name, aligned_name_all_matches_TRUE)
+    dplyr::arrange(original_name, aligned_name)
       
-  current_test_matches_alignments <- 
+  current_match_align_values <- 
     align_taxa(
-      original_name = archived_test_matches_alignments$original_name, 
+      original_name = archived_values$original_name, 
       resources = resources, 
       fuzzy_abs_dist = 3, 
       fuzzy_rel_dist = 0.2, 
@@ -64,26 +69,30 @@ test_that("taxon name alignment matches in match_taxa() and align_taxa() work as
       identifier = "test_all_matches_TRUE"
     )
 
-  expect_equal(archived_test_matches_alignments$aligned_name_all_matches_TRUE, current_test_matches_alignments$aligned_name)
-  expect_equal(archived_test_matches_alignments$taxon_rank_all_matches_TRUE, current_test_matches_alignments$taxonomic_resolution)
-  expect_equal(archived_test_matches_alignments$taxonomic_reference_all_matches_TRUE, current_test_matches_alignments$taxonomic_ref)
-  expect_equal(archived_test_matches_alignments$alignment_code_all_matches_TRUE, 
-                stringr::str_extract(current_test_matches_alignments$alignment_code, "match_[:digit:][:digit:][:alpha:]"))     
+  expect_equal(archived_values$aligned_name, current_match_align_values$aligned_name)
+  expect_equal(archived_values$taxon_rank, current_match_align_values$taxonomic_resolution)
+  expect_equal(archived_values$taxonomic_reference, current_match_align_values$taxonomic_ref)
+  expect_equal(archived_values$alignment_code, 
+                stringr::str_extract(current_match_align_values$alignment_code, "match_[:digit:][:digit:][:alpha:]"))     
 
-  current_test_matches_alignments <- 
+  current_update_values <- 
     create_taxonomic_update_lookup(
-      archived_test_matches_alignments$original_name, 
+      archived_values$original_name, 
       resources = resources,
-      full=TRUE,
+      full = TRUE,
       imprecise_fuzzy_matches = TRUE,
       identifier = "test_all_matches_TRUE",
       one_to_many = "most_likely_species"
     )
   
-  # todo - this first part duplicates test above, but without checking codes, as these aren';t available via create_taxonomic_update_lookup
-  expect_equal(archived_test_matches_alignments$aligned_name_all_matches_TRUE, current_test_matches_alignments$aligned_name)
-  #todo - are the updated names correct?
-  #expect_equal(archived_test_matches_alignments$updated_name, current_test_matches_alignments$updated_name)
+  current_update_values <- current_update_values %>% 
+    left_join(archived_values %>% select(original_name, updated_name, updated_name_passes), by = "original_name") %>% 
+    mutate(test_column = ifelse(canonical_name == updated_name, TRUE, FALSE)) %>% 
+    mutate(test_column = ifelse(is.na(canonical_name) & is.na(updated_name), TRUE, test_column)) %>%
+    mutate(test_column = ifelse(is.na(test_column), FALSE, test_column))
+  
+  expect_equal(archived_values$updated_name_passes, current_update_values$test_column)
+  expect_equal(archived_values$aligned_name, current_update_values$aligned_name)
 })
 
 test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon",
