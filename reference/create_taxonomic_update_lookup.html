@@ -72,7 +72,9 @@
 <span>  version <span class="op">=</span> <span class="fu">default_version</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  one_to_many <span class="op">=</span> <span class="st">"return_all"</span>,</span>
 <span>  full <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  APNI_matches <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  APNI_matches <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  imprecise_fuzzy_matches <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  identifier <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
 <span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>stable_or_current_data <span class="op">=</span> <span class="va">stable_or_current_data</span>,</span>
 <span>    version <span class="op">=</span> <span class="va">version</span><span class="op">)</span>,</span>
 <span>  output <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -103,6 +105,14 @@
 
 <dt>APNI_matches</dt>
 <dd><p>Name matches to the APNI (Australian Plant Names Index) are turned off as a default.</p></dd>
+
+
+<dt>imprecise_fuzzy_matches</dt>
+<dd><p>Imprecise fuzzy matches are turned off as a default.</p></dd>
+
+
+<dt>identifier</dt>
+<dd><p>A dataset, location or other identifier, which defaults to NA.</p></dd>
 
 
 <dt>resources</dt>
