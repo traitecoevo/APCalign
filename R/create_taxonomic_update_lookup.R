@@ -76,8 +76,8 @@ create_taxonomic_update_lookup <- function(taxa,
       updated_data %>% filter(!is.na(aligned_name)) %>% distinct()
     ) %>%
     dplyr::mutate(
-      # todo - why isn't this source APNI?
-      taxonomic_reference = ifelse(known & is.na(taxonomic_reference), "known_name_but_not_apc_accepted", source),
+      # todo - why isn't this source APNI? XXX Lizzy agrees
+      taxonomic_reference = ifelse(known & is.na(taxonomic_reference), "known_name_but_not_apc_accepted", taxonomic_reference),
       # todo - do we want to keep this?
       taxonomic_status_clean = ifelse(known & is.na(taxonomic_status_clean), "known_name_but_not_apc_accepted", taxonomic_status_clean)
     ) %>%

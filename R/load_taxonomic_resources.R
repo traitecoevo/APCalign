@@ -38,6 +38,7 @@ load_taxonomic_resources <-
   taxonomic_resources$APC <- taxonomic_resources$APC %>%
     rename(
       taxon_ID = taxonID,
+      taxon_rank = taxonRank,
       name_type = nameType,
       taxonomic_status = taxonomicStatus,
       pro_parte = proParte,
@@ -59,15 +60,12 @@ load_taxonomic_resources <-
     rename(
       name_type = nameType,
       taxonomic_status = taxonomicStatus,
-      pro_parte = proParte,
+      taxon_rank = taxonRank,
       scientific_name = scientificName,
       scientific_name_ID = scientificNameID,
       canonical_name = canonicalName,
       scientific_name_authorship = scientificNameAuthorship,
       taxon_rank_sort_order = taxonRankSortOrder,
-      taxon_remarks = taxonRemarks,
-      taxon_distribution = taxonDistribution,
-      higher_classification = higherClassification,
       nomenclatural_code = nomenclaturalCode,
       dataset_name = datasetName
       )

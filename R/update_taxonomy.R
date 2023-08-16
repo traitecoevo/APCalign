@@ -70,19 +70,20 @@ update_taxonomy <- function(aligned_names,
   
   taxa_out <-
     tibble::tibble(aligned_name = aligned_names %>% unique %>% sort) %>%
+    ## todo XXXX why aren't we bringing across taxon_rank and taxonomic_reference from aligned_names. Now they have to be recreated when they already exist XXXX 
     # match names against names in APC list
     dplyr::left_join(
       by = "aligned_name",
       resources$APC %>% dplyr::filter(!grepl("sp\\.$", canonical_name)) %>%
         dplyr::select(
           aligned_name = canonical_name,
-          taxon_ID_clean = taxonID,
+          taxon_ID_clean = taxon_ID,
           taxonomic_status_clean = taxonomic_status,
           accepted_name_usage_ID
         )
     ) %>%
     dplyr::distinct() %>%
-    dplyr::mutate(source = ifelse(!is.na(taxon_ID_clean), "APC", NA)) %>%
+    dplyr::mutate(taxonomic_reference = ifelse(!is.na(taxon_ID_clean), "APC", NA)) %>%
     # Now find accepted names for each name in the list (sometimes they are the same)
     dplyr::left_join(
       by = "accepted_name_usage_ID",
@@ -160,12 +161,13 @@ update_taxonomy <- function(aligned_names,
     ) %>%
     dplyr::group_by(aligned_name) %>%
     dplyr::mutate(
-      taxon_ID_clean = paste(taxon_ID_clean, collapse = " ") %>% dplyr::na_if("NA"),
+      taxon_ID_clean = NA_character_,
       family = ifelse(dplyr::n_distinct(family) > 1, NA, family[1])
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
       taxonomic_reference = ifelse(is.na(taxon_ID_clean), NA, "APNI"),
+      #todo is this the line where we should be adding APNI names XXX
       canonical_name = ifelse(is.na(taxon_ID_clean), NA, aligned_name),
       taxonomic_status_clean = ifelse(is.na(taxon_ID_clean), "unknown", "unplaced"),
       taxonomic_status = taxonomic_status_clean
