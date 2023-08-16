@@ -70,7 +70,7 @@ utils::globalVariables(
     "taxonRank",
     "taxonomicStatus",
     "taxonomicStatusClean",
-    "taxonomic_ref",
+    "taxonomic_reference,",
     "trinomial",
     "aligned_name_tmp",
     "identifier_string",

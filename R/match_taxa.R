@@ -60,7 +60,7 @@ match_taxa <- function(
   if (APNI_matches == TRUE) {
     resources$genera_all2 <- resources$genera_all
   } else {
-    resources$genera_all2 <- resources$genera_all %>% filter(taxonomic_ref != "APNI")
+    resources$genera_all2 <- resources$genera_all %>% filter(taxonomic_reference != "APNI")
   }
   
   ## Repeatedly used identifier strings are created. 
@@ -123,7 +123,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
+      taxonomic_reference = resources$genera_all2$taxonomic_reference[ii],
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(resources$genera_all2$canonicalName[ii], " sp."),
       aligned_name = ifelse(is.na(identifier_string),
@@ -132,7 +132,7 @@ match_taxa <- function(
       ),
       aligned_reason = paste0(
         "Exact match of taxon name ending with `sp.` to an ",
-        taxonomic_ref,
+        taxonomic_reference,
         " genus (",
         Sys.Date(),
         ")"
@@ -168,7 +168,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = resources$genera_accepted$taxonomic_ref[ii],
+      taxonomic_reference = resources$genera_accepted$taxonomic_reference[ii],
       taxonomic_resolution = "genus",      
       aligned_name_tmp = 
         paste0(resources$genera_accepted$canonicalName[ii], " sp. [", cleaned_name),
@@ -211,7 +211,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = resources$genera_known$taxonomic_ref[ii],
+      taxonomic_reference = resources$genera_known$taxonomic_reference[ii],
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(resources$genera_known$canonicalName[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -246,7 +246,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = "family",
       aligned_name = ifelse(is.na(identifier_string),
                             paste0(genus, " sp."),
@@ -281,7 +281,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
+      taxonomic_reference = resources$genera_all2$taxonomic_reference[ii],
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(resources$genera_all2$canonicalName[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -290,7 +290,7 @@ match_taxa <- function(
       ),
       aligned_reason = paste0(
         "Exact match to ",
-        taxonomic_ref,
+        taxonomic_reference,
         " genus. Taxon name includes '--' (double dash) indicating an intergrade between two taxa and taxon can only be aligned to genus-rank (",
         Sys.Date(),
         ")"
@@ -315,7 +315,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -347,7 +347,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC known",
+      taxonomic_reference = "APC known",
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus_known, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -379,7 +379,7 @@ match_taxa <- function(
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate( 
-        taxonomic_ref = "APNI",
+        taxonomic_reference = "APNI",
         taxonomic_resolution = "genus", 
         aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name),
         aligned_name = ifelse(is.na(identifier_string2),
@@ -411,7 +411,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = NA_character_,
+      taxonomic_reference = NA_character_,
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -453,7 +453,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
+      taxonomic_reference = resources$genera_all2$taxonomic_reference[ii],
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(resources$genera_all2$canonicalName[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -462,7 +462,7 @@ match_taxa <- function(
       ),
       aligned_reason = paste0(
         "Exact match to ",
-        taxonomic_ref,
+        taxonomic_reference,
         " genus. Taxon name includes '/' (slash) indicating an uncertain species identification but an accepted genus and taxon can only be aligned to genus-rank (",
         Sys.Date(),
         ")"
@@ -491,7 +491,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = "genus",     
       aligned_name_tmp = paste0(fuzzy_match_genus, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -527,7 +527,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(  
-      taxonomic_ref = "APC known",
+      taxonomic_reference = "APC known",
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus_known, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -563,7 +563,7 @@ match_taxa <- function(
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
-        taxonomic_ref = "APNI",
+        taxonomic_reference = "APNI",
         taxonomic_resolution = "genus",     
         aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name),
         aligned_name = ifelse(is.na(identifier_string2),
@@ -601,7 +601,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = NA_character_,
+      taxonomic_reference = NA_character_,
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -638,7 +638,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
       aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -669,7 +669,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC known",
+      taxonomic_reference = "APC known",
       taxonomic_resolution = resources$`APC list (known names)`$taxonRank[ii],
       aligned_name = resources$`APC list (known names)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -699,7 +699,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
       aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -729,7 +729,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC known",
+      taxonomic_reference = "APC known",
       taxonomic_resolution = resources$`APC list (known names)`$taxonRank[ii],
       aligned_name = resources$`APC list (known names)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -771,7 +771,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
       aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -812,7 +812,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC known",
+      taxonomic_reference = "APC known",
       taxonomic_resolution = resources$`APC list (known names)`$taxonRank[ii],
       aligned_name = resources$`APC list (known names)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -843,7 +843,7 @@ match_taxa <- function(
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
-        taxonomic_ref = "APNI",
+        taxonomic_reference = "APNI",
         taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
         aligned_name = resources$`APNI names`$canonicalName[ii],
         aligned_reason = paste0(
@@ -883,7 +883,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
+      taxonomic_reference = resources$genera_all2$taxonomic_reference[ii],
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(resources$genera_all2$canonicalName[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -892,7 +892,7 @@ match_taxa <- function(
       ),
       aligned_reason = paste0(
         "Exact match to ",
-        taxonomic_ref,
+        taxonomic_reference,
         " genus. Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank (",
         Sys.Date(),
         ")"
@@ -921,7 +921,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -957,7 +957,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC known",
+      taxonomic_reference = "APC known",
       taxonomic_resolution = "genus",      
       aligned_name_tmp = paste0(fuzzy_match_genus_known, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -994,7 +994,7 @@ match_taxa <- function(
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
-        taxonomic_ref = "APNI",
+        taxonomic_reference = "APNI",
         taxonomic_resolution = "genus",
         aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name),
         aligned_name = ifelse(is.na(identifier_string2),
@@ -1032,7 +1032,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = NA_character_,
+      taxonomic_reference = NA_character_,
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -1080,7 +1080,7 @@ match_taxa <- function(
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
-        taxonomic_ref = "APC accepted",
+        taxonomic_reference = "APC accepted",
         taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
         aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
         aligned_reason = paste0(
@@ -1125,7 +1125,7 @@ match_taxa <- function(
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
-        taxonomic_ref = "APC known",
+        taxonomic_reference = "APC known",
         taxonomic_resolution = resources$`APC list (known names)`$taxonRank[ii],
         aligned_name = resources$`APC list (known names)`$canonicalName[ii],
         aligned_reason = paste0(
@@ -1161,7 +1161,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = resources$genera_all2$taxonomic_ref[ii],
+      taxonomic_reference = resources$genera_all2$taxonomic_reference[ii],
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(resources$genera_all2$canonicalName[ii], " x [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -1170,7 +1170,7 @@ match_taxa <- function(
       ),
       aligned_reason = paste0(
         "Exact match to ",
-        taxonomic_ref,
+        taxonomic_reference,
         " genus. Taxon name includes ' x ' indicating a hybrid taxon and taxon can only be aligned to genus-rank (",
         Sys.Date(),
         ")"
@@ -1196,7 +1196,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus, " x [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -1229,7 +1229,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC known",
+      taxonomic_reference = "APC known",
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus_known, " x [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -1263,7 +1263,7 @@ match_taxa <- function(
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
-        taxonomic_ref = "APNI",
+        taxonomic_reference = "APNI",
         taxonomic_resolution = "genus",
         aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " x [", cleaned_name),
         aligned_name = ifelse(is.na(identifier_string2),
@@ -1297,7 +1297,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = NA_character_,
+      taxonomic_reference = NA_character_,
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " x [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -1335,7 +1335,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
       aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -1369,7 +1369,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC known",
+      taxonomic_reference = "APC known",
       taxonomic_resolution = resources$`APC list (known names)`$taxonRank[ii],
       aligned_name = resources$`APC list (known names)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -1416,7 +1416,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
       aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -1463,7 +1463,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC known",
+      taxonomic_reference = "APC known",
       taxonomic_resolution = resources$`APC list (known names)`$taxonRank[ii],
       aligned_name = resources$`APC list (known names)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -1499,7 +1499,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
       aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -1534,7 +1534,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC known",
+      taxonomic_reference = "APC known",
       taxonomic_resolution = resources$`APC list (known names)`$taxonRank[ii],
       aligned_name = resources$`APC list (known names)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -1583,7 +1583,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = resources$`APC list (accepted)`$taxonRank[ii],
       aligned_name = resources$`APC list (accepted)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -1632,7 +1632,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC known",
+      taxonomic_reference = "APC known",
       taxonomic_resolution = resources$`APC list (known names)`$taxonRank[ii],
       aligned_name = resources$`APC list (known names)`$canonicalName[ii],
       aligned_reason = paste0(
@@ -1679,7 +1679,7 @@ match_taxa <- function(
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
-        taxonomic_ref = "APNI",
+        taxonomic_reference = "APNI",
         taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
         aligned_name = resources$`APNI names`$canonicalName[ii],
         aligned_reason = paste0(
@@ -1725,7 +1725,7 @@ match_taxa <- function(
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
-        taxonomic_ref = "APNI",
+        taxonomic_reference = "APNI",
         taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
         aligned_name = resources$`APNI names`$canonicalName[ii],
         aligned_reason = paste0(
@@ -1761,7 +1761,7 @@ match_taxa <- function(
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
-        taxonomic_ref = "APNI",
+        taxonomic_reference = "APNI",
         taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
         aligned_name = resources$`APNI names`$canonicalName[ii],
         aligned_reason = paste0(
@@ -1798,7 +1798,7 @@ match_taxa <- function(
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
-        taxonomic_ref = "APNI",
+        taxonomic_reference = "APNI",
         taxonomic_resolution = resources$`APNI names`$taxonRank[ii],
         aligned_name = resources$`APNI names`$canonicalName[ii],
         aligned_reason = paste0(
@@ -1830,7 +1830,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(resources$genera_accepted$canonicalName[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -1865,7 +1865,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC known",
+      taxonomic_reference = "APC known",
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(resources$genera_known$canonicalName[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -1901,7 +1901,7 @@ match_taxa <- function(
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
-        taxonomic_ref = "APNI",
+        taxonomic_reference = "APNI",
         taxonomic_resolution = "genus",
         aligned_name_tmp = paste0(resources$genera_APNI$canonicalName[ii], " sp. [", cleaned_name),
         aligned_name = ifelse(is.na(identifier_string2),
@@ -1933,7 +1933,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = "family",
       aligned_name_tmp = paste0(genus, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -1963,7 +1963,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC accepted",
+      taxonomic_reference = "APC accepted",
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -1993,7 +1993,7 @@ match_taxa <- function(
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_ref = "APC known",
+      taxonomic_reference = "APC known",
       taxonomic_resolution = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus_known, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),

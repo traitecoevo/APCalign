@@ -68,11 +68,11 @@ load_taxonomic_resources <-
     taxonomic_resources[["APC list (accepted)"]] <-
       APC_tmp %>%
       dplyr::filter(taxonomicStatus == "accepted") %>%
-      dplyr::mutate(taxonomic_ref = "APC accepted")
+      dplyr::mutate(taxonomic_reference = "APC accepted")
     taxonomic_resources[["APC list (known names)"]] <-
       APC_tmp %>%
       dplyr::filter(taxonomicStatus != "accepted") %>%
-      dplyr::mutate(taxonomic_ref = "APC known")
+      dplyr::mutate(taxonomic_reference= "APC known")
     
     
     # Repeated from above - bionomial, tronomials etc
@@ -97,7 +97,7 @@ load_taxonomic_resources <-
         trinomial = ifelse(is.na(trinomial), "zzzz zzzz", trinomial),
         trinomial = base::replace(trinomial, duplicated(trinomial), "zzzz zzzz"),
         genus = stringr::word(stripped_canonical, 1),
-        taxonomic_ref = "APNI"
+        taxonomic_reference= "APNI"
       ) %>%
       dplyr::distinct() %>%
       dplyr::arrange(canonicalName)
@@ -116,7 +116,7 @@ load_taxonomic_resources <-
         taxonRank
       ) %>%
       dplyr::filter(taxonRank %in% c("Genus"), taxonomicStatus == "accepted") %>%
-      dplyr::mutate(taxonomic_ref = "APC accepted")
+      dplyr::mutate(taxonomic_reference= "APC accepted")
     
     taxonomic_resources[["genera_known"]] <-
       taxonomic_resources$APC %>%
@@ -131,7 +131,7 @@ load_taxonomic_resources <-
       ) %>%
       dplyr::filter(taxonRank %in% c("Genus")) %>%
       dplyr::filter(!canonicalName %in% taxonomic_resources$genera_accepted$canonicalName) %>%
-      dplyr::mutate(taxonomic_ref = "APC known") %>%
+      dplyr::mutate(taxonomic_reference= "APC known") %>%
       dplyr::distinct(canonicalName, .keep_all = TRUE)
     
     taxonomic_resources[["genera_APNI"]] <-
@@ -143,7 +143,7 @@ load_taxonomic_resources <-
                     scientificName) %>%
       dplyr::filter(taxonRank %in% c("Genus")) %>%
       dplyr::filter(!canonicalName %in% taxonomic_resources$APC$canonicalName) %>%
-      dplyr::mutate(taxonomic_ref = "APNI") %>%
+      dplyr::mutate(taxonomic_reference= "APNI") %>%
       dplyr::distinct(canonicalName, .keep_all = TRUE)
     
     taxonomic_resources[["genera_all"]] <-
