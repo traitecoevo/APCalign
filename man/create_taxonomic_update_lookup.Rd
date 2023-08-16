@@ -11,6 +11,7 @@ create_taxonomic_update_lookup(
   one_to_many = "return_all",
   full = FALSE,
   APNI_matches = TRUE,
+  imprecise_fuzzy_matches = FALSE,
   identifier = NA_character_,
   resources = load_taxonomic_resources(stable_or_current_data = stable_or_current_data,
     version = version),
