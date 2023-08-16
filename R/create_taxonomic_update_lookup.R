@@ -77,7 +77,7 @@ create_taxonomic_update_lookup <- function(taxa,
     ) %>%
     dplyr::mutate(
       # todo - why isn't this source APNI?
-      source = ifelse(known & is.na(source), "known_name_but_not_apc_accepted", source),
+      taxonomic_reference = ifelse(known & is.na(taxonomic_reference), "known_name_but_not_apc_accepted", source),
       # todo - do we want to keep this?
       taxonomic_status_clean = ifelse(known & is.na(taxonomic_status_clean), "known_name_but_not_apc_accepted", taxonomic_status_clean)
     ) %>%
@@ -136,7 +136,7 @@ collapse_to_higher_taxon <-
         apc_names = find_mrct(canonical_name, resources = resources),
         aligned_reason = paste(unique(aligned_reason), collapse = " and "),
         taxonomic_status = paste(unique(taxonomic_status_clean), collapse = " and "),
-        source = paste(unique(source), collapse = " and "),
+        taxonomic_reference = paste(unique(taxonomic_reference), collapse = " and "),
         number_of_collapsed_taxa = n()
       )
 

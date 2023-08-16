@@ -19,8 +19,8 @@
 #' @return A tibble with updated taxonomy for the specified plant names. The tibble contains the following columns:
 #' \itemize{
 #'   \item \code{aligned_name}: the input plant name.
-#'   \item \code{source}: the source of the updated taxonomic information (APC or APNI).
-#'   \item \code{taxonIDClean}: the unique identifier for the updated taxon.
+#'   \item \code{taxonomic_reference}: the source of the updated taxonomic information (APC or APNI).
+#'   \item \code{taxon_ID_clean}: the unique identifier for the updated taxon.
 #'   \item \code{taxonomic_status_clean}: the taxonomic status of the updated taxon.
 #'   \item \code{alternative_taxonomic_status_clean}: the alternative taxonomic status for the input name, if any.
 #'   \item \code{accepted_name_usage_ID}: the unique identifier for the accepted name of the input name.
@@ -30,7 +30,9 @@
 #'   \item \code{taxonomic_status}: the taxonomic status of the accepted name.
 #'   \item \code{family}: the family of the accepted name.
 #'   \item \code{subclass}: the subclass of the accepted name.
-#'   \item \code{taxonDistribution}: the distribution of the accepted name.
+#'   \item \code{taxon_distribution}: the distribution of the accepted name.
+#'   \item \code{taxon_ID}: an identifier for a specific taxon concept.
+#'   \item \code{scientific_name_ID}: an identifier for the nomenclatural (not taxonomic) details of a scientific name.
 #'   \item \code{ccAttributionIRI}: the Creative Commons Attribution International Rights URI of the accepted name.
 #' }
 #'
@@ -74,13 +76,13 @@ update_taxonomy <- function(aligned_names,
       resources$APC %>% dplyr::filter(!grepl("sp\\.$", canonical_name)) %>%
         dplyr::select(
           aligned_name = canonical_name,
-          taxonIDClean = taxonID,
+          taxon_ID_clean = taxonID,
           taxonomic_status_clean = taxonomic_status,
           accepted_name_usage_ID
         )
     ) %>%
     dplyr::distinct() %>%
-    dplyr::mutate(source = ifelse(!is.na(taxonIDClean), "APC", NA)) %>%
+    dplyr::mutate(source = ifelse(!is.na(taxon_ID_clean), "APC", NA)) %>%
     # Now find accepted names for each name in the list (sometimes they are the same)
     dplyr::left_join(
       by = "accepted_name_usage_ID",
@@ -93,7 +95,7 @@ update_taxonomy <- function(aligned_names,
           scientific_name_authorship,
           family,
           subclass,
-          taxonDistribution,
+          taxon_distribution,
           taxon_rank,
           ccAttributionIRI
         )
@@ -121,8 +123,8 @@ update_taxonomy <- function(aligned_names,
     dplyr::ungroup() %>%
     dplyr::select(
       aligned_name,
-      source,
-      taxonIDClean,
+      taxonomic_reference,
+      taxon_ID_clean,
       taxonomic_status_clean,
       alternative_taxonomic_status_clean,
       accepted_name_usage_ID,
@@ -132,13 +134,13 @@ update_taxonomy <- function(aligned_names,
       taxonomic_status,
       family,
       subclass,
-      taxonDistribution,
+      taxon_distribution,
       ccAttributionIRI
     ) %>%
     distinct()
   
   taxa_APC <-
-    taxa_out %>% dplyr::filter(!is.na(taxonIDClean)) %>%
+    taxa_out %>% dplyr::filter(!is.na(taxon_ID_clean)) %>%
     dplyr::distinct()
   
   # Now check against APNI for any species not found in APC
@@ -158,17 +160,17 @@ update_taxonomy <- function(aligned_names,
     ) %>%
     dplyr::group_by(aligned_name) %>%
     dplyr::mutate(
-      taxonIDClean = paste(taxonIDClean, collapse = " ") %>% dplyr::na_if("NA"),
+      taxon_ID_clean = paste(taxon_ID_clean, collapse = " ") %>% dplyr::na_if("NA"),
       family = ifelse(dplyr::n_distinct(family) > 1, NA, family[1])
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
-      source = ifelse(is.na(taxonIDClean), NA, "APNI"),
-      canonical_name = ifelse(is.na(taxonIDClean), NA, aligned_name),
-      taxonomic_status_clean = ifelse(is.na(taxonIDClean), "unknown", "unplaced"),
+      taxonomic_reference = ifelse(is.na(taxon_ID_clean), NA, "APNI"),
+      canonical_name = ifelse(is.na(taxon_ID_clean), NA, aligned_name),
+      taxonomic_status_clean = ifelse(is.na(taxon_ID_clean), "unknown", "unplaced"),
       taxonomic_status = taxonomic_status_clean
     ) %>%
-    dplyr::filter(!is.na(taxonIDClean))
+    dplyr::filter(!is.na(taxon_ID_clean))
 
   # if matches in APC and APNI, combine these and return
   if (nrow(taxa_APNI) > 0) {

@@ -37,19 +37,39 @@ load_taxonomic_resources <-
     
   taxonomic_resources$APC <- taxonomic_resources$APC %>%
     rename(
-      taxon_rank = taxonRank,
-      canonical_name = canonicalName,
+      taxon_ID = taxonID,
+      name_type = nameType,
+      taxonomic_status = taxonomicStatus,
+      pro_parte = proParte,
       scientific_name = scientificName,
       scientific_name_ID = scientificNameID,
-      scientific_name_authorship = scientific_name_authorship
+      accepted_name_usage_ID = acceptedNameUsageID,
+      accepted_name_usage = acceptedNameUsage,
+      canonical_name = canonicalName,
+      scientific_name_authorship = scientificNameAuthorship,
+      taxon_rank_sort_order = taxonRankSortOrder,
+      taxon_remarks = taxonRemarks,
+      taxon_distribution = taxonDistribution,
+      higher_classification = higherClassification,
+      nomenclatural_code = nomenclaturalCode,
+      dataset_name = datasetName
       )
 
-  taxonomic_resources$APNI<- taxonomic_resources$APNI %>%
+  taxonomic_resources$APNI <- taxonomic_resources$APNI %>%
     rename(
-      taxon_rank = taxonRank,
+      name_type = nameType,
+      taxonomic_status = taxonomicStatus,
+      pro_parte = proParte,
       scientific_name = scientificName,
       scientific_name_ID = scientificNameID,
-      scientific_name_authorship = scientific_name_authorship
+      canonical_name = canonicalName,
+      scientific_name_authorship = scientificNameAuthorship,
+      taxon_rank_sort_order = taxonRankSortOrder,
+      taxon_remarks = taxonRemarks,
+      taxon_distribution = taxonDistribution,
+      higher_classification = higherClassification,
+      nomenclatural_code = nomenclaturalCode,
+      dataset_name = datasetName
       )
 
     APC_tmp <-
@@ -59,7 +79,8 @@ load_taxonomic_resources <-
       dplyr::select(canonical_name,
                     scientific_name,
                     taxonomic_status,
-                    ID = taxonID,
+                    taxon_ID,
+                    scientific_name_ID,
                     name_type,
                     taxon_rank) %>%
       dplyr::mutate(
@@ -128,7 +149,8 @@ load_taxonomic_resources <-
         accepted_name_usage,
         scientific_name,
         taxonomic_status,
-        ID = taxonID,
+        taxon_ID,
+        scientific_name_ID,
         name_type,
         taxon_rank
       ) %>%
@@ -142,7 +164,8 @@ load_taxonomic_resources <-
         accepted_name_usage,
         scientific_name,
         taxonomic_status,
-        ID = taxonID,
+        taxon_ID,
+        scientific_name_ID,
         name_type,
         taxon_rank
       ) %>%
@@ -153,11 +176,14 @@ load_taxonomic_resources <-
     
     taxonomic_resources[["genera_APNI"]] <-
       taxonomic_resources$APNI %>%
-      dplyr::select(canonical_name,
-                    taxonomic_status,
-                    name_type,
-                    taxon_rank,
-                    scientific_name) %>%
+      dplyr::select(
+        canonical_name,
+        scientific_name,
+        taxonomic_status,
+        scientific_name_ID,
+        name_type,
+        taxon_rank
+      ) %>%
       dplyr::filter(taxon_rank %in% c("Genus")) %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$APC$canonical_name) %>%
       dplyr::mutate(taxonomic_reference= "APNI") %>%

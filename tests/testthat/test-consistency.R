@@ -70,7 +70,7 @@ test_that("taxon name alignment matches and updates work as expected", {
     )
 
   expect_equal(archived_values$aligned_name, current_match_align_values$aligned_name)
-  expect_equal(archived_values$taxon_rank, current_match_align_values$taxonomic_resolution)
+  expect_equal(archived_values$taxon_rank, current_match_align_values$taxon_rank)
   expect_equal(archived_values$taxonomic_reference, current_match_align_values$taxonomic_ref)
   expect_equal(archived_values$alignment_code, 
                 stringr::str_extract(current_match_align_values$alignment_code, "match_[:digit:][:digit:][:alpha:]"))     

@@ -124,7 +124,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = resources$genera_all2$taxonomic_reference[ii],
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(resources$genera_all2$canonical_name[ii], " sp."),
       aligned_name = ifelse(is.na(identifier_string),
                             aligned_name_tmp,
@@ -169,7 +169,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = resources$genera_accepted$taxonomic_reference[ii],
-      taxonomic_resolution = "genus",      
+      taxon_rank = "genus",      
       aligned_name_tmp = 
         paste0(resources$genera_accepted$canonical_name[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
@@ -212,7 +212,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = resources$genera_known$taxonomic_reference[ii],
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(resources$genera_known$canonical_name[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -247,7 +247,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = "family",
+      taxon_rank = "family",
       aligned_name = ifelse(is.na(identifier_string),
                             paste0(genus, " sp."),
                             paste0(genus, " sp.", identifier_string)),
@@ -282,7 +282,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = resources$genera_all2$taxonomic_reference[ii],
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(resources$genera_all2$canonical_name[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -316,7 +316,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -348,7 +348,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC known",
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus_known, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -380,7 +380,7 @@ match_taxa <- function(
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate( 
         taxonomic_reference = "APNI",
-        taxonomic_resolution = "genus", 
+        taxon_rank = "genus", 
         aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name),
         aligned_name = ifelse(is.na(identifier_string2),
                               paste0(aligned_name_tmp, "]"),
@@ -412,7 +412,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = NA_character_,
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -454,7 +454,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = resources$genera_all2$taxonomic_reference[ii],
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(resources$genera_all2$canonical_name[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -492,7 +492,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = "genus",     
+      taxon_rank = "genus",     
       aligned_name_tmp = paste0(fuzzy_match_genus, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -528,7 +528,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(  
       taxonomic_reference = "APC known",
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus_known, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -564,7 +564,7 @@ match_taxa <- function(
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
         taxonomic_reference = "APNI",
-        taxonomic_resolution = "genus",     
+        taxon_rank = "genus",     
         aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name),
         aligned_name = ifelse(is.na(identifier_string2),
                               paste0(aligned_name_tmp, "]"),
@@ -602,7 +602,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = NA_character_,
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -639,7 +639,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = resources$`APC list (accepted)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
       aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of taxon name to an APC-accepted scientific name (including authorship) (",
@@ -670,7 +670,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC known",
-      taxonomic_resolution = resources$`APC list (known names)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
       aligned_name = resources$`APC list (known names)`$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of taxon name to an APC-known scientific name (including authorship) (",
@@ -700,7 +700,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = resources$`APC list (accepted)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
       aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of taxon name to an APC-accepted canonical name once punctuation and filler words are removed (",
@@ -730,7 +730,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC known",
-      taxonomic_resolution = resources$`APC list (known names)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
       aligned_name = resources$`APC list (known names)`$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of taxon name to an APC-known canonical name once punctuation and filler words are removed (",
@@ -772,7 +772,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = resources$`APC list (accepted)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
       aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
       aligned_reason = paste0(
         "Fuzzy match of taxon name to an APC-accepted canonical name once punctuation and filler words are removed (",
@@ -813,7 +813,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC known",
-      taxonomic_resolution = resources$`APC list (known names)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
       aligned_name = resources$`APC list (known names)`$canonical_name[ii],
       aligned_reason = paste0(
         "Fuzzy match of taxon name to an APC-known canonical name once punctuation and filler words are removed (",
@@ -844,7 +844,7 @@ match_taxa <- function(
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
         taxonomic_reference = "APNI",
-        taxonomic_resolution = resources$`APNI names`$taxon_rank[ii],
+        taxon_rank = resources$`APNI names`$taxon_rank[ii],
         aligned_name = resources$`APNI names`$canonical_name[ii],
         aligned_reason = paste0(
           "Exact match of taxon name to an APNI-listed canonical name once punctuation and filler words are removed (",
@@ -884,7 +884,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = resources$genera_all2$taxonomic_reference[ii],
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(resources$genera_all2$canonical_name[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -922,7 +922,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -958,7 +958,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC known",
-      taxonomic_resolution = "genus",      
+      taxon_rank = "genus",      
       aligned_name_tmp = paste0(fuzzy_match_genus_known, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -995,7 +995,7 @@ match_taxa <- function(
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
         taxonomic_reference = "APNI",
-        taxonomic_resolution = "genus",
+        taxon_rank = "genus",
         aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " sp. [", cleaned_name),
         aligned_name = ifelse(is.na(identifier_string2),
                               paste0(aligned_name_tmp, "]"),
@@ -1033,7 +1033,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = NA_character_,
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -1081,7 +1081,7 @@ match_taxa <- function(
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
         taxonomic_reference = "APC accepted",
-        taxonomic_resolution = resources$`APC list (accepted)`$taxon_rank[ii],
+        taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
         aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
         aligned_reason = paste0(
           "Imprecise fuzzy match of taxon name to an APC-accepted canonical name once punctuation and filler words are removed (",
@@ -1126,7 +1126,7 @@ match_taxa <- function(
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
         taxonomic_reference = "APC known",
-        taxonomic_resolution = resources$`APC list (known names)`$taxon_rank[ii],
+        taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
         aligned_name = resources$`APC list (known names)`$canonical_name[ii],
         aligned_reason = paste0(
           "Imprecise fuzzy match of taxon name to an APC-known canonical name once punctuation and filler words are removed (",
@@ -1162,7 +1162,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = resources$genera_all2$taxonomic_reference[ii],
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(resources$genera_all2$canonical_name[ii], " x [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -1197,7 +1197,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus, " x [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -1230,7 +1230,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC known",
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus_known, " x [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -1264,7 +1264,7 @@ match_taxa <- function(
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
         taxonomic_reference = "APNI",
-        taxonomic_resolution = "genus",
+        taxon_rank = "genus",
         aligned_name_tmp = paste0(fuzzy_match_genus_APNI, " x [", cleaned_name),
         aligned_name = ifelse(is.na(identifier_string2),
                               paste0(aligned_name_tmp, "]"),
@@ -1298,7 +1298,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = NA_character_,
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " x [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -1336,7 +1336,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = resources$`APC list (accepted)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
       aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of the first three words of the taxon name to an APC-accepted canonical name (",
@@ -1370,7 +1370,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC known",
-      taxonomic_resolution = resources$`APC list (known names)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
       aligned_name = resources$`APC list (known names)`$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of the first three words of the taxon name to an APC-known canonical name (",
@@ -1417,7 +1417,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = resources$`APC list (accepted)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
       aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
       aligned_reason = paste0(
         "Fuzzy match of the first three words of the taxon name to an APC-accepted canonical name (",
@@ -1464,7 +1464,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC known",
-      taxonomic_resolution = resources$`APC list (known names)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
       aligned_name = resources$`APC list (known names)`$canonical_name[ii],
       aligned_reason = paste0(
         "Fuzzy match of the first three words of the taxon name to an APC-known canonical name (",
@@ -1500,7 +1500,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = resources$`APC list (accepted)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
       aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of the first two words of the taxon name to an APC-accepted canonical name (",
@@ -1535,7 +1535,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC known",
-      taxonomic_resolution = resources$`APC list (known names)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
       aligned_name = resources$`APC list (known names)`$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of the first two words of the taxon name to an APC-known canonical name (",
@@ -1584,7 +1584,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = resources$`APC list (accepted)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
       aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
       aligned_reason = paste0(
         "Fuzzy match of the first two words of the taxon name to an APC-accepted canonical name (",
@@ -1633,7 +1633,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC known",
-      taxonomic_resolution = resources$`APC list (known names)`$taxon_rank[ii],
+      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
       aligned_name = resources$`APC list (known names)`$canonical_name[ii],
       aligned_reason = paste0(
         "Fuzzy match of the first two words of the taxon name to an APC-known canonical name (",
@@ -1680,7 +1680,7 @@ match_taxa <- function(
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
         taxonomic_reference = "APNI",
-        taxonomic_resolution = resources$`APNI names`$taxon_rank[ii],
+        taxon_rank = resources$`APNI names`$taxon_rank[ii],
         aligned_name = resources$`APNI names`$canonical_name[ii],
         aligned_reason = paste0(
           "Fuzzy match of taxon name to an APNI-listed canonical name once punctuation and filler words are removed (",
@@ -1726,7 +1726,7 @@ match_taxa <- function(
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
         taxonomic_reference = "APNI",
-        taxonomic_resolution = resources$`APNI names`$taxon_rank[ii],
+        taxon_rank = resources$`APNI names`$taxon_rank[ii],
         aligned_name = resources$`APNI names`$canonical_name[ii],
         aligned_reason = paste0(
           "Imprecise fuzzy match of taxon name to an APNI-listed canonical name once punctuation and filler words are removed (",
@@ -1762,7 +1762,7 @@ match_taxa <- function(
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
         taxonomic_reference = "APNI",
-        taxonomic_resolution = resources$`APNI names`$taxon_rank[ii],
+        taxon_rank = resources$`APNI names`$taxon_rank[ii],
         aligned_name = resources$`APNI names`$canonical_name[ii],
         aligned_reason = paste0(
           "Exact match of the first three words of the taxon name to an APNI-listed canonical name (",
@@ -1799,7 +1799,7 @@ match_taxa <- function(
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
         taxonomic_reference = "APNI",
-        taxonomic_resolution = resources$`APNI names`$taxon_rank[ii],
+        taxon_rank = resources$`APNI names`$taxon_rank[ii],
         aligned_name = resources$`APNI names`$canonical_name[ii],
         aligned_reason = paste0(
           "Exact match of the first two words of the taxon name to an APNI-listed canonical name (",
@@ -1831,7 +1831,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(resources$genera_accepted$canonical_name[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -1866,7 +1866,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC known",
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(resources$genera_known$canonical_name[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -1902,7 +1902,7 @@ match_taxa <- function(
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
         taxonomic_reference = "APNI",
-        taxonomic_resolution = "genus",
+        taxon_rank = "genus",
         aligned_name_tmp = paste0(resources$genera_APNI$canonical_name[ii], " sp. [", cleaned_name),
         aligned_name = ifelse(is.na(identifier_string2),
                               paste0(aligned_name_tmp, "]"),
@@ -1934,7 +1934,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = "family",
+      taxon_rank = "family",
       aligned_name_tmp = paste0(genus, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -1964,7 +1964,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC accepted",
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -1994,7 +1994,7 @@ match_taxa <- function(
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_reference = "APC known",
-      taxonomic_resolution = "genus",
+      taxon_rank = "genus",
       aligned_name_tmp = paste0(fuzzy_match_genus_known, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),

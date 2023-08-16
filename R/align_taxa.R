@@ -13,7 +13,7 @@
 #' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default.
 #' @param identifier A dataset, location or other identifier, which defaults to NA.
 #'
-#' @return A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
+#' @return A tibble with columns: original_name, cleaned_name, aligned_name, taxonomic_reference, known, and checked.
 #' @export
 #'
 #' @examples
@@ -64,7 +64,7 @@ align_taxa <- function(original_name,
         original_name = character(0L),
         cleaned_name = character(0L),
         aligned_name = character(0L),
-        source = character(0L),
+        taxonomic_reference = character(0L),
         known = logical(0L),
         checked = logical(0L)
       )
@@ -105,7 +105,7 @@ align_taxa <- function(original_name,
         fuzzy_match_cleaned_APC_known_imprecise = NA_character_,
         fuzzy_match_cleaned_APNI_imprecise = NA_character_,
         taxonomic_reference = NA_character_,
-        taxonomic_resolution = NA_character_,
+        taxon_rank = NA_character_,
         alignment_code = NA_character_,
         checked = FALSE,
         known = FALSE
