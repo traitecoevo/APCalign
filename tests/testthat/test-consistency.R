@@ -42,6 +42,59 @@ test_that("create_taxonomic_update_lookup() works with full", {
   expect_equal(past_result, current_result)
 })
 
+test_that("taxon name alignment matches and updates work as expected", {
+
+  archived_values <- 
+    readr::read_csv("test_matches_alignments_updates.csv", show_col_types = FALSE) %>%
+    dplyr::select(
+      original_name, 
+      alignment_code = alignment_code_all_matches_TRUE, 
+      aligned_name = aligned_name_all_matches_TRUE,
+      taxon_rank = taxon_rank_all_matches_TRUE,
+      taxonomic_reference = taxonomic_reference_all_matches_TRUE,
+      updated_name,
+      updated_name_passes
+    ) %>%
+    dplyr::arrange(original_name, aligned_name)
+      
+  current_match_align_values <- 
+    align_taxa(
+      original_name = archived_values$original_name, 
+      resources = resources, 
+      fuzzy_abs_dist = 3, 
+      fuzzy_rel_dist = 0.2, 
+      imprecise_fuzzy_matches = TRUE,
+      APNI_matches = TRUE,
+      fuzzy_matches = TRUE,
+      identifier = "test_all_matches_TRUE"
+    )
+
+  expect_equal(archived_values$aligned_name, current_match_align_values$aligned_name)
+  expect_equal(archived_values$taxon_rank, current_match_align_values$taxonomic_resolution)
+  expect_equal(archived_values$taxonomic_reference, current_match_align_values$taxonomic_ref)
+  expect_equal(archived_values$alignment_code, 
+                stringr::str_extract(current_match_align_values$alignment_code, "match_[:digit:][:digit:][:alpha:]"))     
+
+  current_update_values <- 
+    create_taxonomic_update_lookup(
+      archived_values$original_name, 
+      resources = resources,
+      full = TRUE,
+      imprecise_fuzzy_matches = TRUE,
+      identifier = "test_all_matches_TRUE",
+      one_to_many = "most_likely_species"
+    )
+  
+  current_update_values <- current_update_values %>% 
+    left_join(archived_values %>% select(original_name, updated_name, updated_name_passes), by = "original_name") %>% 
+    mutate(test_column = ifelse(canonical_name == updated_name, TRUE, FALSE)) %>% 
+    mutate(test_column = ifelse(is.na(canonical_name) & is.na(updated_name), TRUE, test_column)) %>%
+    mutate(test_column = ifelse(is.na(test_column), FALSE, test_column))
+  
+  expect_equal(archived_values$updated_name_passes, current_update_values$test_column)
+  expect_equal(archived_values$aligned_name, current_update_values$aligned_name)
+})
+
 test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon",
           {
             original_name <-
