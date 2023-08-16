@@ -11,6 +11,7 @@
 #' @param full logical for whether the full lookup table is returned or just the two key columns
 #' @param resources These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using \code{\link{load_taxonomic_resources}} separately and pass the data in.
 #' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default. 
+#' @param imprecise_fuzzy_matches Imprecise fuzzy matches are turned off as a default.
 #' @param identifier A dataset, location or other identifier, which defaults to NA.
 #' @param output file path to save the intermediate output to
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
