@@ -67,7 +67,8 @@ load_taxonomic_resources <-
       scientific_name_authorship = scientificNameAuthorship,
       taxon_rank_sort_order = taxonRankSortOrder,
       nomenclatural_code = nomenclaturalCode,
-      dataset_name = datasetName
+      dataset_name = datasetName,
+      name_element = nameElement
       )
 
     APC_tmp <-
@@ -114,7 +115,7 @@ load_taxonomic_resources <-
     # Repeated from above - bionomial, tronomials etc
     taxonomic_resources[["APNI names"]] <-
       taxonomic_resources$APNI %>%
-      dplyr::filter(nameElement != "sp.") %>%
+      dplyr::filter(name_element != "sp.") %>%
       dplyr::filter(!canonical_name %in% APC_tmp$canonical_name) %>%
       dplyr::select(canonical_name, scientific_name, scientific_name_ID, name_type, taxon_rank) %>%
       dplyr::filter(taxon_rank %in% c("Series", "Subspecies", "Species", "Forma", "Varietas")) %>%

@@ -79,7 +79,8 @@ update_taxonomy <- function(aligned_names,
           aligned_name = canonical_name,
           taxon_ID_clean = taxon_ID,
           taxonomic_status_clean = taxonomic_status,
-          accepted_name_usage_ID
+          accepted_name_usage_ID,
+          scientific_name_ID
         )
     ) %>%
     dplyr::distinct() %>%
@@ -120,6 +121,9 @@ update_taxonomy <- function(aligned_names,
       )
     ) %>%
     #dplyr::slice(1:5) %>%
+    # XXXX The filter line was removing all APNI taxa, because they all have taxonomic_status_clean = NA, because no data from APNI has been merged in. 
+    # I've just added the NA replacement as a placeholder
+    dplyr::mutate(taxonomic_status_clean = ifelse(is.na(taxonomic_status_clean), "APNI_value", taxonomic_status_clean)) %>%
     dplyr::filter(taxonomic_status_clean != "misapplied") %>%
     dplyr::ungroup() %>%
     dplyr::select(
@@ -131,6 +135,7 @@ update_taxonomy <- function(aligned_names,
       accepted_name_usage_ID,
       canonical_name,
       scientific_name_authorship,
+      scientific_name_ID,
       taxon_rank,
       taxonomic_status,
       family,
@@ -151,12 +156,13 @@ update_taxonomy <- function(aligned_names,
     dplyr::select(aligned_name) %>%
     dplyr::left_join(
       by = "aligned_name",
-      resources$APNI %>% dplyr::filter(nameElement != "sp.") %>%
+      resources$APNI %>% dplyr::filter(name_element != "sp.") %>%
         dplyr::select(
           aligned_name = canonical_name,
           scientific_name_ID,
           family,
-          taxon_rank
+          taxon_rank,
+          taxonomic_status
         )
     ) %>%
     dplyr::group_by(aligned_name) %>%
@@ -166,13 +172,13 @@ update_taxonomy <- function(aligned_names,
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
-      taxonomic_reference = ifelse(is.na(taxon_ID_clean), NA, "APNI"),
-      #todo is this the line where we should be adding APNI names XXX
-      canonical_name = ifelse(is.na(taxon_ID_clean), NA, aligned_name),
+      taxonomic_reference = ifelse(is.na(scientific_name_ID), NA, "APNI"),
+      ## taxa without a `scientific_name_ID` are also not in APNI
+      canonical_name = ifelse(is.na(scientific_name_ID), NA, aligned_name),
       taxonomic_status_clean = ifelse(is.na(taxon_ID_clean), "unknown", "unplaced"),
       taxonomic_status = taxonomic_status_clean
     ) %>%
-    dplyr::filter(!is.na(taxon_ID_clean))
+    dplyr::filter(!is.na(scientific_name_ID))
 
   # if matches in APC and APNI, combine these and return
   if (nrow(taxa_APNI) > 0) {

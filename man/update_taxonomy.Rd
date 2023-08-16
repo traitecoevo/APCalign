@@ -24,18 +24,20 @@ If specified, the output will be saved in a CSV file with the given name.}
 A tibble with updated taxonomy for the specified plant names. The tibble contains the following columns:
 \itemize{
 \item \code{aligned_name}: the input plant name.
-\item \code{source}: the source of the updated taxonomic information (APC or APNI).
-\item \code{taxonIDClean}: the unique identifier for the updated taxon.
+\item \code{taxonomic_reference}: the source of the updated taxonomic information (APC or APNI).
+\item \code{taxon_ID_clean}: the unique identifier for the updated taxon.
 \item \code{taxonomic_status_clean}: the taxonomic status of the updated taxon.
-\item \code{alternativetaxonomic_status_clean}: the alternative taxonomic status for the input name, if any.
-\item \code{acceptedNameUsageID}: the unique identifier for the accepted name of the input name.
-\item \code{canonicalName}: the accepted scientific name for the input name.
-\item \code{scientificNameAuthorship}: the authorship information for the accepted name.
-\item \code{taxonRank}: the taxonomic rank of the accepted name.
-\item \code{taxonomicStatus}: the taxonomic status of the accepted name.
+\item \code{alternative_taxonomic_status_clean}: the alternative taxonomic status for the input name, if any.
+\item \code{accepted_name_usage_ID}: the unique identifier for the accepted name of the input name.
+\item \code{canonical_name}: the accepted scientific name for the input name.
+\item \code{scientific_name_authorship}: the authorship information for the accepted name.
+\item \code{taxon_rank}: the taxonomic rank of the accepted name.
+\item \code{taxonomic_status}: the taxonomic status of the accepted name.
 \item \code{family}: the family of the accepted name.
 \item \code{subclass}: the subclass of the accepted name.
-\item \code{taxonDistribution}: the distribution of the accepted name.
+\item \code{taxon_distribution}: the distribution of the accepted name.
+\item \code{taxon_ID}: an identifier for a specific taxon concept.
+\item \code{scientific_name_ID}: an identifier for the nomenclatural (not taxonomic) details of a scientific name.
 \item \code{ccAttributionIRI}: the Creative Commons Attribution International Rights URI of the accepted name.
 }
 }
