@@ -7,7 +7,7 @@
 #' @param taxa A list of Australian plant species that needs to be reconciled with current taxonomy.
 #' @param stable_or_current_data either "stable" for a consistent version, or "current" for the leading edge version.
 #' @param version The version number of the dataset to use.
-#' @param one_to_many How to handle one_to_many taxonomic matches.  Default is "return_all".  The other options are "collapse_to_higher_taxon" and "most_likely_species". most_likely_species defaults to the original_name if that name is accepted by the APC; this will be right for certain species subsets, but make errors in other cases, use with caution.
+#' @param taxonomic_splits How to handle one_to_many taxonomic matches.  Default is "return_all".  The other options are "collapse_to_higher_taxon" and "most_likely_species". most_likely_species defaults to the original_name if that name is accepted by the APC; this will be right for certain species subsets, but make errors in other cases, use with caution.
 #' @param full logical for whether the full lookup table is returned or just the two key columns
 #' @param resources These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using \code{\link{load_taxonomic_resources}} separately and pass the data in.
 #' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default. 
@@ -31,7 +31,7 @@
 create_taxonomic_update_lookup <- function(taxa,
                                            stable_or_current_data = "stable",
                                            version = default_version(),
-                                           one_to_many = "return_all",
+                                           taxonomic_splits = "return_all",
                                            full = FALSE,
                                            APNI_matches = TRUE, 
                                            imprecise_fuzzy_matches = FALSE, 
@@ -41,7 +41,7 @@ create_taxonomic_update_lookup <- function(taxa,
                                                                                 version = version),
                                            output = NULL) {
 
-  validate_one_to_many_input(one_to_many)
+  validate_taxonomic_splits_input(taxonomic_splits)
 
   aligned_data <- 
     align_taxa(taxa, resources = resources, 
@@ -54,7 +54,7 @@ create_taxonomic_update_lookup <- function(taxa,
     # todo: why are we renaming this?
     dplyr::rename(canonical_name = canonicalName)
 
-  if(one_to_many == "most_likely_species") {
+  if(taxonomic_splits == "most_likely_species") {
     updated_data <-  
       updated_data %>%
       dplyr::group_by(aligned_name) %>%
@@ -86,7 +86,7 @@ create_taxonomic_update_lookup <- function(taxa,
     dplyr::select(-known)
   
   # todo - should this be an option here, or an extra function operating on outputs?
-  if (one_to_many == "collapse_to_higher_taxon") {
+  if (taxonomic_splits == "collapse_to_higher_taxon") {
     return(collapse_to_higher_taxon(updated_data, resources))
   }
   
@@ -112,16 +112,16 @@ create_taxonomic_update_lookup <- function(taxa,
 }
 
 #' @noRd
-validate_one_to_many_input <- function(one_to_many) {
+validate_taxonomic_splits_input <- function(taxonomic_splits) {
   valid_inputs <-
     c("return_all",
       "collapse_to_higher_taxon",
       "most_likely_species")
-  if (!one_to_many %in% valid_inputs)
+  if (!taxonomic_splits %in% valid_inputs)
     stop(
       paste(
         "Invalid input:",
-        one_to_many,
+        taxonomic_splits,
         ". Valid inputs are 'return_all', 'collapse_to_higher_taxon', or 'most_likely_species'."
       )
     )
