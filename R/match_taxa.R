@@ -748,12 +748,11 @@ match_taxa <- function(
   
   # match_07a: fuzzy match to APC-accepted canonical name
   # Fuzzy match of taxon name to an APC-accepted canonical name, once filler words and punctuation are removed.
-  for (i in 1:nrow(taxa$tocheck)) {
-    taxa$tocheck$stripped_name[i]
+  for (i in 1:nrow(taxa$tocheck)) {    
     taxa$tocheck$fuzzy_match_cleaned_APC[i] <-
       fuzzy_match(
-        txt = taxa$tocheck$stripped_name[i],
-        accepted_list = resources$`APC list (accepted)`$stripped_canonical,
+        txt = taxa$tocheck$stripped_name2[i],
+        accepted_list = resources$`APC list (accepted)`$stripped_canonical2,
         max_distance_abs = fuzzy_abs_dist,
         max_distance_rel = fuzzy_rel_dist,
         n_allowed = 1
@@ -761,12 +760,12 @@ match_taxa <- function(
   }
   
   i <-
-    taxa$tocheck$fuzzy_match_cleaned_APC %in% resources$`APC list (accepted)`$stripped_canonical
+    taxa$tocheck$fuzzy_match_cleaned_APC %in% resources$`APC list (accepted)`$stripped_canonical2
   
   ii <-
     match(
       taxa$tocheck[i,]$fuzzy_match_cleaned_APC,
-      resources$`APC list (accepted)`$stripped_canonical
+      resources$`APC list (accepted)`$stripped_canonical2
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -793,8 +792,8 @@ match_taxa <- function(
   for (i in 1:nrow(taxa$tocheck)) {    
     taxa$tocheck$fuzzy_match_cleaned_APC_known[i] <-
       fuzzy_match(
-        txt = taxa$tocheck$stripped_name[i],
-        accepted_list = resources$`APC list (known names)`$stripped_canonical,
+        txt = taxa$tocheck$stripped_name2[i],
+        accepted_list = resources$`APC list (known names)`$stripped_canonical2,
         max_distance_abs = fuzzy_abs_dist,
         max_distance_rel = fuzzy_rel_dist,
         n_allowed = 1
@@ -802,12 +801,12 @@ match_taxa <- function(
   }
   
   i <-
-    taxa$tocheck$fuzzy_match_cleaned_APC_known %in% resources$`APC list (known names)`$stripped_canonical
+    taxa$tocheck$fuzzy_match_cleaned_APC_known %in% resources$`APC list (known names)`$stripped_canonical2
   
   ii <-
     match(
       taxa$tocheck[i,]$fuzzy_match_cleaned_APC_known,
-      resources$`APC list (known names)`$stripped_canonical
+      resources$`APC list (known names)`$stripped_canonical2
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
