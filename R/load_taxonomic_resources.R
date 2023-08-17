@@ -86,6 +86,7 @@ load_taxonomic_resources <-
                     taxonomic_status,
                     taxon_ID,
                     scientific_name_ID,
+                    accepted_name_usage_ID,
                     name_type,
                     taxon_rank,
                     genus) %>%
@@ -153,6 +154,7 @@ load_taxonomic_resources <-
       dplyr::select(
         canonical_name,
         accepted_name_usage,
+        accepted_name_usage_ID,
         scientific_name,
         taxonomic_status,
         taxon_ID,
@@ -169,6 +171,7 @@ load_taxonomic_resources <-
       dplyr::select(
         canonical_name,
         accepted_name_usage,
+        accepted_name_usage_ID,
         scientific_name,
         taxonomic_status,
         taxon_ID,
