@@ -2048,7 +2048,10 @@ standardise_names <- function(taxon_names) {
     ## for hybrid markers
     stringi::stri_trans_general("Any-Latin; Latin-ASCII") %>%
     f("\\*", "x") %>%
-    
+  
+    ## remove ".."
+    stringr::str_replace("\\.\\.", "\\.") %>%
+
     ## Weird formatting
     f("[\\n\\t]", " ") %>%
     f("[\\n\\t]", " ") %>%
@@ -2058,41 +2061,44 @@ standardise_names <- function(taxon_names) {
     f("\\(\\ ", "\\(") %>%
     
     ## Capitalise first letter
-    f("^([a-z])", "\\U\\1") %>%
+    f("^([a-z])", "\\U ") %>%
     
     ## sp. not sp or spp
-    f("\\ssp(\\s|$)", " sp.\\1") %>%
-    f("\\sspp.(\\s|$)", " sp.\\1") %>%
-    f("\\sspp(\\s|$)", " sp.\\1") %>%
-    f("\\sspp(\\s|$)", " sp.\\1") %>%
+    f("\\ssp(\\s|$)",   " sp. ") %>%
+    f("\\sspp.(\\s|$)", " sp. ") %>%
+    f("\\sspp(\\s|$)",  " sp. ") %>%
     
     ## subsp. not ssp, ssp., subsp or sub sp.
-    f("\\sssp(\\s|$)", " subsp.\\1") %>%
-    f("\\sssp.(\\s|$)", " subsp.\\1") %>%
-    f("\\ssubsp(\\s|$)", " subsp.\\1") %>%
-    f("\\ssub sp.(\\s|$)", " subsp.\\1") %>%
+    f("\\sssp(\\s|$)",     " subsp. ") %>%
+    f("\\sssp.(\\s|$)",    " subsp. ") %>%
+    f("\\ssubsp(\\s|$)",   " subsp. ") %>%
+    f("\\ssub sp.(\\s|$)", " subsp. ") %>%
     
-    ## var. not var
-    f("\\svar(\\s|$)", " var.\\1") %>%
+    ## var. not var or v or v.
+    f("\\svar(\\s|$)",   " var. ") %>%
+    f("\\sv(\\s|$|\\.)", " var. ") %>%
     
-    ## aff. not affin, aff, affn
-    f("\\saffin(\\s|$)", " aff.\\1") %>%
-    f("\\saff(\\s|$)", " aff.\\1") %>%
-    f("\\saffn(\\s|$)", " aff.\\1") %>%
+    ## aff. not affin, aff affn affinis
+    f("\\saffin(\\s|$)",    " aff. ") %>%
+    f("\\saff(\\s|$)",      " aff. ") %>%
+    f("\\saffn(\\s|$|\\.)", " aff. ") %>%
+    f("\\saffinis(\\s|$)",  " aff. ") %>%
     
-    ## f. not forma or form
-    f("\\sforma(\\s|$)", " f.\\1") %>%
-    f("\\sform(\\s|$|\\.)", " f.\\1") %>%
+    ## f. not forma or form or form. or f
+    f("\\sforma(\\s|$)",       " f. ") %>%
+    f("\\sform(\\s|$|\\.\\s)", " f. ") %>%
+    f("\\sf(\\s|$)",           " f. ") %>%
     
     ## remove " ms" if present
-    f("\\sms(\\s|$)", "\\1") %>%
+    f("\\sms(\\s|$)", " ") %>%
     
     ## remove " s.l" or " s.s." if present
-    f("\\ssl(\\s|$)", "\\1") %>%
-    f("\\ss\\.l\\.(\\s|$)", "\\1") %>%
+    f("\\ssl(\\s|$)", " ") %>%
+    f("\\ss\\.l\\.(\\s|$)", " ") %>%
     f("\\sss(\\s|$)", "") %>%
-    f("\\ss\\.s\\.(\\s|$)", "\\1") %>%
+    f("\\ss\\.s\\.(\\s|$)", " ") %>%
     
     ## clean white space
     stringr::str_squish()
 }
+
