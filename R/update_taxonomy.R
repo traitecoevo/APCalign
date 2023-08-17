@@ -71,7 +71,7 @@ update_taxonomy <- function(aligned_data,
   
   aligned_data <- 
     aligned_data %>%
-    dplyr::select(aligned_name, taxon_rank, taxonomic_reference) %>%
+    dplyr::select(original_name, aligned_name, taxon_rank, taxonomic_reference, aligned_reason) %>%
     dplyr::mutate(genus = stringr::word(aligned_name, 1))
   
   species_and_infraspecific <- c("Species", "Forma", "Varietas", "Subspecies")
@@ -203,7 +203,7 @@ update_taxonomy <- function(aligned_data,
     mutate(
       taxonomic_reference = ifelse(taxon_rank %in% species_and_infraspecific, taxonomic_reference, taxonomic_dataset_genus),
       taxonomic_status = ifelse(taxon_rank %in% species_and_infraspecific, taxonomic_status, taxonomic_status_genus),
-      update_reason = ifelse(taxon_rank %in% species_and_infraspecific, taxonomic_status_clean, genus_update_reason)
+      update_reason = ifelse(taxon_rank %in% species_and_infraspecific, taxonomic_status_clean, as.character(genus_update_reason))
     ) %>%
     select(
       original_name,
@@ -215,6 +215,7 @@ update_taxonomy <- function(aligned_data,
       taxon_rank,
       taxonomic_reference,
       taxonomic_status,
+      aligned_reason,
       update_reason,
       subclass,
       taxon_distribution,
