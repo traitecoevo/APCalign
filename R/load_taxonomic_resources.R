@@ -90,9 +90,10 @@ load_taxonomic_resources <-
                     taxon_rank,
                     genus) %>%
       dplyr::mutate(
-        stripped_canonical = strip_names(canonical_name),
-        ## Todo: rename stripped_canonical2, state purpose
-        # stripped_2 gets rid of `sp` and `spp` which is helpful for some matches
+        # strip_names removes punctuation and filler words associated with infraspecific taxa (subsp, var, f, ser)
+        stripped_canonical = strip_names(canonical_name),        
+        ## strip_names2 removes punctuation, filler words associated with infraspecific taxa (subsp, var, f, ser), and filler words associated with species name cases (x, sp)
+        ## strip_names2 is essential for the matches involving 2 or 3 words, since you want those words to not count filler words
         stripped_canonical2 = strip_names_2(canonical_name),
         stripped_scientific = strip_names(scientific_name),
         binomial = ifelse(

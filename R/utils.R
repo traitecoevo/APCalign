@@ -24,11 +24,12 @@ strip_names <- function(taxon_names) {
     stringr::str_replace_all("\\(\\ ", "") %>%
     stringr::str_replace_all("[:punct:]", " ") %>%
     stringr::str_replace_all("\\,", "") %>%
-    stringr::str_replace_all(" ser ", " ") %>%
-    stringr::str_replace_all(" s l ", " ") %>%
-    stringr::str_replace_all(" s s ", " ") %>%
     stringr::str_replace_all("\\=", " ") %>%
     stringr::str_replace_all("  ", " ") %>%
+    stringr::str_replace_all(" subsp ", " ") %>%
+    stringr::str_replace_all(" var ", " ") %>%   
+    stringr::str_replace_all(" ser ", " ") %>%
+    stringr::str_replace_all(" f ", " ") %>%
     stringr::str_squish() %>%
     tolower()
 }
@@ -43,9 +44,6 @@ strip_names_2 <- function(x) {
     stringr::str_replace_all(" ser ", " ") %>%
     stringr::str_replace_all(" f ", " ") %>%
     stringr::str_replace_all(" species ", " ") %>%
-    stringr::str_replace_all(" s l ", " ") %>%
-    stringr::str_replace_all(" s s ", " ") %>%
-    stringr::str_replace_all(" ss ", " ") %>%
     stringr::str_replace_all(" x ", " ") %>%
     stringr::str_replace_all(" sp ", " ") %>%
     stringr::str_replace_all(" sp1", " 1") %>%

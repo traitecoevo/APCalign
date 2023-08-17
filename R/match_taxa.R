@@ -107,13 +107,9 @@ match_taxa <- function(
   # Aligned name includes identifier to indicate `genus sp.` refers to a specific species (or infra-specific taxon), associated with a specific dataset/location.
   
   i <-
-    (
-      stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
-        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$") |
-        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]ssp$")
-    ) &
+    stringr::str_detect(taxa$tocheck$cleaned_name, "[:space:]sp\\.$") &
     taxa$tocheck$genus %in% resources$genera_all2$canonical_name &
-    stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp", "ssp")
+    stringr::word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
   
   ii <-
     match(
@@ -152,13 +148,9 @@ match_taxa <- function(
   # Aligned name includes identifier to indicate `genus sp.` refers to a specific species (or infra-specific taxon), associated with a specific dataset/location.
   
   i <-
-    (
-      stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
-        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$") |
-        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]ssp$")
-    ) &
+    stringr::str_detect(taxa$tocheck$cleaned_name, "[:space:]sp\\.$") &
     taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$canonical_name &
-    stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp", "ssp")
+    stringr::word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
   
   ii <-
     match(
@@ -195,13 +187,9 @@ match_taxa <- function(
   # there isn't an exact match to an APC known genus name.
   # Aligned name includes identifier to indicate `genus sp.` refers to a specific species (or infra-specific taxon), associated with a specific dataset/location.
   i <-
-    (
-      stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
-        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$") |
-        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]ssp$")
-    ) &
+    stringr::str_detect(taxa$tocheck$cleaned_name, "[:space:]sp\\.$") &
     taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$canonical_name &
-    stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp", "ssp")
+    stringr::word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
   
   ii <-
     match(
@@ -236,13 +224,9 @@ match_taxa <- function(
   # Exact matches of APC-accepted family for names where the final "word" is `sp` or `spp`.
   # Aligned name includes identifier to indicate `family sp.` refers to a specific species (or infra-specific taxon), associated with a specific dataset/location.
   i <-
-    (
-      stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]sp$") |
-        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]spp$") |
-        stringr::str_detect(taxa$tocheck$stripped_name, "[:space:]ssp$")
-    ) &
+    stringr::str_detect(taxa$tocheck$cleaned_name, "[:space:]sp\\.$") &
     taxa$tocheck$genus %in% resources$family_accepted$canonical_name &
-    stringr::word(taxa$tocheck$stripped_name, 2) %in% c("sp", "spp", "ssp")
+    stringr::word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -689,12 +673,12 @@ match_taxa <- function(
   # match_06a: APC-accepted canonical name
   # Taxon names that are exact matches to APC-accepted canonical names, once filler words and punctuation are removed.
   i <-
-    taxa$tocheck$stripped_name %in% resources$`APC list (accepted)`$stripped_canonical
+    taxa$tocheck$cleaned_name %in% resources$`APC list (accepted)`$canonical_name
   
   ii <-
     match(
-      taxa$tocheck[i,]$stripped_name,
-      resources$`APC list (accepted)`$stripped_canonical
+      taxa$tocheck[i,]$cleaned_name,
+      resources$`APC list (accepted)`$canonical_name
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -719,12 +703,12 @@ match_taxa <- function(
   # match_06b: APC-known canonical name
   # Taxon names that are exact matches to APC-known canonical names, once filler words and punctuation are removed.
   i <-
-    taxa$tocheck$stripped_name %in% resources$`APC list (known names)`$stripped_canonical
+    taxa$tocheck$cleaned_name %in% resources$`APC list (known names)`$canonical_name
   
   ii <-
     match(
-      taxa$tocheck[i,]$stripped_name,
-      resources$`APC list (known names)`$stripped_canonical
+      taxa$tocheck[i,]$cleaned_name,
+      resources$`APC list (known names)`$canonical_name
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -751,8 +735,8 @@ match_taxa <- function(
   for (i in 1:nrow(taxa$tocheck)) {    
     taxa$tocheck$fuzzy_match_cleaned_APC[i] <-
       fuzzy_match(
-        txt = taxa$tocheck$stripped_name2[i],
-        accepted_list = resources$`APC list (accepted)`$stripped_canonical2,
+        txt = taxa$tocheck$stripped_name[i],
+        accepted_list = resources$`APC list (accepted)`$stripped_canonical,
         max_distance_abs = fuzzy_abs_dist,
         max_distance_rel = fuzzy_rel_dist,
         n_allowed = 1
@@ -760,12 +744,12 @@ match_taxa <- function(
   }
   
   i <-
-    taxa$tocheck$fuzzy_match_cleaned_APC %in% resources$`APC list (accepted)`$stripped_canonical2
+    taxa$tocheck$fuzzy_match_cleaned_APC %in% resources$`APC list (accepted)`$stripped_canonical
   
   ii <-
     match(
       taxa$tocheck[i,]$fuzzy_match_cleaned_APC,
-      resources$`APC list (accepted)`$stripped_canonical2
+      resources$`APC list (accepted)`$stripped_canonical
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -792,8 +776,8 @@ match_taxa <- function(
   for (i in 1:nrow(taxa$tocheck)) {    
     taxa$tocheck$fuzzy_match_cleaned_APC_known[i] <-
       fuzzy_match(
-        txt = taxa$tocheck$stripped_name2[i],
-        accepted_list = resources$`APC list (known names)`$stripped_canonical2,
+        txt = taxa$tocheck$stripped_name[i],
+        accepted_list = resources$`APC list (known names)`$stripped_canonical,
         max_distance_abs = fuzzy_abs_dist,
         max_distance_rel = fuzzy_rel_dist,
         n_allowed = 1
@@ -801,12 +785,12 @@ match_taxa <- function(
   }
   
   i <-
-    taxa$tocheck$fuzzy_match_cleaned_APC_known %in% resources$`APC list (known names)`$stripped_canonical2
+    taxa$tocheck$fuzzy_match_cleaned_APC_known %in% resources$`APC list (known names)`$stripped_canonical
   
   ii <-
     match(
       taxa$tocheck[i,]$fuzzy_match_cleaned_APC_known,
-      resources$`APC list (known names)`$stripped_canonical2
+      resources$`APC list (known names)`$stripped_canonical
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -832,12 +816,12 @@ match_taxa <- function(
   # Taxon names that are exact matches to APNI-listed canonical names, once filler words and punctuation are removed.
   if (APNI_matches == TRUE) {
     i <-
-      taxa$tocheck$stripped_name2 %in% resources$`APNI names`$stripped_canonical2
+      taxa$tocheck$cleaned_name %in% resources$`APNI names`$canonical_name
     
     ii <-
       match(
-        taxa$tocheck[i,]$stripped_name2,
-        resources$`APNI names`$stripped_canonical2
+        taxa$tocheck[i,]$cleaned_name,
+        resources$`APNI names`$canonical_name
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -2062,10 +2046,12 @@ standardise_names <- function(taxon_names) {
     ## Capitalise first letter
     f("^([a-z])", "\\U ") %>%
     
-    ## sp. not sp or spp
+    ## sp. not sp or spp or ssp
     f("\\ssp(\\s|$)",   " sp. ") %>%
     f("\\sspp.(\\s|$)", " sp. ") %>%
     f("\\sspp(\\s|$)",  " sp. ") %>%
+    f("\\sssp.(\\s|$)", " sp. ") %>%
+    f("\\sssp(\\s|$)",  " sp. ") %>%
     
     ## subsp. not ssp, ssp., subsp or sub sp.
     f("\\sssp(\\s|$)",     " subsp. ") %>%
@@ -2091,12 +2077,19 @@ standardise_names <- function(taxon_names) {
     ## remove " ms" if present
     f("\\sms(\\s|$)", " ") %>%
     
-    ## remove " s.l" or " s.s." if present
+    ## remove " s.l" or " s.s." or "s s " or " s l " if present
     f("\\ssl(\\s|$)", " ") %>%
     f("\\ss\\.l\\.(\\s|$)", " ") %>%
     f("\\sss(\\s|$)", "") %>%
     f("\\ss\\.s\\.(\\s|$)", " ") %>%
+    f("\\ss\\ss(\\s|$)", " ") %>%
+    f("\\ss\\sl(\\s|$)", " ") %>%
+    f("\\ss\\.\\ss(\\s|$|\\.\\s)", " ") %>%
+    f("\\ss\\.\\sl(\\s|$|\\.\\s)", " ") %>%
     
+    ## remove "ser" if present
+    f("\\sser(\\s|\\.\\s)", " ser. ") %>%
+
     ## clean white space
     stringr::str_squish()
 }
