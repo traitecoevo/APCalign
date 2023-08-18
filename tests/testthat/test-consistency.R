@@ -150,8 +150,16 @@ test_that("align_taxa() works with longer list", {
 })
 
 test_that("update_taxonomy() works", {
+  aligned_data <- tibble::tibble(
+    original_name = c("Dryandra preissii", "Banksia acuminata"),
+    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
+    taxon_rank = c("Species", "Species"),
+    taxonomic_reference = c("APC", "APC"),
+    aligned_reason = NA_character_
+  )
+  
   expect_equal(nrow(update_taxonomy(
-    aligned_names = c("Dryandra preissii", "Banksia acuminata"),
+    aligned_data,
     resources = resources
   )), 2)
 

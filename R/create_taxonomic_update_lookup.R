@@ -16,7 +16,7 @@
 #' @param output file path to save the intermediate output to
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @details
-#' `updated_reason` represents the taxonomic status of the aligned name
+#' `update_reason` represents the taxonomic status of the aligned name
 #' @export
 #'
 #' @seealso \code{\link{load_taxonomic_resources}}
@@ -101,7 +101,7 @@ create_taxonomic_update_lookup <- function(taxa,
         taxon_rank,
         scientific_name_authorship,
         aligned_reason,
-        updated_reason
+        update_reason
       )
   }
 
