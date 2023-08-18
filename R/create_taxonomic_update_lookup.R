@@ -50,11 +50,12 @@ create_taxonomic_update_lookup <- function(taxa,
                imprecise_fuzzy_matches = imprecise_fuzzy_matches)
 
   updated_data <- 
-    update_taxonomy(aligned_data$aligned_name, resources = resources, output = output)
+    update_taxonomy(aligned_data, resources = resources, output = output)
 
   if(one_to_many == "most_likely_species") {
     updated_data <-  
       updated_data %>%
+      dplyr::mutate(canonical_name = suggested_name) %>%
       dplyr::group_by(aligned_name) %>%
       # todo: should this be for all outputs? Move to update_taxonomy
       # take first species, this is most likely, based on ordering determined in update_taxonomy
@@ -67,21 +68,21 @@ create_taxonomic_update_lookup <- function(taxa,
   }
   # browser()
 
-  updated_data <-
-    # merge with original data on alignment to preserve order
-    dplyr::left_join(
-      by = "aligned_name",
-      aligned_data %>%
-        dplyr::select(original_name, aligned_name, aligned_reason, known),
-      updated_data %>% filter(!is.na(aligned_name)) %>% distinct()
-    ) %>%
-    dplyr::mutate(
-      # todo - why isn't this source APNI? XXX Lizzy agrees
-      taxonomic_reference = ifelse(known & is.na(taxonomic_reference), "APNI", taxonomic_reference),
-      # todo - do we want to keep this? - correct term is `unplaced`, but you have to specify a reference 
-      taxonomic_status_clean = ifelse(known & is.na(taxonomic_status_clean), "unplaced by APC", taxonomic_status_clean)
-    ) %>%
-    dplyr::select(-known)
+  # updated_data <-
+  #   # merge with original data on alignment to preserve order
+  #   dplyr::left_join(
+  #     by = "aligned_name",
+  #     aligned_data %>%
+  #       dplyr::select(original_name, aligned_name, aligned_reason, known),
+  #     updated_data %>% filter(!is.na(aligned_name)) %>% distinct()
+  #   ) %>%
+  #   dplyr::mutate(
+  #     # todo - why isn't this source APNI? XXX Lizzy agrees
+  #     taxonomic_reference = ifelse(known & is.na(taxonomic_reference), "APNI", taxonomic_reference),
+  #     # todo - do we want to keep this? - correct term is `unplaced`, but you have to specify a reference 
+  #     taxonomic_status_clean = ifelse(known & is.na(taxonomic_status_clean), "unplaced by APC", taxonomic_status_clean)
+  #   ) %>%
+  #   dplyr::select(-known)
   
   # todo - should this be an option here, or an extra function operating on outputs?
   if (one_to_many == "collapse_to_higher_taxon") {
@@ -94,12 +95,13 @@ create_taxonomic_update_lookup <- function(taxa,
       dplyr::select(
         original_name,
         aligned_name,
-        # todo - why are we renaming these?
-        accepted_name = canonical_name,
+        accepted_name,
+        suggested_name,
+        genus,
         taxon_rank,
-        author = scientific_name_authorship,
+        scientific_name_authorship,
         aligned_reason,
-        updated_reason = taxonomic_status_clean
+        updated_reason
       )
   }
 
