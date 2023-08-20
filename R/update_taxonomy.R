@@ -80,7 +80,8 @@ update_taxonomy <- function(aligned_data,
     aligned_data %>%
       mutate(
         taxonomic_dataset_tmp = stringr::word(taxonomic_reference, 1),
-        taxonomic_rank_tmp = ifelse(taxon_rank %in% species_and_infraspecific, "Species_x", taxon_rank)
+        taxonomic_rank_tmp = ifelse(taxon_rank %in% species_and_infraspecific, "Species_x", taxon_rank),
+        row_number = dplyr::row_number()
       ) %>%
     split(paste(.$taxonomic_dataset_tmp, .$taxonomic_rank_tmp))
 
@@ -168,19 +169,22 @@ update_taxonomy <- function(aligned_data,
   
   if (!is.null(taxa_out[["APC Species_x"]])) {
     taxa_out[["APC Species_x"]] <- taxa_out[["APC Species_x"]] %>%
+    # todo: I think this join is for capturing splits, but by requiring taxonomic_status == "accepted", it means that you won't do any updates
+    # maybe the right solution is first to go through all the updates to APC known taxa, then delete lots of columns and readd??
     dplyr::left_join(
       by = "aligned_name",
       resources$APC %>%
-        dplyr::filter(taxon_rank %in% species_and_infraspecific) %>%
-        dplyr::distinct(canonical_name, .keep_all = TRUE) %>%
+        dplyr::filter(taxon_rank %in% species_and_infraspecific & taxonomic_status == "accepted") %>%
+        dplyr::arrange(taxonomic_status) %>% #todo arrange by specified sort order
+        #dplyr::distinct(canonical_name, .keep_all = TRUE) %>%
         dplyr::select(
           aligned_name = canonical_name,
-          taxon_ID_clean = taxon_ID,
           taxonomic_status_clean = taxonomic_status,
+          taxon_ID_clean = taxon_ID,
           accepted_name_usage_ID,
           scientific_name_ID
         )
-    ) %>%
+      ) %>%
       # Now find accepted names for each name in the species (and infraspecific taxon) list (sometimes they are the same)
       dplyr::left_join(
         by = "accepted_name_usage_ID",
@@ -283,6 +287,7 @@ update_taxonomy <- function(aligned_data,
     dplyr::bind_rows(taxa_out) %>%
     mutate(
       suggested_name = ifelse(is.na(suggested_name), aligned_name, suggested_name),
+      suggested_name = ifelse(is.na(suggested_name), original_name, suggested_name),
       update_reason = ifelse(taxonomic_status == "accepted", "aligned name accepted by APC", update_reason),
       taxonomic_status = ifelse(is.na(taxonomic_status), "unknown", taxonomic_status),
       taxonomic_reference = ifelse(stringr::str_detect(taxonomic_reference, "APC"), "APC", taxonomic_reference),
@@ -310,33 +315,34 @@ update_taxonomy <- function(aligned_data,
       taxon_ID_genus,
       scientific_name_ID,
       canonical_name,
-      taxonomic_status_clean
+      taxonomic_status_clean,
+      row_number
     )
 
   # Assemble output in the order of the input `aligned_names`
   
   ## XXX code exists because NA's in alignments were breaking code
-  taxa_out <-
-    taxa_out %>%
-    dplyr::distinct() %>%
-    # Bring in any missing taxa (without alignments) so output list is complete
-    dplyr::bind_rows(
-      aligned_data %>%
-        dplyr::filter(!aligned_name %in% taxa_out$aligned_name)
-    ) %>%
-    # As we may have multiple matches per species and want to maintain order within taxa,
-    # we'll do this by nesting data before joining into original list
-    tidyr::nest(.by = "aligned_name", .key = "data")
-  
-  taxa_out <- 
-    aligned_data %>%
-    select(aligned_name) %>% 
-    # join into original list
-    dplyr::left_join(by = "aligned_name", taxa_out) %>%
-    # Now unnest
-    tidyr::unnest("data") #%>%
-  # some extra useful info
-  # dplyr::mutate(genus = stringr::word(canonical_name, 1, 1))
+  # taxa_out <-
+  #   taxa_out %>%
+  #   dplyr::distinct() %>%
+  #   # Bring in any missing taxa (without alignments) so output list is complete
+  #   dplyr::bind_rows(
+  #     aligned_data %>%
+  #       dplyr::filter(!aligned_name %in% taxa_out$aligned_name)
+  #   ) %>%
+  #   # As we may have multiple matches per species and want to maintain order within taxa,
+  #   # we'll do this by nesting data before joining into original list
+  #   tidyr::nest(.by = "aligned_name", .key = "data")
+  # 
+  # taxa_out <- 
+  #   aligned_data %>%
+  #   select(aligned_name) %>% 
+  #   # join into original list
+  #   dplyr::left_join(by = "aligned_name", taxa_out) %>%
+  #   # Now unnest
+  #   tidyr::unnest("data") #%>%
+  # # some extra useful info
+  # # dplyr::mutate(genus = stringr::word(canonical_name, 1, 1))
   
   if (!is.null(output)) {
     readr::write_csv(taxa_out, output)

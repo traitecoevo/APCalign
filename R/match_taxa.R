@@ -163,11 +163,11 @@ match_taxa <- function(
       taxonomic_reference = resources$genera_accepted$taxonomic_reference[ii],
       taxon_rank = "genus",      
       aligned_name_tmp = 
-        paste0(resources$genera_accepted$canonical_name[ii], " sp. [", cleaned_name),
-      aligned_name = ifelse(is.na(identifier_string2),
-                            paste0(aligned_name_tmp, "]"),
-                            paste0(aligned_name_tmp, identifier_string2, "]")
-                            ),
+        paste0(resources$genera_accepted$canonical_name[ii], " sp."),
+      aligned_name = ifelse(is.na(identifier_string),
+                            aligned_name_tmp,
+                            paste0(aligned_name_tmp, identifier_string)
+      ),
       aligned_reason = paste0(
         "Fuzzy match of taxon name ending with `sp.` to an APC-accepted genus (",
         Sys.Date(),
@@ -201,10 +201,10 @@ match_taxa <- function(
     mutate(
       taxonomic_reference = resources$genera_known$taxonomic_reference[ii],
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(resources$genera_known$canonical_name[ii], " sp. [", cleaned_name),
-      aligned_name = ifelse(is.na(identifier_string2),
-                            paste0(aligned_name_tmp, "]"),
-                            paste0(aligned_name_tmp, identifier_string2, "]")
+      aligned_name_tmp = paste0(resources$genera_known$canonical_name[ii], " sp."),
+      aligned_name = ifelse(is.na(identifier_string),
+                            aligned_name_tmp,
+                            paste0(aligned_name_tmp, identifier_string)
       ),
       aligned_reason = paste0(
         "Fuzzy match of taxon name ending with `sp.` to an APC-known genus (",
@@ -2044,7 +2044,7 @@ standardise_names <- function(taxon_names) {
     f("\\(\\ ", "\\(") %>%
     
     ## Capitalise first letter
-    f("^([a-z])", "\\U ") %>%
+    f("^([a-z])", "\\U\\1") %>%
     
     ## sp. not sp or spp or ssp
     f("\\ssp(\\s|$)",   " sp. ") %>%

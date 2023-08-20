@@ -55,14 +55,15 @@ create_taxonomic_update_lookup <- function(taxa,
   if(one_to_many == "most_likely_species") {
     updated_data <-  
       updated_data %>%
-      dplyr::mutate(canonical_name = suggested_name) %>%
-      dplyr::group_by(aligned_name) %>%
+      dplyr::group_by(row_number) %>%
+      dplyr::arrange(taxonomic_status_clean) %>% ## TODO arrange by sort order
       # todo: should this be for all outputs? Move to update_taxonomy
       # take first species, this is most likely, based on ordering determined in update_taxonomy
       dplyr::mutate(
-        possible_matches = sprintf("%s (%s)", canonical_name, taxonomic_status_clean) %>% paste(collapse = "; ")
+        possible_matches = sprintf("%s (%s)", suggested_name, taxonomic_status_clean) %>% paste(collapse = "; ")
       ) %>%
       # take first record, this is most likely as we've set a preferred order above
+      # todo XXXX this code is also collapsing identical suggested names. I think we need to separate collapsing all the split names from collapsing duplicate suggested names, which might go with different original names
       dplyr::slice(1) %>%
       dplyr::ungroup()
   }
