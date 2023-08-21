@@ -43,6 +43,27 @@ create_taxonomic_update_lookup <- function(taxa,
 
   validate_one_to_many_input(one_to_many)
 
+  preferred_order <-
+    c(
+      "accepted",
+      "taxonomic synonym",
+      "basionym",
+      "nomenclatural synonym",
+      "isonym",
+      "orthographic variant",
+      "common name",
+      "doubtful taxonomic synonym",
+      "replaced synonym",
+      "misapplied",
+      "doubtful pro parte taxonomic synonym",
+      "pro parte nomenclatural synonym",
+      "pro parte taxonomic synonym",
+      "pro parte misapplied",
+      "excluded",
+      "doubtful misapplied",
+      "doubtful pro parte misapplied"
+    )
+  
   aligned_data <- 
     align_taxa(taxa, resources = resources, 
                APNI_matches = APNI_matches, 
@@ -85,6 +106,7 @@ create_taxonomic_update_lookup <- function(taxa,
         suggested_name,
         genus,
         taxon_rank,
+        taxonomic_reference,
         scientific_name_authorship,
         aligned_reason,
         update_reason

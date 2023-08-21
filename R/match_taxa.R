@@ -2050,14 +2050,14 @@ standardise_names <- function(taxon_names) {
     f("\\ssp(\\s|$)",   " sp. ") %>%
     f("\\sspp.(\\s|$)", " sp. ") %>%
     f("\\sspp(\\s|$)",  " sp. ") %>%
-    f("\\sssp.(\\s|$)", " sp. ") %>%
-    f("\\sssp(\\s|$)",  " sp. ") %>%
     
     ## subsp. not ssp, ssp., subsp or sub sp.
     f("\\sssp(\\s|$)",     " subsp. ") %>%
     f("\\sssp.(\\s|$)",    " subsp. ") %>%
     f("\\ssubsp(\\s|$)",   " subsp. ") %>%
     f("\\ssub sp.(\\s|$)", " subsp. ") %>%
+    f("\\sssp.(\\s|$)",    " subsp. ") %>%
+    f("\\sssp(\\s|$)",     " subsp. ") %>%
     
     ## var. not var or v or v.
     f("\\svar(\\s|$)",   " var. ") %>%

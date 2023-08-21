@@ -97,7 +97,7 @@ update_taxonomy <- function(aligned_data,
             genus = canonical_name,
             taxonomic_reference_genus = taxonomic_reference,
             accepted_name_usage_ID,
-            taxonomic_status,
+            taxonomic_status
           )
       ) %>%
       # todo maybe: currently not documenting alternate taxonomic status for genera
@@ -111,12 +111,12 @@ update_taxonomy <- function(aligned_data,
         taxonomic_reference_genus = resources$genera_all$taxonomic_reference[match(accepted_name_usage_ID, resources$genera_all$taxon_ID)],
         taxonomic_reference = ifelse(is.na(accepted_name_usage_ID), taxonomic_reference, taxonomic_reference_genus),
         taxonomic_status_genus = resources$genera_all$taxonomic_status[match(accepted_name_usage_ID, resources$genera_all$taxon_ID)],
-        taxonomic_status = ifelse(is.na(accepted_name_usage_ID), my_order, taxonomic_status_genus),
+        taxonomic_status = ifelse(is.na(accepted_name_usage_ID), as.character(my_order), taxonomic_status_genus),
         taxon_ID_genus = resources$genera_all$taxon_ID[match(accepted_name_usage_ID, resources$genera_all$accepted_name_usage_ID)],
         aligned_minus_genus = ifelse(is.na(genus_accepted), NA, stringr::str_replace(aligned_name, stringr::word(aligned_name, 1),"")),
         suggested_name = ifelse(taxonomic_status == "accepted", paste0(genus_accepted, aligned_minus_genus), NA),
         suggested_name = ifelse(taxonomic_status != "accepted", aligned_name, suggested_name),
-        genus_update_reason = my_order,
+        genus_update_reason = as.character(my_order),
         genus = genus_accepted,
         taxonomic_reference = "APC"
       ) %>%    
@@ -290,9 +290,35 @@ update_taxonomy <- function(aligned_data,
       dplyr::select(-accepted_name_usage_ID_genus)
   }
   
-  taxa_out <- 
+  taxa_blank <-
+      tibble::tibble(
+        original_name = character(0L),
+        aligned_name = character(0L),
+        accepted_name = character(0L),
+        suggested_name = character(0L),
+        genus = character(0L),
+        family = character(0L),
+        taxon_rank = character(0L),
+        taxonomic_reference = character(0L),
+        taxonomic_status = character(0L),
+        aligned_reason = character(0L),
+        update_reason = character(0L),
+        subclass = character(0L),
+        taxon_distribution = character(0L),
+        scientific_name_authorship = character(0L),
+        taxon_ID = character(0L),
+        taxon_ID_genus = character(0L),
+        scientific_name_ID = character(0L),
+        canonical_name = character(0L),
+        taxonomic_status_clean = character(0L),
+        taxonomic_status_with_splits = character(0L),
+        row_number = numeric(0L)
+      )
+
+  taxa_out <-
     dplyr::bind_rows(taxa_out) %>%
-    mutate(
+    dplyr::bind_rows(taxa_blank) %>%
+    dplyr::mutate(
       suggested_name = ifelse(is.na(suggested_name), aligned_name, suggested_name),
       suggested_name = ifelse(is.na(suggested_name), original_name, suggested_name),
       update_reason = ifelse(taxonomic_status_clean == "accepted", "aligned name accepted by APC", update_reason),
@@ -301,9 +327,10 @@ update_taxonomy <- function(aligned_data,
       genus = ifelse(taxonomic_status == "unknown", NA_character_, genus),
       taxon_rank = ifelse(taxonomic_status == "unknown", NA_character_, taxon_rank),
       taxon_rank = stringr::str_to_lower(taxon_rank),
-      canonical_name = suggested_name
+      canonical_name = suggested_name,
+      taxonomic_status_clean = ifelse(is.na(taxonomic_status_clean), NA_character_, taxonomic_status_clean)
     ) %>%
-    select(
+    dplyr::select(
       original_name,
       aligned_name,
       accepted_name,
