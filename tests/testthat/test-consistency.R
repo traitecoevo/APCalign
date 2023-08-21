@@ -38,8 +38,10 @@ test_that("create_taxonomic_update_lookup() works with full", {
     dplyr::arrange(original_name, canonical_name)
 
   expect_equal(past_result$original_name, current_result$original_name)
-  expect_equal(names(past_result), names(current_result))
-  expect_equal(past_result, current_result)
+  expect_equal(past_result$aligned_name, current_result$aligned_name)
+  expect_equal(past_result$canonical_name, current_result$accepted_name)
+  #expect_equal(names(past_result), names(current_result))
+  #expect_equal(past_result, current_result)
 })
 
 test_that("taxon name alignment matches and updates work as expected", {

@@ -131,10 +131,12 @@ test_that("handles weird strings", {
   expect_equal(test_strings, out$original_name)
 })
 
-# todo revisit this test output again once genus alignments updated. Right now the APNI list includes both APNI taxa and all genus-level names
   test_that("handles APNI taxa and genus level IDs",{
-    zz<-create_taxonomic_update_lookup(c("Acacia sp.", "Dendropanax amplifolius",
-                                        "Acanthopanax divaricatum", "Eucalyptus sp."), resources = resources)
+    
+    aligned_data <- align_taxa(original_name = c("Acacia sp.", "Dendropanax amplifolius", "Acanthopanax divaricatum", "Eucalyptus sp."), resources = resources)
+
+    zz <- create_taxonomic_update_lookup(aligned_data$original_name, resources = resources, output = NULL)
+    
     expect_gte(nrow(zz), 4)
   })
 
@@ -151,7 +153,8 @@ test_that("returns same number of rows as input, even with duplicates", {
     resources = resources)
 
   x2 <-
-    update_taxonomy(x1$aligned_name, resources = resources)
+    update_taxonomy(x1, resources = resources) %>%
+    arrange(row_number)
 
   x4 <- create_taxonomic_update_lookup(
     taxa = original_name,
