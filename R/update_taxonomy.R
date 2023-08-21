@@ -169,23 +169,28 @@ update_taxonomy <- function(aligned_data,
   
   if (!is.null(taxa_out[["APC Species_x"]])) {
     taxa_out[["APC Species_x"]] <- taxa_out[["APC Species_x"]] %>%
-    # todo: I think this join is for capturing splits, but by requiring taxonomic_status == "accepted", it means that you won't do any updates
-    # maybe the right solution is first to go through all the updates to APC known taxa, then delete lots of columns and readd??
-    dplyr::left_join(
-      by = "aligned_name",
-      resources$APC %>%
-        dplyr::filter(taxon_rank %in% species_and_infraspecific & taxonomic_status == "accepted") %>%
-        dplyr::arrange(taxonomic_status) %>% #todo arrange by specified sort order
-        #dplyr::distinct(canonical_name, .keep_all = TRUE) %>%
-        dplyr::select(
-          aligned_name = canonical_name,
-          taxonomic_status_clean = taxonomic_status,
-          taxon_ID_clean = taxon_ID,
-          accepted_name_usage_ID,
-          scientific_name_ID
-        )
+      ## First propagate extra entries for taxa that have been split, based on the aligned names 
+      dplyr::left_join(
+        by = "aligned_name",
+        resources$APC %>%
+          dplyr::filter(
+            taxon_rank %in% species_and_infraspecific &
+              taxonomic_status != "misapplied"
+          ) %>%
+          dplyr::mutate(my_order = forcats::fct_relevel(
+            taxonomic_status,
+            subset(preferred_order, preferred_order %in%  taxonomic_status)
+          )) %>%
+          dplyr::arrange(canonical_name, my_order) %>%
+          dplyr::select(
+            aligned_name = canonical_name,
+            taxonomic_status_with_splits = taxonomic_status,
+            accepted_name_usage_ID,
+            taxon_ID_with_splits = taxon_ID,
+            scientific_name_ID
+          )
       ) %>%
-      # Now find accepted names for each name in the species (and infraspecific taxon) list (sometimes they are the same)
+      # Second find accepted names for each name in the species (and infraspecific taxon) list (sometimes they are the same)
       dplyr::left_join(
         by = "accepted_name_usage_ID",
         resources$APC %>%
@@ -193,7 +198,7 @@ update_taxonomy <- function(aligned_data,
           dplyr::select(
             accepted_name_usage_ID,
             accepted_name = canonical_name,
-            taxonomic_status,
+            taxonomic_status_clean = taxonomic_status,
             scientific_name_authorship,
             family,
             subclass,
@@ -201,7 +206,7 @@ update_taxonomy <- function(aligned_data,
             ccAttributionIRI
           )
       ) %>%
-      # Some species have multiple matches. We will prefer the accepted usage, but record others if they exists
+      # Some species have multiple matches. We will prefer the accepted usage, but record others if they exist
       # To do this we define the order we want variables to sort by, with accepted at the top
       dplyr::mutate(my_order =  forcats::fct_relevel(
         taxonomic_status_clean,
@@ -229,8 +234,8 @@ update_taxonomy <- function(aligned_data,
         taxonomic_reference = "APC",
         suggested_name = ifelse(is.na(accepted_name), aligned_name, accepted_name),
         family = ifelse(is.na(family), resources$APC$family[match(stringr::word(suggested_name, 1), resources$APC$genus)], family),
-        taxonomic_status = ifelse(is.na(taxonomic_status), taxonomic_status_clean, taxonomic_status)
-      ) %>%
+        taxon_ID_clean = taxon_ID_with_splits
+      ) %>% 
       dplyr::select(-my_order, -genus_accepted)
   }
   
@@ -316,6 +321,7 @@ update_taxonomy <- function(aligned_data,
       scientific_name_ID,
       canonical_name,
       taxonomic_status_clean,
+      taxonomic_status_with_splits,
       row_number
     )
 

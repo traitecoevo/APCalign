@@ -56,34 +56,18 @@ create_taxonomic_update_lookup <- function(taxa,
     updated_data <-  
       updated_data %>%
       dplyr::group_by(row_number) %>%
-      dplyr::arrange(taxonomic_status_clean) %>% ## TODO arrange by sort order
-      # todo: should this be for all outputs? Move to update_taxonomy
-      # take first species, this is most likely, based on ordering determined in update_taxonomy
+      dplyr::mutate(my_order =  forcats::fct_relevel(
+        taxonomic_status_splits,
+        subset(preferred_order, preferred_order %in%  taxonomic_status_splits)
+      )) %>%
+      dplyr::arrange(row_number, my_order) %>%
       dplyr::mutate(
-        possible_matches = sprintf("%s (%s)", suggested_name, taxonomic_status_clean) %>% paste(collapse = "; ")
+        possible_matches = sprintf("%s (%s)", suggested_name, taxonomic_status_splits) %>% paste(collapse = "; ")
       ) %>%
       # take first record, this is most likely as we've set a preferred order above
-      # todo XXXX this code is also collapsing identical suggested names. I think we need to separate collapsing all the split names from collapsing duplicate suggested names, which might go with different original names
       dplyr::slice(1) %>%
       dplyr::ungroup()
   }
-  # browser()
-
-  # updated_data <-
-  #   # merge with original data on alignment to preserve order
-  #   dplyr::left_join(
-  #     by = "aligned_name",
-  #     aligned_data %>%
-  #       dplyr::select(original_name, aligned_name, aligned_reason, known),
-  #     updated_data %>% filter(!is.na(aligned_name)) %>% distinct()
-  #   ) %>%
-  #   dplyr::mutate(
-  #     # todo - why isn't this source APNI? XXX Lizzy agrees
-  #     taxonomic_reference = ifelse(known & is.na(taxonomic_reference), "APNI", taxonomic_reference),
-  #     # todo - do we want to keep this? - correct term is `unplaced`, but you have to specify a reference 
-  #     taxonomic_status_clean = ifelse(known & is.na(taxonomic_status_clean), "unplaced by APC", taxonomic_status_clean)
-  #   ) %>%
-  #   dplyr::select(-known)
   
   # todo - should this be an option here, or an extra function operating on outputs?
   if (one_to_many == "collapse_to_higher_taxon") {
