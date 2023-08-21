@@ -5,20 +5,20 @@
 \title{Use APC and APNI to update taxonomy, replacing synonyms to current taxa where relevant}
 \usage{
 update_taxonomy(
-  aligned_names,
+  aligned_data,
   output = NULL,
   resources = load_taxonomic_resources()
 )
 }
 \arguments{
-\item{aligned_names}{A character vector of plant names to update. These names must be in the format of the
-scientific name, with genus and species, and may contain additional qualifiers such as subspecies or varieties.
-The names are case insensitive.}
-
 \item{output}{(optional) Name of the file where results are saved. The default is NULL and no file is created.
 If specified, the output will be saved in a CSV file with the given name.}
 
 \item{resources}{the taxonomic resources required to make the summary statistics.  Loading this can be slow, so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.}
+
+\item{aligned_names}{A character vector of plant names to update. These names must be in the format of the
+scientific name, with genus and species, and may contain additional qualifiers such as subspecies or varieties.
+The names are case insensitive.}
 }
 \value{
 A tibble with updated taxonomy for the specified plant names. The tibble contains the following columns:
@@ -29,11 +29,12 @@ A tibble with updated taxonomy for the specified plant names. The tibble contain
 \item \code{taxonomic_status_clean}: the taxonomic status of the updated taxon.
 \item \code{alternative_taxonomic_status_clean}: the alternative taxonomic status for the input name, if any.
 \item \code{accepted_name_usage_ID}: the unique identifier for the accepted name of the input name.
-\item \code{canonical_name}: the accepted scientific name for the input name.
-\item \code{scientific_name_authorship}: the authorship information for the accepted name.
-\item \code{taxon_rank}: the taxonomic rank of the accepted name.
-\item \code{taxonomic_status}: the taxonomic status of the accepted name.
-\item \code{family}: the family of the accepted name.
+\item \code{canonical_name}: the accepted (or known) scientific name for the input name.
+\item \code{scientific_name_authorship}: the authorship information for the accepted (or known) name.
+\item \code{taxon_rank}: the taxonomic rank of the accepted (or known) name.
+\item \code{taxonomic_status}: the taxonomic status of the accepted (or known) name.
+\item \code{genus}: the genus of the accepted (or known) name.
+\item \code{family}: the family of the accepted (or known) name.
 \item \code{subclass}: the subclass of the accepted name.
 \item \code{taxon_distribution}: the distribution of the accepted name.
 \item \code{taxon_ID}: an identifier for a specific taxon concept.

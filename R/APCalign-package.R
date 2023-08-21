@@ -74,6 +74,11 @@ utils::globalVariables(
     "trinomial",
     "aligned_name_tmp",
     "identifier_string",
-    "identifier_string2"
+    "identifier_string2",
+    "suggested_name",
+    "update_reason",
+    "taxon_ID_genus",
+    "taxonomic_status_with_splits",
+    "row_number"
   )
 )
