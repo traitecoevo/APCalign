@@ -6,9 +6,10 @@
 #'
 #' @family taxonomic alignment functions
 #'
-#' @param aligned_names A character vector of plant names to update. These names must be in the format of the
-#' scientific name, with genus and species, and may contain additional qualifiers such as subspecies or varieties.
-#' The names are case insensitive.
+#' @param aligned_data A tibble of plant names to update. This table must include 5 columns, original_name, aligned_name, taxon_rank, taxonomic_reference, and aligned_reason.
+#' These columns are created by the function `align_taxa`. 
+#' The columns `original_name` and `aligned_name` must be in the format of the scientific name, with genus and species, 
+#' and may contain additional qualifiers such as subspecies or varieties. The names are case insensitive.
 #'
 #' @param output (optional) Name of the file where results are saved. The default is NULL and no file is created.
 #' If specified, the output will be saved in a CSV file with the given name.
@@ -41,7 +42,7 @@
 #'   \item \code{taxon_ID}: an identifier for a specific taxon concept.
 #'   \item \code{taxon_ID_genus}: an identifier for the genus.
 #'   \item \code{scientific_name_ID}: an identifier for the nomenclatural (not taxonomic) details of a scientific name.
-#'   \item \code{row_nuber}: the row number of a specific original_name in the input.
+#'   \item \code{row_number}: the row number of a specific original_name in the input.
 #' }
 #' 
 #'   
@@ -52,7 +53,15 @@
 #'
 #' @examples
 #' # Update taxonomy for two plant names and print the result
-#' \donttest{update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"))}
+#' \donttest{update_taxonomy(
+#'  tibble::tibble(
+#'    original_name = c("Dryandra preissii", "Banksia acuminata"),
+#'    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
+#'    taxon_rank = c("Species", "Species"),
+#'    taxonomic_reference = c("APC", "APC"),
+#'    aligned_reason = NA_character_
+#'  )
+#' )}
 
 update_taxonomy <- function(aligned_data,
                             output = NULL,
