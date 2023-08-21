@@ -111,9 +111,13 @@ update_taxonomy <- function(aligned_data,
           dplyr::filter(stringr::str_detect(taxonomic_reference, "APC")) %>%
           dplyr::arrange(canonical_name, taxonomic_status) %>% ### how do I specify that I want to arrange by `preferred order`
           dplyr::distinct(canonical_name, .keep_all = TRUE) %>%
-          dplyr::select(
+          dplyr::mutate(
             genus = canonical_name,
-            taxonomic_reference_genus = taxonomic_reference,
+            taxonomic_reference_genus = taxonomic_reference) %>%
+                    
+          dplyr::select(
+            genus, 
+            taxonomic_reference_genus,
             accepted_name_usage_ID,
             taxonomic_status
           )
@@ -200,11 +204,16 @@ update_taxonomy <- function(aligned_data,
             subset(preferred_order, preferred_order %in%  taxonomic_status)
           )) %>%
           dplyr::arrange(canonical_name, my_order) %>%
-          dplyr::select(
+          dplyr::mutate(
             aligned_name = canonical_name,
             taxonomic_status_with_splits = taxonomic_status,
+            taxon_ID_with_splits = taxon_ID
+          ) %>%
+          dplyr::select(
+            aligned_name,
+            taxonomic_status_with_splits,
             accepted_name_usage_ID,
-            taxon_ID_with_splits = taxon_ID,
+            taxon_ID_with_splits,
             scientific_name_ID
           )
       ) %>%
@@ -213,10 +222,14 @@ update_taxonomy <- function(aligned_data,
         by = "accepted_name_usage_ID",
         resources$APC %>%
           dplyr::filter(taxonomic_status == "accepted") %>%
+          dplyr::mutate(
+            accepted_name = canonical_name,
+            taxonomic_status_clean = taxonomic_status
+          ) %>%
           dplyr::select(
             accepted_name_usage_ID,
-            accepted_name = canonical_name,
-            taxonomic_status_clean = taxonomic_status,
+            accepted_name,
+            taxonomic_status_clean,
             scientific_name_authorship,
             family,
             subclass,
@@ -266,8 +279,11 @@ update_taxonomy <- function(aligned_data,
       resources$APNI %>%
         dplyr::filter(taxon_rank %in% species_and_infraspecific) %>%
         dplyr::distinct(canonical_name, .keep_all = TRUE) %>%
+        dplyr::mutate(
+          aligned_name = canonical_name
+        ) %>%
         dplyr::select(
-          aligned_name = canonical_name,
+          aligned_name,
           canonical_name,
           scientific_name_authorship,
           scientific_name_ID,
@@ -292,11 +308,17 @@ update_taxonomy <- function(aligned_data,
         resources$genera_all %>%
           dplyr::arrange(canonical_name, taxonomic_status) %>% ### how do I specify that I want to arrange by `preferred order`
           distinct(canonical_name, .keep_all = TRUE) %>%
-          dplyr::select(
+          dplyr::mutate(
             genus = canonical_name,
             accepted_name_usage_ID_genus = accepted_name_usage_ID,
             taxonomic_status_genus = taxonomic_status,
             taxonomic_reference_genus = taxonomic_reference
+          ) %>%
+          dplyr::select(
+            genus, 
+            accepted_name_usage_ID_genus, 
+            taxonomic_status_genus, 
+            taxonomic_reference_genus
           )
       ) %>%
       dplyr::mutate(
@@ -346,7 +368,8 @@ update_taxonomy <- function(aligned_data,
       taxon_rank = ifelse(taxonomic_status == "unknown", NA_character_, taxon_rank),
       taxon_rank = stringr::str_to_lower(taxon_rank),
       canonical_name = suggested_name,
-      taxonomic_status_clean = ifelse(is.na(taxonomic_status_clean), NA_character_, taxonomic_status_clean)
+      taxonomic_status_clean = ifelse(is.na(taxonomic_status_clean), NA_character_, taxonomic_status_clean),
+      taxon_ID = taxon_ID_clean
     ) %>%
     dplyr::select(
       original_name,
@@ -363,7 +386,7 @@ update_taxonomy <- function(aligned_data,
       subclass,
       taxon_distribution,
       scientific_name_authorship,
-      taxon_ID = taxon_ID_clean,
+      taxon_ID,
       taxon_ID_genus,
       scientific_name_ID,
       canonical_name,
