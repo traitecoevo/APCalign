@@ -37,23 +37,23 @@ load_taxonomic_resources <-
     
   taxonomic_resources$APC <- taxonomic_resources$APC %>%
     rename(
-      taxon_ID = taxonID,
-      taxon_rank = taxonRank,
-      name_type = nameType,
-      taxonomic_status = taxonomicStatus,
-      pro_parte = proParte,
-      scientific_name = scientificName,
-      scientific_name_ID = scientificNameID,
-      accepted_name_usage_ID = acceptedNameUsageID,
-      accepted_name_usage = acceptedNameUsage,
-      canonical_name = canonicalName,
-      scientific_name_authorship = scientificNameAuthorship,
-      taxon_rank_sort_order = taxonRankSortOrder,
-      taxon_remarks = taxonRemarks,
-      taxon_distribution = taxonDistribution,
-      higher_classification = higherClassification,
-      nomenclatural_code = nomenclaturalCode,
-      dataset_name = datasetName
+      taxon_ID = .data$taxonID,
+      taxon_rank = .data$taxonRank,
+      name_type = .data$nameType,
+      taxonomic_status = .data$taxonomicStatus,
+      pro_parte = .data$proParte,
+      scientific_name = .data$scientificName,
+      scientific_name_ID = .data$scientificNameID,
+      accepted_name_usage_ID = .data$acceptedNameUsageID,
+      accepted_name_usage = .data$acceptedNameUsage,
+      canonical_name = .data$canonicalName,
+      scientific_name_authorship = .data$scientificNameAuthorship,
+      taxon_rank_sort_order = .data$taxonRankSortOrder,
+      taxon_remarks = .data$taxonRemarks,
+      taxon_distribution = .data$taxonDistribution,
+      higher_classification = .data$higherClassification,
+      nomenclatural_code = .data$nomenclaturalCode,
+      dataset_name = .data$datasetName
       ) %>%
     mutate(
       genus = stringr::word(canonical_name, 1)
@@ -61,17 +61,17 @@ load_taxonomic_resources <-
 
   taxonomic_resources$APNI <- taxonomic_resources$APNI %>%
     rename(
-      name_type = nameType,
-      taxonomic_status = taxonomicStatus,
-      taxon_rank = taxonRank,
-      scientific_name = scientificName,
-      scientific_name_ID = scientificNameID,
-      canonical_name = canonicalName,
-      scientific_name_authorship = scientificNameAuthorship,
-      taxon_rank_sort_order = taxonRankSortOrder,
-      nomenclatural_code = nomenclaturalCode,
-      dataset_name = datasetName,
-      name_element = nameElement
+      name_type = .data$nameType,
+      taxonomic_status = .data$taxonomicStatus,
+      taxon_rank = .data$taxonRank,
+      scientific_name = .data$scientificName,
+      scientific_name_ID = .data$scientificNameID,
+      canonical_name = .data$canonicalName,
+      scientific_name_authorship = .data$scientificNameAuthorship,
+      taxon_rank_sort_order = .data$taxonRankSortOrder,
+      nomenclatural_code = .data$nomenclaturalCode,
+      dataset_name = .data$datasetName,
+      name_element = .data$nameElement
       ) %>%
     mutate(
       genus = stringr::word(canonical_name, 1)

@@ -34,13 +34,14 @@ NULL
 utils::globalVariables(
   c(
     ".",
+    "accepted_name",
     "accepted_name_usage",
     "accepted_name_usage_ID",
     "aligned_name",
+    "aligned_minus_genus",
     "aligned_reason",
     "alternative_taxonomic_status_clean",
     "binomial",
-    "canonical_name",
     "canonical_name",
     "ccAttributionIRI",
     "checked",
@@ -50,6 +51,7 @@ utils::globalVariables(
     "fuzzy_match_genus_APNI",
     "fuzzy_match_genus_known",
     "genus",
+    "genus_accepted",
     "known",
     "my_order",
     "name_element", 
@@ -67,10 +69,13 @@ utils::globalVariables(
     "taxon_distribution",
     "taxon_ID",
     "taxon_ID_clean",
+    "taxon_ID_with_splits",
     "taxon_rank",
     "taxonomic_status",
     "taxonomic_status_clean",
+    "taxonomic_status_genus",
     "taxonomic_reference",
+    "taxonomic_reference_genus",
     "trinomial",
     "aligned_name_tmp",
     "identifier_string",
@@ -82,3 +87,4 @@ utils::globalVariables(
     "row_number"
   )
 )
+
