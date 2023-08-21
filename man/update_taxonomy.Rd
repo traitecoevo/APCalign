@@ -49,7 +49,15 @@ to their current accepted name.
 }
 \examples{
 # Update taxonomy for two plant names and print the result
-\donttest{update_taxonomy(c("Eucalyptus pauciflora", "Acacia victoriae"))}
+update_taxonomy(
+ tibble::tibble(
+   original_name = c("Dryandra preissii", "Banksia acuminata"),
+   aligned_name = c("Dryandra preissii", "Banksia acuminata"),
+   taxon_rank = c("Species", "Species"),
+   taxonomic_reference = c("APC", "APC"),
+   aligned_reason = NA_character_
+ )
+)
 }
 \seealso{
 load_taxonomic_resources

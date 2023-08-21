@@ -53,7 +53,7 @@
 #'
 #' @examples
 #' # Update taxonomy for two plant names and print the result
-#' \donttest{update_taxonomy(
+#' update_taxonomy(
 #'  tibble::tibble(
 #'    original_name = c("Dryandra preissii", "Banksia acuminata"),
 #'    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
@@ -61,7 +61,7 @@
 #'    taxonomic_reference = c("APC", "APC"),
 #'    aligned_reason = NA_character_
 #'  )
-#' )}
+#' )
 
 update_taxonomy <- function(aligned_data,
                             output = NULL,
