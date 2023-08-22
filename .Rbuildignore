@@ -1,9 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
-ignore/
-.github
-.git
+^ignore$
+^x_acrhive$
+^.github$
+^.git$
 ^codecov\.yml$
 ^\.github$
 ^todo.md

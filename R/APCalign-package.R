@@ -37,6 +37,7 @@ utils::globalVariables(
     "accepted_name",
     "accepted_name_usage",
     "accepted_name_usage_ID",
+    "accepted_name_usage_ID_genus",
     "aligned_name",
     "aligned_minus_genus",
     "aligned_reason",
