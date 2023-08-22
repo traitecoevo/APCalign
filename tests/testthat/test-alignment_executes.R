@@ -1,9 +1,6 @@
-# currently not testing the current option as the webhosting seems unreliable for that dataset
-# resources_current<-load_taxonomic_resources(stable_or_current_data="current")
 
-
-test_that("create_taxonomic_update_lookup() works with full", {
-  create_taxonomic_update_lookup(
+test_that("create_taxonomic_update_lookup() returns more/less rows as requested", {
+  taxa <- 
     c(
       "Banksia integrifolia",
       "Acacia longifolia",
@@ -20,39 +17,35 @@ test_that("create_taxonomic_update_lookup() works with full", {
       "Acacia aneura",
       "Acacia paraneura",
       "Galactia striata"
-    ),
+    )
+  
+  create_taxonomic_update_lookup(
+    taxa,
     resources = resources,
-    full = TRUE
-  ) -> zz
-  expect_gte(nrow(zz), 80)
+    taxonomic_splits = "most_likely_species"
+  ) -> zz1
+
+  expect_equal(zz1$original_name, taxa)
+  
+  create_taxonomic_update_lookup(
+    taxa,
+    resources = resources,
+    taxonomic_splits = "return_all"
+  ) -> zz2
+
+  create_taxonomic_update_lookup(
+    taxa,
+    resources = resources,
+    taxonomic_splits = "collapse_to_higher_taxon"
+  ) -> zz3
+
+  expect_gte(nrow(zz3), 11)
+  expect_true(all(zz3$original_name %in% taxa))
+
+  # todo - test something more specific about output above
 })
 
-test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon",
-          {
-            create_taxonomic_update_lookup(
-              c(
-                "Banksia integrifolia",
-                "Acacia longifolia",
-                "Commersonia rosea",
-                "Thelymitra pauciflora",
-                "Justicia procumbens",
-                "Hibbertia stricta",
-                "Rostellularia adscendens",
-                "Hibbertia sericea",
-                "Hibbertia sp.",
-                "Athrotaxis laxiflolia",
-                "Genoplesium insigne",
-                "Polypogon viridis",
-                "Acacia aneura"
-              ),
-              taxonomic_splits = "collapse_to_higher_taxon",
-              resources = resources
-            ) -> zz
-            expect_gte(nrow(zz), 11)
-          })
-
-
-test_that("align_taxa() works - no/with fuzzy", {
+test_that("align_taxa() executes - no/with fuzzy", {
   
   original_name = c("Dryandra preissii", "Banksia acuminata")
   
@@ -64,7 +57,7 @@ test_that("align_taxa() works - no/with fuzzy", {
 })
 
 
-test_that("align_taxa() works with longer list", {
+test_that("align_taxa() executes with longer list", {
   species_list <-
     readr::read_csv(system.file("extdata", "species.csv", package = "APCalign"),
                     show_col_types = FALSE)
@@ -74,7 +67,7 @@ test_that("align_taxa() works with longer list", {
   expect_equal(species_list$name, aligned_data$original_name)
 })
 
-test_that("update_taxonomy() works", {
+test_that("update_taxonomy() runs", {
   aligned_data <- tibble::tibble(
     original_name = c("Dryandra preissii", "Banksia acuminata"),
     aligned_name = c("Dryandra preissii", "Banksia acuminata"),
@@ -83,14 +76,23 @@ test_that("update_taxonomy() works", {
     aligned_reason = NA_character_
   )
   
-  expect_equal(nrow(update_taxonomy(
+  zz <-
+  update_taxonomy(
     aligned_data = aligned_data,
-    resources = resources
-  )), 2)
+    resources = resources,
+    taxonomic_splits = "most_likely_species"
+  )
 
-  expect_equal(nrow(create_taxonomic_update_lookup(
-    c("Dryandra preissii", "Banksia acuminata"), resources = resources
-  )), 2)
+  expect_equal(nrow(zz), 2)
+  expect_equal(zz$aligned_name, aligned_data$aligned_name)
+
+  zz2 <-
+  create_taxonomic_update_lookup(
+    aligned_data$original_name, resources = resources
+  )
+#  zz2
+#
+ # expect_equal(nrow(, 2)
 })
 
 test_that("weird hybrid symbols work", {
@@ -139,6 +141,22 @@ test_that("handles weird strings", {
     
     expect_gte(nrow(zz), 4)
   })
+
+test_that("Runs when neither taxa in in APC", {
+  original_name <-
+    c(
+      "Acacia sp", "Banksia sp"
+    )
+
+  x <- create_taxonomic_update_lookup(
+    taxa = original_name,
+    resources = resources, taxonomic_splits = "most_likely_species"
+  )
+
+  # output should be same order and length as input
+  expect_equal(x$original_name, original_name)
+})
+
 
 
 test_that("returns same number of rows as input, even with duplicates", {

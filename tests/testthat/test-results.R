@@ -1,12 +1,10 @@
 #
-#
-# currently not testing the current option as the webhosting seems unreliable for that dataset
-# resources <-load_taxonomic_resources(stable_or_current_data="current")
 
+test_that("consistency with previous runs", {
+  
+  # Check that results are consistent through time
 
-test_that("create_taxonomic_update_lookup() works with full", {
-  current_result <-
-    create_taxonomic_update_lookup(
+  taxa <-
     c(
       "Banksia integrifolia",
       "Acacia longifolia",
@@ -23,29 +21,33 @@ test_that("create_taxonomic_update_lookup() works with full", {
       "Acacia aneura",
       "Acacia paraneura",
       "Galactia striata"
-    ),
-    resources = resources,
-    full = TRUE
-  ) %>%
+    )
+  output <-
+    create_taxonomic_update_lookup(
+      taxa,
+      resources = resources,
+      full = TRUE
+    ) %>%
     dplyr::arrange(original_name, canonical_name)
 
-  #readr::write_csv(current_result, "consistency_lookup.csv")
+  #readr::write_csv(output, "consistency_lookup.csv")
 
   past_result <-
     readr::read_csv("consistency_lookup.csv", show_col_types = FALSE) %>%
     dplyr::arrange(original_name, canonical_name)
 
   # tests the most important columns
-  # things have changed and we can't check other columns
-  expect_equal(past_result$original_name, current_result$original_name)
-  expect_equal(past_result$aligned_name, current_result$aligned_name)
-  expect_equal(past_result$canonical_name, current_result$accepted_name)
-  
+  # other cols changed so we can't check other columns
+  expect_equal(past_result$original_name, output$original_name)
+  expect_equal(past_result$aligned_name, output$aligned_name)
+  expect_equal(past_result$canonical_name, output$accepted_name)
   })
 
 test_that("taxon name alignment matches and updates work as expected", {
 
-  archived_values <- 
+  # Compare results to a table of values that have been closely scrutinised
+  
+  benchmarks <- 
     readr::read_csv("test_matches_alignments_updates.csv", show_col_types = FALSE) %>%
     dplyr::rename(
       alignment_code = alignment_code_all_matches_TRUE, 
@@ -64,9 +66,9 @@ test_that("taxon name alignment matches and updates work as expected", {
     ) %>%
     dplyr::arrange(original_name, aligned_name)
       
-  current_match_align_values <- 
+  output <- 
     align_taxa(
-      original_name = archived_values$original_name, 
+      original_name = benchmarks$original_name, 
       resources = resources, 
       fuzzy_abs_dist = 3, 
       fuzzy_rel_dist = 0.2, 
@@ -75,20 +77,19 @@ test_that("taxon name alignment matches and updates work as expected", {
       fuzzy_matches = TRUE,
       identifier = "test_all_matches_TRUE"
     )
-  expect_equal(archived_values$original_name, current_match_align_values$original_name)
-  expect_equal(archived_values$aligned_name, current_match_align_values$aligned_name)
-  expect_equal(archived_values$taxon_rank, current_match_align_values$taxon_rank)
-  expect_equal(archived_values$taxonomic_dataset, current_match_align_values$taxonomic_dataset)
-  expect_equal(archived_values$alignment_code, 
-                stringr::str_extract(current_match_align_values$alignment_code, "match_[:digit:][:digit:][:alpha:]"))     
+  
+  expect_equal(benchmarks$original_name,  output$original_name)
+  expect_equal(benchmarks$aligned_name,   output$aligned_name)
+  expect_equal(benchmarks$taxon_rank,     output$taxon_rank)
+  expect_equal(benchmarks$taxonomic_dataset, output$taxonomic_dataset)
+  expect_equal(benchmarks$alignment_code, 
+                stringr::str_extract(output$alignment_code, "match_[:digit:][:digit:][:alpha:]"))     
+
 
   current_update_values <- 
-    create_taxonomic_update_lookup(
-      archived_values$original_name, 
+    update_taxonomy(
+      output, 
       resources = resources,
-      full = TRUE,
-      imprecise_fuzzy_matches = TRUE,
-      identifier = "test_all_matches_TRUE",
       taxonomic_splits = "most_likely_species"
     )
   
@@ -106,7 +107,7 @@ test_that("taxon name alignment matches and updates work as expected", {
       test_column = ifelse(is.na(suggested_name) & is.na(updated_name), TRUE, test_column),
       test_column = ifelse(is.na(test_column), FALSE, test_column)
     )
-  
+
   expect_equal(archived_values$original_name, current_update_values$original_name)
   # We expect 100% success in alignment
   expect_equal(archived_values$aligned_name, current_update_values$aligned_name)
