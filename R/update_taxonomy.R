@@ -70,23 +70,21 @@ update_taxonomy <- function(aligned_data,
   aligned_data <- 
     aligned_data %>%
     dplyr::select(original_name, aligned_name, taxon_rank, taxonomic_dataset, aligned_reason) %>%
-    dplyr::mutate(genus = stringr::word(aligned_name, 1))
+    dplyr::mutate(
+      genus = stringr::word(aligned_name, 1),
+      row_number = dplyr::row_number()
+    )
 
   ## split tibble of aligned names based on 
   ## - the taxonomic dataset (APC, APNI), 
   ## - the taxon rank (family, genus, species/infraspecific) assigned during taxon alignments
-
   taxa_out <-
-    aligned_data %>%
-      mutate(
-        row_number = dplyr::row_number()
-      ) %>%
-    split(
+    split(aligned_data,
       paste(
         # Taxonomic reference
-        stringr::word(.data$taxonomic_dataset, 1),
+        stringr::word(aligned_data$taxonomic_dataset, 1),
         # Taxon rank
-        ifelse(species_and_infraspecific(taxon_rank), "species_and_infraspecific_taxa", taxon_rank)
+        ifelse(species_and_infraspecific(aligned_data$taxon_rank), "species_and_infraspecific_taxa", aligned_data$taxon_rank)
       )
     )
 
