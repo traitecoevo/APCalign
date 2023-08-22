@@ -16,7 +16,7 @@
 #' @param output file path to save the intermediate output to
 #' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 #' @details
-#' `updated_reason` represents the taxonomic status of the aligned name
+#' `update_reason` represents the taxonomic status of the aligned name
 #' @export
 #'
 #' @seealso \code{\link{load_taxonomic_resources}}
@@ -50,40 +50,26 @@ create_taxonomic_update_lookup <- function(taxa,
                imprecise_fuzzy_matches = imprecise_fuzzy_matches)
 
   updated_data <- 
-    update_taxonomy(aligned_data$aligned_name, resources = resources, output = output) %>%
-    # todo: why are we renaming this?
-    dplyr::rename(canonical_name = canonicalName)
+    update_taxonomy(aligned_data, resources = resources, output = output)
 
   if(taxonomic_splits == "most_likely_species") {
     updated_data <-  
       updated_data %>%
-      dplyr::group_by(aligned_name) %>%
-      # todo: should this be for all outputs? Move to update_taxonomy
-      # take first species, this is most likely, based on ordering determined in update_taxonomy
+      dplyr::group_by(row_number) %>%
+      # todo move ordering to loading taxonomic resources?
+      dplyr::mutate(my_order =  forcats::fct_relevel(
+        taxonomic_status_with_splits,
+        subset(resources$preferred_order, resources$preferred_order %in% taxonomic_status_with_splits)
+      )) %>%
+      dplyr::arrange(row_number, my_order) %>%
       dplyr::mutate(
-        possible_matches = sprintf("%s (%s)", canonical_name, taxonomicStatusClean) %>% paste(collapse = "; ")
+        possible_matches = sprintf("%s (%s)", suggested_name, taxonomic_status_with_splits) %>% paste(collapse = "; "),
+        taxonomic_status_with_splits = NA_character_
       ) %>%
       # take first record, this is most likely as we've set a preferred order above
       dplyr::slice(1) %>%
       dplyr::ungroup()
   }
-  # browser()
-
-  updated_data <-
-    # merge with original data on alignment to preserve order
-    dplyr::left_join(
-      by = "aligned_name",
-      aligned_data %>%
-        dplyr::select(original_name, aligned_name, aligned_reason, known),
-      updated_data %>% filter(!is.na(aligned_name)) %>% distinct()
-    ) %>%
-    dplyr::mutate(
-      # todo - why isn't this source APNI?
-      source = ifelse(known & is.na(source), "known_name_but_not_apc_accepted", source),
-      # todo - do we want to keep this?
-      taxonomicStatusClean = ifelse(known & is.na(taxonomicStatusClean), "known_name_but_not_apc_accepted", taxonomicStatusClean)
-    ) %>%
-    dplyr::select(-known)
   
   # todo - should this be an option here, or an extra function operating on outputs?
   if (taxonomic_splits == "collapse_to_higher_taxon") {
@@ -96,12 +82,14 @@ create_taxonomic_update_lookup <- function(taxa,
       dplyr::select(
         original_name,
         aligned_name,
-        # todo - why are we renaming these?
-        accepted_name = canonical_name,
-        taxon_rank = taxonRank,
-        author = scientificNameAuthorship,
+        accepted_name,
+        suggested_name,
+        genus,
+        taxon_rank,
+        taxonomic_reference,
+        scientific_name_authorship,
         aligned_reason,
-        updated_reason = taxonomicStatusClean
+        update_reason
       )
   }
 
@@ -137,8 +125,8 @@ collapse_to_higher_taxon <-
       dplyr::summarise(
         apc_names = find_mrct(canonical_name, resources = resources),
         aligned_reason = paste(unique(aligned_reason), collapse = " and "),
-        taxonomicStatus = paste(unique(taxonomicStatusClean), collapse = " and "),
-        source = paste(unique(source), collapse = " and "),
+        taxonomic_status = paste(unique(taxonomic_status_clean), collapse = " and "),
+        taxonomic_reference = paste(unique(taxonomic_reference), collapse = " and "),
         number_of_collapsed_taxa = n()
       )
 
@@ -161,10 +149,10 @@ find_mrct <- function(taxa,
                                                            version = version)) {
   # Filter the resources data to only include the taxa of interest
   relevant_taxa <-
-    dplyr::filter(resources$APC, resources$APC$canonicalName %in% taxa)
+    dplyr::filter(resources$APC, resources$APC$canonical_name %in% taxa)
   
   # Check different scenarios to find the most recent common taxon
-  unique_canonical_names <- unique(relevant_taxa$canonicalName)
+  unique_canonical_names <- unique(relevant_taxa$canonical_name)
   unique_genus_species <-
     unique(stringr::word(unique_canonical_names, 1, 2))
   unique_genus <-

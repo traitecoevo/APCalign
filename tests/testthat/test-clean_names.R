@@ -75,8 +75,16 @@ test_that("align_taxa() works with longer list", {
 })
 
 test_that("update_taxonomy() works", {
+  aligned_data <- tibble::tibble(
+    original_name = c("Dryandra preissii", "Banksia acuminata"),
+    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
+    taxon_rank = c("Species", "Species"),
+    taxonomic_reference = c("APC", "APC"),
+    aligned_reason = NA_character_
+  )
+  
   expect_equal(nrow(update_taxonomy(
-    aligned_names = c("Dryandra preissii", "Banksia acuminata"),
+    aligned_data = aligned_data,
     resources = resources
   )), 2)
 
@@ -123,11 +131,13 @@ test_that("handles weird strings", {
   expect_equal(test_strings, out$original_name)
 })
 
-
   test_that("handles APNI taxa and genus level IDs",{
-    zz<-create_taxonomic_update_lookup(c("Acacia sp.", "Dendropanax amplifolius",
-                                        "Acanthopanax divaricatum", "Eucalyptus sp."), resources=resources)
-    expect_gte(nrow(zz), 2)
+    
+    aligned_data <- align_taxa(original_name = c("Acacia sp.", "Dendropanax amplifolius", "Acanthopanax divaricatum", "Eucalyptus sp."), resources = resources)
+
+    zz <- create_taxonomic_update_lookup(aligned_data$original_name, resources = resources, output = NULL)
+    
+    expect_gte(nrow(zz), 4)
   })
 
 
@@ -143,7 +153,8 @@ test_that("returns same number of rows as input, even with duplicates", {
     resources = resources)
 
   x2 <-
-    update_taxonomy(x1$aligned_name, resources = resources)
+    update_taxonomy(x1, resources = resources) %>%
+    arrange(row_number)
 
   x4 <- create_taxonomic_update_lookup(
     taxa = original_name,

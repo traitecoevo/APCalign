@@ -46,7 +46,7 @@ A lookup table containing the original species names, the aligned species names,
 This function takes a list of Australian plant species that needs to be reconciled with current taxonomy and generates a lookup table to help fix the taxonomy. The lookup table contains the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 }
 \details{
-\code{updated_reason} represents the taxonomic status of the aligned name
+\code{update_reason} represents the taxonomic status of the aligned name
 }
 \examples{
 \donttest{resources <- load_taxonomic_resources()
