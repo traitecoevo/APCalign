@@ -390,11 +390,12 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources) 
 
   data %>%
     ## First propagate extra entries for taxa that have been split, based on the aligned names
-    ## `misapplied` names need to be filtered out, as these are names that should not be include in the `taxonomic_splits = TRUE` output
+    ## `misapplied` names need to be filtered out, as these are names that should not be include in the output when `taxonomic_splits = "return_all"`
     ## for taxa where there is ambiguity due to a taxon split, there can be multiple `canonical_name` (per APC) matches to a single `aligned_name`
     ## however the APC-column `taxon_ID` will be unique for each row of data
     ## the `accepted_named_usage_ID` column will provide the link to the possibly-accepted name
     dplyr::left_join(
+      relationship = "many-to-many",
       by = "aligned_name",
       resources$APC %>%
         dplyr::filter(
