@@ -79,11 +79,16 @@ update_taxonomy <- function(aligned_data,
   taxa_out <-
     aligned_data %>%
       mutate(
-        taxonomic_dataset_tmp = stringr::word(taxonomic_reference, 1),
-        taxonomic_rank_tmp = ifelse(species_and_infraspecific(taxon_rank), "species_and_infraspecific_taxa", taxon_rank),
         row_number = dplyr::row_number()
       ) %>%
-    split(paste(.$taxonomic_dataset_tmp, .$taxonomic_rank_tmp))
+    split(
+      paste(
+        # Taxonomic reference
+        stringr::word(.data$taxonomic_reference, 1),
+        # Taxon rank
+        ifelse(species_and_infraspecific(taxon_rank), "species_and_infraspecific_taxa", taxon_rank)
+      )
+    )
 
   ## tibble of taxa whose aligned_names are taxon_rank = genus and taxonomic_reference = APC
   if (!is.null(taxa_out[["APC genus"]])) {
