@@ -16,7 +16,7 @@
 #'               "Quercus kelloggii",
 #'               "Pinus contorta var. latifolia"))
 #'
-#' @noRd
+#' @export
 strip_names <- function(taxon_names) {
   taxon_names %>%
     stringr::str_replace_all("\\.", "") %>%

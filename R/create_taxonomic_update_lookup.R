@@ -59,7 +59,7 @@ create_taxonomic_update_lookup <- function(taxa,
       # todo move ordering to loading taxonomic resources?
       dplyr::mutate(my_order =  forcats::fct_relevel(
         taxonomic_status_with_splits,
-        subset(resources$preferred_order, resources$preferred_order %in% taxonomic_status_with_splits)
+        subset(taxonomic_status_preferred_order(), taxonomic_status_preferred_order() %in% taxonomic_status_with_splits)
       )) %>%
       dplyr::arrange(row_number, my_order) %>%
       dplyr::mutate(

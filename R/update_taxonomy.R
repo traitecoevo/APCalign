@@ -230,6 +230,29 @@ species_and_infraspecific <- function(taxon_rank) {
   taxon_rank %in% c("Species", "Forma", "Varietas", "Subspecies")
 }
 
+# preferred order of taxonomic updates
+taxonomic_status_preferred_order <- function() {
+  c(
+    "accepted",
+    "taxonomic synonym",
+    "basionym",
+    "nomenclatural synonym",
+    "isonym",
+    "orthographic variant",
+    "common name",
+    "doubtful taxonomic synonym",
+    "replaced synonym",
+    "misapplied",
+    "doubtful pro parte taxonomic synonym",
+    "pro parte nomenclatural synonym",
+    "pro parte taxonomic synonym",
+    "pro parte misapplied",
+    "excluded",
+    "doubtful misapplied",
+    "doubtful pro parte misapplied"
+  )
+}
+
 # Function to update names of taxa whose aligned_names are 
 # taxon_rank = genus and taxonomic_reference = APC
 update_taxonomy_APC_genus <- function(data, resources) {
@@ -256,7 +279,7 @@ update_taxonomy_APC_genus <- function(data, resources) {
     # todo maybe: currently not documenting alternate taxonomic status for genera
     dplyr::mutate(my_order = forcats::fct_relevel(
       taxonomic_status,
-      subset(resources$preferred_order, resources$preferred_order %in% taxonomic_status)
+      subset(taxonomic_status_preferred_order(), taxonomic_status_preferred_order() %in% taxonomic_status)
     )) %>%
     dplyr::arrange(aligned_name, my_order) %>%
     #
@@ -349,7 +372,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources) 
         ) %>%
         dplyr::mutate(my_order = forcats::fct_relevel(
           taxonomic_status,
-          subset(resources$preferred_order, resources$preferred_order %in% taxonomic_status)
+          subset(taxonomic_status_preferred_order(), taxonomic_status_preferred_order() %in% taxonomic_status)
         )) %>%
         dplyr::arrange(canonical_name, my_order) %>%
         dplyr::mutate(
@@ -392,7 +415,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources) 
     # To do this we define the order we want variables to sort by, with accepted at the top
     dplyr::mutate(my_order = forcats::fct_relevel(
       taxonomic_status_clean,
-      subset(resources$preferred_order, resources$preferred_order %in% taxonomic_status_clean)
+      subset(taxonomic_status_preferred_order(), taxonomic_status_preferred_order() %in% taxonomic_status_clean)
     )) %>%
     dplyr::arrange(aligned_name, my_order) %>%
     # For each species, keep the first record (accepted if present) and
