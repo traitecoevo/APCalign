@@ -57,10 +57,9 @@ create_taxonomic_update_lookup <- function(taxa,
       updated_data %>%
       dplyr::group_by(row_number) %>%
       # todo move ordering to loading taxonomic resources?
-      dplyr::mutate(my_order =  forcats::fct_relevel(
-        taxonomic_status_aligned,
-        subset(taxonomic_status_preferred_order(), taxonomic_status_preferred_order() %in% taxonomic_status_aligned)
-      )) %>%
+      dplyr::mutate(
+        my_order =  relevel_taxonomic_status_preferred_order(taxonomic_status_aligned)
+      ) %>%
       dplyr::arrange(row_number, my_order) %>%
       dplyr::mutate(
         possible_matches = sprintf("%s (%s)", suggested_name, taxonomic_status_aligned) %>% paste(collapse = "; "),

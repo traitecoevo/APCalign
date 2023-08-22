@@ -69,7 +69,6 @@ utils::globalVariables(
     "taxon_distribution",
     "taxon_ID",
     "taxon_ID_aligned",
-    "taxon_ID_with_splits",
     "taxon_rank",
     "taxonomic_status",
     "taxonomic_status_aligned",
@@ -83,7 +82,6 @@ utils::globalVariables(
     "suggested_name",
     "update_reason",
     "taxon_ID_genus",
-    "taxonomic_status_with_splits",
     "row_number"
   )
 )
