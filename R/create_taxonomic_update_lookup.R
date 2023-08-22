@@ -125,7 +125,7 @@ collapse_to_higher_taxon <-
       dplyr::summarise(
         apc_names = find_mrct(canonical_name, resources = resources),
         aligned_reason = paste(unique(aligned_reason), collapse = " and "),
-        taxonomic_status = paste(unique(taxonomic_status_clean), collapse = " and "),
+        taxonomic_status = paste(unique(taxonomic_status_aligned), collapse = " and "),
         taxonomic_reference = paste(unique(taxonomic_reference), collapse = " and "),
         number_of_collapsed_taxa = n()
       )

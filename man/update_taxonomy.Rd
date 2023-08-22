@@ -29,9 +29,9 @@ A tibble with updated taxonomy for the specified plant names. The tibble contain
 \item \code{accepted_name}: the APC-accepted plant name, when available.
 \item \code{suggested_name}: the suggested plant name to use. Identical to the accepted_name, when an accepted_name exists.
 \item \code{taxonomic_reference}: the source of the updated taxonomic information (APC or APNI).
-\item \code{taxon_ID_clean}: the unique identifier for the updated taxon.
-\item \code{taxonomic_status_clean}: the taxonomic status of the updated taxon.
-\item \code{alternative_taxonomic_status_clean}: the alternative taxonomic status for the input name, if any.
+\item \code{taxon_ID_aligned}: the unique identifier for the updated taxon.
+\item \code{taxonomic_status_aligned}: the taxonomic status of the updated taxon.
+\item \code{alternative_taxonomic_status_aligned}: the alternative taxonomic status for the input name, if any.
 \item \code{accepted_name_usage_ID}: the unique identifier for the accepted name of the input name.
 \item \code{canonical_name}: the accepted (or known) scientific name for the input name.
 \item \code{scientific_name_authorship}: the authorship information for the accepted (or known) name.
