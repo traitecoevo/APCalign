@@ -95,6 +95,7 @@ collapse_to_higher_taxon <-
       aligned_species_list %>%
       dplyr::group_by(original_name, aligned_name) %>%
       dplyr::summarise(
+        row_number= min(row_number),
         collapsed_names = find_mrct(canonical_name, resources = resources),
         aligned_reason = paste(unique(aligned_reason), collapse = " and "),
         taxonomic_status = paste(unique(taxonomic_status_aligned), collapse = " and "),

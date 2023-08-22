@@ -153,6 +153,7 @@ update_taxonomy <- function(aligned_data,
       ## `genus` was the first word of the `aligned_name` in the input table; now needs to be set to NA for unknown taxa
       genus = ifelse(taxonomic_status == "unknown", NA_character_, genus),
       taxon_rank = ifelse(taxonomic_status == "unknown", NA_character_, taxon_rank),
+      # the next line makes everythign incosistent. If we want low, should do on loading APC
       taxon_rank = stringr::str_to_lower(taxon_rank),
       canonical_name = suggested_name,
       taxonomic_status_aligned = ifelse(is.na(taxonomic_status_aligned), NA_character_, taxonomic_status_aligned)
@@ -180,30 +181,6 @@ update_taxonomy <- function(aligned_data,
       row_number
     )
 
-  # Assemble output in the order of the input `aligned_names`
-  
-  ## XXX code exists because NA's in alignments were breaking code
-  # taxa_out <-
-  #   taxa_out %>%
-  #   dplyr::distinct() %>%
-  #   # Bring in any missing taxa (without alignments) so output list is complete
-  #   dplyr::bind_rows(
-  #     aligned_data %>%
-  #       dplyr::filter(!aligned_name %in% taxa_out$aligned_name)
-  #   ) %>%
-  #   # As we may have multiple matches per species and want to maintain order within taxa,
-  #   # we'll do this by nesting data before joining into original list
-  #   tidyr::nest(.by = "aligned_name", .key = "data")
-  # 
-  # taxa_out <- 
-  #   aligned_data %>%
-  #   select(aligned_name) %>% 
-  #   # join into original list
-  #   dplyr::left_join(by = "aligned_name", taxa_out) %>%
-  #   # Now unnest
-  #   tidyr::unnest("data") #%>%
-  # # some extra useful info
-  # # dplyr::mutate(genus = stringr::word(canonical_name, 1, 1))
   
   # Implement decisions about how to handle splits
   if (taxonomic_splits == "most_likely_species") {
@@ -227,6 +204,10 @@ update_taxonomy <- function(aligned_data,
   if (taxonomic_splits == "collapse_to_higher_taxon") {
     taxa_out <- collapse_to_higher_taxon(taxa_out, resources)
   }
+  
+  # Assemble output in the order of the input `aligned_names`
+  # sort so that has same order as input
+  taxa_out <- taxa_out  %>% dplyr::arrange(row_number)
 
   if (!is.null(output)) {
     readr::write_csv(taxa_out, output)
