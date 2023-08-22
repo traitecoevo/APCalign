@@ -236,9 +236,11 @@ taxonomic_status_preferred_order <- function() {
     "pro parte nomenclatural synonym",
     "pro parte taxonomic synonym",
     "pro parte misapplied",
+    "unplaced", 
     "excluded",
     "doubtful misapplied",
-    "doubtful pro parte misapplied"
+    "doubtful pro parte misapplied",
+    "included"
   )
 }
 
