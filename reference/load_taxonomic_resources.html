@@ -102,194 +102,222 @@ a URL which is the cutting edge version, but this may change at any time without
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading resources...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ...done</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $APC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 109,624 × 37</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    taxonID    nameType acceptedNameUsageID acceptedNameUsage nomenclaturalStatus</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> https://i… scienti… https://id.biodive… Plantae Haeckel   <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> https://i… scienti… https://id.biodive… Charophyta Sachs  <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> https://i… scienti… https://id.biodive… Charophyta Sachs  orth. var.         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> https://i… scienti… https://id.biodive… Equisetopsida C.… <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> https://i… scienti… https://id.biodive… Equisetopsida C.… orth. var.         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> https://i… scienti… https://id.biodive… Equisetopsida C.… <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> https://i… scienti… https://id.biodive… Cycadidae Pax     <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> https://i… scienti… https://id.biodive… Cycadales Pers. … <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 109,624 × 38</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    taxon_ID                 name_type accepted_name_usage_ID accepted_name_usage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> https://id.biodiversity… scientif… https://id.biodiversi… Plantae Haeckel    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> https://id.biodiversity… scientif… https://id.biodiversi… Charophyta Sachs   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> https://id.biodiversity… scientif… https://id.biodiversi… Charophyta Sachs   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> https://id.biodiversity… scientif… https://id.biodiversi… Equisetopsida C.Ag…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> https://id.biodiversity… scientif… https://id.biodiversi… Equisetopsida C.Ag…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> https://id.biodiversity… scientif… https://id.biodiversi… Equisetopsida C.Ag…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> https://id.biodiversity… scientif… https://id.biodiversi… Cycadidae Pax      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> https://id.biodiversity… scientif… https://id.biodiversi… Cycadales Pers. ex…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> https://id.biodiversity… scientif… https://id.biodiversi… Cycadales Pers. ex…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> https://id.biodiversity… scientif… https://id.biodiversi… Cycadales Pers. ex…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 109,614 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 32 more variables: nomIlleg &lt;chr&gt;, nomInval &lt;chr&gt;, taxonomicStatus &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   proParte &lt;lgl&gt;, scientificName &lt;chr&gt;, scientificNameID &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   canonicalName &lt;chr&gt;, scientificNameAuthorship &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   parentNameUsageID &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonRankSortOrder &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   kingdom &lt;chr&gt;, class &lt;chr&gt;, subclass &lt;chr&gt;, family &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonConceptID &lt;chr&gt;, nameAccordingTo &lt;chr&gt;, nameAccordingToID &lt;chr&gt;, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 34 more variables: nomenclaturalStatus &lt;chr&gt;, nomIlleg &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   nomInval &lt;chr&gt;, taxonomic_status &lt;chr&gt;, pro_parte &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name &lt;chr&gt;, scientific_name_ID &lt;chr&gt;, canonical_name &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name_authorship &lt;chr&gt;, parentNameUsageID &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_rank &lt;chr&gt;, taxon_rank_sort_order &lt;dbl&gt;, kingdom &lt;chr&gt;, class &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   subclass &lt;chr&gt;, family &lt;chr&gt;, taxonConceptID &lt;chr&gt;, …</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $APNI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 132,385 × 47</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    scientificNameID     nameType scientificName scientificNameHTML canonicalName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> https://id.biodiver… scienti… Acanthus ebra… &lt;scientific&gt;&lt;name… Acanthus ebr…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> https://id.biodiver… autonym  Acanthus ebra… &lt;scientific&gt;&lt;name… Acanthus ebr…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> https://id.biodiver… scienti… Acanthus ebra… &lt;scientific&gt;&lt;name… Acanthus ebr…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> https://id.biodiver… autonym  Acanthus ilic… &lt;scientific&gt;&lt;name… Acanthus ili…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> https://id.biodiver… scienti… Acanthus ilic… &lt;scientific&gt;&lt;name… Acanthus ili…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> https://id.biodiver… scienti… Acanthus ilic… &lt;scientific&gt;&lt;name… Acanthus ili…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> https://id.biodiver… scienti… Acanthus ilic… &lt;scientific&gt;&lt;name… Acanthus ili…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> https://id.biodiver… scienti… Acanthus moll… &lt;scientific&gt;&lt;name… Acanthus mol…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> https://id.biodiver… scienti… Acanthus volu… &lt;scientific&gt;&lt;name… Acanthus vol…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> https://id.biodiver… scienti… Acanthus L.    &lt;scientific&gt;&lt;name… Acanthus     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 132,385 × 48</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    scientific_name_ID               name_type scientific_name scientificNameHTML</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> https://id.biodiversity.org.au/… scientif… Acanthus ebrac… &lt;scientific&gt;&lt;name…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> https://id.biodiversity.org.au/… autonym   Acanthus ebrac… &lt;scientific&gt;&lt;name…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> https://id.biodiversity.org.au/… scientif… Acanthus ebrac… &lt;scientific&gt;&lt;name…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> https://id.biodiversity.org.au/… autonym   Acanthus ilici… &lt;scientific&gt;&lt;name…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> https://id.biodiversity.org.au/… scientif… Acanthus ilici… &lt;scientific&gt;&lt;name…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> https://id.biodiversity.org.au/… scientif… Acanthus ilici… &lt;scientific&gt;&lt;name…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> https://id.biodiversity.org.au/… scientif… Acanthus ilici… &lt;scientific&gt;&lt;name…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> https://id.biodiversity.org.au/… scientif… Acanthus molli… &lt;scientific&gt;&lt;name…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> https://id.biodiversity.org.au/… scientif… Acanthus volub… &lt;scientific&gt;&lt;name…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> https://id.biodiversity.org.au/… scientif… Acanthus L.     &lt;scientific&gt;&lt;name…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 132,375 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 42 more variables: canonicalNameHTML &lt;chr&gt;, nameElement &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   nomenclaturalStatus &lt;chr&gt;, scientificNameAuthorship &lt;chr&gt;, autonym &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   hybrid &lt;lgl&gt;, cultivar &lt;lgl&gt;, formula &lt;lgl&gt;, scientific &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   nomInval &lt;lgl&gt;, nomIlleg &lt;lgl&gt;, namePublishedIn &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   namePublishedInID &lt;chr&gt;, namePublishedInYear &lt;dbl&gt;, nameInstanceType &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   nameAccordingToID &lt;chr&gt;, nameAccordingTo &lt;chr&gt;, originalNameUsage &lt;chr&gt;, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 44 more variables: canonical_name &lt;chr&gt;, canonicalNameHTML &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   name_element &lt;chr&gt;, nomenclaturalStatus &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name_authorship &lt;chr&gt;, autonym &lt;lgl&gt;, hybrid &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   cultivar &lt;lgl&gt;, formula &lt;lgl&gt;, scientific &lt;lgl&gt;, nomInval &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   nomIlleg &lt;lgl&gt;, namePublishedIn &lt;chr&gt;, namePublishedInID &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   namePublishedInYear &lt;dbl&gt;, nameInstanceType &lt;chr&gt;, …</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`APC list (accepted)`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 30,538 × 13</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    canonicalName     scientificName     taxonomicStatus ID    nameType taxonRank</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Cycas angulata    Cycas angulata R.… accepted        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Cycas arenicola   Cycas arenicola K… accepted        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Cycas armstrongii Cycas armstrongii… accepted        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Cycas arnhemica   Cycas arnhemica K… accepted        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Cycas badensis    Cycas badensis K.… accepted        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Cycas basaltica   Cycas basaltica C… accepted        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Cycas brunnea     Cycas brunnea K.D… accepted        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Cycas cairnsiana  Cycas cairnsiana … accepted        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Cycas calcicola   Cycas calcicola M… accepted        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Cycas canalis     Cycas canalis K.D… accepted        http… scienti… Species  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 30,538 × 15</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    canonical_name   scientific_name taxonomic_status taxon_ID scientific_name_ID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Cycas angulata   Cycas angulata… accepted         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Cycas arenicola  Cycas arenicol… accepted         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Cycas armstrong… Cycas armstron… accepted         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Cycas arnhemica  Cycas arnhemic… accepted         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Cycas badensis   Cycas badensis… accepted         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Cycas basaltica  Cycas basaltic… accepted         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Cycas brunnea    Cycas brunnea … accepted         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Cycas cairnsiana Cycas cairnsia… accepted         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Cycas calcicola  Cycas calcicol… accepted         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Cycas canalis    Cycas canalis … accepted         https:/… https://id.biodiv…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 30,528 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: stripped_canonical &lt;chr&gt;, stripped_canonical2 &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   stripped_scientific &lt;chr&gt;, binomial &lt;chr&gt;, genus &lt;chr&gt;, trinomial &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_ref &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 10 more variables: accepted_name_usage_ID &lt;chr&gt;, name_type &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_rank &lt;chr&gt;, genus &lt;chr&gt;, stripped_canonical &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   stripped_canonical2 &lt;chr&gt;, stripped_scientific &lt;chr&gt;, binomial &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   trinomial &lt;chr&gt;, taxonomic_reference &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`APC list (known names)`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 69,837 × 13</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    canonicalName         scientificName taxonomicStatus ID    nameType taxonRank</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Pterostylis clivosa   Pterostylis c… alternative na… http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Pterostylis crebra    Pterostylis c… alternative na… http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Eucalyptus resinifer… Eucalyptus re… alternative na… http… scienti… Varietas </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Macrozamia pauli-gui… Macrozamia pa… basionym        http… scienti… Subspeci…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Lycopodium crebrum    Lycopodium cr… basionym        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Lycopodium lockyeri   Lycopodium lo… basionym        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Aralia polaris        Aralia polari… basionym        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Sium nodiflorum       Sium nodiflor… basionym        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Trachymene kochii     Trachymene ko… basionym        http… scienti… Species  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Pittosporum resinosum Pittosporum r… basionym        http… scienti… Species  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 69,837 × 15</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    canonical_name   scientific_name taxonomic_status taxon_ID scientific_name_ID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Pterostylis cli… Pterostylis cl… alternative name https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Pterostylis cre… Pterostylis cr… alternative name https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Eucalyptus resi… Eucalyptus res… alternative name https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Macrozamia paul… Macrozamia pau… basionym         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Lycopodium creb… Lycopodium cre… basionym         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Lycopodium lock… Lycopodium loc… basionym         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Aralia polaris   Aralia polaris… basionym         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Sium nodiflorum  Sium nodifloru… basionym         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Trachymene koch… Trachymene koc… basionym         https:/… https://id.biodiv…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Pittosporum res… Pittosporum re… basionym         https:/… https://id.biodiv…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 69,827 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: stripped_canonical &lt;chr&gt;, stripped_canonical2 &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   stripped_scientific &lt;chr&gt;, binomial &lt;chr&gt;, genus &lt;chr&gt;, trinomial &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_ref &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 10 more variables: accepted_name_usage_ID &lt;chr&gt;, name_type &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_rank &lt;chr&gt;, genus &lt;chr&gt;, stripped_canonical &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   stripped_canonical2 &lt;chr&gt;, stripped_scientific &lt;chr&gt;, binomial &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   trinomial &lt;chr&gt;, taxonomic_reference &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`APNI names`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 15,377 × 13</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    canonicalName         scientificName ID    nameType taxonRank taxonomicStatus</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> (Eucalyptus globulus… (Eucalyptus g… http… hybrid-… Species   unplaced for A…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> (Eucalyptus globulus… (Eucalyptus g… http… hybrid-… Species   unplaced for A…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> (Eucalyptus johnston… (Eucalyptus j… http… hybrid-… Species   unplaced for A…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> (Eucalyptus johnston… (Eucalyptus j… http… hybrid-… Species   unplaced for A…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> (Eucalyptus urnigera… (Eucalyptus u… http… hybrid-… Species   unplaced for A…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> (Eucalyptus urnigera… (Eucalyptus u… http… hybrid-… Species   unplaced for A…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Abacopteris presliana Abacopteris p… http… scienti… Species   unplaced for A…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Abarema clypearia f.… Abarema clype… http… scienti… Forma     unplaced for A…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Abarema pruinosa      Abarema pruin… http… scienti… Species   unplaced for A…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Abelia rupestris      Abelia rupest… http… scienti… Species   unplaced for A…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    canonical_name        scientific_name scientific_name_ID name_type taxon_rank</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> (Eucalyptus globulus… (Eucalyptus gl… https://id.biodiv… hybrid-f… Species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> (Eucalyptus globulus… (Eucalyptus gl… https://id.biodiv… hybrid-f… Species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> (Eucalyptus johnston… (Eucalyptus jo… https://id.biodiv… hybrid-f… Species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> (Eucalyptus johnston… (Eucalyptus jo… https://id.biodiv… hybrid-f… Species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> (Eucalyptus urnigera… (Eucalyptus ur… https://id.biodiv… hybrid-f… Species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> (Eucalyptus urnigera… (Eucalyptus ur… https://id.biodiv… hybrid-f… Species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Abacopteris presliana Abacopteris pr… https://id.biodiv… scientif… Species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Abarema clypearia f.… Abarema clypea… https://id.biodiv… scientif… Forma     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Abarema pruinosa      Abarema pruino… https://id.biodiv… scientif… Species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Abelia rupestris      Abelia rupestr… https://id.biodiv… scientif… Species   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15,367 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: stripped_canonical &lt;chr&gt;, stripped_canonical2 &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   stripped_scientific &lt;chr&gt;, binomial &lt;chr&gt;, trinomial &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_ref &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 8 more variables: taxonomic_status &lt;chr&gt;, stripped_canonical &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   stripped_canonical2 &lt;chr&gt;, stripped_scientific &lt;chr&gt;, binomial &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   trinomial &lt;chr&gt;, genus &lt;chr&gt;, taxonomic_reference &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $genera_accepted</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3,094 × 8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    canonicalName acceptedNameUsage scientificName taxonomicStatus ID    nameType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Cycas         Cycas L.          Cycas L.       accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Bowenia       Bowenia Hook.f.   Bowenia Hook.… accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Lepidozamia   Lepidozamia Regel Lepidozamia R… accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Macrozamia    Macrozamia Miq.   Macrozamia Mi… accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Equisetum     Equisetum L.      Equisetum L.   accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Isoetes       Isoetes L.        Isoetes L.     accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Huperzia      Huperzia Bernh.   Huperzia Bern… accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Lycopodiella  Lycopodiella Hol… Lycopodiella … accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Lycopodium    Lycopodium L.     Lycopodium L.  accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Phlegmariurus Phlegmariurus Ho… Phlegmariurus… accepted        http… scienti…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3,094 × 11</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    canonical_name accepted_name_usage accepted_name_usage_ID     scientific_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Cycas          Cycas L.            https://id.biodiversity.o… Cycas L.       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Bowenia        Bowenia Hook.f.     https://id.biodiversity.o… Bowenia Hook.f.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Lepidozamia    Lepidozamia Regel   https://id.biodiversity.o… Lepidozamia Re…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Macrozamia     Macrozamia Miq.     https://id.biodiversity.o… Macrozamia Miq.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Equisetum      Equisetum L.        https://id.biodiversity.o… Equisetum L.   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Isoetes        Isoetes L.          https://id.biodiversity.o… Isoetes L.     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Huperzia       Huperzia Bernh.     https://id.biodiversity.o… Huperzia Bernh.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Lycopodiella   Lycopodiella Holub  https://id.biodiversity.o… Lycopodiella H…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Lycopodium     Lycopodium L.       https://id.biodiversity.o… Lycopodium L.  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Phlegmariurus  Phlegmariurus Holub https://id.biodiversity.o… Phlegmariurus …</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3,084 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: taxonRank &lt;chr&gt;, taxonomic_ref &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: taxonomic_status &lt;chr&gt;, taxon_ID &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name_ID &lt;chr&gt;, name_type &lt;chr&gt;, taxon_rank &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_reference &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $genera_known</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2,852 × 8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    canonicalName acceptedNameUsage scientificName taxonomicStatus ID    nameType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Encephallart… Encephalartos Le… Encephallarte… orthographic v… http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Encephalartus Encephalartos Le… Encephalartus… orthographic v… http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Encephalartos Encephalartos Le… Encephalartos… excluded        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Catakidozamia Lepidozamia Regel Catakidozamia… taxonomic syno… http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Zamia         Zamia L.          Zamia L.       excluded        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Calamaria     Isoetes L.        Calamaria Boe… taxonomic syno… http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Lateristachys Lycopodiella Hol… Lateristachys… taxonomic syno… http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Lepidotis     Lycopodiella Hol… Lepidotis P.B… taxonomic syno… http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Austrolycopo… Lycopodium L.     Austrolycopod… taxonomic syno… http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Diphasium     Lycopodium L.     Diphasium C.P… taxonomic syno… http… scienti…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2,852 × 11</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    canonical_name   accepted_name_usage accepted_name_usage_ID   scientific_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Encephallartes   Encephalartos Lehm. https://id.biodiversity… Encephallartes…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Encephalartus    Encephalartos Lehm. https://id.biodiversity… Encephalartus …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Encephalartos    Encephalartos Lehm. https://id.biodiversity… Encephalartos …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Catakidozamia    Lepidozamia Regel   https://id.biodiversity… Catakidozamia …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Zamia            Zamia L.            https://id.biodiversity… Zamia L.       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Calamaria        Isoetes L.          https://id.biodiversity… Calamaria Boeh…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Lateristachys    Lycopodiella Holub  https://id.biodiversity… Lateristachys …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Lepidotis        Lycopodiella Holub  https://id.biodiversity… Lepidotis P.Be…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Austrolycopodium Lycopodium L.       https://id.biodiversity… Austrolycopodi…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Diphasium        Lycopodium L.       https://id.biodiversity… Diphasium C.Pr…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2,842 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: taxonRank &lt;chr&gt;, taxonomic_ref &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: taxonomic_status &lt;chr&gt;, taxon_ID &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name_ID &lt;chr&gt;, name_type &lt;chr&gt;, taxon_rank &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_reference &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $genera_APNI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1,430 × 6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    canonicalName taxonomicStatus nameType taxonRank scientificName taxonomic_ref</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Beloperone    unplaced        scienti… Genus     Beloperone Ne… APNI         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Hemiadelphis  unplaced        scienti… Genus     Hemiadelphis … APNI         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Leptosiphoni… unplaced        scienti… Genus     Leptosiphoniu… APNI         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Megaskepasma  unplaced        scienti… Genus     Megaskepasma … APNI         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Meyenia       unplaced        scienti… Genus     Meyenia Nees   APNI         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Simonachne    unplaced        scienti… Genus     Simonachne E.… APNI         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Thyrsacanthus unplaced        scienti… Genus     Thyrsacanthus… APNI         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Synarrhena    unplaced        scienti… Genus     Synarrhena F.… APNI         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Allosorus     unplaced        scienti… Genus     Allosorus Ber… APNI         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Austrogramme  unplaced        scienti… Genus     Austrogramme … APNI         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1,430 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    canonical_name scientific_name  taxonomic_status scientific_name_ID name_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Beloperone     Beloperone Nees  unplaced         https://id.biodiv… scientif…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Hemiadelphis   Hemiadelphis Ne… unplaced         https://id.biodiv… scientif…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Leptosiphonium Leptosiphonium … unplaced         https://id.biodiv… scientif…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Megaskepasma   Megaskepasma Li… unplaced         https://id.biodiv… scientif…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Meyenia        Meyenia Nees     unplaced         https://id.biodiv… scientif…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Simonachne     Simonachne E.J.… unplaced         https://id.biodiv… scientif…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Thyrsacanthus  Thyrsacanthus N… unplaced         https://id.biodiv… scientif…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Synarrhena     Synarrhena F.Mu… unplaced         https://id.biodiv… scientif…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Allosorus      Allosorus Bernh. unplaced         https://id.biodiv… scientif…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Austrogramme   Austrogramme E.… unplaced         https://id.biodiv… scientif…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1,420 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: taxon_rank &lt;chr&gt;, genus &lt;chr&gt;, taxonomic_reference &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $genera_all</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7,376 × 9</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    canonicalName acceptedNameUsage scientificName taxonomicStatus ID    nameType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Cycas         Cycas L.          Cycas L.       accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Bowenia       Bowenia Hook.f.   Bowenia Hook.… accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Lepidozamia   Lepidozamia Regel Lepidozamia R… accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Macrozamia    Macrozamia Miq.   Macrozamia Mi… accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Equisetum     Equisetum L.      Equisetum L.   accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Isoetes       Isoetes L.        Isoetes L.     accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Huperzia      Huperzia Bernh.   Huperzia Bern… accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Lycopodiella  Lycopodiella Hol… Lycopodiella … accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Lycopodium    Lycopodium L.     Lycopodium L.  accepted        http… scienti…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Phlegmariurus Phlegmariurus Ho… Phlegmariurus… accepted        http… scienti…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7,376 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    canonical_name accepted_name_usage accepted_name_usage_ID     scientific_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Cycas          Cycas L.            https://id.biodiversity.o… Cycas L.       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Bowenia        Bowenia Hook.f.     https://id.biodiversity.o… Bowenia Hook.f.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Lepidozamia    Lepidozamia Regel   https://id.biodiversity.o… Lepidozamia Re…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Macrozamia     Macrozamia Miq.     https://id.biodiversity.o… Macrozamia Miq.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Equisetum      Equisetum L.        https://id.biodiversity.o… Equisetum L.   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Isoetes        Isoetes L.          https://id.biodiversity.o… Isoetes L.     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Huperzia       Huperzia Bernh.     https://id.biodiversity.o… Huperzia Bernh.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Lycopodiella   Lycopodiella Holub  https://id.biodiversity.o… Lycopodiella H…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Lycopodium     Lycopodium L.       https://id.biodiversity.o… Lycopodium L.  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Phlegmariurus  Phlegmariurus Holub https://id.biodiversity.o… Phlegmariurus …</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7,366 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: taxonRank &lt;chr&gt;, taxonomic_ref &lt;chr&gt;, cleaned_name &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 8 more variables: taxonomic_status &lt;chr&gt;, taxon_ID &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name_ID &lt;chr&gt;, name_type &lt;chr&gt;, taxon_rank &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_reference &lt;chr&gt;, cleaned_name &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $family_accepted</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 307 × 37</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    taxonID    nameType acceptedNameUsageID acceptedNameUsage nomenclaturalStatus</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> https://i… scienti… https://id.biodive… Cycadaceae Pers.  nom. cons.         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> https://i… scienti… https://id.biodive… Zamiaceae Horan.  nom. cons.         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> https://i… scienti… https://id.biodive… Equisetaceae Mic… <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> https://i… scienti… https://id.biodive… Isoetaceae Rchb.  <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> https://i… scienti… https://id.biodive… Lycopodiaceae P.… <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> https://i… scienti… https://id.biodive… Selaginellaceae … <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> https://i… scienti… https://id.biodive… Apiaceae Lindl.   nom. cons.         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> https://i… scienti… https://id.biodive… Araliaceae Juss.  nom. cons.         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> https://i… scienti… https://id.biodive… Griseliniaceae J… <span style="color: #BB0000;">NA</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> https://i… scienti… https://id.biodive… Myodocarpaceae D… <span style="color: #BB0000;">NA</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 307 × 38</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    taxon_ID                 name_type accepted_name_usage_ID accepted_name_usage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> https://id.biodiversity… scientif… https://id.biodiversi… Cycadaceae Pers.   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> https://id.biodiversity… scientif… https://id.biodiversi… Zamiaceae Horan.   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> https://id.biodiversity… scientif… https://id.biodiversi… Equisetaceae Michx…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> https://id.biodiversity… scientif… https://id.biodiversi… Isoetaceae Rchb.   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> https://id.biodiversity… scientif… https://id.biodiversi… Lycopodiaceae P.Be…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> https://id.biodiversity… scientif… https://id.biodiversi… Selaginellaceae Wi…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> https://id.biodiversity… scientif… https://id.biodiversi… Apiaceae Lindl.    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> https://id.biodiversity… scientif… https://id.biodiversi… Araliaceae Juss.   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> https://id.biodiversity… scientif… https://id.biodiversi… Griseliniaceae J.R…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> https://id.biodiversity… scientif… https://id.biodiversi… Myodocarpaceae Dow…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 297 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 32 more variables: nomIlleg &lt;chr&gt;, nomInval &lt;chr&gt;, taxonomicStatus &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   proParte &lt;lgl&gt;, scientificName &lt;chr&gt;, scientificNameID &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   canonicalName &lt;chr&gt;, scientificNameAuthorship &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   parentNameUsageID &lt;chr&gt;, taxonRank &lt;chr&gt;, taxonRankSortOrder &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   kingdom &lt;chr&gt;, class &lt;chr&gt;, subclass &lt;chr&gt;, family &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonConceptID &lt;chr&gt;, nameAccordingTo &lt;chr&gt;, nameAccordingToID &lt;chr&gt;, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 34 more variables: nomenclaturalStatus &lt;chr&gt;, nomIlleg &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   nomInval &lt;chr&gt;, taxonomic_status &lt;chr&gt;, pro_parte &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name &lt;chr&gt;, scientific_name_ID &lt;chr&gt;, canonical_name &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name_authorship &lt;chr&gt;, parentNameUsageID &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_rank &lt;chr&gt;, taxon_rank_sort_order &lt;dbl&gt;, kingdom &lt;chr&gt;, class &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   subclass &lt;chr&gt;, family &lt;chr&gt;, taxonConceptID &lt;chr&gt;, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $preferred_order</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "accepted"                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2] "taxonomic synonym"                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "basionym"                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "nomenclatural synonym"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "isonym"                              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "orthographic variant"                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "common name"                         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] "doubtful taxonomic synonym"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "replaced synonym"                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "misapplied"                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "doubtful pro parte taxonomic synonym"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [12] "pro parte nomenclatural synonym"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "pro parte taxonomic synonym"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [14] "pro parte misapplied"                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "excluded"                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "doubtful misapplied"                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "doubtful pro parte misapplied"       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
