@@ -6,7 +6,7 @@
 #'
 #' @family taxonomic alignment functions
 #'
-#' @param aligned_data A tibble of plant names to update. This table must include 5 columns, original_name, aligned_name, taxon_rank, taxonomic_reference, and aligned_reason.
+#' @param aligned_data A tibble of plant names to update. This table must include 5 columns, original_name, aligned_name, taxon_rank, taxonomic_dataset, and aligned_reason.
 #' These columns are created by the function `align_taxa`. 
 #' The columns `original_name` and `aligned_name` must be in the format of the scientific name, with genus and species, 
 #' and may contain additional qualifiers such as subspecies or varieties. The names are case insensitive.
@@ -23,7 +23,7 @@
 #'   \item \code{aligned_name}: the input plant name.
 #'   \item \code{accepted_name}: the APC-accepted plant name, when available.
 #'   \item \code{suggested_name}: the suggested plant name to use. Identical to the accepted_name, when an accepted_name exists.
-#'   \item \code{taxonomic_reference}: the source of the updated taxonomic information (APC or APNI).
+#'   \item \code{taxonomic_dataset}: the source of the updated taxonomic information (APC or APNI).
 #'   \item \code{taxon_ID_aligned}: the unique identifier for the updated taxon.
 #'   \item \code{taxonomic_status_aligned}: the taxonomic status of the updated taxon.
 #'   \item \code{alternative_taxonomic_status_aligned}: the alternative taxonomic status for the input name, if any.
@@ -58,7 +58,7 @@
 #'    original_name = c("Dryandra preissii", "Banksia acuminata"),
 #'    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
 #'    taxon_rank = c("Species", "Species"),
-#'    taxonomic_reference = c("APC", "APC"),
+#'    taxonomic_dataset = c("APC", "APC"),
 #'    aligned_reason = NA_character_
 #'  )
 #' )
@@ -69,7 +69,7 @@ update_taxonomy <- function(aligned_data,
     
   aligned_data <- 
     aligned_data %>%
-    dplyr::select(original_name, aligned_name, taxon_rank, taxonomic_reference, aligned_reason) %>%
+    dplyr::select(original_name, aligned_name, taxon_rank, taxonomic_dataset, aligned_reason) %>%
     dplyr::mutate(genus = stringr::word(aligned_name, 1))
 
   ## split tibble of aligned names based on 
@@ -84,19 +84,19 @@ update_taxonomy <- function(aligned_data,
     split(
       paste(
         # Taxonomic reference
-        stringr::word(.data$taxonomic_reference, 1),
+        stringr::word(.data$taxonomic_dataset, 1),
         # Taxon rank
         ifelse(species_and_infraspecific(taxon_rank), "species_and_infraspecific_taxa", taxon_rank)
       )
     )
 
-  ## tibble of taxa whose aligned_names are taxon_rank = genus and taxonomic_reference = APC
+  ## taxa whose aligned_names are taxon_rank = genus and taxonomic_dataset = APC
   if (!is.null(taxa_out[["APC genus"]])) {
     taxa_out[["APC genus"]] <- taxa_out[["APC genus"]] %>%
       update_taxonomy_APC_genus(resources)
   }
     
-  ## tibble of taxa whose aligned_names are taxon_rank = genus and taxonomic_reference = APNI
+  ## taxa whose aligned_names are taxon_rank = genus and taxonomic_dataset = APNI
   ## these are genera that are not recorded in the APC and therefore there are no identifiers for these taxa
   ## the only information that can be added is, when available, the family name
   # todo Should we have any identifier for APNI genus-rank names?
@@ -105,14 +105,14 @@ update_taxonomy <- function(aligned_data,
       update_taxonomy_APNI_genus(resources)
   }
     
-  ## tibble of taxa whose aligned_names are taxon_rank = family and taxonomic_reference = APC
+  ## taxa whose aligned_names are taxon_rank = family and taxonomic_dataset = APC
   ## these are taxa for which the `genus` and `accepted_name` fields will be NA's and all identifiers will be blank
   if (!is.null(taxa_out[["APC family"]])) {
     taxa_out[["APC family"]] <- taxa_out[["APC family"]] %>%
     update_taxonomy_APC_family(resources)
   }
     
-  ## tibble of taxa whose aligned_names are taxon_rank = species/infraspecific and taxonomic_reference = APC
+  ## taxa whose aligned_names are taxon_rank = species/infraspecific and taxonomic_dataset = APC
   ## these are the subset of names in `taxa_out` that *should* have an APC-accepted name
   if (!is.null(taxa_out[["APC species_and_infraspecific_taxa"]])) {
     taxa_out[["APC species_and_infraspecific_taxa"]] <- taxa_out[["APC species_and_infraspecific_taxa"]] %>%
@@ -120,13 +120,14 @@ update_taxonomy <- function(aligned_data,
   }
   
   
-  ## tibble of taxa whose aligned_names are taxon_rank = species/infraspecific and taxonomic_reference = APNI
+  ## taxa whose aligned_names are taxon_rank = species/infraspecific and taxonomic_dataset = APNI
   if (!is.null(taxa_out[["APNI species_and_infraspecific_taxa"]])) {
     taxa_out[["APNI species_and_infraspecific_taxa"]] <- taxa_out[["APNI species_and_infraspecific_taxa"]] %>%
     update_taxonomy_APNI_species_and_infraspecific_taxa(resources)
   }
   
   ## create a blank tibble with all columns, for taxon lists where some columns aren't created in any of the individual tibbles
+  # todo can we remove?
   taxa_blank <-
       tibble::tibble(
         original_name = character(0L),
@@ -136,7 +137,7 @@ update_taxonomy <- function(aligned_data,
         genus = character(0L),
         family = character(0L),
         taxon_rank = character(0L),
-        taxonomic_reference = character(0L),
+        taxonomic_dataset = character(0L),
         taxonomic_status = character(0L),
         aligned_reason = character(0L),
         update_reason = character(0L),
@@ -154,8 +155,8 @@ update_taxonomy <- function(aligned_data,
 
   ## bind taxa_out back together.
   ## there are some tibbles that can be created when taxa_out is split that will not have been manipulated, namely those without alignments and that
-  ## therefore are NA for either `taxonomic_reference` or `taxon_rank`; the mutate steps below are primarily to ensure the final `suggested_name`
-  ## `taxon_rank`, `taxonomic_status`, `taxonomic_reference`, `genus` are properly filled in for those rows of data
+  ## therefore are NA for either `taxonomic_dataset` or `taxon_rank`; the mutate steps below are primarily to ensure the final `suggested_name`
+  ## `taxon_rank`, `taxonomic_status`, `taxonomic_dataset`, `genus` are properly filled in for those rows of data
   taxa_out <-
     dplyr::bind_rows(taxa_out) %>%
     dplyr::bind_rows(taxa_blank) %>%
@@ -164,7 +165,7 @@ update_taxonomy <- function(aligned_data,
       suggested_name = ifelse(is.na(suggested_name), original_name, suggested_name),
       update_reason = ifelse(taxonomic_status_aligned == "accepted", "aligned name accepted by APC", update_reason),
       taxonomic_status = ifelse(is.na(taxonomic_status), "unknown", taxonomic_status),
-      taxonomic_reference = ifelse(stringr::str_detect(taxonomic_reference, "APC"), "APC", taxonomic_reference),
+      taxonomic_dataset = ifelse(stringr::str_detect(taxonomic_dataset, "APC"), "APC", taxonomic_dataset),
       ## `genus` was the first word of the `aligned_name` in the input table; now needs to be set to NA for unknown taxa
       genus = ifelse(taxonomic_status == "unknown", NA_character_, genus),
       taxon_rank = ifelse(taxonomic_status == "unknown", NA_character_, taxon_rank),
@@ -181,7 +182,7 @@ update_taxonomy <- function(aligned_data,
       genus,
       family,
       taxon_rank,
-      taxonomic_reference,
+      taxonomic_dataset,
       taxonomic_status,
       aligned_reason,
       update_reason,
@@ -259,7 +260,7 @@ taxonomic_status_preferred_order <- function() {
 }
 
 # Function to update names of taxa whose aligned_names are 
-# taxon_rank = genus and taxonomic_reference = APC
+# taxon_rank = genus and taxonomic_dataset = APC
 update_taxonomy_APC_genus <- function(data, resources) {
   
   data %>% 
@@ -267,16 +268,16 @@ update_taxonomy_APC_genus <- function(data, resources) {
   dplyr::left_join(
     by = "genus",
     resources$genera_all %>%
-      dplyr::filter(stringr::str_detect(taxonomic_reference, "APC")) %>%
+      dplyr::filter(stringr::str_detect(taxonomic_dataset, "APC")) %>%
       dplyr::arrange(canonical_name, taxonomic_status) %>% ### how do I specify that I want to arrange by `preferred order`
       dplyr::distinct(canonical_name, .keep_all = TRUE) %>%
       dplyr::mutate(
         genus = canonical_name,
-        taxonomic_reference_genus = taxonomic_reference
+        taxonomic_dataset_genus = taxonomic_dataset
       ) %>%
       dplyr::select(
         genus,
-        taxonomic_reference_genus,
+        taxonomic_dataset_genus,
         accepted_name_usage_ID,
         taxonomic_status
       )
@@ -292,8 +293,8 @@ update_taxonomy_APC_genus <- function(data, resources) {
       # if required, update the genus name in the `aligned_name` to the currently APC-accepted genus
       genus_accepted = resources$genera_all$canonical_name[match(accepted_name_usage_ID, resources$genera_all$taxon_ID)],
       # XXX next 2 lines overwritten later and variables never used, probably can go
-      # taxonomic_reference_genus = resources$genera_all$taxonomic_reference[match(accepted_name_usage_ID, resources$genera_all$taxon_ID)],
-      # taxonomic_reference = ifelse(is.na(accepted_name_usage_ID), taxonomic_reference, taxonomic_reference_genus),
+      # taxonomic_dataset_genus = resources$genera_all$taxonomic_dataset[match(accepted_name_usage_ID, resources$genera_all$taxon_ID)],
+      # taxonomic_dataset = ifelse(is.na(accepted_name_usage_ID), taxonomic_dataset, taxonomic_dataset_genus),
       # add variables specifying the taxonomic_status and taxon_ID of the genus, since these will be APC-accepted taxon names, even though the
       # `accepted_name` and `taxon_ID` at the species-level will be blank
       taxonomic_status_genus = resources$genera_all$taxonomic_status[match(accepted_name_usage_ID, resources$genera_all$taxon_ID)],
@@ -306,7 +307,7 @@ update_taxonomy_APC_genus <- function(data, resources) {
       # indicate taxonomic_status of the genus name in `aligned_name` and why it needed to be updated for the `suggested_name`
       genus_update_reason = as.character(my_order),
       genus = genus_accepted,
-      taxonomic_reference = "APC"
+      taxonomic_dataset = "APC"
     ) %>%
     # add family alignments in
     dplyr::left_join(
@@ -319,11 +320,11 @@ update_taxonomy_APC_genus <- function(data, resources) {
         ) %>%
         dplyr::distinct(genus, .keep_all = TRUE)
     ) %>%
-    dplyr::select(-taxonomic_reference_genus, -taxonomic_status_genus, -aligned_minus_genus, -my_order, -genus_accepted, -accepted_name_usage_ID)
+    dplyr::select(-taxonomic_dataset_genus, -taxonomic_status_genus, -aligned_minus_genus, -my_order, -genus_accepted, -accepted_name_usage_ID)
 }
 
 # Function to update names of taxa whose aligned_names are
-#  taxon_rank = genus and taxonomic_reference = APNI
+#  taxon_rank = genus and taxonomic_dataset = APNI
 update_taxonomy_APNI_genus <- function(data, resources) {
   data %>%
     dplyr::left_join(
@@ -346,7 +347,7 @@ update_taxonomy_APNI_genus <- function(data, resources) {
 }
 
 # Function to update names of taxa whose aligned_names are
-# taxon_rank = family and taxonomic_reference = APC
+# taxon_rank = family and taxonomic_dataset = APC
 update_taxonomy_APC_family <- function(data, resources) {
   data %>%
     dplyr::mutate(
@@ -355,12 +356,12 @@ update_taxonomy_APC_family <- function(data, resources) {
       family = genus,
       genus = NA_character_,
       taxonomic_status_genus = NA_character_,
-      taxonomic_reference = "APC"
+      taxonomic_dataset = "APC"
     )
 }
 
 # Function to update names of taxa whose aligned_names are
-# taxon_rank = species/infraspecific and taxonomic_reference = APC
+# taxon_rank = species/infraspecific and taxonomic_dataset = APC
 update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources) {
   data %>%
     ## First propagate extra entries for taxa that have been split, based on the aligned names
@@ -444,7 +445,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources) 
       taxon_ID_genus = resources$genera_all$taxon_ID[match(genus_accepted, resources$genera_all$canonical_name)],
       taxonomic_status_aligned = taxonomic_status_with_splits,
       update_reason = taxonomic_status_aligned,
-      taxonomic_reference = "APC",
+      taxonomic_dataset = "APC",
       ## there are rare cases of names within the APC that do not align to an accepted name.
       ## For these taxa, the `suggested_name` is the `aligned_name` and the family name must be added
       genus = ifelse(is.na(genus_accepted), genus, genus_accepted),
@@ -456,7 +457,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources) 
 }
 
 # Function to update names of taxa whose aligned_names are
-# taxon_rank = species/infraspecific and taxonomic_reference = APNI
+# taxon_rank = species/infraspecific and taxonomic_dataset = APNI
 update_taxonomy_APNI_species_and_infraspecific_taxa <- function(data, resources) {
   data %>%
     dplyr::left_join(
@@ -500,23 +501,23 @@ update_taxonomy_APNI_species_and_infraspecific_taxa <- function(data, resources)
           genus = canonical_name,
           accepted_name_usage_ID_genus = accepted_name_usage_ID,
           taxonomic_status_genus = taxonomic_status,
-          taxonomic_reference_genus = taxonomic_reference
+          taxonomic_dataset_genus = taxonomic_dataset
         ) %>%
         dplyr::select(
           genus,
           accepted_name_usage_ID_genus,
           taxonomic_status_genus,
-          taxonomic_reference_genus
+          taxonomic_dataset_genus
         )
     ) %>%
     ## final manipulations to ensure APNI names that align with APC-accepted genus
-    ## have proper columns filled in (`genus` & `taxonomic_ID_genus` & `taxonomic_reference_genus`),
+    ## have proper columns filled in (`genus` & `taxonomic_ID_genus` & `taxonomic_dataset_genus`),
     ## while APNI names that do not align with an APC-accepted genus have these columns set to NA
     dplyr::mutate(
       genus_accepted = ifelse(is.na(accepted_name_usage_ID_genus), NA_character_, resources$genera_all$canonical_name[match(accepted_name_usage_ID_genus, resources$genera_all$taxon_ID)]),
       taxon_ID_genus = resources$genera_all$taxon_ID[match(genus_accepted, resources$genera_all$canonical_name)],
       genus = ifelse(is.na(genus_accepted), genus, genus_accepted),
-      taxonomic_reference_genus = ifelse(stringr::str_detect(taxonomic_reference_genus, "APC"), "APC", taxonomic_reference_genus)
+      taxonomic_dataset_genus = ifelse(stringr::str_detect(taxonomic_dataset_genus, "APC"), "APC", taxonomic_dataset_genus)
     ) %>%
     dplyr::select(-accepted_name_usage_ID_genus)
 }

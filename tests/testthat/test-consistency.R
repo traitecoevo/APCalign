@@ -51,14 +51,14 @@ test_that("taxon name alignment matches and updates work as expected", {
       alignment_code = alignment_code_all_matches_TRUE, 
       aligned_name = aligned_name_all_matches_TRUE,
       taxon_rank = taxon_rank_all_matches_TRUE,
-      taxonomic_reference = taxonomic_reference_all_matches_TRUE,
+      taxonomic_dataset = taxonomic_dataset_all_matches_TRUE,
     ) %>%
     dplyr::select(
       original_name, 
       alignment_code,
       aligned_name,
       taxon_rank,
-      taxonomic_reference,
+      taxonomic_dataset,
       updated_name,
       updated_name_passes
     ) %>%
@@ -78,7 +78,7 @@ test_that("taxon name alignment matches and updates work as expected", {
   expect_equal(archived_values$original_name, current_match_align_values$original_name)
   expect_equal(archived_values$aligned_name, current_match_align_values$aligned_name)
   expect_equal(archived_values$taxon_rank, current_match_align_values$taxon_rank)
-  expect_equal(archived_values$taxonomic_reference, current_match_align_values$taxonomic_reference)
+  expect_equal(archived_values$taxonomic_dataset, current_match_align_values$taxonomic_dataset)
   expect_equal(archived_values$alignment_code, 
                 stringr::str_extract(current_match_align_values$alignment_code, "match_[:digit:][:digit:][:alpha:]"))     
 
@@ -175,7 +175,7 @@ test_that("update_taxonomy() works", {
     original_name = c("Dryandra preissii", "Banksia acuminata"),
     aligned_name = c("Dryandra preissii", "Banksia acuminata"),
     taxon_rank = c("Species", "Species"),
-    taxonomic_reference = c("APC", "APC"),
+    taxonomic_dataset = c("APC", "APC"),
     aligned_reason = NA_character_
   )
   

@@ -11,7 +11,7 @@ update_taxonomy(
 )
 }
 \arguments{
-\item{aligned_data}{A tibble of plant names to update. This table must include 5 columns, original_name, aligned_name, taxon_rank, taxonomic_reference, and aligned_reason.
+\item{aligned_data}{A tibble of plant names to update. This table must include 5 columns, original_name, aligned_name, taxon_rank, taxonomic_dataset, and aligned_reason.
 These columns are created by the function \code{align_taxa}.
 The columns \code{original_name} and \code{aligned_name} must be in the format of the scientific name, with genus and species,
 and may contain additional qualifiers such as subspecies or varieties. The names are case insensitive.}
@@ -28,7 +28,7 @@ A tibble with updated taxonomy for the specified plant names. The tibble contain
 \item \code{aligned_name}: the input plant name.
 \item \code{accepted_name}: the APC-accepted plant name, when available.
 \item \code{suggested_name}: the suggested plant name to use. Identical to the accepted_name, when an accepted_name exists.
-\item \code{taxonomic_reference}: the source of the updated taxonomic information (APC or APNI).
+\item \code{taxonomic_dataset}: the source of the updated taxonomic information (APC or APNI).
 \item \code{taxon_ID_aligned}: the unique identifier for the updated taxon.
 \item \code{taxonomic_status_aligned}: the taxonomic status of the updated taxon.
 \item \code{alternative_taxonomic_status_aligned}: the alternative taxonomic status for the input name, if any.
@@ -62,7 +62,7 @@ update_taxonomy(
    original_name = c("Dryandra preissii", "Banksia acuminata"),
    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
    taxon_rank = c("Species", "Species"),
-   taxonomic_reference = c("APC", "APC"),
+   taxonomic_dataset = c("APC", "APC"),
    aligned_reason = NA_character_
  )
 )

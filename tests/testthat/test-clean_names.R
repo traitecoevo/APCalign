@@ -79,7 +79,7 @@ test_that("update_taxonomy() works", {
     original_name = c("Dryandra preissii", "Banksia acuminata"),
     aligned_name = c("Dryandra preissii", "Banksia acuminata"),
     taxon_rank = c("Species", "Species"),
-    taxonomic_reference = c("APC", "APC"),
+    taxonomic_dataset = c("APC", "APC"),
     aligned_reason = NA_character_
   )
   

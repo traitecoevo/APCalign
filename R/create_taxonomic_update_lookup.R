@@ -86,7 +86,7 @@ create_taxonomic_update_lookup <- function(taxa,
         suggested_name,
         genus,
         taxon_rank,
-        taxonomic_reference,
+        taxonomic_dataset,
         scientific_name_authorship,
         aligned_reason,
         update_reason
@@ -126,7 +126,7 @@ collapse_to_higher_taxon <-
         apc_names = find_mrct(canonical_name, resources = resources),
         aligned_reason = paste(unique(aligned_reason), collapse = " and "),
         taxonomic_status = paste(unique(taxonomic_status_aligned), collapse = " and "),
-        taxonomic_reference = paste(unique(taxonomic_reference), collapse = " and "),
+        taxonomic_dataset = paste(unique(taxonomic_dataset), collapse = " and "),
         number_of_collapsed_taxa = n()
       )
 
