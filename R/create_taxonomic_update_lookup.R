@@ -58,13 +58,13 @@ create_taxonomic_update_lookup <- function(taxa,
       dplyr::group_by(row_number) %>%
       # todo move ordering to loading taxonomic resources?
       dplyr::mutate(my_order =  forcats::fct_relevel(
-        taxonomic_status_with_splits,
-        subset(taxonomic_status_preferred_order(), taxonomic_status_preferred_order() %in% taxonomic_status_with_splits)
+        taxonomic_status_aligned,
+        subset(taxonomic_status_preferred_order(), taxonomic_status_preferred_order() %in% taxonomic_status_aligned)
       )) %>%
       dplyr::arrange(row_number, my_order) %>%
       dplyr::mutate(
-        possible_matches = sprintf("%s (%s)", suggested_name, taxonomic_status_with_splits) %>% paste(collapse = "; "),
-        taxonomic_status_with_splits = NA_character_
+        possible_matches = sprintf("%s (%s)", suggested_name, taxonomic_status_aligned) %>% paste(collapse = "; "),
+        taxonomic_status_aligned = NA_character_
       ) %>%
       # take first record, this is most likely as we've set a preferred order above
       dplyr::slice(1) %>%
