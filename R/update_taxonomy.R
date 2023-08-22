@@ -409,12 +409,10 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources) 
         dplyr::mutate(
           aligned_name = canonical_name,
           taxonomic_status_aligned = taxonomic_status,
-          taxon_ID_with_splits = taxon_ID
         ) %>%
         dplyr::select(
           aligned_name,
           taxonomic_status_aligned,
-          taxon_ID_with_splits,
           accepted_name_usage_ID,
           scientific_name_ID
         )
