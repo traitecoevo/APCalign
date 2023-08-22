@@ -285,7 +285,7 @@ update_taxonomy <- function(aligned_data,
       dplyr::mutate(
         # for APC-accepted species, the `suggested_name` is the `accepted_name`
         suggested_name = accepted_name,
-        taxonomic_status = ifelse(is.na(accepted_name, taxonomic_status_clean, "accepted")),
+        taxonomic_status = ifelse(is.na(accepted_name), taxonomic_status_clean, "accepted"),
         # for APC-accepted species, the `genus` is the first word of the `accepted_name`
         genus_accepted = stringr::word(suggested_name, 1),
         taxon_ID_genus = resources$genera_all$taxon_ID[match(genus_accepted, resources$genera_all$canonical_name)],
