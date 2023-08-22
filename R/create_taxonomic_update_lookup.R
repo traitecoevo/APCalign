@@ -50,30 +50,10 @@ create_taxonomic_update_lookup <- function(taxa,
                imprecise_fuzzy_matches = imprecise_fuzzy_matches)
 
   updated_data <- 
-    update_taxonomy(aligned_data, resources = resources, output = output)
-
-  if(taxonomic_splits == "most_likely_species") {
-    updated_data <-  
-      updated_data %>%
-      dplyr::group_by(row_number) %>%
-      # todo move ordering to loading taxonomic resources?
-      dplyr::mutate(
-        my_order =  relevel_taxonomic_status_preferred_order(taxonomic_status_aligned)
-      ) %>%
-      dplyr::arrange(row_number, my_order) %>%
-      dplyr::mutate(
-        possible_matches = sprintf("%s (%s)", suggested_name, taxonomic_status_aligned) %>% paste(collapse = "; "),
-        taxonomic_status_aligned = NA_character_
-      ) %>%
-      # take first record, this is most likely as we've set a preferred order above
-      dplyr::slice(1) %>%
-      dplyr::ungroup()
-  }
-  
-  # todo - should this be an option here, or an extra function operating on outputs?
-  if (taxonomic_splits == "collapse_to_higher_taxon") {
-    return(collapse_to_higher_taxon(updated_data, resources))
-  }
+    update_taxonomy(aligned_data, 
+      taxonomic_splits = taxonomic_splits,
+      resources = resources, 
+      output = output)
   
   if (!full) {
     updated_data <-
@@ -93,8 +73,6 @@ create_taxonomic_update_lookup <- function(taxa,
   }
 
   # todo - should we add file caching here? Or is it enough to have in component functions
-  #  - however, results will be incomplete 
-
   return(updated_data)
 }
 

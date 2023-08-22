@@ -11,6 +11,7 @@
 #' The columns `original_name` and `aligned_name` must be in the format of the scientific name, with genus and species, 
 #' and may contain additional qualifiers such as subspecies or varieties. The names are case insensitive.
 #'
+#' @param taxonomic_splits XXXXX
 #' @param output (optional) Name of the file where results are saved. The default is NULL and no file is created.
 #' If specified, the output will be saved in a CSV file with the given name.
 #'
@@ -62,6 +63,7 @@
 #' )
 
 update_taxonomy <- function(aligned_data,
+                            taxonomic_splits = "most_likely_species",
                             output = NULL,
                             resources = load_taxonomic_resources()) {
     
@@ -105,7 +107,6 @@ update_taxonomy <- function(aligned_data,
   ## these are the subset of names in `taxa_out` that *should* have an APC-accepted name
   taxa_out[["APC species_and_infraspecific_taxa"]] <- taxa_out[["APC species_and_infraspecific_taxa"]] %>%
     update_taxonomy_APC_species_and_infraspecific_taxa(resources)
-  
   
   ## taxa whose aligned_names are taxon_rank = species/infraspecific and taxonomic_dataset = APNI
   taxa_out[["APNI species_and_infraspecific_taxa"]] <- taxa_out[["APNI species_and_infraspecific_taxa"]] %>%
@@ -206,6 +207,29 @@ update_taxonomy <- function(aligned_data,
   #   tidyr::unnest("data") #%>%
   # # some extra useful info
   # # dplyr::mutate(genus = stringr::word(canonical_name, 1, 1))
+  
+  # Implement decisions about how to handle splits
+  if (taxonomic_splits == "most_likely_species") {
+    taxa_out <-
+      taxa_out %>%
+      dplyr::group_by(row_number) %>%
+      # todo move ordering to loading taxonomic resources?
+      dplyr::mutate(
+        my_order = relevel_taxonomic_status_preferred_order(taxonomic_status_aligned)
+      ) %>%
+      dplyr::arrange(row_number, my_order) %>%
+      dplyr::mutate(
+        possible_matches = sprintf("%s (%s)", suggested_name, taxonomic_status_aligned) %>% paste(collapse = "; ")
+      ) %>%
+      # take first record, this is most likely as we've set a preferred order above
+      dplyr::slice(1) %>%
+      dplyr::ungroup()
+  }
+
+  # todo - should this be an option here, or an extra function operating on outputs?
+  if (taxonomic_splits == "collapse_to_higher_taxon") {
+    taxa_out <- collapse_to_higher_taxon(taxa_out, resources)
+  }
   
   if (!is.null(output)) {
     readr::write_csv(taxa_out, output)
