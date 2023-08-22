@@ -40,7 +40,6 @@ utils::globalVariables(
     "aligned_name",
     "aligned_minus_genus",
     "aligned_reason",
-    "alternative_taxonomic_status_aligned",
     "binomial",
     "canonical_name",
     "ccAttributionIRI",

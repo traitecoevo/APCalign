@@ -25,7 +25,6 @@
 #'   \item \code{accepted_name}: the APC-accepted plant name, when available.
 #'   \item \code{suggested_name}: the suggested plant name to use. Identical to the accepted_name, when an accepted_name exists.
 #'   \item \code{taxonomic_dataset}: the source of the updated taxonomic information (APC or APNI).
-#'   \item \code{alternative_taxonomic_status_aligned}: the alternative taxonomic status for the input name, if any.
 #'   \item \code{accepted_name_usage_ID}: the unique identifier for the accepted name of the input name.
 #'   \item \code{canonical_name}: the accepted (or known) scientific name for the input name.
 #'   \item \code{scientific_name_authorship}: the authorship information for the accepted (or known) name.
@@ -135,7 +134,6 @@ update_taxonomy <- function(aligned_data,
         scientific_name_ID = character(0L),
         canonical_name = character(0L),
         taxonomic_status_aligned = character(0L),
-        alternative_taxonomic_status_aligned = character(0L),
         row_number = numeric(0L)
       )
 
@@ -179,7 +177,6 @@ update_taxonomy <- function(aligned_data,
       scientific_name_ID,
       canonical_name,
       taxonomic_status_aligned,
-      alternative_taxonomic_status_aligned,
       row_number
     )
 
@@ -230,7 +227,7 @@ update_taxonomy <- function(aligned_data,
   if (taxonomic_splits == "collapse_to_higher_taxon") {
     taxa_out <- collapse_to_higher_taxon(taxa_out, resources)
   }
-  
+
   if (!is.null(output)) {
     readr::write_csv(taxa_out, output)
     message("  - output saved in file: ", output)
@@ -441,26 +438,6 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources) 
           taxon_distribution
         )
     ) %>%
-    # Some species have multiple matches. We will prefer the accepted usage, but record others if they exist
-    # To do this we define the order we want variables to sort by, with accepted at the top
-    dplyr::mutate(
-      my_order = relevel_taxonomic_status_preferred_order(taxonomic_status_aligned)
-    ) %>%
-    dplyr::arrange(aligned_name, my_order) %>%
-    # For each species, keep the first record (accepted if present) and
-    # record any alternative status to indicate where there was ambiguity
-    dplyr::group_by(aligned_name) %>%
-    dplyr::mutate(
-      # todo: move this outside function to higher level
-      # XX removed the if else about needing to be accepted, because not always true
-      alternative_taxonomic_status_aligned = 
-        taxonomic_status_aligned %>% 
-        unique() %>% 
-        subset(., . != "accepted") %>% 
-        paste0(collapse = " | ") %>% 
-        dplyr::na_if("")
-    ) %>%
-    dplyr::ungroup() %>%
     dplyr::mutate(
       # for APC-accepted species, the `suggested_name` is the `accepted_name`
       suggested_name = accepted_name,
@@ -476,7 +453,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources) 
       suggested_name = ifelse(is.na(accepted_name), aligned_name, accepted_name),
       family = ifelse(is.na(family), resources$APC$family[match(stringr::word(suggested_name, 1), resources$APC$genus)], family)
     ) %>%
-    dplyr::select(-my_order, -genus_accepted)
+    dplyr::select(-genus_accepted)
 }
 
 # Function to update names of taxa whose aligned_names are

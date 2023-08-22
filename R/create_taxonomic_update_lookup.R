@@ -58,18 +58,13 @@ create_taxonomic_update_lookup <- function(taxa,
   if (!full) {
     updated_data <-
       updated_data %>%
-      dplyr::select(
-        original_name,
-        aligned_name,
-        accepted_name,
-        suggested_name,
-        genus,
-        taxon_rank,
-        taxonomic_dataset,
-        scientific_name_authorship,
-        aligned_reason,
-        update_reason
-      )
+        dplyr::select(
+          dplyr::any_of(c(
+            "original_name", "aligned_name", "accepted_name", "suggested_name", "genus", "taxon_rank", "taxonomic_dataset", "scientific_name_authorship", "aligned_reason", "update_reason",
+            # these last ones come from collapse_to_higher_taxon
+            "collapsed_names", "number_of_collapsed_taxa"
+          ))
+        )        
   }
 
   # todo - should we add file caching here? Or is it enough to have in component functions
@@ -100,7 +95,7 @@ collapse_to_higher_taxon <-
       aligned_species_list %>%
       dplyr::group_by(original_name, aligned_name) %>%
       dplyr::summarise(
-        apc_names = find_mrct(canonical_name, resources = resources),
+        collapsed_names = find_mrct(canonical_name, resources = resources),
         aligned_reason = paste(unique(aligned_reason), collapse = " and "),
         taxonomic_status = paste(unique(taxonomic_status_aligned), collapse = " and "),
         taxonomic_dataset = paste(unique(taxonomic_dataset), collapse = " and "),
