@@ -22,6 +22,7 @@ test_that("consistency with previous runs", {
       "Acacia paraneura",
       "Galactia striata"
     )
+  
   output <-
     create_taxonomic_update_lookup(
       taxa,
@@ -33,22 +34,24 @@ test_that("consistency with previous runs", {
   #readr::write_csv(output, "consistency_lookup.csv")
 
   past_result <-
-    readr::read_csv("consistency_lookup.csv", show_col_types = FALSE) %>%
-    dplyr::arrange(original_name, canonical_name)
+    readr::read_csv("benchmarks/consistency_lookup.csv", show_col_types = FALSE) %>%
+    dplyr::arrange(original_name, canonical_name) %>%
+    dplyr::rename(accepted_name = canonical_name)
 
   # tests the most important columns
   # other cols changed so we can't check other columns
-  expect_equal(past_result$original_name, output$original_name)
-  expect_equal(past_result$aligned_name, output$aligned_name)
-  expect_equal(past_result$canonical_name, output$accepted_name)
-  })
+  expect_equal(
+    past_result %>% select(original_name, aligned_name, accepted_name),
+    output %>% select(original_name, aligned_name, accepted_name)
+    )
+})
 
 test_that("taxon name alignment matches and updates work as expected", {
 
   # Compare results to a table of values that have been closely scrutinised
   
   benchmarks <- 
-    readr::read_csv("test_matches_alignments_updates.csv", show_col_types = FALSE) %>%
+    readr::read_csv("benchmarks/test_matches_alignments_updates.csv", show_col_types = FALSE) %>%
     dplyr::rename(
       alignment_code = alignment_code_all_matches_TRUE, 
       aligned_name = aligned_name_all_matches_TRUE,
@@ -66,7 +69,7 @@ test_that("taxon name alignment matches and updates work as expected", {
     ) %>%
     dplyr::arrange(original_name, aligned_name)
       
-  output <- 
+  output_align <- 
     align_taxa(
       original_name = benchmarks$original_name, 
       resources = resources, 
@@ -78,25 +81,25 @@ test_that("taxon name alignment matches and updates work as expected", {
       identifier = "test_all_matches_TRUE"
     )
   
-  expect_equal(benchmarks$original_name,  output$original_name)
-  expect_equal(benchmarks$aligned_name,   output$aligned_name)
-  expect_equal(benchmarks$taxon_rank,     output$taxon_rank)
-  expect_equal(benchmarks$taxonomic_dataset, output$taxonomic_dataset)
+  expect_equal(benchmarks$original_name,  output_align$original_name)
+  expect_equal(benchmarks$aligned_name,   output_align$aligned_name)
+  expect_equal(benchmarks$taxon_rank,     output_align$taxon_rank)
+  expect_equal(benchmarks$taxonomic_dataset, output_align$taxonomic_dataset)
   expect_equal(benchmarks$alignment_code, 
-                stringr::str_extract(output$alignment_code, "match_[:digit:][:digit:][:alpha:]"))     
+                stringr::str_extract(output_align$alignment_code, "match_[:digit:][:digit:][:alpha:]"))     
 
 
-  current_update_values <- 
+  output_updates <- 
     update_taxonomy(
-      output, 
+      output_align, 
       resources = resources,
       taxonomic_splits = "most_likely_species"
     )
   
-  current_update_values <- 
-    current_update_values %>% 
+  output_updates <- 
+    output_updates %>% 
     dplyr::left_join(by = "original_name",
-      archived_values %>% select(original_name, updated_name, updated_name_passes), 
+      benchmarks %>% select(original_name, updated_name, updated_name_passes), 
     ) %>% 
     # Make a logical to see if the suggested name matches the updated_name in the spreadsheet
     # We don't expect all of these to match perfectly. 
@@ -108,12 +111,12 @@ test_that("taxon name alignment matches and updates work as expected", {
       test_column = ifelse(is.na(test_column), FALSE, test_column)
     )
 
-  expect_equal(archived_values$original_name, current_update_values$original_name)
+  expect_equal(benchmarks$original_name, output_updates$original_name)
   # We expect 100% success in alignment
-  expect_equal(archived_values$aligned_name, current_update_values$aligned_name)
+  expect_equal(benchmarks$aligned_name, output_updates$aligned_name)
   # for update_taxonomony, there are cases where the algorithm doesn't produce a desired result (suggested_name != updated_name)
   # these are known and expected failures.
-  expect_equal(archived_values$updated_name_passes, current_update_values$test_column)
+  expect_equal(benchmarks$updated_name_passes, output_updates$test_column)
 })
 
 test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon",
@@ -141,6 +144,8 @@ test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon"
                 resources = resources
               )
             expect_equal(1,1)
+            # todo - the above doesn't actually test the results.
+            # add tests against expected outpit
             #expect_equal(nrow(zz), 4)
             #expect_equal(zz$original_name, original_name)
           })
