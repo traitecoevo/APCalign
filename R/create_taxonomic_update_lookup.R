@@ -43,27 +43,6 @@ create_taxonomic_update_lookup <- function(taxa,
 
   validate_one_to_many_input(one_to_many)
 
-  preferred_order <-
-    c(
-      "accepted",
-      "taxonomic synonym",
-      "basionym",
-      "nomenclatural synonym",
-      "isonym",
-      "orthographic variant",
-      "common name",
-      "doubtful taxonomic synonym",
-      "replaced synonym",
-      "misapplied",
-      "doubtful pro parte taxonomic synonym",
-      "pro parte nomenclatural synonym",
-      "pro parte taxonomic synonym",
-      "pro parte misapplied",
-      "excluded",
-      "doubtful misapplied",
-      "doubtful pro parte misapplied"
-    )
-  
   aligned_data <- 
     align_taxa(taxa, resources = resources, 
                APNI_matches = APNI_matches, 
@@ -77,9 +56,10 @@ create_taxonomic_update_lookup <- function(taxa,
     updated_data <-  
       updated_data %>%
       dplyr::group_by(row_number) %>%
+      # todo move ordering to loading taxonomic resources?
       dplyr::mutate(my_order =  forcats::fct_relevel(
         taxonomic_status_with_splits,
-        subset(preferred_order, preferred_order %in%  taxonomic_status_with_splits)
+        subset(resources$preferred_order, resources$preferred_order %in% taxonomic_status_with_splits)
       )) %>%
       dplyr::arrange(row_number, my_order) %>%
       dplyr::mutate(

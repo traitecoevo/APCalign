@@ -217,6 +217,27 @@ load_taxonomic_resources <-
       taxonomic_resources$APC %>%
       dplyr::filter(taxon_rank %in% c("Familia"), taxonomic_status == "accepted")
     
+    taxonomic_resources[["preferred_order"]] <- 
+      c(
+        "accepted",
+        "taxonomic synonym",
+        "basionym",
+        "nomenclatural synonym",
+        "isonym",
+        "orthographic variant",
+        "common name",
+        "doubtful taxonomic synonym",
+        "replaced synonym",
+        "misapplied",
+        "doubtful pro parte taxonomic synonym",
+        "pro parte nomenclatural synonym",
+        "pro parte taxonomic synonym",
+        "pro parte misapplied",
+        "excluded",
+        "doubtful misapplied",
+        "doubtful pro parte misapplied"
+      )
+
     return(taxonomic_resources)
   }
 
