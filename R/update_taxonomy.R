@@ -134,6 +134,7 @@ update_taxonomy <- function(aligned_data,
         scientific_name_ID = character(0L),
         canonical_name = character(0L),
         taxonomic_status_aligned = character(0L),
+        alternative_taxonomic_status_aligned = character(0L),
         row_number = numeric(0L)
       )
 
