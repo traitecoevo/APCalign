@@ -6,6 +6,7 @@
 \usage{
 update_taxonomy(
   aligned_data,
+  taxonomic_splits = "most_likely_species",
   output = NULL,
   resources = load_taxonomic_resources()
 )
@@ -15,6 +16,8 @@ update_taxonomy(
 These columns are created by the function \code{align_taxa}.
 The columns \code{original_name} and \code{aligned_name} must be in the format of the scientific name, with genus and species,
 and may contain additional qualifiers such as subspecies or varieties. The names are case insensitive.}
+
+\item{taxonomic_splits}{XXXXX}
 
 \item{output}{(optional) Name of the file where results are saved. The default is NULL and no file is created.
 If specified, the output will be saved in a CSV file with the given name.}
@@ -29,14 +32,12 @@ A tibble with updated taxonomy for the specified plant names. The tibble contain
 \item \code{accepted_name}: the APC-accepted plant name, when available.
 \item \code{suggested_name}: the suggested plant name to use. Identical to the accepted_name, when an accepted_name exists.
 \item \code{taxonomic_dataset}: the source of the updated taxonomic information (APC or APNI).
-\item \code{taxon_ID_aligned}: the unique identifier for the updated taxon.
-\item \code{taxonomic_status_aligned}: the taxonomic status of the updated taxon.
-\item \code{alternative_taxonomic_status_aligned}: the alternative taxonomic status for the input name, if any.
 \item \code{accepted_name_usage_ID}: the unique identifier for the accepted name of the input name.
 \item \code{canonical_name}: the accepted (or known) scientific name for the input name.
 \item \code{scientific_name_authorship}: the authorship information for the accepted (or known) name.
 \item \code{taxon_rank}: the taxonomic rank of the accepted (or known) name.
 \item \code{taxonomic_status}: the taxonomic status of the accepted (or known) name.
+\item \code{ taxonomic_status_aligned}: for taxa where there is ambiguity due to a taxon split, the taxonomic status of each possible match.
 \item \code{aligned_reason}: the explanation of a specific taxon name alignment (from an original name to an aligned name).
 \item \code{update_reason}: the explanation of a specific taxon name update (from an aligned name to an accepted name).
 \item \code{genus}: the genus of the accepted (or known) name.
