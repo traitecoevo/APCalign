@@ -87,40 +87,29 @@ update_taxonomy <- function(aligned_data,
     )
 
   ## taxa whose aligned_names are taxon_rank = genus and taxonomic_dataset = APC
-  if (!is.null(taxa_out[["APC genus"]])) {
-    taxa_out[["APC genus"]] <- taxa_out[["APC genus"]] %>%
-      update_taxonomy_APC_genus(resources)
-  }
+  taxa_out[["APC genus"]] <- taxa_out[["APC genus"]] %>%
+    update_taxonomy_APC_genus(resources)
     
   ## taxa whose aligned_names are taxon_rank = genus and taxonomic_dataset = APNI
   ## these are genera that are not recorded in the APC and therefore there are no identifiers for these taxa
   ## the only information that can be added is, when available, the family name
-  # todo Should we have any identifier for APNI genus-rank names?
-  if (!is.null(taxa_out[["APNI genus"]])) {
-    taxa_out[["APNI genus"]] <- taxa_out[["APNI genus"]] %>%
-      update_taxonomy_APNI_genus(resources)
-  }
+  taxa_out[["APNI genus"]] <- taxa_out[["APNI genus"]] %>%
+    update_taxonomy_APNI_genus(resources)
     
   ## taxa whose aligned_names are taxon_rank = family and taxonomic_dataset = APC
   ## these are taxa for which the `genus` and `accepted_name` fields will be NA's and all identifiers will be blank
-  if (!is.null(taxa_out[["APC family"]])) {
-    taxa_out[["APC family"]] <- taxa_out[["APC family"]] %>%
+  taxa_out[["APC family"]] <- taxa_out[["APC family"]] %>%
     update_taxonomy_APC_family(resources)
-  }
     
   ## taxa whose aligned_names are taxon_rank = species/infraspecific and taxonomic_dataset = APC
   ## these are the subset of names in `taxa_out` that *should* have an APC-accepted name
-  if (!is.null(taxa_out[["APC species_and_infraspecific_taxa"]])) {
-    taxa_out[["APC species_and_infraspecific_taxa"]] <- taxa_out[["APC species_and_infraspecific_taxa"]] %>%
+  taxa_out[["APC species_and_infraspecific_taxa"]] <- taxa_out[["APC species_and_infraspecific_taxa"]] %>%
     update_taxonomy_APC_species_and_infraspecific_taxa(resources)
-  }
   
   
   ## taxa whose aligned_names are taxon_rank = species/infraspecific and taxonomic_dataset = APNI
-  if (!is.null(taxa_out[["APNI species_and_infraspecific_taxa"]])) {
-    taxa_out[["APNI species_and_infraspecific_taxa"]] <- taxa_out[["APNI species_and_infraspecific_taxa"]] %>%
+  taxa_out[["APNI species_and_infraspecific_taxa"]] <- taxa_out[["APNI species_and_infraspecific_taxa"]] %>%
     update_taxonomy_APNI_species_and_infraspecific_taxa(resources)
-  }
   
   ## create a blank tibble with all columns, for taxon lists where some columns aren't created in any of the individual tibbles
   # todo can we remove?
@@ -257,6 +246,8 @@ taxonomic_status_preferred_order <- function() {
 # taxon_rank = genus and taxonomic_dataset = APC
 update_taxonomy_APC_genus <- function(data, resources) {
   
+  if(is.null(data)) return(NULL)
+
   data %>% 
   # merge in columns from APC, at the genus-level
   dplyr::left_join(
@@ -320,6 +311,9 @@ update_taxonomy_APC_genus <- function(data, resources) {
 # Function to update names of taxa whose aligned_names are
 #  taxon_rank = genus and taxonomic_dataset = APNI
 update_taxonomy_APNI_genus <- function(data, resources) {
+
+  if(is.null(data)) return(NULL)
+
   data %>%
     dplyr::left_join(
       by = "genus",
@@ -343,6 +337,9 @@ update_taxonomy_APNI_genus <- function(data, resources) {
 # Function to update names of taxa whose aligned_names are
 # taxon_rank = family and taxonomic_dataset = APC
 update_taxonomy_APC_family <- function(data, resources) {
+
+  if(is.null(data)) return(NULL)
+
   data %>%
     dplyr::mutate(
       suggested_name = aligned_name,
@@ -357,6 +354,9 @@ update_taxonomy_APC_family <- function(data, resources) {
 # Function to update names of taxa whose aligned_names are
 # taxon_rank = species/infraspecific and taxonomic_dataset = APC
 update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources) {
+
+  if(is.null(data)) return(NULL)
+
   data %>%
     ## First propagate extra entries for taxa that have been split, based on the aligned names
     ## `misapplied` names need to be filtered out, as these are names that should not be include in the `taxonomic_splits = TRUE` output
@@ -449,6 +449,9 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources) 
 # Function to update names of taxa whose aligned_names are
 # taxon_rank = species/infraspecific and taxonomic_dataset = APNI
 update_taxonomy_APNI_species_and_infraspecific_taxa <- function(data, resources) {
+  
+  if(is.null(data)) return(NULL)
+
   data %>%
     dplyr::left_join(
       by = "aligned_name",
