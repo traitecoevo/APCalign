@@ -70,7 +70,7 @@
 <span>  <span class="va">taxa</span>,</span>
 <span>  stable_or_current_data <span class="op">=</span> <span class="st">"stable"</span>,</span>
 <span>  version <span class="op">=</span> <span class="fu">default_version</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  one_to_many <span class="op">=</span> <span class="st">"return_all"</span>,</span>
+<span>  taxonomic_splits <span class="op">=</span> <span class="st">"return_all"</span>,</span>
 <span>  full <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  APNI_matches <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  imprecise_fuzzy_matches <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -95,7 +95,7 @@
 <dd><p>The version number of the dataset to use.</p></dd>
 
 
-<dt>one_to_many</dt>
+<dt>taxonomic_splits</dt>
 <dd><p>How to handle one_to_many taxonomic matches.  Default is "return_all".  The other options are "collapse_to_higher_taxon" and "most_likely_species". most_likely_species defaults to the original_name if that name is accepted by the APC; this will be right for certain species subsets, but make errors in other cases, use with caution.</p></dd>
 
 
