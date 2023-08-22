@@ -89,7 +89,7 @@ test_that("taxon name alignment matches and updates work as expected", {
       full = TRUE,
       imprecise_fuzzy_matches = TRUE,
       identifier = "test_all_matches_TRUE",
-      one_to_many = "most_likely_species"
+      taxonomic_splits = "most_likely_species"
     )
   
   current_update_values <- 
@@ -136,7 +136,7 @@ test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon"
             zz <- 
               create_taxonomic_update_lookup(
                 original_name,
-                one_to_many = "collapse_to_higher_taxon",
+                taxonomic_splits = "collapse_to_higher_taxon",
                 resources = resources
               )
             expect_equal(1,1)

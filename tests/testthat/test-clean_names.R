@@ -45,7 +45,7 @@ test_that("create_taxonomic_update_lookup() works with collapse_to_higher_taxon"
                 "Polypogon viridis",
                 "Acacia aneura"
               ),
-              one_to_many = "collapse_to_higher_taxon",
+              taxonomic_splits = "collapse_to_higher_taxon",
               resources = resources
             ) -> zz
             expect_gte(nrow(zz), 11)
@@ -126,7 +126,7 @@ test_that("handles weird strings", {
   out <- align_taxa(test_strings, resources = resources)
   expect_equal(test_strings, out$original_name)
 
-  out <- create_taxonomic_update_lookup(test_strings, one_to_many = "most_likely_species",
+  out <- create_taxonomic_update_lookup(test_strings, taxonomic_splits = "most_likely_species",
     resources = resources)
   expect_equal(test_strings, out$original_name)
 })
@@ -158,7 +158,7 @@ test_that("returns same number of rows as input, even with duplicates", {
 
   x4 <- create_taxonomic_update_lookup(
     taxa = original_name,
-    resources = resources, one_to_many = "most_likely_species")
+    resources = resources, taxonomic_splits = "most_likely_species")
 
   # output should be same order and length as input
   expect_equal(x1$original_name, original_name)
