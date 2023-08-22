@@ -37,7 +37,7 @@ so call \code{\link{load_taxonomic_resources}} separately to greatly speed this 
 \item{identifier}{A dataset, location or other identifier, which defaults to NA.}
 }
 \value{
-A tibble with columns: original_name, cleaned_name, aligned_name, source, known, and checked.
+A tibble with columns: original_name, cleaned_name, aligned_name, taxonomic_reference, known, and checked.
 }
 \description{
 This function uses Australian Plant Census (APC) & the Australian Plant Name Index (APNI) to find taxonomic alignments for a list of names.
