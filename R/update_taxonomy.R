@@ -295,7 +295,7 @@ update_taxonomy_APC_genus <- function(data, resources) {
       # add variables specifying the taxonomic_status and taxon_ID of the genus, since these will be APC-accepted taxon names, even though the
       # `accepted_name` and `taxon_ID` at the species-level will be blank
       taxonomic_status_genus = resources$genera_all$taxonomic_status[match(accepted_name_usage_ID, resources$genera_all$taxon_ID)],
-      taxonomic_status = ifelse(is.na(accepted_name_usage_ID), as.character(my_order), taxonomic_status_genus),
+      taxonomic_status = ifelse(is.na(accepted_name_usage_ID), as.character(my_order), paste("genus", taxonomic_status_genus)),
       taxon_ID_genus = resources$genera_all$taxon_ID[match(accepted_name_usage_ID, resources$genera_all$accepted_name_usage_ID)],
       # genus names in `aligned_name` that are not APC-accepted need to be updated to their current name in `suggested_name`
       aligned_minus_genus = ifelse(is.na(genus_accepted), NA, stringr::str_replace(aligned_name, stringr::word(aligned_name, 1), "")),
@@ -359,6 +359,7 @@ update_taxonomy_APC_family <- function(data, resources) {
       family = genus,
       genus = NA_character_,
       taxonomic_status_genus = NA_character_,
+      taxonomic_status = "family accepted",
       taxonomic_dataset = "APC"
     )
 }
