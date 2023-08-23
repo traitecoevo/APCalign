@@ -244,7 +244,16 @@ test_that("Runs when neither taxa in in APC", {
   expect_equal(out$original_name, original_name)
   })
 
-
+test_that("no matches to APC accepted names are required", {
+  # some genus matches
+  out1 <- create_taxonomic_update_lookup(taxa = c("Eucalyptus", "Banksia asdasd", "Ryandra sp"), resources = resources)
+  expect_equal(nrow(out1), 3)
+  
+  # all garbage
+  out2 <- create_taxonomic_update_lookup(taxa = c("Aucalyptus", "Danksia asdasd", "Ryandra sp"), resources = resources)
+  expect_equal(nrow(out2), 3)
+  expect_equal(out2$aligned_name, c(NA_character_, NA_character_, NA_character_))
+})
 
 test_that("returns same number of rows as input, even with duplicates", {
   
