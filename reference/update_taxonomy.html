@@ -74,6 +74,7 @@ to their current accepted name.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">update_taxonomy</span><span class="op">(</span></span>
 <span>  <span class="va">aligned_data</span>,</span>
+<span>  taxonomic_splits <span class="op">=</span> <span class="st">"most_likely_species"</span>,</span>
 <span>  output <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -82,10 +83,14 @@ to their current accepted name.</p>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>aligned_data</dt>
-<dd><p>A tibble of plant names to update. This table must include 5 columns, original_name, aligned_name, taxon_rank, taxonomic_reference, and aligned_reason.
+<dd><p>A tibble of plant names to update. This table must include 5 columns, original_name, aligned_name, taxon_rank, taxonomic_dataset, and aligned_reason.
 These columns are created by the function <code>align_taxa</code>.
 The columns <code>original_name</code> and <code>aligned_name</code> must be in the format of the scientific name, with genus and species,
 and may contain additional qualifiers such as subspecies or varieties. The names are case insensitive.</p></dd>
+
+
+<dt>taxonomic_splits</dt>
+<dd><p>XXXXX</p></dd>
 
 
 <dt>output</dt>
@@ -105,16 +110,13 @@ If specified, the output will be saved in a CSV file with the given name.</p></d
 <li><p><code>aligned_name</code>: the input plant name.</p></li>
 <li><p><code>accepted_name</code>: the APC-accepted plant name, when available.</p></li>
 <li><p><code>suggested_name</code>: the suggested plant name to use. Identical to the accepted_name, when an accepted_name exists.</p></li>
-<li><p><code>taxonomic_reference</code>: the source of the updated taxonomic information (APC or APNI).</p></li>
-<li><p><code>taxon_ID_clean</code>: the unique identifier for the updated taxon.</p></li>
-<li><p><code>taxonomic_status_clean</code>: the taxonomic status of the updated taxon.</p></li>
-<li><p><code>alternative_taxonomic_status_clean</code>: the alternative taxonomic status for the input name, if any.</p></li>
+<li><p><code>taxonomic_dataset</code>: the source of the updated taxonomic information (APC or APNI).</p></li>
 <li><p><code>accepted_name_usage_ID</code>: the unique identifier for the accepted name of the input name.</p></li>
 <li><p><code>canonical_name</code>: the accepted (or known) scientific name for the input name.</p></li>
 <li><p><code>scientific_name_authorship</code>: the authorship information for the accepted (or known) name.</p></li>
 <li><p><code>taxon_rank</code>: the taxonomic rank of the accepted (or known) name.</p></li>
 <li><p><code>taxonomic_status</code>: the taxonomic status of the accepted (or known) name.</p></li>
-<li><p><code>taxonomic_status_with_splits</code>: for taxa where there is ambiguity due to a taxon split, the taxonomic status of each possible match.</p></li>
+<li><p><code> taxonomic_status_aligned</code>: for taxa where there is ambiguity due to a taxon split, the taxonomic status of each possible match.</p></li>
 <li><p><code>aligned_reason</code>: the explanation of a specific taxon name alignment (from an original name to an aligned name).</p></li>
 <li><p><code>update_reason</code>: the explanation of a specific taxon name update (from an aligned name to an accepted name).</p></li>
 <li><p><code>genus</code>: the genus of the accepted (or known) name.</p></li>
@@ -141,24 +143,24 @@ If specified, the output will be saved in a CSV file with the given name.</p></d
 <span class="r-in"><span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>   original_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Dryandra preissii"</span>, <span class="st">"Banksia acuminata"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>   aligned_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Dryandra preissii"</span>, <span class="st">"Banksia acuminata"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>   taxon_rank <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Species"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>   taxonomic_reference <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"APC"</span>, <span class="st">"APC"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   taxon_rank <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"species"</span>, <span class="st">"species"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   taxonomic_dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"APC"</span>, <span class="st">"APC"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>   aligned_reason <span class="op">=</span> <span class="cn">NA_character_</span></span></span>
 <span class="r-in"><span> <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading resources...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ...done</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 21</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 22</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   original_name     aligned_name      accepted_name  suggested_name genus family</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Banksia acuminata Banksia acuminata Banksia acumi… Banksia acumi… Bank… Prote…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Dryandra preissii Dryandra preissii Banksia acumi… Banksia acumi… Bank… Prote…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: taxon_rank &lt;chr&gt;, taxonomic_reference &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Dryandra preissii Dryandra preissii Banksia acumi… Banksia acumi… Bank… Prote…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Banksia acuminata Banksia acuminata Banksia acumi… Banksia acumi… Bank… Prote…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 16 more variables: taxon_rank &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_status &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   subclass &lt;chr&gt;, taxon_distribution &lt;chr&gt;, scientific_name_authorship &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_ID &lt;chr&gt;, taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   canonical_name &lt;chr&gt;, taxonomic_status_clean &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_status_with_splits &lt;chr&gt;, row_number &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   canonical_name &lt;chr&gt;, taxonomic_status_aligned &lt;chr&gt;, row_number &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   my_order &lt;fct&gt;, possible_matches &lt;chr&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

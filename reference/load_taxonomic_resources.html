@@ -163,7 +163,7 @@ a URL which is the cutting edge version, but this may change at any time without
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 10 more variables: accepted_name_usage_ID &lt;chr&gt;, name_type &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_rank &lt;chr&gt;, genus &lt;chr&gt;, stripped_canonical &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   stripped_canonical2 &lt;chr&gt;, stripped_scientific &lt;chr&gt;, binomial &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   trinomial &lt;chr&gt;, taxonomic_reference &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   trinomial &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`APC list (known names)`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 69,837 × 15</span></span>
@@ -183,26 +183,26 @@ a URL which is the cutting edge version, but this may change at any time without
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 10 more variables: accepted_name_usage_ID &lt;chr&gt;, name_type &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_rank &lt;chr&gt;, genus &lt;chr&gt;, stripped_canonical &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   stripped_canonical2 &lt;chr&gt;, stripped_scientific &lt;chr&gt;, binomial &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   trinomial &lt;chr&gt;, taxonomic_reference &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   trinomial &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`APNI names`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 15,377 × 13</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    canonical_name        scientific_name scientific_name_ID name_type taxon_rank</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> (Eucalyptus globulus… (Eucalyptus gl… https://id.biodiv… hybrid-f… Species   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> (Eucalyptus globulus… (Eucalyptus gl… https://id.biodiv… hybrid-f… Species   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> (Eucalyptus johnston… (Eucalyptus jo… https://id.biodiv… hybrid-f… Species   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> (Eucalyptus johnston… (Eucalyptus jo… https://id.biodiv… hybrid-f… Species   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> (Eucalyptus urnigera… (Eucalyptus ur… https://id.biodiv… hybrid-f… Species   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> (Eucalyptus urnigera… (Eucalyptus ur… https://id.biodiv… hybrid-f… Species   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Abacopteris presliana Abacopteris pr… https://id.biodiv… scientif… Species   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Abarema clypearia f.… Abarema clypea… https://id.biodiv… scientif… Forma     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Abarema pruinosa      Abarema pruino… https://id.biodiv… scientif… Species   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Abelia rupestris      Abelia rupestr… https://id.biodiv… scientif… Species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> (Eucalyptus globulus… (Eucalyptus gl… https://id.biodiv… hybrid-f… species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> (Eucalyptus globulus… (Eucalyptus gl… https://id.biodiv… hybrid-f… species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> (Eucalyptus johnston… (Eucalyptus jo… https://id.biodiv… hybrid-f… species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> (Eucalyptus johnston… (Eucalyptus jo… https://id.biodiv… hybrid-f… species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> (Eucalyptus urnigera… (Eucalyptus ur… https://id.biodiv… hybrid-f… species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> (Eucalyptus urnigera… (Eucalyptus ur… https://id.biodiv… hybrid-f… species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Abacopteris presliana Abacopteris pr… https://id.biodiv… scientif… species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Abarema clypearia f.… Abarema clypea… https://id.biodiv… scientif… form      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Abarema pruinosa      Abarema pruino… https://id.biodiv… scientif… species   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Abelia rupestris      Abelia rupestr… https://id.biodiv… scientif… species   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15,367 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 8 more variables: taxonomic_status &lt;chr&gt;, stripped_canonical &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   stripped_canonical2 &lt;chr&gt;, stripped_scientific &lt;chr&gt;, binomial &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   trinomial &lt;chr&gt;, genus &lt;chr&gt;, taxonomic_reference &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   trinomial &lt;chr&gt;, genus &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $genera_accepted</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3,094 × 11</span></span>
@@ -221,7 +221,7 @@ a URL which is the cutting edge version, but this may change at any time without
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3,084 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: taxonomic_status &lt;chr&gt;, taxon_ID &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name_ID &lt;chr&gt;, name_type &lt;chr&gt;, taxon_rank &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_reference &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_dataset &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $genera_known</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2,852 × 11</span></span>
@@ -240,7 +240,7 @@ a URL which is the cutting edge version, but this may change at any time without
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2,842 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: taxonomic_status &lt;chr&gt;, taxon_ID &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name_ID &lt;chr&gt;, name_type &lt;chr&gt;, taxon_rank &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_reference &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_dataset &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $genera_APNI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1,430 × 8</span></span>
@@ -257,7 +257,7 @@ a URL which is the cutting edge version, but this may change at any time without
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Allosorus      Allosorus Bernh. unplaced         https://id.biodiv… scientif…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Austrogramme   Austrogramme E.… unplaced         https://id.biodiv… scientif…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1,420 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: taxon_rank &lt;chr&gt;, genus &lt;chr&gt;, taxonomic_reference &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: taxon_rank &lt;chr&gt;, genus &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $genera_all</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7,376 × 12</span></span>
@@ -276,7 +276,7 @@ a URL which is the cutting edge version, but this may change at any time without
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7,366 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 8 more variables: taxonomic_status &lt;chr&gt;, taxon_ID &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name_ID &lt;chr&gt;, name_type &lt;chr&gt;, taxon_rank &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_reference &lt;chr&gt;, cleaned_name &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_dataset &lt;chr&gt;, cleaned_name &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $family_accepted</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 307 × 38</span></span>
@@ -299,25 +299,6 @@ a URL which is the cutting edge version, but this may change at any time without
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name_authorship &lt;chr&gt;, parentNameUsageID &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_rank &lt;chr&gt;, taxon_rank_sort_order &lt;dbl&gt;, kingdom &lt;chr&gt;, class &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   subclass &lt;chr&gt;, family &lt;chr&gt;, taxonConceptID &lt;chr&gt;, …</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $preferred_order</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "accepted"                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [2] "taxonomic synonym"                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "basionym"                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "nomenclatural synonym"               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "isonym"                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "orthographic variant"                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "common name"                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] "doubtful taxonomic synonym"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "replaced synonym"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "misapplied"                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "doubtful pro parte taxonomic synonym"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [12] "pro parte nomenclatural synonym"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "pro parte taxonomic synonym"         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [14] "pro parte misapplied"                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "excluded"                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "doubtful misapplied"                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "doubtful pro parte misapplied"       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
