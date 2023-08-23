@@ -167,8 +167,7 @@ test_that("handles weird strings", {
   out1 <- 
     align_taxa(test_strings, resources = resources) %>%
     mutate(
-      taxon_rank = stringr::str_to_lower(taxon_rank), #todo standardise taxon_rank when resources read in
-      taxonomic_dataset = ifelse(stringr::str_detect(taxonomic_dataset, "APC"), "APC", taxonomic_dataset) #todo standardise terms used to taxonomic_dataset
+      taxon_rank = stringr::str_to_lower(taxon_rank) #todo standardise taxon_rank when resources read in
     )
   
   expect_equal(test_strings, out1$original_name)

@@ -114,12 +114,12 @@ load_taxonomic_resources <-
     taxonomic_resources[["APC list (accepted)"]] <-
       APC_tmp %>%
       dplyr::filter(taxonomic_status == "accepted") %>%
-      dplyr::mutate(taxonomic_dataset = "APC accepted")
+      dplyr::mutate(taxonomic_dataset = "APC")
     
     taxonomic_resources[["APC list (known names)"]] <-
       APC_tmp %>%
       dplyr::filter(taxonomic_status != "accepted") %>%
-      dplyr::mutate(taxonomic_dataset= "APC known")
+      dplyr::mutate(taxonomic_dataset= "APC")
     
     # Repeated from above - bionomial, tronomials etc
     taxonomic_resources[["APNI names"]] <-
@@ -163,7 +163,7 @@ load_taxonomic_resources <-
         genus
       ) %>%
       dplyr::filter(taxon_rank %in% c("Genus"), taxonomic_status == "accepted") %>%
-      dplyr::mutate(taxonomic_dataset= "APC accepted")
+      dplyr::mutate(taxonomic_dataset= "APC")
     
     taxonomic_resources[["genera_known"]] <-
       taxonomic_resources$APC %>%
@@ -181,7 +181,7 @@ load_taxonomic_resources <-
       ) %>%
       dplyr::filter(taxon_rank %in% c("Genus")) %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$genera_accepted$canonical_name) %>%
-      dplyr::mutate(taxonomic_dataset= "APC known") %>%
+      dplyr::mutate(taxonomic_dataset= "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
     
     taxonomic_resources[["genera_APNI"]] <-
