@@ -181,9 +181,6 @@ test_that("handles weird strings", {
   
   v <- intersect(names(out1) , names(out2))
   
-  # remove the column genus, because this isn't the same. the values that comes in is the first word of the aligned name, while the values in the lookup table are actual APC-accepted genera
-  # will work without next line once we filter aligned_data output to just be columns that are needed by `update_taxonomy`
-  v <- v[-4]
   expect_equal(out1[,v], out2[,v])
   
   out_v <- c(rep(NA_character_, nrow(out1)-1), "Banksia serrata")
@@ -197,7 +194,6 @@ test_that("handles APNI taxa and genus level IDs",{
   original_name <- c("Acacia sp.", "Dendropanax amplifolius", "Acanthopanax divaricatum", "Eucalyptus sp.")
   taxon_rank <- c("genus", "species", "species", "genus")
   taxonomic_dataset <- c("APC", "APNI", "APNI", "APC")
-  genus_aligned <- c("Acacia", "Dendropanax", "Acanthopanax", "Eucalyptus")
   genus_updated <- c("Acacia", NA, NA, "Eucalyptus")
   
   out1 <- 
@@ -214,7 +210,6 @@ test_that("handles APNI taxa and genus level IDs",{
   expect_equal(original_name, out2$original_name)
   expect_equal(taxon_rank, out2$taxon_rank)
   expect_equal(taxonomic_dataset, out2$taxonomic_dataset)
-  expect_equal(genus_aligned, out1$genus)
   expect_equal(genus_updated, out2$genus)
   expect_equal(out2$aligned_name, out2$suggested_name)
   expect_equal(length(unique(out2$aligned_reason)), 2)
@@ -277,20 +272,32 @@ test_that("returns same number of rows as input, even with duplicates", {
       resources = resources, 
       taxonomic_splits = "most_likely_species")
   
-  # outputs should be same order and length as input
+  
+  out4 <- 
+    align_taxa(
+      original_name <- original_name,
+      resources = resources,
+      full = TRUE
+    )
+  
+# outputs should be same order and length as input
   expect_equal(out1$original_name, original_name)
   expect_equal(out2$original_name, original_name)
   expect_equal(out3$original_name, original_name)
+  expect_equal(out4$original_name, original_name)
   
   # same alignments
   expect_equal(out2$aligned_name, out1$aligned_name)
   expect_equal(out3$aligned_name, out1$aligned_name)
+  expect_equal(out4$aligned_name, out1$aligned_name)
 
     
   expect_equal(subset(out2$aligned_name, !duplicated(out2$aligned_name)), subset(out1$aligned_name, !duplicated(out1$aligned_name)))
   expect_equal(subset(out2$aligned_name, !duplicated(out2$aligned_name)), subset(out1$aligned_name, !duplicated(out1$aligned_name)))
   expect_gte(length(out2$aligned_name), length(out1$aligned_name))
-
+  expect_equal(ncol(out1), 7) #limited columns (full = FALSE, the default)
+  expect_equal(ncol(out4), 24) #all columns (full = TRUE)
+  
   #
   expect_equal(out3$original_name, original_name)
   })

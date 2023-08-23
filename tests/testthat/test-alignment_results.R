@@ -72,8 +72,9 @@ test_that("taxon name alignment matches and updates work as expected", {
       
   output_align <- 
     align_taxa(
-      original_name = benchmarks$original_name, 
-      resources = resources, 
+      original_name = benchmarks$original_name,
+      resources = resources,
+      full = TRUE,
       fuzzy_abs_dist = 3, 
       fuzzy_rel_dist = 0.2, 
       imprecise_fuzzy_matches = TRUE,

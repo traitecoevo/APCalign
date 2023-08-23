@@ -4,6 +4,7 @@
 #'
 #' @param original_name A list of names to query for taxonomic alignments.
 #' @param output (optional) The name of the file to save the results to.
+#' @param full Parameter to determine how many columns are output
 #' @param resources the taxonomic resources used to align the taxa names. Loading this can be slow,
 #' so call \code{\link{load_taxonomic_resources}} separately to greatly speed this function up and pass the resources in.
 #' @param fuzzy_abs_dist The number of characters allowed to be different for a fuzzy match.
@@ -33,6 +34,7 @@
 #' 
 align_taxa <- function(original_name,
                        output = NULL,
+                       full = FALSE,
                        resources = load_taxonomic_resources(),
                        fuzzy_abs_dist = 3, 
                        fuzzy_rel_dist = 0.2, 
@@ -143,7 +145,18 @@ align_taxa <- function(original_name,
     # reassemble
     dplyr::bind_rows() %>%
     dplyr::mutate(known = !is.na(aligned_name))
-  
+
+  if (full == TRUE) {
+    taxa <-
+      taxa %>%
+      dplyr::select(-genus, -known, -checked) %>%
+      dplyr::select(original_name, cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code, everything())   
+  } else {
+     taxa <-
+      taxa %>%
+      dplyr::select(original_name, cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code)      
+  }
+
   # Assemble output in the order of the input
   # by joining results into a tibble with inputs as column
   taxa <-
