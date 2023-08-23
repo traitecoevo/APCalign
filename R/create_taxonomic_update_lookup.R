@@ -100,7 +100,9 @@ collapse_to_higher_taxon <-
         aligned_reason = paste(unique(aligned_reason), collapse = " and "),
         taxonomic_status = paste(unique(taxonomic_status_aligned), collapse = " and "),
         taxonomic_dataset = paste(unique(taxonomic_dataset), collapse = " and "),
-        number_of_collapsed_taxa = n()
+        taxon_rank = paste(unique(taxon_rank), collapse = " and "),
+        number_of_collapsed_taxa = n(),
+        accepted_name = ifelse(number_of_collapsed_taxa==1, accepted_name, NA)
       )
 
     # order same as inputs

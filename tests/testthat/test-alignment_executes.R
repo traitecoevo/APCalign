@@ -48,31 +48,35 @@ test_that("create_taxonomic_update_lookup() returns more/less rows as requested"
       original_name,
       resources = resources,
       taxonomic_splits = "collapse_to_higher_taxon"
-    ) 
+    ) %>%
+    dplyr::mutate(
+      should_collapse = ifelse(number_of_collapsed_taxa > 1 | taxon_rank %in% c("genus", "family"), TRUE, FALSE), ## todo: there is a bug in the function, because a genus-rank aligned name with an accepted genus should not be collapsed below genus.
+      names_collapsed = ifelse((collapsed_names == accepted_name & !is.na(accepted_name)) | collapsed_names == aligned_name, FALSE, TRUE)
+    )
 
   expect_equal(nrow(out3), length(original_name))
   expect_equal(out3$original_name, original_name)
-  
-  # todo - test something more specific about output above
-  
-  # todo - check collapse actually works in out 3
+  #test whether the names expected to collapse, do collapse 
+  expect_equal(out3$should_collapse, out3$names_collapsed)
+  expect_equal(sum(out3$number_of_collapsed_taxa), nrow(out2))
   })
 
 test_that("align_taxa() executes - no/with fuzzy", {
   
-  original_name <- c("Dryandra preissii", "Banksia acuminata")
+  original_name <- c("Dryandra preissii", "Banksia acuminata", "Bannksia accuminata")
+  aligned_name <- c("Dryandra preissii", "Banksia acuminata", "Banksia acuminata")
+  aligned_no_fuzzy <- c("Dryandra preissii", "Banksia acuminata", NA)
   
   out1 <- 
     align_taxa(original_name, resources = resources, fuzzy_matches = TRUE)
   out2 <- 
     align_taxa(original_name, resources = resources, fuzzy_matches = FALSE)
-
-  expect_equal(original_name, out1$original_name)
-  expect_equal(original_name, out2$original_name)
   
-  #todo - output should be different between the two
-  # can we add somethign that shows difference
-  })
+  expect_equal(original_name, out1$original_name)
+  expect_equal(aligned_name, out1$aligned_name)
+  expect_equal(original_name, out2$original_name)
+  expect_equal(aligned_no_fuzzy, out2$aligned_name)
+})
 
 
 test_that("align_taxa() executes with longer list", {
@@ -124,10 +128,9 @@ test_that("check runs with weird hybrid symbols", {
   
   out <- align_taxa(original_name, resources = resources)
   
-  expect_equal(original_name, out$original_name)
+  expect_equal(standardise_names(original_name), out$cleaned_name)
+  expect_equal(standardise_names(original_name), out$aligned_name)
   
-  # todo - why don't these work?
-  #expect_equal(original_name, out$cleaned_name)
 })
 
 test_that("handles NAs inn inputs", {
@@ -162,7 +165,12 @@ test_that("handles weird strings", {
   )
 
   out1 <- 
-    align_taxa(test_strings, resources = resources)
+    align_taxa(test_strings, resources = resources) %>%
+    mutate(
+      taxon_rank = stringr::str_to_lower(taxon_rank), #todo standardise taxon_rank when resources read in
+      taxonomic_dataset = ifelse(stringr::str_detect(taxonomic_dataset, "APC"), "APC", taxonomic_dataset) #todo standardise terms used to taxonomic_dataset
+    )
+  
   expect_equal(test_strings, out1$original_name)
   
   out2 <- 
@@ -171,10 +179,15 @@ test_that("handles weird strings", {
       taxonomic_splits = "most_likely_species",
       resources = resources)
 
+  expect_equal(nrow(out1), length(test_strings))
   expect_equal(out1$original_name, test_strings)
   expect_equal(out2$original_name, test_strings)
   
   v <- intersect(names(out1) , names(out2))
+  
+  # remove the column genus, because this isn't the same. the values that comes in is the first word of the aligned name, while the values in the lookup table are actual APC-accepted genera
+  # will work without next line once we filter aligned_data output to just be columns that are needed by `update_taxonomy`
+  v <- v[-4]
   expect_equal(out1[,v], out2[,v])
   
   out_v <- c(rep(NA_character_, nrow(out1)-1), "Banksia serrata")
@@ -186,6 +199,10 @@ test_that("handles weird strings", {
 test_that("handles APNI taxa and genus level IDs",{
   
   original_name <- c("Acacia sp.", "Dendropanax amplifolius", "Acanthopanax divaricatum", "Eucalyptus sp.")
+  taxon_rank <- c("genus", "species", "species", "genus")
+  taxonomic_dataset <- c("APC", "APNI", "APNI", "APC")
+  genus_aligned <- c("Acacia", "Dendropanax", "Acanthopanax", "Eucalyptus")
+  genus_updated <- c("Acacia", NA, NA, "Eucalyptus")
   
   out1 <- 
     align_taxa(original_name, resources = resources)
@@ -199,8 +216,14 @@ test_that("handles APNI taxa and genus level IDs",{
   
   expect_equal(original_name, out1$original_name)
   expect_equal(original_name, out2$original_name)
+  expect_equal(taxon_rank, out2$taxon_rank)
+  expect_equal(taxonomic_dataset, out2$taxonomic_dataset)
+  expect_equal(genus_aligned, out1$genus)
+  expect_equal(genus_updated, out2$genus)
+  expect_equal(out2$aligned_name, out2$suggested_name)
+  expect_equal(length(unique(out2$aligned_reason)), 2)
+  expect_equal(length(unique(out2$accepted_name)), 1)
   
-  # todo - more here
   expect_gte(nrow(out1), 4)
   
   expect_false(any(str_detect(out2$suggested_name, "NA sp.")))

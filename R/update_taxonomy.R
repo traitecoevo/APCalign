@@ -496,9 +496,8 @@ update_taxonomy_APNI_species_and_infraspecific_taxa <- function(data, resources)
     ## have proper columns filled in (`genus` & `taxonomic_ID_genus` & `taxonomic_dataset_genus`),
     ## while APNI names that do not align with an APC-accepted genus have these columns set to NA
     dplyr::mutate(
-      genus_accepted = ifelse(is.na(accepted_name_usage_ID_genus), NA_character_, resources$genera_all$canonical_name[match(accepted_name_usage_ID_genus, resources$genera_all$taxon_ID)]),
-      taxon_ID_genus = resources$genera_all$taxon_ID[match(genus_accepted, resources$genera_all$canonical_name)],
-      genus = ifelse(is.na(genus_accepted), genus, genus_accepted),
+      genus = ifelse(is.na(accepted_name_usage_ID_genus), NA_character_, resources$genera_all$canonical_name[match(accepted_name_usage_ID_genus, resources$genera_all$taxon_ID)]),
+      taxon_ID_genus = resources$genera_all$taxon_ID[match(genus, resources$genera_all$canonical_name)],
       taxonomic_dataset_genus = ifelse(stringr::str_detect(taxonomic_dataset_genus, "APC"), "APC", taxonomic_dataset_genus)
     ) %>%
     dplyr::select(-accepted_name_usage_ID_genus)
