@@ -2,7 +2,7 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^ignore$
-^x_acrhive$
+^x_archive$
 ^.github$
 ^.git$
 ^codecov\.yml$
