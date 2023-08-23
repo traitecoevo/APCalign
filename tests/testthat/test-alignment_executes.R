@@ -54,6 +54,8 @@ test_that("create_taxonomic_update_lookup() returns more/less rows as requested"
   expect_equal(out3$original_name, original_name)
   
   # todo - test something more specific about output above
+  
+  # todo - check collapse actually works in out 3
   })
 
 test_that("align_taxa() executes - no/with fuzzy", {
@@ -144,7 +146,7 @@ test_that("handles NAs inn inputs", {
   expect_equal(original_name, out2$original_name)
   expect_equal(original_name, out2$aligned_name)
   expect_equal(original_name, out2$suggested_name)
-  
+
   })
 
 
@@ -200,6 +202,9 @@ test_that("handles APNI taxa and genus level IDs",{
   
   # todo - more here
   expect_gte(nrow(out1), 4)
+  
+  expect_false(any(str_detect(out2$suggested_name, "NA sp.")))
+  expect_equal(out2$accepted_name, rep(NA_character_, nrow(out2)))
   
   })
 
