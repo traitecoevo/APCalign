@@ -57,7 +57,7 @@ utils::globalVariables(
     "my_order",
     "name_element", 
     "name_type",
-    "native_anywhere", 
+    "native_anywhere",
     "number_of_collapsed_taxa",
     "original_name",
     "scientific_name",
