@@ -61,7 +61,7 @@ update_taxonomy(
  tibble::tibble(
    original_name = c("Dryandra preissii", "Banksia acuminata"),
    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
-   taxon_rank = c("Species", "Species"),
+   taxon_rank = c("species", "species"),
    taxonomic_dataset = c("APC", "APC"),
    aligned_reason = NA_character_
  )

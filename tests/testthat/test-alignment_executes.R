@@ -165,10 +165,7 @@ test_that("handles weird strings", {
   )
 
   out1 <- 
-    align_taxa(test_strings, resources = resources) %>%
-    mutate(
-      taxon_rank = stringr::str_to_lower(taxon_rank) #todo standardise taxon_rank when resources read in
-    )
+    align_taxa(test_strings, resources = resources)
   
   expect_equal(test_strings, out1$original_name)
   

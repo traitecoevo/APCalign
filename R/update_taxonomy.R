@@ -55,7 +55,7 @@
 #'  tibble::tibble(
 #'    original_name = c("Dryandra preissii", "Banksia acuminata"),
 #'    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
-#'    taxon_rank = c("Species", "Species"),
+#'    taxon_rank = c("species", "species"),
 #'    taxonomic_dataset = c("APC", "APC"),
 #'    aligned_reason = NA_character_
 #'  )
@@ -219,7 +219,7 @@ update_taxonomy <- function(aligned_data,
 
 # Logical based on rank of a taxon
 species_and_infraspecific <- function(taxon_rank) {
-  taxon_rank %in% c("Species", "Forma", "Varietas", "Subspecies")
+  taxon_rank %in% c("species", "form", "variety", "subspecies")
 }
 
 # preferred order of taxonomic updates
