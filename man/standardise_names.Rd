@@ -16,11 +16,17 @@ A character vector of standardised taxon names.
 This function standardises taxon names by performing a series of text
 substitutions to remove common inconsistencies in taxonomic nomenclature.
 The function takes a character vector of taxon names as input and returns a
-character vector of standardised taxon names as output.
+character vector of standardised taxon names as output. In particular it standardises
+the abbreviations used to document infraspecific taxon ranks (subsp., var., f.),
+as people use many variants of these terms. It also standardises or removes a few additional filler
+words used within taxon names (affinis becomes aff.; s.l. and s.s. are removed).
 }
 \examples{
-standardise_names(c("Abies alba Mill.",
-                    "Quercus suber",
+standardise_names(c("Quercus suber",
                     "Eucalyptus sp.",
-                    "Agave americana var. marginata"))
+                    "Eucalyptus spp.",
+                    "Agave americana var. marginata",
+                    "Agave americana v marginata",
+                    "Notelaea longifolia forma longifolia",
+                    "Notelaea longifolia f longifolia"))
 }
