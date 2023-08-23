@@ -34,6 +34,8 @@ reference:
   - create_taxonomic_update_lookup
   - align_taxa
   - update_taxonomy
+  - standardise_names
+  - strip_names
 - subtitle: Established status across states/territories
 - contents:
   - create_species_state_origin_matrix
@@ -42,5 +44,3 @@ reference:
 - title: Data
 - contents:
   - gbif_lite
-
-
