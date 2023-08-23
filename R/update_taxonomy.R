@@ -81,7 +81,7 @@ update_taxonomy <- function(aligned_data,
     split(aligned_data,
       paste(
         # Taxonomic reference
-        stringr::word(aligned_data$taxonomic_dataset, 1),
+        aligned_data$taxonomic_dataset,
         # Taxon rank
         ifelse(species_and_infraspecific(aligned_data$taxon_rank), "species_and_infraspecific_taxa", aligned_data$taxon_rank)
       )
