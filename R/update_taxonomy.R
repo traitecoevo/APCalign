@@ -105,7 +105,7 @@ update_taxonomy <- function(aligned_data,
   ## taxa whose aligned_names are taxon_rank = species/infraspecific and taxonomic_dataset = APC
   ## these are the subset of names in `taxa_out` that *should* have an APC-accepted name
   taxa_out[["APC species_and_infraspecific_taxa"]] <- taxa_out[["APC species_and_infraspecific_taxa"]] %>%
-    update_taxonomy_APC_species_and_infraspecific_taxa(resources)
+    update_taxonomy_APC_species_and_infraspecific_taxa(resources, taxonomic_splits)
   
   ## taxa whose aligned_names are taxon_rank = species/infraspecific and taxonomic_dataset = APNI
   taxa_out[["APNI species_and_infraspecific_taxa"]] <- taxa_out[["APNI species_and_infraspecific_taxa"]] %>%
@@ -134,7 +134,8 @@ update_taxonomy <- function(aligned_data,
         scientific_name_ID = character(0L),
         canonical_name = character(0L),
         taxonomic_status_aligned = character(0L),
-        row_number = numeric(0L)
+        row_number = numeric(0L),
+        alternative_accepted_names = character(0L)
       )
 
   ## bind taxa_out back together.
@@ -178,7 +179,8 @@ update_taxonomy <- function(aligned_data,
       scientific_name_ID,
       canonical_name,
       taxonomic_status_aligned,
-      row_number
+      row_number,
+      alternative_accepted_names
     )
 
   
@@ -219,7 +221,7 @@ update_taxonomy <- function(aligned_data,
 
 # Logical based on rank of a taxon
 species_and_infraspecific <- function(taxon_rank) {
-  taxon_rank %in% c("species", "form", "variety", "subspecies")
+  taxon_rank %in% c("species", "form", "variety", "subspecies", "series")
 }
 
 # preferred order of taxonomic updates
@@ -366,10 +368,107 @@ update_taxonomy_APC_family <- function(data, resources) {
 
 # Function to update names of taxa whose aligned_names are
 # taxon_rank = species/infraspecific and taxonomic_dataset = APC
-update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources) {
+update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, taxonomic_splits) {
 
   if(is.null(data)) return(NULL)
-
+  
+  ## All canonical names which can link to multiple accepted name usages, because the taxon has been split
+  split_taxa_canonical <- 
+    resources$APC %>%
+    dplyr::filter(pro_parte == TRUE) %>%
+    dplyr::filter(species_and_infraspecific(taxon_rank)) %>%
+    dplyr::distinct(canonical_name)
+  
+  
+  with_split_taxa <- 
+    resources$APC %>%
+    dplyr::filter(species_and_infraspecific(taxon_rank)) %>%
+    dplyr::filter(canonical_name %in% split_taxa_canonical$canonical_name) %>%  ##see https://id.biodiversity.org.au/node/apni/2912962 ; somehow need both canonical in split and a few (few!) additional accepted_name_usage_id's to match
+    dplyr::filter(taxonomic_status != "misapplied") %>%
+    #dplyr::filter(pro_parte == TRUE | taxonomic_status == "accepted") %>% # this is the filter that needs to be applied for what names gets joined in if "return_all" is true
+    dplyr::mutate(
+      alternate_accepted_name = resources$'APC list (accepted)'$canonical_name[match(accepted_name_usage_ID, resources$'APC list (accepted)'$accepted_name_usage_ID)]
+    ) %>%
+    dplyr::distinct(canonical_name, alternate_accepted_name, taxonomic_status, taxon_rank, .keep_all = TRUE) %>% ## there can be multiple rows for this same combination, due to different `instances` of a name; we only maintain 1 row
+    dplyr::mutate(
+      #alternate_accepted_name = ifelse(alternate_accepted_name == canonical_name, NA, alternate_accepted_name),
+      alternative_accepted_names = NA_character_,
+      my_order = relevel_taxonomic_status_preferred_order(taxonomic_status),
+      split_taxon = "yes"
+      ) %>%
+    dplyr::arrange(my_order) %>%
+    dplyr::select(canonical_name, alternate_accepted_name, taxonomic_status, split_taxon, accepted_name_usage_ID, taxon_rank, my_order) %>%
+    dplyr::rename(taxonomic_status_aligned = taxonomic_status)
+  
+  if (taxonomic_splits == "most_likely_species") {
+    with_split_taxa <-
+      with_split_taxa %>%
+      dplyr::mutate(
+        alternative_accepted_name_tmp = ifelse(is.na(alternate_accepted_name), NA, paste0(alternate_accepted_name, " (", taxonomic_status_aligned, ")"))
+      ) %>%
+      dplyr::group_by(canonical_name) %>%
+      dplyr::mutate(alternative_accepted_names = 
+                      alternative_accepted_name_tmp %>%
+                      unique() %>% 
+                      subset(., taxonomic_status_aligned != "accepted") %>% ## not as simple as this. See canonical_name "Acacia aneura var. conifera" which is a synonym, and has been split into "Acacia aneura" and "Acacia aptaneura". 
+                      #How do you choose a most likely species?
+                      paste0(collapse = " | ") %>%
+                      dplyr::na_if("")
+      ) %>%
+      dplyr::arrange(my_order) %>%
+      dplyr::slice(1) %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(
+        alternative_accepted_names = ifelse(taxonomic_status_aligned != "accepted" & canonical_name %in% resources$'APC list (accepted)'$canonical_name, NA, alternative_accepted_names),
+        alternative_accepted_names = stringr::str_replace_all(alternative_accepted_names, "\\ \\|\\ NA", "")
+      ) %>%
+      dplyr::select(-alternative_accepted_name_tmp)
+  }
+  
+  ## create a new resources$APC that already has columns for alternate accepted names (for split taxa) and alternative taxonomic status (for synonyms); easier to join this in
+  # TODO XXX this also needs to be filtered to avoid splits if splits aren't wanted!!!
+  resources$APC2 <-
+    resources$APC %>%
+    dplyr::distinct(canonical_name, accepted_name_usage_ID, taxonomic_status, .keep_all = TRUE) %>% ## there can be multiple rows for this same combination, due to different `instances` of a name; we only maintain 1 row
+    select(canonical_name, taxon_rank, taxonomic_status, accepted_name_usage_ID, taxon_ID, scientific_name, scientific_name_ID, scientific_name_authorship, family, subclass, taxon_distribution) %>%
+    left_join(
+      by = c("canonical_name", "taxon_rank", "accepted_name_usage_ID", "taxonomic_status"),
+      with_split_taxa %>%
+        mutate(taxonomic_status = taxonomic_status_aligned)
+    )
+  
+  ## Generate variable documenting alternate taxonomic status of accepted taxon names
+  ## This is relevant for taxa  if the aligned name is an APC accepted name & 
+  ## the APC accepted name links to synonyms (& other taxonomic status values) by the `accepted_name_usage_ID`
+  collapsed_taxonomic_status <-
+    resources$APC %>%
+    dplyr::filter(taxon_rank %in% c("species", "series", "subspecies", "form", "variety")) %>%
+    dplyr::filter(taxonomic_status != "excluded") %>%
+    dplyr::select(canonical_name, accepted_name_usage, accepted_name_usage_ID, taxon_ID, taxonomic_status, taxon_rank) %>%
+    dplyr::mutate(my_order = relevel_taxonomic_status_preferred_order(taxonomic_status)) %>%
+    dplyr::group_by(accepted_name_usage_ID) %>%
+    dplyr::arrange(my_order) %>%
+    dplyr::mutate(alternative_taxonomic_status_aligned = 
+                    taxonomic_status %>% 
+                    unique() %>% 
+                    subset(., . != "accepted") %>% 
+                    paste0(collapse = " | ") %>% 
+                    na_if("")
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::rename(aligned_name = canonical_name) %>%
+    dplyr::select(
+      aligned_name,
+      alternative_taxonomic_status_aligned,
+      accepted_name_usage_ID,
+      taxonomic_status
+    ) %>%
+    dplyr::filter(!is.na(alternative_taxonomic_status_aligned)) %>%
+    dplyr::mutate(
+      accepted_name = resources$`APC list (accepted)`$canonical_name[match(accepted_name_usage_ID, resources$`APC list (accepted)`$accepted_name_usage_ID)],
+      alternative_taxonomic_status_aligned = ifelse(accepted_name == aligned_name, alternative_taxonomic_status_aligned, NA)
+    )
+  
   data %>%
     ## First propagate extra entries for taxa that have been split, based on the aligned names
     ## `misapplied` names need to be filtered out, as these are names that should not be include in the output when `taxonomic_splits = "return_all"`
@@ -377,28 +476,35 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources) 
     ## however the APC-column `taxon_ID` will be unique for each row of data
     ## the `accepted_named_usage_ID` column will provide the link to the possibly-accepted name
     dplyr::left_join(
-      relationship = "many-to-many",
       by = "aligned_name",
-      resources$APC %>%
-        dplyr::filter(
-          species_and_infraspecific(taxon_rank) &
-            taxonomic_status != "misapplied"
-        ) %>%
+      resources$APC2 %>%
         dplyr::mutate(
-          my_order = relevel_taxonomic_status_preferred_order(taxonomic_status)
-        ) %>%
-        dplyr::arrange(canonical_name, my_order) %>%
-        dplyr::mutate(
-          aligned_name = canonical_name,
-          taxonomic_status_aligned = taxonomic_status,
+          aligned_name = canonical_name
         ) %>%
         dplyr::select(
           aligned_name,
           taxonomic_status_aligned,
           accepted_name_usage_ID,
-          scientific_name_ID
+          scientific_name_ID,
+          alternative_accepted_names,
+          my_order
         )
+    ) %>% View()      
+      
+      
+      resources$APC %>%
+        dplyr::filter(taxonomic_status == "accepted") %>%
+        dplyr::mutate(
+          aligned_name = canonical_name
+        ) %>%
+        dplyr::select(
+          aligned_name,
+          accepted_name_usage_ID)
     ) %>%
+    dplyr::mutate(accepted_name = resources$APC$canonical_name[match(accepted_name_usage_ID, resources$APC$accepted_name_usage_ID)]) %>% View()
+      
+      
+
     ## Second, find accepted names for each name in the species (and infraspecific taxon) list (sometimes they are the same)
     ## `accepted_name_usage_ID` provides the code to update the names. A given accepted_name has a single `accepted_name_usage_ID`
     dplyr::left_join(
