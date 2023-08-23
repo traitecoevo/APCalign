@@ -31,7 +31,7 @@ create_species_state_origin_matrix <- function(resources = load_taxonomic_resour
 #' @noRd
 filter_data_to_accepted_species <- function(resources) {
   dplyr::filter(resources$APC,
-                taxon_rank == "Species" &
+                taxon_rank == "species" &
                   taxonomic_status == "accepted")
 }
 

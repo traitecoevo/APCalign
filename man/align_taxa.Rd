@@ -7,6 +7,7 @@
 align_taxa(
   original_name,
   output = NULL,
+  full = FALSE,
   resources = load_taxonomic_resources(),
   fuzzy_abs_dist = 3,
   fuzzy_rel_dist = 0.2,
@@ -20,6 +21,8 @@ align_taxa(
 \item{original_name}{A list of names to query for taxonomic alignments.}
 
 \item{output}{(optional) The name of the file to save the results to.}
+
+\item{full}{Parameter to determine how many columns are output}
 
 \item{resources}{the taxonomic resources used to align the taxa names. Loading this can be slow,
 so call \code{\link{load_taxonomic_resources}} separately to greatly speed this function up and pass the resources in.}
@@ -37,7 +40,7 @@ so call \code{\link{load_taxonomic_resources}} separately to greatly speed this 
 \item{identifier}{A dataset, location or other identifier, which defaults to NA.}
 }
 \value{
-A tibble with columns: original_name, cleaned_name, aligned_name, taxonomic_reference, known, and checked.
+A tibble with columns: original_name, cleaned_name, aligned_name, taxonomic_dataset, known, and checked.
 }
 \description{
 This function uses Australian Plant Census (APC) & the Australian Plant Name Index (APNI) to find taxonomic alignments for a list of names.

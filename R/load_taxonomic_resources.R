@@ -54,9 +54,17 @@ load_taxonomic_resources <-
       higher_classification = .data$higherClassification,
       nomenclatural_code = .data$nomenclaturalCode,
       dataset_name = .data$datasetName
-      ) %>%
+    ) %>%
     mutate(
-      genus = stringr::word(canonical_name, 1)
+      genus = stringr::word(canonical_name, 1),
+      taxon_rank = stringr::str_to_lower(taxon_rank),
+      taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
+      taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
+      taxon_rank = stringr::str_replace(taxon_rank, "ordo", "order"),
+      taxon_rank = stringr::str_replace(taxon_rank, "familia", "family"),
+      taxon_rank = stringr::str_replace(taxon_rank, "varietas", "variety"),
+      taxon_rank = stringr::str_replace(taxon_rank, "forma", "form"),
+      taxon_rank = stringr::str_replace(taxon_rank, "sectio", "section")
     )
 
   taxonomic_resources$APNI <- taxonomic_resources$APNI %>%
@@ -72,15 +80,23 @@ load_taxonomic_resources <-
       nomenclatural_code = .data$nomenclaturalCode,
       dataset_name = .data$datasetName,
       name_element = .data$nameElement
-      ) %>%
+    )  %>%
     mutate(
-      genus = stringr::word(canonical_name, 1)
+      genus = stringr::word(canonical_name, 1),
+      taxon_rank = stringr::str_to_lower(taxon_rank),
+      taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
+      taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
+      taxon_rank = stringr::str_replace(taxon_rank, "ordo", "order"),
+      taxon_rank = stringr::str_replace(taxon_rank, "familia", "family"),
+      taxon_rank = stringr::str_replace(taxon_rank, "varietas", "variety"),
+      taxon_rank = stringr::str_replace(taxon_rank, "forma", "form"),
+      taxon_rank = stringr::str_replace(taxon_rank, "sectio", "section")
     )
 
     APC_tmp <-
       taxonomic_resources$APC %>%
       dplyr::arrange(taxonomic_status) %>%
-      dplyr::filter(taxon_rank %in% c("Subspecies", "Species", "Forma", "Varietas")) %>%
+      dplyr::filter(taxon_rank %in% c("subspecies", "species", "form", "variety")) %>%
       dplyr::select(canonical_name,
                     scientific_name,
                     taxonomic_status,
@@ -98,7 +114,7 @@ load_taxonomic_resources <-
         stripped_canonical2 = strip_names_2(canonical_name),
         stripped_scientific = strip_names(scientific_name),
         binomial = ifelse(
-          taxon_rank == "Species",
+          taxon_rank == "species",
           stringr::word(stripped_canonical2, start = 1, end = 2),
           zzz
         ),
@@ -114,12 +130,12 @@ load_taxonomic_resources <-
     taxonomic_resources[["APC list (accepted)"]] <-
       APC_tmp %>%
       dplyr::filter(taxonomic_status == "accepted") %>%
-      dplyr::mutate(taxonomic_reference = "APC accepted")
+      dplyr::mutate(taxonomic_dataset = "APC")
     
     taxonomic_resources[["APC list (known names)"]] <-
       APC_tmp %>%
       dplyr::filter(taxonomic_status != "accepted") %>%
-      dplyr::mutate(taxonomic_reference= "APC known")
+      dplyr::mutate(taxonomic_dataset = "APC")
     
     # Repeated from above - bionomial, tronomials etc
     taxonomic_resources[["APNI names"]] <-
@@ -127,14 +143,14 @@ load_taxonomic_resources <-
       dplyr::filter(name_element != "sp.") %>%
       dplyr::filter(!canonical_name %in% APC_tmp$canonical_name) %>%
       dplyr::select(canonical_name, scientific_name, scientific_name_ID, name_type, taxon_rank) %>%
-      dplyr::filter(taxon_rank %in% c("Series", "Subspecies", "Species", "Forma", "Varietas")) %>%
+      dplyr::filter(taxon_rank %in% c("series", "subspecies", "species", "form", "variety")) %>%
       dplyr::mutate(
         taxonomic_status = "unplaced for APC",
         stripped_canonical = strip_names(canonical_name),
         stripped_canonical2 = strip_names_2(canonical_name),
         stripped_scientific = strip_names(scientific_name),
         binomial = ifelse(
-          taxon_rank == "Species",
+          taxon_rank == "species",
           stringr::word(stripped_canonical2, start = 1, end = 2),
           "zzzz zzzz"
         ),
@@ -143,12 +159,11 @@ load_taxonomic_resources <-
         trinomial = ifelse(is.na(trinomial), "zzzz zzzz", trinomial),
         trinomial = base::replace(trinomial, duplicated(trinomial), "zzzz zzzz"),
         genus = stringr::word(stripped_canonical, 1),
-        taxonomic_reference= "APNI"
+        taxonomic_dataset = "APNI"
       ) %>%
       dplyr::distinct() %>%
       dplyr::arrange(canonical_name)
     
-    ## Todo: do we need all this, or only genera_all
     taxonomic_resources[["genera_accepted"]] <-
       taxonomic_resources$APC %>%
       dplyr::select(
@@ -163,8 +178,8 @@ load_taxonomic_resources <-
         taxon_rank,
         genus
       ) %>%
-      dplyr::filter(taxon_rank %in% c("Genus"), taxonomic_status == "accepted") %>%
-      dplyr::mutate(taxonomic_reference= "APC accepted")
+      dplyr::filter(taxon_rank %in% c("genus"), taxonomic_status == "accepted") %>%
+      dplyr::mutate(taxonomic_dataset = "APC")
     
     taxonomic_resources[["genera_known"]] <-
       taxonomic_resources$APC %>%
@@ -180,9 +195,9 @@ load_taxonomic_resources <-
         taxon_rank,
         genus
       ) %>%
-      dplyr::filter(taxon_rank %in% c("Genus")) %>%
+      dplyr::filter(taxon_rank %in% c("genus")) %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$genera_accepted$canonical_name) %>%
-      dplyr::mutate(taxonomic_reference= "APC known") %>%
+      dplyr::mutate(taxonomic_dataset = "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
     
     taxonomic_resources[["genera_APNI"]] <-
@@ -196,9 +211,9 @@ load_taxonomic_resources <-
         taxon_rank,
         genus
       ) %>%
-      dplyr::filter(taxon_rank %in% c("Genus")) %>%
+      dplyr::filter(taxon_rank %in% c("genus")) %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$APC$canonical_name) %>%
-      dplyr::mutate(taxonomic_reference= "APNI") %>%
+      dplyr::mutate(taxonomic_dataset = "APNI") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
     
     taxonomic_resources[["genera_all"]] <-
@@ -215,29 +230,8 @@ load_taxonomic_resources <-
     
     taxonomic_resources[["family_accepted"]] <-
       taxonomic_resources$APC %>%
-      dplyr::filter(taxon_rank %in% c("Familia"), taxonomic_status == "accepted")
-    
-    taxonomic_resources[["preferred_order"]] <- 
-      c(
-        "accepted",
-        "taxonomic synonym",
-        "basionym",
-        "nomenclatural synonym",
-        "isonym",
-        "orthographic variant",
-        "common name",
-        "doubtful taxonomic synonym",
-        "replaced synonym",
-        "misapplied",
-        "doubtful pro parte taxonomic synonym",
-        "pro parte nomenclatural synonym",
-        "pro parte taxonomic synonym",
-        "pro parte misapplied",
-        "excluded",
-        "doubtful misapplied",
-        "doubtful pro parte misapplied"
-      )
-
+      dplyr::filter(taxon_rank %in% c("family"), taxonomic_status == "accepted")
+  
     return(taxonomic_resources)
   }
 
