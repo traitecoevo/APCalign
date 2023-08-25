@@ -140,7 +140,7 @@ update_taxonomy <- function(aligned_data,
         canonical_name = character(0L),
         row_number = numeric(0L),
         alternative_accepted_name = character(0L),
-        alternative_accepted_names = character(0L),
+        alternative_possible_names = character(0L),
         number_of_collapsed_taxa = numeric(0L)
       )
 
@@ -188,7 +188,7 @@ update_taxonomy <- function(aligned_data,
       taxonomic_status_aligned,
       row_number,
       alternative_accepted_name,
-      alternative_accepted_names,
+      alternative_possible_names,
       number_of_collapsed_taxa
     )
   
@@ -200,16 +200,16 @@ update_taxonomy <- function(aligned_data,
   } else if (taxonomic_splits == "return_all") {
     taxa_out <-
       taxa_out %>%
-      dplyr::select(-alternative_accepted_names, -number_of_collapsed_taxa)
+      dplyr::select(-alternative_possible_names, -number_of_collapsed_taxa)
     
   } else if (taxonomic_splits == "collapse_to_higher_taxon") {
     taxa_out <-
       taxa_out %>%
       dplyr::select(-alternative_accepted_name) %>%
-      dplyr::rename(suggested_names_collapsed = alternative_accepted_names) %>%
+      dplyr::rename(possible_names_collapsed = alternative_possible_names) %>%
       dplyr::mutate(
-        suggested_names_collapsed = ifelse(taxon_rank == "family", suggested_name, suggested_names_collapsed),
-        suggested_names_collapsed = ifelse(taxon_rank == "genus", suggested_name, suggested_names_collapsed),
+        possible_names_collapsed = ifelse(taxon_rank == "family", suggested_name, possible_names_collapsed),
+        possible_names_collapsed = ifelse(taxon_rank == "genus", suggested_name, possible_names_collapsed),
         suggested_name = ifelse(taxon_rank == "family", paste(family, "sp."), suggested_name),
         suggested_name = ifelse(taxon_rank == "genus", paste(genus, "sp."), suggested_name),
         update_reason = ifelse(
@@ -411,13 +411,13 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
     dplyr::distinct(canonical_name, alternative_accepted_name, taxonomic_status, taxon_rank, .keep_all = TRUE) %>% ## there can be multiple rows for this same combination, due to different `instances` of a name; we only maintain 1 row
     dplyr::mutate(
       alternative_accepted_name = ifelse(alternative_accepted_name == canonical_name, NA, alternative_accepted_name),
-      alternative_accepted_names = NA_character_,
+      alternative_possible_names = NA_character_,
       suggested_collapsed_name = NA_character_,
       number_of_collapsed_taxa = 1,
       my_order = relevel_taxonomic_status_preferred_order(taxonomic_status)
       ) %>%
     dplyr::arrange(my_order) %>%
-    dplyr::select(canonical_name, accepted_name_2, alternative_accepted_name, alternative_accepted_names, taxonomic_status, accepted_name_usage_ID, 
+    dplyr::select(canonical_name, accepted_name_2, alternative_accepted_name, alternative_possible_names, taxonomic_status, accepted_name_usage_ID, 
                   taxon_rank, my_order, pro_parte, suggested_collapsed_name, number_of_collapsed_taxa) %>%
     dplyr::rename(taxonomic_status_aligned = taxonomic_status)
   
@@ -428,10 +428,10 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
         alternative_accepted_name_tmp = ifelse(is.na(alternative_accepted_name), NA, paste0(alternative_accepted_name, " (", taxonomic_status_aligned, ")"))
       ) %>%
       dplyr::group_by(canonical_name) %>%
-      dplyr::mutate(alternative_accepted_names = 
+      dplyr::mutate(alternative_possible_names = 
                       alternative_accepted_name_tmp %>%
                       unique() %>% 
-                      .[-1] %>% ## todo: remove the first name in the group, regardless of status
+                      .[-1] %>%
                       paste0(collapse = " | ") %>%
                       dplyr::na_if("")
       ) %>%
@@ -439,16 +439,21 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
       dplyr::slice(1) %>%
       dplyr::ungroup() %>%
       dplyr::mutate(
-        alternative_accepted_names = ifelse(taxonomic_status_aligned != "accepted" & canonical_name %in% resources$'APC list (accepted)'$canonical_name, NA, alternative_accepted_names),
-        alternative_accepted_names = stringr::str_replace_all(alternative_accepted_names, "\\ \\|\\ NA", "")
+        alternative_possible_names = ifelse(taxonomic_status_aligned != "accepted" & canonical_name %in% resources$'APC list (accepted)'$canonical_name, NA, alternative_possible_names),
+        alternative_possible_names = stringr::str_replace_all(alternative_possible_names, "\\ \\|\\ NA", "")
       ) %>%
       dplyr::select(-alternative_accepted_name_tmp)
   } else {
+    # while `misapplied` and `excluded` names are documented as `alternative_possible_names`, it is not appropriate for them to be returned as a `suggested_name`
+    # this means that the number of names reported when taxonomic_splits = "most_likely_species" is different to the number of names reported for other values
     split_taxa_table <-
       split_taxa_table %>%
       dplyr::filter(taxonomic_status_aligned != "misapplied" & taxonomic_status_aligned != "excluded")
   } 
   
+  ## with the option `collapse_to_higher_taxon` names whose connection to a taxon concept is ambiguous due to a taxonomic split are demoted to taxon_rank = genus
+  ## and the suggested name is given as `genus sp.`
+  ## the possible species/infraspecific taxon names are collapsed into a single column
   if (taxonomic_splits == "collapse_to_higher_taxon") {
   split_taxa_table <-
     split_taxa_table %>%
@@ -462,7 +467,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
       number_of_collapsed_taxa = sum(number_of_collapsed_taxa),
       suggested_collapsed_name = paste(stringr::word(accepted_name_2, 1), "sp."),
       accepted_name_2 = paste(stringr::word(accepted_name_2, 1), "sp."),
-      alternative_accepted_names = 
+      alternative_possible_names = 
                     alternative_accepted_name_tmp %>%
                     unique() %>%
                     paste0(collapse = " | ") %>%
@@ -472,8 +477,8 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
     dplyr::slice(1) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
-      alternative_accepted_names = ifelse(taxonomic_status_aligned != "accepted" & canonical_name %in% resources$'APC list (accepted)'$canonical_name, NA, alternative_accepted_names),
-      alternative_accepted_names = stringr::str_replace_all(alternative_accepted_names, "\\ \\|\\ NA", ""),
+      alternative_possible_names = ifelse(taxonomic_status_aligned != "accepted" & canonical_name %in% resources$'APC list (accepted)'$canonical_name, NA, alternative_possible_names),
+      alternative_possible_names = stringr::str_replace_all(alternative_possible_names, "\\ \\|\\ NA", ""),
       taxon_rank = ifelse(number_of_collapsed_taxa > 1 & species_and_infraspecific(taxon_rank), "genus", taxon_rank)
     ) %>%
     dplyr::select(-alternative_accepted_name_tmp)
@@ -495,6 +500,8 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
           my_order = relevel_taxonomic_status_preferred_order(taxonomic_status)
         ) %>%
         dplyr::arrange(my_order) %>%
+        ## due to splits there can be duplicate `canonical_name` entries, which would causes row duplication; we retain the accepted name, 
+        ## or the name with the "highest priority" taxonomic_status, per `my_order` 
         dplyr::distinct(canonical_name, .keep_all = TRUE) %>%
         dplyr::rename(
           aligned_name = canonical_name,
@@ -517,6 +524,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
           ## the canonical_name for an APC-accepted species becomes the `accepted_name` in the output
           accepted_name = canonical_name
         ) %>%
+        # add in the other columns we care about
         dplyr::select(
           accepted_name_usage_ID,
           accepted_name,
@@ -527,21 +535,31 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
           taxon_distribution
         )
     ) %>%
+    ## Third, we join in the information on taxonomic splits, from the `split_taxa_table` created above.
+    ## The columns in this table varies based on the value of the variable `taxonomic_splits`
+    ## If `taxonomic_splits = "return_all"`, this step increases the number of rows in the table; for other parameter values the number of rows should stay the same
     dplyr::left_join(
       by = "aligned_name",
       split_taxa_table %>%
         dplyr::rename(aligned_name = canonical_name) %>%
-        dplyr::select(aligned_name, accepted_name_2, alternative_accepted_name, alternative_accepted_names, suggested_collapsed_name, number_of_collapsed_taxa)
+        dplyr::select(aligned_name, accepted_name_2, alternative_accepted_name, alternative_possible_names, suggested_collapsed_name, number_of_collapsed_taxa)
     ) %>%
+    ## Fourth, there are a number of final manipulations, including taking all the different information sources merged in to determine the best possible `suggested_name`
     dplyr::mutate(
+      ## the `accepted_name` coming from the `split_taxa_table` takes priority over the `accepted_name` simply generated from the `aligned_name`
       accepted_name = ifelse(!is.na(accepted_name_2), accepted_name_2, accepted_name),
-      taxon_ID = accepted_name_usage_ID, 
-      # for APC-accepted species, the `suggested_name` is the `accepted_name`
-      accepted_name_usage_ID = ifelse(taxonomic_status == "accepted", accepted_name_usage_ID, NA_character_),
+      ## except this introduces some names where the `taxonomic_status` isn't actually `accepted`
       accepted_name = ifelse(taxonomic_status == "accepted", accepted_name, NA_character_),
+      taxon_ID = accepted_name_usage_ID, 
+      accepted_name_usage_ID = ifelse(taxonomic_status == "accepted", accepted_name_usage_ID, NA_character_),
+      ## for APC-accepted species, the `suggested_name` is the `accepted_name`
       suggested_name = accepted_name,
-      suggested_name = ifelse(!is.na(suggested_collapsed_name),suggested_collapsed_name, suggested_name),
+      ## if `taxonomic_splits` == "collapse_to_higher_taxon", the suggested_name, becomes the genus-level name created in this table
+      suggested_name = ifelse(!is.na(suggested_collapsed_name), suggested_collapsed_name, suggested_name),
+      ## these are occasionally taxa where the `accepted_name_usage_ID` links to a taxon that is "known" by APC, but doesn't have taxonomic_status = "accepted"
+      ## for these taxa, the suggested name is the `canonical_name` associated with the particular `accepted_name_usage_ID`
       suggested_name = ifelse(is.na(suggested_name) & !is.na(taxon_ID), resources$`APC list (known names)`$canonical_name[match(taxon_ID,resources$`APC list (known names)`$accepted_name_usage_ID)], suggested_name),
+      ## if there are no "accepted names" (or similar), the aligned name becomes the suggested name
       suggested_name = ifelse(is.na(suggested_name), aligned_name, suggested_name),
       taxonomic_status = ifelse(is.na(accepted_name),  taxonomic_status_aligned, "accepted"),
       # for APC-accepted species, the `genus` is the first word of the `accepted_name`
@@ -554,9 +572,10 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
       genus = ifelse(is.na(genus_accepted), genus, genus_accepted),
       family = ifelse(is.na(family), resources$APC$family[match(stringr::word(suggested_name, 1), resources$APC$genus)], family)
     ) %>%
+    ## next line just in case duplication snuck in - there are rare cases where one of the left_joins duplicates a row 
     dplyr::distinct(row_number, original_name, aligned_name, accepted_name, .keep_all = TRUE) %>%
     dplyr::select(original_name, aligned_name, suggested_name, accepted_name, accepted_name_2, alternative_accepted_name, 
-                  alternative_accepted_names, taxonomic_status, taxonomic_status_aligned, taxon_rank, number_of_collapsed_taxa, everything())
+                  alternative_possible_names, taxonomic_status, taxonomic_status_aligned, taxon_rank, number_of_collapsed_taxa, everything())
 }
 
 # Function to update names of taxa whose aligned_names are

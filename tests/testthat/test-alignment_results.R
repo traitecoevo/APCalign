@@ -30,7 +30,8 @@ test_that("consistency with previous runs", {
     create_taxonomic_update_lookup(
       taxa,
       resources = resources,
-      full = TRUE
+      full = TRUE,
+      taxonomic_splits = "return_all"
     ) %>%
     dplyr::arrange(original_name, accepted_name)
 
@@ -89,7 +90,7 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
   
   rows_gt_1 <- out3 %>% filter(number_of_collapsed_taxa > 1)
   rows_end_sp <- out3 %>% filter(stringr::str_detect(suggested_name, "sp.$"))
-  rows_alt_names <- out3 %>% filter(!is.na(suggested_names_collapsed))
+  rows_alt_names <- out3 %>% filter(!is.na(possible_names_collapsed))
   
   
   expect_equal(nrow(out1), nrow(out3))
@@ -97,6 +98,16 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
   expect_equal(nrow(out2), sum(out3$number_of_collapsed_taxa)-2)
   expect_equal(nrow(rows_gt_1), nrow(rows_end_sp))
   expect_equal(nrow(rows_gt_1), nrow(rows_alt_names))
+  
+  out4 <-
+    create_taxonomic_update_lookup(
+      benchmarks$original_name,
+      resources = resources,
+      full = TRUE) %>%
+    arrange(original_name, taxon_ID, taxonomic_status)
+  
+  expect_equal(out1, out4)
+  
   
   })
 

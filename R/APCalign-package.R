@@ -43,7 +43,7 @@ utils::globalVariables(
     "aligned_reason",
     "alignment_code",
     "alternative_accepted_name",
-    "alternative_accepted_names",
+    "alternative_possible_names",
     "binomial",
     "canonical_name",
     "ccAttributionIRI",
@@ -86,7 +86,7 @@ utils::globalVariables(
     "suggested_name",
     "update_reason",
     "taxon_ID_genus",
-    "suggested_names_collapsed",
+    "possible_names_collapsed",
     "number_of_collapsed_taxa",
     "row_number"
   )
