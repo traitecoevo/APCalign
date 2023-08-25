@@ -17,7 +17,11 @@ These columns are created by the function \code{align_taxa}.
 The columns \code{original_name} and \code{aligned_name} must be in the format of the scientific name, with genus and species,
 and may contain additional qualifiers such as subspecies or varieties. The names are case insensitive.}
 
-\item{taxonomic_splits}{XXXXX}
+\item{taxonomic_splits}{Variable that determines what protocol to use to update taxon names that are ambiguous due to taxonomic splits.
+The three options are:
+most_likely_species, which returns the species name in use before the split; alternative names are returned in a separate column
+return_all, which returns all possible names
+collapse_to_higher_taxon, which declares that an ambiguous name cannot be aligned to an accepted species/infraspecific name and the name is demoted to genus rank}
 
 \item{output}{(optional) Name of the file where results are saved. The default is NULL and no file is created.
 If specified, the output will be saved in a CSV file with the given name.}

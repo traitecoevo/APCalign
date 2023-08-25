@@ -11,7 +11,12 @@
 #' The columns `original_name` and `aligned_name` must be in the format of the scientific name, with genus and species, 
 #' and may contain additional qualifiers such as subspecies or varieties. The names are case insensitive.
 #'
-#' @param taxonomic_splits XXXXX
+#' @param taxonomic_splits Variable that determines what protocol to use to update taxon names that are ambiguous due to taxonomic splits. 
+#' The three options are:
+#'    most_likely_species, which returns the species name in use before the split; alternative names are returned in a separate column
+#'    return_all, which returns all possible names
+#'    collapse_to_higher_taxon, which declares that an ambiguous name cannot be aligned to an accepted species/infraspecific name and the name is demoted to genus rank
+#' 
 #' @param output (optional) Name of the file where results are saved. The default is NULL and no file is created.
 #' If specified, the output will be saved in a CSV file with the given name.
 #'
@@ -112,7 +117,6 @@ update_taxonomy <- function(aligned_data,
     update_taxonomy_APNI_species_and_infraspecific_taxa(resources)
   
   ## create a blank tibble with all columns, for taxon lists where some columns aren't created in any of the individual tibbles
-  # todo can we remove?
   taxa_blank <-
       tibble::tibble(
         original_name = character(0L),
@@ -306,9 +310,6 @@ update_taxonomy_APC_genus <- function(data, resources) {
     dplyr::mutate(
       # if required, update the genus name in the `aligned_name` to the currently APC-accepted genus
       genus_accepted = resources$genera_all$canonical_name[match(accepted_name_usage_ID, resources$genera_all$taxon_ID)],
-      # XXX next 2 lines overwritten later and variables never used, probably can go
-      # taxonomic_dataset_genus = resources$genera_all$taxonomic_dataset[match(accepted_name_usage_ID, resources$genera_all$taxon_ID)],
-      # taxonomic_dataset = ifelse(is.na(accepted_name_usage_ID), taxonomic_dataset, taxonomic_dataset_genus),
       # add variables specifying the taxonomic_status and taxon_ID of the genus, since these will be APC-accepted taxon names, even though the
       # `accepted_name` and `taxon_ID` at the species-level will be blank
       taxonomic_status_genus = resources$genera_all$taxonomic_status[match(accepted_name_usage_ID, resources$genera_all$taxon_ID)],
@@ -430,7 +431,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
       dplyr::mutate(alternative_accepted_names = 
                       alternative_accepted_name_tmp %>%
                       unique() %>% 
-                      subset(., taxonomic_status_aligned != "accepted") %>% ## todo: not as simple as this. You actually just want to remove the first name in the group want to subset on row number
+                      subset(., taxonomic_status_aligned != "accepted") %>% ## todo: remove the first name in the group, regardless of status
                       paste0(collapse = " | ") %>%
                       dplyr::na_if("")
       ) %>%
@@ -599,7 +600,8 @@ update_taxonomy_APNI_species_and_infraspecific_taxa <- function(data, resources)
     dplyr::left_join(
       by = "genus",
       resources$genera_all %>%
-        dplyr::arrange(canonical_name, taxonomic_status) %>% ### TODO - add function to create my_order and arrange based on it
+        dplyr::mutate(my_order = relevel_taxonomic_status_preferred_order(taxonomic_status)) %>%
+        dplyr::arrange(canonical_name, my_order) %>%
         dplyr::distinct(canonical_name, .keep_all = TRUE) %>%
         dplyr::mutate(
           genus = canonical_name,

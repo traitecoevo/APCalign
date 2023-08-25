@@ -114,12 +114,8 @@ test_that("update_taxonomy() runs and prdouces suitable structure", {
   v <- intersect(names(out1) , names(out2))
   expect_equal(out1[,v], out2[,v])
 
-  ## XXX To do: I don't understand why these were passing. They don't make any sense
-  #expect_equal(out1$suggested_name, rep(aligned_data$aligned_name[2], 2))
-  #expect_equal(out2$accepted_name, rep(aligned_data$aligned_name[2], 2))
- 
-  out2
- 
+  expect_equal(out1$suggested_name, rep(aligned_data$aligned_name[2], 2))
+  expect_equal(out2$accepted_name, rep(aligned_data$aligned_name[2], 2))
 })
 
 test_that("check runs with weird hybrid symbols", {

@@ -61,10 +61,7 @@ create_taxonomic_update_lookup <- function(taxa,
         dplyr::select(
           dplyr::any_of(c(
             "original_name", "aligned_name", "accepted_name", "suggested_name", "genus", "taxon_rank", "taxonomic_dataset", "scientific_name_authorship", "aligned_reason", "update_reason", 
-            # todo: should have a separate if statement, with `alternative_accepted_names` only retain for "most_likely_species"
-            "alternative_accepted_names",
-            # these last ones come from collapse_to_higher_taxon
-            "suggested_names_collapsed", "number_of_collapsed_taxa"
+            "alternative_accepted_names", "suggested_names_collapsed", "number_of_collapsed_taxa"
           ))
         )        
   }
