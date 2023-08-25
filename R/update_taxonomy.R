@@ -431,7 +431,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
       dplyr::mutate(alternative_accepted_names = 
                       alternative_accepted_name_tmp %>%
                       unique() %>% 
-                      subset(., taxonomic_status_aligned != "accepted") %>% ## todo: remove the first name in the group, regardless of status
+                      .[-1] %>% ## todo: remove the first name in the group, regardless of status
                       paste0(collapse = " | ") %>%
                       dplyr::na_if("")
       ) %>%
