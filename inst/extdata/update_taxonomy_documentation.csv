@@ -1,0 +1,11 @@
+﻿,categories of aligned names processed by function:,,,,columns filled in,,,
+function name,taxonomic dataset,taxon rank,updates to aligned name,format/algorithm for `suggested_name`,accepted name (& taxon_ID),genus (& taxon_ID_genus),scientific_name_ID,additional columns
+update_taxonomy_APC_genus,APC,genus,update to APC accepted genus,`genus sp. [notes]` (genus updated if necessary),no,yes,no,
+update_taxonomy_APNI_genus,APNI,genus,none,`genus sp. [notes]` (aligned name),no,no,no,
+update_taxonomy_APC_family,APC,family,none,`family sp. [notes]` (aligned name),no,no,no,
+update_taxonomy_APC_species_and_infraspecific_taxa,APC,species & infraspecific,,APC accepted species/infraspecific name,yes,yes,yes,
+"taxonomic_splits = ""most_likely_species""",,,update to APC accepted taxon concept,most likely APC accepted species/infraspecific name,yes,yes,yes,alternative_possible_names
+"taxonomic_splits = ""return_all""",,,update to APC accepted taxon concept,all possible APC accepted species/infraspecific name (extra rows added),yes,yes,yes,alternative_accepted_name
+"taxonomic_splits = ""collapse_to_higher_taxon""",,,update to APC accepted genus,"APC accepted genus, as `genus sp.`",no,yes,no,possible_names_collapsed; number_of_collapsed_taxa
+update_taxonomy_APNI_species_and_infraspecific_taxa,APNI,species & infraspecific,none to species name; update genus to APC accepted genus if possible,APNI listed species/infraspecific name (aligned name),no,sometimes,yes,
+not required,(not aligned),(not aligned),none,original name,no,no,no,

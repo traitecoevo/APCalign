@@ -1,0 +1,52 @@
+﻿alignment_code,resources matched to,match type,taxon_rank being aligned,search goals,notes about sequence
+match_01a,"APC accepted taxon concepts, other APC taxon concepts, APNI",exact,genus,"Detect `genus sp. `, `genus ssp.` and `genus spp.`",First goal is to align 2-word strings that indicate an unknown species within a genus (or family)
+match_01b,APC accepted taxon concepts,fuzzy,genus,"Detect `genus sp. `, `genus ssp.` and `genus spp.`",
+match_01c,other APC taxon concepts,fuzzy,genus,"Detect `genus sp. `, `genus ssp.` and `genus spp.`",
+match_02a,APC accepted taxon concepts,exact,family,"Detect `family sp. `, `family ssp.` and `family spp.`",
+match_03a,"APC accepted taxon concepts, other APC taxon concepts, APNI",exact,genus,"Detect ` -- `, `--` (intergrade taxa) and align to genus",Next find strings that indicate a name reflects an intergrade between two taxa. These names can only be aligned to a genus.
+match_03b,APC accepted taxon concepts,fuzzy,genus,"Detect ` -- `, `--` (intergrade taxa) and align to genus",
+match_03c,other APC taxon concepts,fuzzy,genus,"Detect ` -- `, `--` (intergrade taxa) and align to genus",
+match_03d,APNI,fuzzy,genus,"Detect ` -- `, `--` (intergrade taxa) and align to genus",
+match_03e,NA,no match,genus,"Detect ` -- `, `--` (intergrade taxa), but fail to align to genus",
+match_04a,"APC accepted taxon concepts, other APC taxon concepts, APNI",exact,genus,Detect ` \` (indecision between taxa) and align to genus.,Next find strings that indicate a name reflects a data collector's indecision about which of two (or more) taxa is the appropriate taxon. These names can only be aligned to a genus.
+match_04b,APC accepted taxon concepts,fuzzy,genus,Detect ` \` (indecision between taxa) and align to genus.,
+match_04c,other APC taxon concepts,fuzzy,genus,Detect ` \` (indecision between taxa) and align to genus.,
+match_04d,APNI,fuzzy,genus,Detect ` \` (indecision between taxa) and align to genus.,
+match_04e,NA,no match,genus,"Detect ` \` (indecision between taxa), but fail to align to genus",
+match_05a,APC accepted taxon concepts,exact,species/infraspecific,"Detect scientific names, including authorship","Check if strings are full scientific names, including authorship."
+match_05b,other APC taxon concepts,exact,species/infraspecific,"Detect scientific names, including authorship",
+match_06a,APC accepted taxon concepts,exact,species/infraspecific,"Detect canonical names, lacking authorship","Check if strings are canonical names, lacking authorship."
+match_06b,other APC taxon concepts,exact,species/infraspecific,"Detect canonical names, lacking authorship",
+match_07a,APC accepted taxon concepts,fuzzy,species/infraspecific,"Detect canonical names, lacking authorship","Check if strings are canonical names, lacking authorship, now with fuzzy matching"
+match_07b,other APC taxon concepts,fuzzy,species/infraspecific,"Detect canonical names, lacking authorship",
+match_08a,APNI,exact,species/infraspecific,"Detect canonical names, lacking authorship",
+match_09a,"APC accepted taxon concepts, other APC taxon concepts, APNI",exact,genus,"Detect `aff`, `affinis` (affinity to) and align to genus","Find strings that indicate a name that indicates an affinity to a specific taxon, but the name itself is not that taxon. Such names, unless documented in APC (i.e. matches 6, 7 above) can only be aligned to genus."
+match_09b,APC accepted taxon concepts,fuzzy,genus,"Detect `aff`, `affinis` (affinity to) and align to genus",
+match_09c,other APC taxon concepts,fuzzy,genus,"Detect `aff`, `affinis` (affinity to) and align to genus",
+match_09d,APNI,fuzzy,genus,"Detect `aff`, `affinis` (affinity to) and align to genus",
+match_09e,NA,no match,genus,"Detect `aff`, `affinis` (affinity to), but fail to align to genus",
+match_10a,APC accepted taxon concepts,imprecise fuzzy,species/infraspecific,"Detect canonical names, lacking authorship","Check if strings are canonical names, lacking authorship, now with imprecise fuzzy matching"
+match_10b,other APC taxon concepts,imprecise fuzzy,species/infraspecific,"Detect canonical names, lacking authorship",
+match_11a,"APC accepted taxon concepts, other APC taxon concepts, APNI",exact,genus,Detect ` x ` (hybrid taxon) and align to genus,"Find strings that indicate a name that is a hybrid between two taxa. Such names, unless documented in APC (i.e. matches 6, 7 above) can only be aligned to genus."
+match_11b,APC accepted taxon concepts,fuzzy,genus,Detect ` x ` (hybrid taxon) and align to genus,
+match_11c,other APC taxon concepts,fuzzy,genus,Detect ` x ` (hybrid taxon) and align to genus,
+match_11d,APNI,fuzzy,genus,Detect ` x ` (hybrid taxon) and align to genus,
+match_11e,NA,no match,genus,"Detect ` x ` (hybrid taxon), but fail to align to genus",
+match_12a,APC accepted taxon concepts,exact,species/infraspecific,"Detect canonical names, by checking first three words in string","Check if the first three words in the name string match with a canonical name, allowing notes to be discarded. Also useful for aligning phrase names."
+match_12b,other APC taxon concepts,exact,species/infraspecific,"Detect canonical names, by checking first three words in string",
+match_13a,APC accepted taxon concepts,fuzzy,species/infraspecific,"Detect canonical names, by checking first three words in string",
+match_13b,other APC taxon concepts,fuzzy,species/infraspecific,"Detect canonical names, by checking first three words in string",
+match_14a,APC accepted taxon concepts,exact,species/infraspecific,"Detect canonical names, by checking first two words in string","Check if the first two words in the name string match with a canonical name, allowing notes and invalid infraspecific names to be discarded. Also useful for aligning phrase names."
+match_14b,other APC taxon concepts,exact,species/infraspecific,"Detect canonical names, by checking first two words in string",
+match_15a,APC accepted taxon concepts,fuzzy,species/infraspecific,"Detect canonical names, by checking first two words in string",
+match_15b,other APC taxon concepts,fuzzy,species/infraspecific,"Detect canonical names, by checking first two words in string",
+match_16a,APNI,fuzzy,species/infraspecific,"Detect canonical names, lacking authorship","Check if APNI name strings are canonical names, lacking authorship, now with fuzzy matching"
+match_17a,APNI,imprecise fuzzy,species/infraspecific,"Detect canonical names, lacking authorship","Check if APNI name strings are canonical names, lacking authorship, now with imprecise fuzzy matching"
+match_18a,APNI,exact,species/infraspecific,"Detect canonical names, by checking first three words in string","Check if the first three words in the APNI name name string match with a canonical name, allowing notes to be discarded. Also useful for aligning phrase names."
+match_19a,APNI,exact,species/infraspecific,"Detect canonical names, by checking first two words in string","Check if the first two words in the APNI name name string match with a canonical name, allowing notes to be discarded. Also useful for aligning phrase names."
+match_20a,APC accepted taxon concepts,exact,genus,"Detect an APC-accepted genus, by checking the first word in the string","Check if the first two word in the \name name string match with a canonical name, allowing an alignment to the genus-level or family-level"
+match_20b,other APC taxon concepts,exact,genus,"Detect an APC-known genus, by checking the first word in the string",
+match_20c,APNI,exact,genus,"Detect an APC-known genus, by checking the first word in the string",
+match_21a,APC accepted taxon concepts,exact,family,"Detect an APC-known family, by checking the first word in the string",
+match_22a,APC accepted taxon concepts,fuzzy,genus,"Detect an APC-accepted genus, by checking the first word in the string",
+match_22b,other APC taxon concepts,fuzzy,genus,"Detect an APC-known genus, by checking the first word in the string",
