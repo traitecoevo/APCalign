@@ -44,6 +44,7 @@ utils::globalVariables(
     "alignment_code",
     "binomial",
     "canonical_name",
+    "canonicalName",
     "ccAttributionIRI",
     "checked",
     "cleaned_name",

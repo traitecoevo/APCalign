@@ -351,7 +351,7 @@ dataset_get <- function(version = default_version(),
   apni_file <- contentid::resolve(apni_hash, store = TRUE, path = path)
   
   #only getting APNI names that are not in APC
-  APNI <- arrow::open_dataset(apni_file) |> dplyr::filter(!canonicalName %in% APC$canonicalName) |> dplyr::collect()
+  APNI <- arrow::open_dataset(apni_file) %>% dplyr::filter(!.data$canonicalName %in% APC$canonicalName) %>% dplyr::collect()
   
   
   
