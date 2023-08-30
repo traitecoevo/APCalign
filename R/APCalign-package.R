@@ -46,6 +46,7 @@ utils::globalVariables(
     "alternative_possible_names",
     "binomial",
     "canonical_name",
+    "canonicalName",
     "ccAttributionIRI",
     "checked",
     "cleaned_name",
