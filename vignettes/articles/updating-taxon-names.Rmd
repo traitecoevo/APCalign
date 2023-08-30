@@ -1,5 +1,5 @@
 ---
-title: "Name matching in APCalign"
+title: "Methods for updating taxon names in APCalign"
 ---
 
 ```{r, include = FALSE}
@@ -11,4 +11,5 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(APCalign)
+
 ```

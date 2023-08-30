@@ -12,7 +12,7 @@ vignette: >
 When working with biodiversity data, it is important to verify  taxonomic names with an authoritative list and correct any out-of-date names. The 'APCalign' package simplifies this process by:
 
 -   Accessing up-to-date taxonomic information from the [Australian Plant Census](https://biodiversity.org.au/nsl/services/search/taxonomy) and the [Australia Plant Name Index](https://biodiversity.org.au/nsl/services/search/names).
--   Aligning authoritative names to your taxonomic names using our [fuzzy matching algorithm](https://traitecoevo.github.io/APCalign/articles/taxmatch.html)
+-   Aligning authoritative names to your taxonomic names using our [fuzzy matching algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
 -   Updating your taxonomic names in a transparent, reproducible manner
 
 ## Installation
@@ -91,7 +91,7 @@ resources <- load_taxonomic_resources(stable_or_current_data = "stable", version
 
 Now we can query our taxonomic names against the taxonomic resources we just retrieved using `create_taxonomic_update_lookup()`. This is an all-in-one function will:
 
-- Align your taxonomic names to APNI and APC using our [fuzzy matching algorithm](https://traitecoevo.github.io/APCalign/articles/taxmatch.html)
+- Align your taxonomic names to APNI and APC using our [fuzzy matching algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
 - Update taxonomic names to APC accepted name.
 - Returns NA for names where a match cannot be found
 
@@ -246,7 +246,7 @@ update_gbif_names |>
 This function will:
 
 -   Clean up your taxonomic names <!-- (Getting rid of trailing whitespaces, case correction) -->
--   Find best alignment with APNI to your taxonomic name using our [fuzzy matching algorithm](https://traitecoevo.github.io/APCalign/articles/taxmatch.html)
+-   Find best alignment with APNI to your taxonomic name using our [fuzzy matching algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
 
 You can control the degree of fuzzy matching using the arguments `max_distance_abs` and `max_distance_rel`
 
