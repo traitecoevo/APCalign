@@ -90,7 +90,11 @@ and may contain additional qualifiers such as subspecies or varieties. The names
 
 
 <dt>taxonomic_splits</dt>
-<dd><p>XXXXX</p></dd>
+<dd><p>Variable that determines what protocol to use to update taxon names that are ambiguous due to taxonomic splits.
+The three options are:
+most_likely_species, which returns the species name in use before the split; alternative names are returned in a separate column
+return_all, which returns all possible names
+collapse_to_higher_taxon, which declares that an ambiguous name cannot be aligned to an accepted species/infraspecific name and the name is demoted to genus rank</p></dd>
 
 
 <dt>output</dt>
@@ -150,17 +154,17 @@ If specified, the output will be saved in a CSV file with the given name.</p></d
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading resources...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ...done</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 22</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 21</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   original_name     aligned_name      accepted_name  suggested_name genus family</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Dryandra preissii Dryandra preissii Banksia acumi… Banksia acumi… Bank… Prote…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Banksia acuminata Banksia acuminata Banksia acumi… Banksia acumi… Bank… Prote…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 16 more variables: taxon_rank &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_status &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   subclass &lt;chr&gt;, taxon_distribution &lt;chr&gt;, scientific_name_authorship &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_ID &lt;chr&gt;, taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   canonical_name &lt;chr&gt;, taxonomic_status_aligned &lt;chr&gt;, row_number &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   my_order &lt;fct&gt;, possible_matches &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: taxon_rank &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_status &lt;chr&gt;, taxonomic_status_aligned &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_distribution &lt;chr&gt;, scientific_name_authorship &lt;chr&gt;, taxon_ID &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;, canonical_name &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

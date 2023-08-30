@@ -70,7 +70,7 @@
 <span>  <span class="va">taxa</span>,</span>
 <span>  stable_or_current_data <span class="op">=</span> <span class="st">"stable"</span>,</span>
 <span>  version <span class="op">=</span> <span class="fu">default_version</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  taxonomic_splits <span class="op">=</span> <span class="st">"return_all"</span>,</span>
+<span>  taxonomic_splits <span class="op">=</span> <span class="st">"most_likely_species"</span>,</span>
 <span>  full <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  APNI_matches <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  imprecise_fuzzy_matches <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -153,15 +153,16 @@
 <span class="r-in"><span>                                 resources<span class="op">=</span><span class="va">resources</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Checking alignments of 4 taxa</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">0</span> names already matched; <span style="color: #0000BB;">0</span> names checked but without a match; <span style="color: #0000BB;">4</span> taxa yet to be checked</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 12</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   original_name       aligned_name accepted_name suggested_name genus taxon_rank</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Eucalyptus regnans  Eucalyptus … Eucalyptus r… Eucalyptus re… Euca… species   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Acacia melanoxylon  Acacia mela… Acacia melan… Acacia melano… Acac… species   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Not a species       <span style="color: #BB0000;">NA</span>           <span style="color: #BB0000;">NA</span>            Not a species  <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: taxonomic_dataset &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name_authorship &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 6 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name_authorship &lt;chr&gt;, aligned_reason &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   update_reason &lt;chr&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
