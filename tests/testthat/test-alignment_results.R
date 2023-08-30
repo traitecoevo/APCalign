@@ -89,8 +89,8 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
     mutate(number_of_collapsed_taxa = ifelse(is.na(number_of_collapsed_taxa), 1, number_of_collapsed_taxa))
   
   rows_gt_1 <- out3 %>% filter(number_of_collapsed_taxa > 1)
-  rows_end_sp <- out3 %>% filter(stringr::str_detect(suggested_name, "sp.$"))
-  rows_alt_names <- out3 %>% filter(!is.na(possible_names_collapsed))
+  rows_end_sp <- out3 %>% filter(stringr::str_detect(suggested_name, "sp."))
+  rows_alt_names <- out3 %>% filter(stringr::str_detect(suggested_name, "collapsed names:"))
   
   
   expect_equal(nrow(out1), nrow(out3))
