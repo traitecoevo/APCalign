@@ -7,6 +7,16 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+library(APCalign)
+library(readr)
+library(dplyr)
+
+APC_source_documentation <-
+  readr::read_csv(system.file("extdata", "APC_source_documentation.csv", package = "APCalign"),
+    show_col_types = FALSE
+  )
+
 ```
 
 ![](data_providers.png)
@@ -31,8 +41,6 @@ You can find the meta-data for the APC and APNI below:
 - [Meta-data for APC output](https://ibis-cloud.atlassian.net/wiki/spaces/NP/pages/1154383943/NSL+Taxon+export+format)
 - [Meta-data  of the APNI output](https://ibis-cloud.atlassian.net/wiki/spaces/NP/pages/1154383919/NSL+Name+export+format)
 
-
 For more details on APNI and APC, we recommend taking a read of [their extensive documentation](https://ibis-cloud.atlassian.net/wiki/spaces/NP/pages/1380483087/NSL+API+Documentation#1.-Introduction).
-
 
 
