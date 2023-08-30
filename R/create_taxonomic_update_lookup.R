@@ -31,7 +31,7 @@
 create_taxonomic_update_lookup <- function(taxa,
                                            stable_or_current_data = "stable",
                                            version = default_version(),
-                                           taxonomic_splits = "return_all",
+                                           taxonomic_splits = "most_likely_species",
                                            full = FALSE,
                                            APNI_matches = TRUE, 
                                            imprecise_fuzzy_matches = FALSE, 
@@ -60,9 +60,8 @@ create_taxonomic_update_lookup <- function(taxa,
       updated_data %>%
         dplyr::select(
           dplyr::any_of(c(
-            "original_name", "aligned_name", "accepted_name", "suggested_name", "genus", "taxon_rank", "taxonomic_dataset", "scientific_name_authorship", "aligned_reason", "update_reason",
-            # these last ones come from collapse_to_higher_taxon
-            "collapsed_names", "number_of_collapsed_taxa"
+            "original_name", "aligned_name", "accepted_name", "suggested_name", "genus", "taxon_rank", "taxonomic_dataset", "taxonomic_status", "scientific_name_authorship", "aligned_reason", "update_reason", 
+            "alternative_possible_names", "possible_names_collapsed", "number_of_collapsed_taxa"
           ))
         )        
   }
@@ -85,69 +84,4 @@ validate_taxonomic_splits_input <- function(taxonomic_splits) {
         ". Valid inputs are 'return_all', 'collapse_to_higher_taxon', or 'most_likely_species'."
       )
     )
-}
-
-#' Currently only collapses to genus or all the way to plants
-#' @noRd
-collapse_to_higher_taxon <-
-  function(aligned_species_list, resources) {
-    out <- 
-      aligned_species_list %>%
-      dplyr::group_by(original_name, aligned_name) %>%
-      dplyr::summarise(
-        row_number= min(row_number),
-        collapsed_names = find_mrct(canonical_name, resources = resources),
-        aligned_reason = paste(unique(aligned_reason), collapse = " and "),
-        taxonomic_status = paste(unique(taxonomic_status_aligned), collapse = " and "),
-        taxonomic_dataset = paste(unique(taxonomic_dataset), collapse = " and "),
-        taxon_rank = paste(unique(taxon_rank), collapse = " and "),
-        number_of_collapsed_taxa = n(),
-        accepted_name = ifelse(number_of_collapsed_taxa==1, accepted_name, NA)
-      )
-
-    # order same as inputs
-    aligned_species_list %>%
-      dplyr::select(original_name, aligned_name) %>%
-      dplyr::distinct() %>%
-      dplyr::left_join(
-        by = c("original_name", "aligned_name"),
-        out
-      )
-  }
-
-#' @noRd
-find_mrct <- function(taxa,
-                      stable_or_current_data = "stable",
-                      version = default_version(),
-                      resources = load_taxonomic_resources(stable_or_current_data =
-                                                             stable_or_current_data,
-                                                           version = version)) {
-  # Filter the resources data to only include the taxa of interest
-  relevant_taxa <-
-    dplyr::filter(resources$APC, resources$APC$canonical_name %in% taxa)
-  
-  # Check different scenarios to find the most recent common taxon
-  unique_canonical_names <- unique(relevant_taxa$canonical_name)
-  unique_genus_species <-
-    unique(stringr::word(unique_canonical_names, 1, 2))
-  unique_genus <-
-    unique(stringr::word(unique_canonical_names, 1, 1))
-  unique_family <- unique(relevant_taxa$family)
-  
-  if (length(unique_canonical_names) == 1) {
-    # All taxa are the same
-    return(unique_canonical_names[1])
-  } else if (length(unique_genus_species) == 1) {
-    # All species are the same, but different subspecific taxa
-    return(stringr::word(unique_canonical_names[1], 1, 2))
-  } else if (length(unique_genus) == 1) {
-    # All genera are the same, but different species
-    return(paste0(unique_genus, " sp."))
-  } else if (length(unique_family) == 1) {
-    # All families are the same, but different genera
-    return(unique_family[1])
-  } else {
-    # Return "plants" for other cases
-    return("plants")
-  }
 }
