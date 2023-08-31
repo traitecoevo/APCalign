@@ -87,16 +87,15 @@ resources <- load_taxonomic_resources(stable_or_current_data = "stable", version
 #> Loading resources......done
 ```
 
-## Standardise plant taxon names
+## Align and update plant taxon names
 
 Now we can query our taxonomic names against the taxonomic resources we just retrieved using `create_taxonomic_update_lookup()`. This is an all-in-one function will:
 
-- Align your taxonomic names to APNI and APC using our [fuzzy matching algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
-- Update taxonomic names to APC accepted name.
-- Returns NA for names where a match cannot be found
+- Align your taxonomic names to APC and APNI using our [matching algorithms](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)  
+- Update names to an APC-accepted species or infraspecific name whenever possible.  
+- Return a suggested name for all names, defaulting to an `accepted_name` when available, and otherwise providing an APNI name or a name where only a genus-level alignment is possible.  
 
-If you would like to learn more about each of these step, take a look at the section [Closer look at name standardisation with 'APCalign'](#closer-look)
-
+If you would like to learn more about each of these step, take a look at the section [Closer look at name alignment and updating with 'APCalign'](#closer-look)  
 
 ```r
 library(dplyr)
@@ -124,32 +123,8 @@ update_gbif_names |> print(n = 6)
 
 The `original_name` is the taxon name used in your original data.
 The `aligned_name` is the taxon name we used to link with the APC to identify any synonyms. 
-The `apc_name` is the currently, accepted taxon name used by the Australian Plant Census.
-
-We recommend joining the output of `create_taxonomic_update_lookup()` back to your original data so all names
-
-
-```r
-gbif_lite |> 
-left_join(update_gbif_names,  # Left joining updated taxon names back to original data 
-          by = join_by(species == original_name)) |> 
-  select(species, ends_with("name"), # Rearranging naming columns
-         aligned_reason, infraspecificepithet:decimalLatitude) |> 
-  print(n = 6)
-#> # A tibble: 154 × 11
-#>   species          scientificname verbatimscientificname aligned_name apc_name taxonomic_status_of_…¹
-#>   <chr>            <chr>          <chr>                  <chr>        <chr>    <chr>                 
-#> 1 Tetratheca cili… Tetratheca ci… Tetratheca ciliata     Tetratheca … Tetrath… accepted              
-#> 2 Peganum harmala  Peganum harma… Peganum harmala        Peganum har… Peganum… accepted              
-#> 3 Calotis multica… Calotis multi… Calotis multicaulis    Calotis mul… Calotis… accepted              
-#> 4 Calotis multica… Calotis multi… Calotis multicaulis    Calotis mul… Calotis… pro parte misapplied  
-#> 5 Leptospermum tr… Leptospermum … Leptospermum trinervi… Leptospermu… Leptosp… accepted              
-#> 6 Lepidosperma la… Lepidosperma … Lepidosperma laterale  Lepidosperm… Lepidos… accepted              
-#> # ℹ 148 more rows
-#> # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name
-#> # ℹ 5 more variables: aligned_reason <chr>, infraspecificepithet <chr>, taxonrank <chr>,
-#> #   decimalLongitude <dbl>, decimalLatitude <dbl>
-```
+The `accepted_name` is the currently, accepted taxon name used by the Australian Plant Census.
+The `suggested_name` is the best possible name option for the `original_name`.
 
 
 ## Plant established status across states/territories
@@ -237,21 +212,36 @@ update_gbif_names |>
 
 ## Closer look at name standardisation with 'APCalign' {#closer-look}
 
-`create_taxonomic_update_lookup` is a simple, wrapper, function for novice users that want to quickly check and standardise taxon names. For more experienced users, you can take a look at the sub functions `align_taxa()` and `update_taxonomy()` to see how taxon names are processed, aligned and updated.
+`create_taxonomic_update_lookup` is a simple, wrapper, function for novice users that want to quickly check and standardise taxon names. For more experienced users, you can take a look at the sub functions `match_taxa()`, `align_taxa()` and `update_taxonomy()` to see how taxon names are processed, aligned and updated.
 
 ![](../man/figures/standardise_taxonomy_workflow.png)
 
-### Aligning names to APNI and APC
+### Aligning names to APC and APNI
 
-This function will:
+The function `align_taxa` will:
 
--   Clean up your taxonomic names <!-- (Getting rid of trailing whitespaces, case correction) -->
--   Find best alignment with APNI to your taxonomic name using our [fuzzy matching algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
+1.  Clean up your taxonomic names <!-- (Getting rid of trailing whitespaces, case correction, standardise infraspecific taxon designations) -->
+    - The functions `standardise_names`, `strip_names` and `strip_names_2` standardise infraspecific taxon designations, clean up punctuation and whitespaces  
 
-You can control the degree of fuzzy matching using the arguments `max_distance_abs` and `max_distance_rel`
+2.  Find best alignment with APC or APNI to your taxonomic name using our the function [match_taxa](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)  
+    - A taxonomic name flows through a progression of [50 match algorithms](https://traitecoevo.github.io/APCalign/articles/tableXXXX) until it is able to be aligned to a name on either the APC or APNI list.  
+    - These include exact and fuzzy matches. Fuzzy matches are designed to capture small spelling mistakes and syntax errors in phrase names.  
+    - These include matches to the entire name string and matches on just select words in the sequence.  
+    - The sequence of matches has been carefully curated to align names with the fewest mistakes.  
 
-Note that the `aligned_name` may not be current. This does the best possible effort to match phrase names and subspecific taxa which often have alternative formatting.  This function also searches for small spelling or gender mistakes. 
+3.  Arguments let you select which of the 50 matching algorithms are activated/deactivated and the fuzziness of the fuzzy matching function  
+    - `fuzzy_matches` turns fuzzy matching on / off (it defaults to `TRUE`).  
+    - `fuzzy_abs_dist` and `fuzzy_rel_dist` control the degree of fuzzy matching (they default to `fuzzy_abs_dist = 3` & `fuzzy_rel_dist = 0.2`).  
+    - `imprecise_fuzzy_matches` turns  imprecise fuzzy matching on / off (it defaults to `FALSE`; for true it is set to `fuzzy_abs_dist = 5` & `fuzzy_rel_dist = 0.5`).  
+    - `APNI_matches` turns matches to the APNI list on/off (it defaults to `TRUE`).  
+    - `identifier` allows you to specify a text string that is added to genus-level matches, indicating the site, study, etc.  
 
+4.  Determines the `taxon_rank` to which the name can be resolved, based on its syntax.  
+    - For names that can only be resolved to genus, reformats the name to offer a standardised `genus sp.` name, with additional information/notes provided as part of the original name in square brackets, as in `Acacia sp. [skinny leaves]` or `Acacia sp. [Broken Hill]`  
+
+5.  Determines the `taxonomic_reference` (APC or APNI) of each name-alignment.   
+
+Note that `align_taxa` **does not** seek to update outdated taxonomy. That process occurs during subsequent [update_taxonomy](#update) process. It instead simply aligns each name input to the closest match amongst names documented by the APC and APNI.  
 
 ```r
 library(dplyr)
@@ -303,10 +293,35 @@ aligned_gbif_taxa |>
 #> 5 match_20. Rewording name to be recognised as genus rank, with genus accepted by APC …     1 0.00826
 ```
 
-### Update taxonomic names to alignments
+### Updating to APC-accepted names {#update}
 
-`update_taxonomy()` will update APNI taxa to specified (or current) version of APC. It will use the general synonymy published by the APC to attempt to sync the taxon names to a specific list. The function will also add other relevant taxonomy columns in the output
+`update_taxonomy()` uses the information generated by `align_taxa()` to, whenever possible, update names to APC-accepted names.  
 
+#### Overview:  
+
+- It divides names into lists based on the `taxon_rank` and `taxonomic_dataset` assigned by `align_taxa`, as each list requires different `updating` algorithms.  
+- Only taxonomic names that are designated as `taxon_rank = species/infraspecific` and `taxonomic_dataset = APC` can be updated to an APC-accepted name.  
+- For all other taxa, it may be possible to align the genus-name to an APC-accepted genus.  
+- For all taxa, a `suggested_name` is provided, selecting the `accepted_name` when available, and otherwise the `aligned_name`, but with, if possible, an updated, APC-accepted genus name.   
+
+#### Updating taxonomy:  
+
+- The APC includes all previously recorded taxonomic names for a current taxon concept, designating the currently-accepted name as `taxonomic_status: accepted`, while previously used or inappropriately used names for the taxon concept have alternative taxonomic statuses documented (e.g. taxonomic synonym, orthographic variant, misapplied).   
+
+- The APC includes a column `acceptedNameUsageID` that links a taxon name with an alterantive taxonomic status to the current taxon name, allowing outdated/inappropriately used names to be synced to their current name.  
+
+- *Note: Names listed on the APNI but absent from the APC are those that are designated as `taxonomic_dataset: APNI` by APCalign. These are names that are currently `unknown` by the APC. Over time, this list shrinks, as taxonomists link ever more occasionally used name variants to an APC-accepted taxon. However, for now, names listed only on the APNI cannot be updated.* 
+
+#### Taxonomic splits:  
+- Taxonomic splits refers to instances where a single taxon concept is subsequently split into multiple taxon concepts. For such taxa, when the `aligned_name` is the "old" taxon concept name, it is impossible to know which of the currently accepted taxon concepts the name represents.  
+
+- The function `update_taxonomy` includes an argument `taxonomic_splits`, offering three alternative outputs for taxon concepts that have been split.  
+
+  1. `most_likely_species` is the default value, and returns the `accepted_name` of the original taxon_concept; alternative names are documented in square brackets as part of the suggested name (`Acacia aneura [alternative possible names: Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied) | Acacia quadrimarginea (misapplied)`).  
+  
+  2. `return_all` returns all currently accepted names that were split from the original taxon_concept; this leads to an increase in the number of rows in the output table. (Acacia aneura, Acacia minyura and Acacia paraneura are each output as a separate row, each with a unique taxon_ID)  
+  
+  3. `collapse_to_higher_taxon` declares that for split names, there is no way to be certain about which accepted name is appropriate and therefore that the best possible match is at the genus level; no `accepted_name` is returned, the `taxon_rank` is demoted to `genus` and the suggested name documents the possible species-level names in square brackets (`Acacia sp. [collapsed names: Acacia aneura (accepted) | Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied)]`)  
 
 
 ```r
