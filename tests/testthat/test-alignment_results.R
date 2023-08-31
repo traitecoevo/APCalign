@@ -30,21 +30,85 @@ test_that("consistency with previous runs", {
     create_taxonomic_update_lookup(
       taxa,
       resources = resources,
-      full = TRUE
+      full = TRUE,
+      taxonomic_splits = "return_all"
     ) %>%
-    dplyr::arrange(original_name, canonical_name)
+    dplyr::arrange(original_name, accepted_name)
 
   #readr::write_csv(output, "consistency_lookup.csv")
 
   past_result <-
     readr::read_csv("benchmarks/consistency_lookup.csv", show_col_types = FALSE) %>%
     dplyr::arrange(original_name, canonical_name) %>%
-    dplyr::rename(accepted_name = canonical_name)
+    dplyr::rename(accepted_name = canonical_name) %>%
+    dplyr::distinct(aligned_name, accepted_name_usage_ID, .keep_all = TRUE)
 
   # tests the most important columns
   # other cols changed so we can't check other columns
   v <-c("original_name", "aligned_name", "accepted_name")
   expect_equal(past_result[,v], output[,v])
+  })
+
+test_that("taxon name splits and complex taxonomic status values work as expected", {
+  # Compare results to a table of values that have been closely scrutinised
+  benchmarks <- 
+    readr::read_csv("benchmarks/test_splits_synonyms.csv", show_col_types = FALSE) %>%
+    arrange(original_name, accepted_name_usage_ID, taxonomic_status)
+  
+  out1 <-
+    create_taxonomic_update_lookup(
+      benchmarks$original_name,
+      taxonomic_splits = "most_likely_species",
+      resources = resources,
+      full = TRUE) %>%
+      arrange(original_name, taxon_ID, taxonomic_status)
+  
+  expect_equal(benchmarks$original_name, out1$original_name)
+  expect_equal(benchmarks$accepted_name_usage_ID, out1$taxon_ID)
+  #todo: include test that confirms taxonomic_status in benchmarks is present (str_detect) in either out1$taxonomic_status or out1$alternative_taxonomic_status_aligned
+  
+  out2 <-
+    create_taxonomic_update_lookup(
+      benchmarks$original_name,
+      taxonomic_splits = "return_all",
+      resources = resources,
+      full = TRUE) %>%
+      arrange(original_name, taxon_ID, taxonomic_status)
+  
+  expect_gte(nrow(out2), 60)
+  expect_contains(out2$original_name, benchmarks$original_name)
+  expect_contains(out2$accepted_name, out1$accepted_name)
+  
+  out3 <-
+    create_taxonomic_update_lookup(
+      benchmarks$original_name,
+      taxonomic_splits = "collapse_to_higher_taxon",
+      resources = resources,
+      full = TRUE) %>%
+    arrange(original_name, taxon_ID, taxonomic_status) %>%
+    mutate(number_of_collapsed_taxa = ifelse(is.na(number_of_collapsed_taxa), 1, number_of_collapsed_taxa))
+  
+  rows_gt_1 <- out3 %>% filter(number_of_collapsed_taxa > 1)
+  rows_end_sp <- out3 %>% filter(stringr::str_detect(suggested_name, "sp."))
+  rows_alt_names <- out3 %>% filter(stringr::str_detect(suggested_name, "collapsed names:"))
+  
+  
+  expect_equal(nrow(out1), nrow(out3))
+  #will be less (slightly) because `return_all` excludes misapplied and excluded taxa
+  expect_equal(nrow(out2), sum(out3$number_of_collapsed_taxa)-2)
+  expect_equal(nrow(rows_gt_1), nrow(rows_end_sp))
+  expect_equal(nrow(rows_gt_1), nrow(rows_alt_names))
+  
+  out4 <-
+    create_taxonomic_update_lookup(
+      benchmarks$original_name,
+      resources = resources,
+      full = TRUE) %>%
+    arrange(original_name, taxon_ID, taxonomic_status)
+  
+  expect_equal(out1, out4)
+  
+  
   })
 
 test_that("taxon name alignment matches and updates work as expected", {

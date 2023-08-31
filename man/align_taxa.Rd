@@ -40,10 +40,39 @@ so call \code{\link{load_taxonomic_resources}} separately to greatly speed this 
 \item{identifier}{A dataset, location or other identifier, which defaults to NA.}
 }
 \value{
-A tibble with columns: original_name, cleaned_name, aligned_name, taxonomic_dataset, known, and checked.
+A tibble with columns that include original_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code. See Details
 }
 \description{
 This function uses Australian Plant Census (APC) & the Australian Plant Name Index (APNI) to find taxonomic alignments for a list of names.
+}
+\details{
+\itemize{
+\item original_name: the original plant name input.
+\item aligned_name: the original plant name after the function standardise_names has standardised the syntax of infraspecific taxon designations.
+\item taxonomic_dataset: the source of the aligned names (APC or APNI).
+\item taxon_rank: the taxonomic rank of the aligned name.
+\item aligned_reason: the explanation of a specific taxon name alignment (from an original name to an aligned name).
+\item alignment_code: a code that accompanies the aligned_reason, indicating the relative sequence of the match during the alignment process.
+\item cleaned_name: original name with punctuation and infraspecific taxon designation terms standardised by the function standardise_names; streamlines exact matches.
+\item stripped_name: cleaned name with punctuation and infraspecific taxon designation terms removed by the function strip_names; improves fuzzy matches.
+\item stripped_name2: cleaned name with punctuation, infraspecific taxon designation terms, and other filler words removed by the function strip_names_2; required for matches to \verb{first two word} and \verb{first three words}.
+\item trinomial: the first three words in \code{stripped_name2}, required for matches that ignore all other text in the original_name; improves phrase name matches.
+\item binomial: the first two words in \code{stripped_name2}, required for matches that ignore all other text in the original_name; improves phrase name matches.
+\item genus: the first two words in \code{cleaned_name}; required for genus-rank matches and reprocessing of genus-rank names.
+\item fuzzy_match_genus: fuzzy match of genus column to best match among APC-accepted names; required for fuzzy matches of genus-rank names.
+\item fuzzy_match_genus_known: fuzzy match of genus column to best match among APC-known names, only considering different matches to those documented under APC-accepted genera; required for fuzzy matches of genus-rank names.
+\item fuzzy_match_genus_APNI: fuzzy match of genus column to best match among APNI names, only considering different matches to those documented under APC-accepted and APC-known genera; required for fuzzy matches of genus-rank names.
+\item fuzzy_match_cleaned_APC: fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 07a in the function \code{match_taxa}.
+\item fuzzy_match_cleaned_APC_known: fuzzy match of stripped_name to APC-known names; created for yet-to-be-aligned names at the match step 07b in the function \code{match_taxa}.
+\item fuzzy_match_cleaned_APC_imprecise: imprecise fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 10a in the function \code{match_taxa}.
+\item fuzzy_match_cleaned_APC_known_imprecise: imprecise fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 10b in the function \code{match_taxa}.
+\item fuzzy_match_binomial: fuzzy match of binomial column to best match among APC-accepted names; created for yet-to-be-aligned names at match step 15a in the function \code{match_taxa}.
+\item fuzzy_match_binomial_APC_known: fuzzy match of binomial column to best match among APC-known names; created for yet-to-be-aligned names at match step 15a in the function \code{match_taxa}.
+\item fuzzy_match_trinomial: fuzzy match of trinomial column to best match among APC-accepted names; created for yet-to-be-aligned names at match step 16a in the function \code{match_taxa}.
+\item fuzzy_match_trinomial_known: fuzzy match of trinomial column to best match among APC-known names; created for yet-to-be-aligned names at match step 16b in the function \code{match_taxa}.
+\item fuzzy_match_cleaned_APNI: fuzzy match of stripped_name to APNI names; created for yet-to-be-aligned names at the match step 16a in the function \code{match_taxa}.
+\item fuzzy_match_cleaned_APNI_imprecise: imprecise fuzzy match of stripped_name to APNI names; created for yet-to-be-aligned names at the match step 17a in the function \code{match_taxa}.
+}
 }
 \examples{
 \donttest{align_taxa(c("Poa annua", "Abies alba"))}
