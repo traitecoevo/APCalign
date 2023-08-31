@@ -74,7 +74,7 @@ standardise_names <- function(taxon_names) {
     f("\\sf(\\s|$)",           " f. ") %>%
     
     ## remove " ms" if present
-    f("\\sms(\\s|$)", " ") %>%
+    f("\\sms(\\s|$|\\.\\s)", " ") %>%
     
     ## remove " s.l" or " s.s." or "s s " or " s l " if present
     f("\\ssl(\\s|$)", " ") %>%
@@ -85,6 +85,9 @@ standardise_names <- function(taxon_names) {
     f("\\ss\\sl(\\s|$)", " ") %>%
     f("\\ss\\.\\ss(\\s|$|\\.\\s)", " ") %>%
     f("\\ss\\.\\sl(\\s|$|\\.\\s)", " ") %>%
+    f("\\ss(\\.\\s|\\s)lat(\\s|$|\\.\\s)", " ") %>%
+    f("\\ssensu\\slato(\\s|$|\\.\\s)", " ") %>%
+    f("\\ssensu\\sstricto(\\s|$|\\.\\s)", " ") %>%
     
     ## remove "ser" if present
     f("\\sser(\\s|\\.\\s)", " ser. ") %>%

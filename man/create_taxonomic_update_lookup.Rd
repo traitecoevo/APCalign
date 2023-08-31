@@ -8,7 +8,7 @@ create_taxonomic_update_lookup(
   taxa,
   stable_or_current_data = "stable",
   version = default_version(),
-  taxonomic_splits = "return_all",
+  taxonomic_splits = "most_likely_species",
   full = FALSE,
   APNI_matches = TRUE,
   imprecise_fuzzy_matches = FALSE,

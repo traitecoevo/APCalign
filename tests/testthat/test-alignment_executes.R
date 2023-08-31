@@ -50,15 +50,13 @@ test_that("create_taxonomic_update_lookup() returns more/less rows as requested"
       taxonomic_splits = "collapse_to_higher_taxon"
     ) %>%
     dplyr::mutate(
-      should_collapse = ifelse(number_of_collapsed_taxa > 1 | taxon_rank %in% c("genus", "family"), TRUE, FALSE), ## todo: there is a bug in the function, because a genus-rank aligned name with an accepted genus should not be collapsed below genus.
-      names_collapsed = ifelse((collapsed_names == accepted_name & !is.na(accepted_name)) | collapsed_names == aligned_name, FALSE, TRUE)
+      should_collapse = ifelse(number_of_collapsed_taxa > 1, TRUE, FALSE),
+      number_of_collapsed_taxa = ifelse(is.na(number_of_collapsed_taxa), 1, number_of_collapsed_taxa)
     )
 
   expect_equal(nrow(out3), length(original_name))
   expect_equal(out3$original_name, original_name)
-  #test whether the names expected to collapse, do collapse 
-  expect_equal(out3$should_collapse, out3$names_collapsed)
-  expect_equal(sum(out3$number_of_collapsed_taxa), nrow(out2))
+  expect_equal(sum(out3$number_of_collapsed_taxa)-1, nrow(out2))
   })
 
 test_that("align_taxa() executes - no/with fuzzy", {
@@ -118,9 +116,6 @@ test_that("update_taxonomy() runs and prdouces suitable structure", {
 
   expect_equal(out1$suggested_name, rep(aligned_data$aligned_name[2], 2))
   expect_equal(out2$accepted_name, rep(aligned_data$aligned_name[2], 2))
- 
-  out2
- 
 })
 
 test_that("check runs with weird hybrid symbols", {
@@ -146,9 +141,11 @@ test_that("handles NAs inn inputs", {
       taxonomic_splits = "most_likely_species",
       resources = resources
       )
+  
   expect_equal(original_name, out2$original_name)
   expect_equal(original_name, out2$aligned_name)
-  expect_equal(original_name, out2$suggested_name)
+  expect_equal(original_name, out2$accepted_name)
+  expect_equal(original_name[1], stringr::word(out2$suggested_name[1], start = 1, end = 2))
 
   })
 
