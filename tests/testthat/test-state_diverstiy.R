@@ -26,7 +26,7 @@ test_that("native_anywhere_in_australia() works", {
       resources = resources
     )
   # readr::write_csv(native_check,"tests/testthat/benchmarks/native_check.csv")
-  previous_check <- readr::read_csv("tests/testthat/benchmarks/native_check.csv", show_col_types = FALSE)
+  previous_check <- readr::read_csv("benchmarks/native_check.csv", show_col_types = FALSE)
   expect_equal(native_check, previous_check)
   expect_warning(native_anywhere_in_australia(species = "NOTASPECIES", resources = resources))
 })
