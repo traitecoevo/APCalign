@@ -1,18 +1,18 @@
 #' Check if a vector of species are native anywhere in Australia
 #'
-#' This function checks if the given species is native anywhere in Australia.
+#' This function checks if the given species is native anywhere in Australia according to the loaded version of the Australian Plant Census (APC).
 #' It creates a lookup table from taxonomic resources, and checks if the species
-#' is listed as native in that table. Note that this will not detect within Australia invasives,
-#' e.g. if a species is from Western Australia and is invasive on the east coast.
+#' is listed as native in that table. Note that this will not detect within Australia invasions,
+#' e.g. if a species is from Western Australia and is invasive on the east coast.  And recent invasions are unlikely to be documented yet in APC. 
 #' For the complete matrix of species by states that also represents within-Australia invasions,
-#' use \link{create_species_state_origin_matrix}.
+#' use \link{create_species_state_origin_matrix}.  For spelling checks and taxonomy updates please see \link{create_taxonomic_update_lookup}.
 #'
 #' @family diversity methods
 #' @param species A character string typically representing the binomial for the species.  
 #' @param resources An optional list of taxonomic resources to use for the lookup.
 #'        If not provided, the function will load default taxonomic resources using the `load_taxonomic_resources()` function.
 #' @return A tibble with two columns: `species`, which is the same as the unique values of the input `species`,
-#'         and `native_anywhere_in_aus`, a logical vector indicating whether each species is native anywhere in Australia.
+#'         and `native_anywhere_in_aus`, a vector indicating whether each species is native anywhere in Australia, introduced by humans from elsewhere, or unknown with respect to the APC resource.
 #' @export
 #' @examples
 #' \donttest{native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata","Banksis notaspecies"))}
@@ -26,7 +26,7 @@ native_anywhere_in_australia <- function(species, resources = load_taxonomic_res
   # Count words and issue warnings for non-binomial names
   word_counts <- stringi::stri_count_words(species_modified)
   if (any(word_counts != 2)) {
-    warning("All input species not binomials; \n  Consider using align_taxa first")
+    warning("All input species not binomials; \n this function is designed to work primarily with species-level binomials.")
   }
   
   # Create lookup tables
