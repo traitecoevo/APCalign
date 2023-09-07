@@ -12,11 +12,12 @@ editor_options:
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  echo = FALSE,
   comment = "#>"
 )
-```
 
-```{r setup}
+options(rmarkdown.html_vignette.check_title = FALSE)
+
 library(APCalign)
 library(readr)
 library(dplyr)
@@ -57,8 +58,6 @@ APCalign_outputs_documentation <-
   readr::read_csv(here("inst/", "extdata", "APCalign_outputs_documentation.csv"),
     show_col_types = FALSE
   )
-
-
 ```
 
 # Aligning taxa with APC and APNI
@@ -82,8 +81,6 @@ update_taxonomy_documentation %>%
 ```
 
 # Ouputs of APCalign
-
-This possibly belongs in APCalign vignette
 
 ```{r, results='show'}
 APCalign_outputs_documentation %>%
