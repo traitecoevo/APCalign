@@ -32,10 +32,10 @@
 #'   \item \code{taxonomic_dataset}: the source of the updated taxonomic information (APC or APNI).
 #'   \item \code{accepted_name_usage_ID}: the unique identifier for the accepted name of the input name.
 #'   \item \code{canonical_name}: the accepted (or known) scientific name for the input name.
-#'   \item \code{scientific_name_authorship}: the authorship information for the accepted (or known) name.
+#'   \item \code{scientific_name}: the full scientific name, with authorship.
 #'   \item \code{taxon_rank}: the taxonomic rank of the accepted (or known) name.
 #'   \item \code{taxonomic_status}: the taxonomic status of the accepted (or known) name.
-#'   \item \code{ taxonomic_status_aligned}: for taxa where there is ambiguity due to a taxon split, the taxonomic status of each possible match.
+#'   \item \code{taxonomic_status_aligned}: for taxa where there is ambiguity due to a taxon split, the taxonomic status of each possible match.
 #'   \item \code{aligned_reason}: the explanation of a specific taxon name alignment (from an original name to an aligned name).
 #'   \item \code{update_reason}: the explanation of a specific taxon name update (from an aligned name to an accepted name).
 #'   \item \code{genus}: the genus of the accepted (or known) name.
@@ -133,7 +133,7 @@ update_taxonomy <- function(aligned_data,
         update_reason = character(0L),
         subclass = character(0L),
         taxon_distribution = character(0L),
-        scientific_name_authorship = character(0L),
+        scientific_name = character(0L),
         taxon_ID = character(0L),
         taxon_ID_genus = character(0L),
         scientific_name_ID = character(0L),
@@ -179,7 +179,7 @@ update_taxonomy <- function(aligned_data,
       "update_reason",
       "subclass",
       "taxon_distribution",
-      "scientific_name_authorship",
+      "scientific_name",
       "taxon_ID",
       "taxon_ID_genus",
       "scientific_name_ID",
@@ -492,7 +492,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
           accepted_name_usage_ID,
           accepted_name,
           taxonomic_status,
-          scientific_name_authorship,
+          scientific_name,
           family,
           subclass,
           taxon_distribution
@@ -565,7 +565,7 @@ update_taxonomy_APNI_species_and_infraspecific_taxa <- function(data, resources)
         dplyr::select(
           aligned_name,
           canonical_name,
-          scientific_name_authorship,
+          scientific_name,
           scientific_name_ID,
           taxonomic_status,
           family,
