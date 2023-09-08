@@ -81,7 +81,7 @@ create_taxonomic_update_lookup <- function(taxa,
       updated_data %>%
         dplyr::select(
           dplyr::any_of(c(
-            "original_name", "aligned_name", "accepted_name", "suggested_name", "genus", "taxon_rank", "taxonomic_dataset", "taxonomic_status", "scientific_name_authorship", "aligned_reason", "update_reason", 
+            "original_name", "aligned_name", "accepted_name", "suggested_name", "genus", "taxon_rank", "taxonomic_dataset", "taxonomic_status", "scientific_name", "aligned_reason", "update_reason", 
             "alternative_possible_names", "possible_names_collapsed", "number_of_collapsed_taxa"
           ))
         )        
