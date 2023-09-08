@@ -54,7 +54,7 @@ There are two versions of the databases that you can retrieve with the `stable_o
 -   `stable` will retrieve the most recent, archived version of the databases from our [GitHub releases](https://github.com/traitecoevo/APCalign/releases). This is set as the default option.
 -   `current` will retrieve the up-to-date databases directly from the APC and APNI website.
 
-Note that the databases are quite large so the initial retrieval of `stable` versions will take a few minutes. Once the taxonomic resources have been stored locally, subsequent retrievals will take less time. Retrieving `current` resources will always take longer since it is. Check out our [Resource Caching](https://traitecoevo.github.io/APCalign/articles/caching.html) article to learn more about how the APC and APNIC databases are accessed, stored and retrieved.
+Note that the databases are quite large so the initial retrieval of `stable` versions will take a few minutes. Once the taxonomic resources have been stored locally, subsequent retrievals will take less time. Retrieving `current` resources will always take longer since it is accessing the latest information from the website. Check out our [Resource Caching](https://traitecoevo.github.io/APCalign/articles/caching.html) article to learn more about how the APC and APNIC databases are accessed, stored and retrieved.
 
 ```{r}
 # Benchmarking the retrieval of `stable` or `current` resources
@@ -78,7 +78,7 @@ resources <- load_taxonomic_resources(stable_or_current_data = "stable", version
 
 ## Align and update plant taxon names
 
-Now we can query our taxonomic names against the taxonomic resources we just retrieved using `create_taxonomic_update_lookup()`. This is an all-in-one function will:
+Now we can query our taxonomic names against the taxonomic resources we just retrieved using `create_taxonomic_update_lookup()`. This all-in-one function will:
 
 - Align your taxonomic names to APC and APNI using our [matching algorithms](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)  
 - Update names to an APC-accepted species or infraspecific name whenever possible.  
@@ -203,9 +203,9 @@ There are arguments in `align_taxa` that allows you to select which of the 50 ma
 
 - `fuzzy_matches` turns fuzzy matching on / off (it defaults to `TRUE`).  
 - `fuzzy_abs_dist` and `fuzzy_rel_dist` control the degree of fuzzy matching (they default to `fuzzy_abs_dist = 3` & `fuzzy_rel_dist = 0.2`).  
-- `imprecise_fuzzy_matches` turns  imprecise fuzzy matching on / off (it defaults to `FALSE`; for true it is set to `fuzzy_abs_dist = 5` & `fuzzy_rel_dist = 0.5`).  
+- `imprecise_fuzzy_matches` turns  imprecise fuzzy matching on / off (it defaults to `FALSE`; for true it is set to `fuzzy_abs_dist = 5` & `fuzzy_rel_dist = 0.25`).  
 - `APNI_matches` turns matches to the APNI list on/off (it defaults to `TRUE`).  
-- `identifier` allows you to specify a text string that is added to genus-level matches, indicating the site, study, etc e.g. `Acacia sp. [long leaves]`
+- `identifier` allows you to specify a text string that is added to genus-level matches, indicating the site, study, etc e.g. `Acacia sp. [Blue Mountains]`
 
 ### Updating to APC-accepted names {#update}
 
