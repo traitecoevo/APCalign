@@ -38,10 +38,10 @@ A tibble with updated taxonomy for the specified plant names. The tibble contain
 \item \code{taxonomic_dataset}: the source of the updated taxonomic information (APC or APNI).
 \item \code{accepted_name_usage_ID}: the unique identifier for the accepted name of the input name.
 \item \code{canonical_name}: the accepted (or known) scientific name for the input name.
-\item \code{scientific_name_authorship}: the authorship information for the accepted (or known) name.
+\item \code{scientific_name}: the full scientific name, with authorship.
 \item \code{taxon_rank}: the taxonomic rank of the accepted (or known) name.
 \item \code{taxonomic_status}: the taxonomic status of the accepted (or known) name.
-\item \code{ taxonomic_status_aligned}: for taxa where there is ambiguity due to a taxon split, the taxonomic status of each possible match.
+\item \code{taxonomic_status_aligned}: for taxa where there is ambiguity due to a taxon split, the taxonomic status of each possible match.
 \item \code{aligned_reason}: the explanation of a specific taxon name alignment (from an original name to an aligned name).
 \item \code{update_reason}: the explanation of a specific taxon name update (from an aligned name to an accepted name).
 \item \code{genus}: the genus of the accepted (or known) name.
