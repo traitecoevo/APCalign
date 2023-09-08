@@ -33,7 +33,7 @@
     <a class="dropdown-item" href="../articles/caching.html">How is APC/APNI stored in APCalign?</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Taxon matching</h6>
-    <a class="dropdown-item" href="../articles/taxmatch.html">Our fuzzy matching algorithim</a>
+    <a class="dropdown-item" href="../articles/updating-taxon-names.html">Our fuzzy matching algorithim</a>
   </div>
 </li>
 <li class="nav-item">
@@ -127,8 +127,37 @@ so call <code><a href="load_taxonomic_resources.html">load_taxonomic_resources</
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A tibble with columns: original_name, cleaned_name, aligned_name, taxonomic_dataset, known, and checked.</p>
+<p>A tibble with columns that include original_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code. See Details</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    
+<ul><li><p>original_name: the original plant name input.</p></li>
+<li><p>aligned_name: the original plant name after the function standardise_names has standardised the syntax of infraspecific taxon designations.</p></li>
+<li><p>taxonomic_dataset: the source of the aligned names (APC or APNI).</p></li>
+<li><p>taxon_rank: the taxonomic rank of the aligned name.</p></li>
+<li><p>aligned_reason: the explanation of a specific taxon name alignment (from an original name to an aligned name).</p></li>
+<li><p>alignment_code: a code that accompanies the aligned_reason, indicating the relative sequence of the match during the alignment process.</p></li>
+<li><p>cleaned_name: original name with punctuation and infraspecific taxon designation terms standardised by the function standardise_names; streamlines exact matches.</p></li>
+<li><p>stripped_name: cleaned name with punctuation and infraspecific taxon designation terms removed by the function strip_names; improves fuzzy matches.</p></li>
+<li><p>stripped_name2: cleaned name with punctuation, infraspecific taxon designation terms, and other filler words removed by the function strip_names_2; required for matches to <code>first two word</code> and <code>first three words</code>.</p></li>
+<li><p>trinomial: the first three words in <code>stripped_name2</code>, required for matches that ignore all other text in the original_name; improves phrase name matches.</p></li>
+<li><p>binomial: the first two words in <code>stripped_name2</code>, required for matches that ignore all other text in the original_name; improves phrase name matches.</p></li>
+<li><p>genus: the first two words in <code>cleaned_name</code>; required for genus-rank matches and reprocessing of genus-rank names.</p></li>
+<li><p>fuzzy_match_genus: fuzzy match of genus column to best match among APC-accepted names; required for fuzzy matches of genus-rank names.</p></li>
+<li><p>fuzzy_match_genus_known: fuzzy match of genus column to best match among APC-known names, only considering different matches to those documented under APC-accepted genera; required for fuzzy matches of genus-rank names.</p></li>
+<li><p>fuzzy_match_genus_APNI: fuzzy match of genus column to best match among APNI names, only considering different matches to those documented under APC-accepted and APC-known genera; required for fuzzy matches of genus-rank names.</p></li>
+<li><p>fuzzy_match_cleaned_APC: fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 07a in the function <code>match_taxa</code>.</p></li>
+<li><p>fuzzy_match_cleaned_APC_known: fuzzy match of stripped_name to APC-known names; created for yet-to-be-aligned names at the match step 07b in the function <code>match_taxa</code>.</p></li>
+<li><p>fuzzy_match_cleaned_APC_imprecise: imprecise fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 10a in the function <code>match_taxa</code>.</p></li>
+<li><p>fuzzy_match_cleaned_APC_known_imprecise: imprecise fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 10b in the function <code>match_taxa</code>.</p></li>
+<li><p>fuzzy_match_binomial: fuzzy match of binomial column to best match among APC-accepted names; created for yet-to-be-aligned names at match step 15a in the function <code>match_taxa</code>.</p></li>
+<li><p>fuzzy_match_binomial_APC_known: fuzzy match of binomial column to best match among APC-known names; created for yet-to-be-aligned names at match step 15a in the function <code>match_taxa</code>.</p></li>
+<li><p>fuzzy_match_trinomial: fuzzy match of trinomial column to best match among APC-accepted names; created for yet-to-be-aligned names at match step 16a in the function <code>match_taxa</code>.</p></li>
+<li><p>fuzzy_match_trinomial_known: fuzzy match of trinomial column to best match among APC-known names; created for yet-to-be-aligned names at match step 16b in the function <code>match_taxa</code>.</p></li>
+<li><p>fuzzy_match_cleaned_APNI: fuzzy match of stripped_name to APNI names; created for yet-to-be-aligned names at the match step 16a in the function <code>match_taxa</code>.</p></li>
+<li><p>fuzzy_match_cleaned_APNI_imprecise: imprecise fuzzy match of stripped_name to APNI names; created for yet-to-be-aligned names at the match step 17a in the function <code>match_taxa</code>.</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></code></p>

@@ -50,7 +50,7 @@
     <a class="dropdown-item" href="articles/caching.html">How is APC/APNI stored in APCalign?</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Taxon matching</h6>
-    <a class="dropdown-item" href="articles/taxmatch.html">Our fuzzy matching algorithim</a>
+    <a class="dropdown-item" href="articles/updating-taxon-names.html">Our fuzzy matching algorithim</a>
   </div>
 </li>
 <li class="nav-item">
@@ -79,7 +79,7 @@
 <div class="section level1">
 <div class="page-header"><h1 id="apcalign-">APCalign <img src="reference/figures/APCalign_hex.png" align="right" width="120"><a class="anchor" aria-label="anchor" href="#apcalign-"></a>
 </h1></div>
-<p>‘APCalign’ uses the <a href="https://biodiversity.org.au/nsl/services/search/taxonomy" class="external-link">Australian Plant Census (APC)</a> and <a href="https://biodiversity.org.au/nsl/services/search/names" class="external-link">Australian Plant Name Index</a> to standardise Australian plant taxon names. ‘APCalign’ also supplies information about the established status of plant taxa across different states/territories.</p>
+<p>‘APCalign’ uses the <a href="https://biodiversity.org.au/nsl/services/search/taxonomy" class="external-link">Australian Plant Census (APC)</a> and <a href="https://biodiversity.org.au/nsl/services/search/names" class="external-link">Australian Plant Name Index</a> to align and update Australian plant taxon name strings. ‘APCalign’ also supplies information about the established status (native/introduced) of plant taxa across different states/territories.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -95,8 +95,10 @@
 </h2>
 <p>Generating a look-up table can be done with just one function</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Load APC/APNI resources into R</span></span>
+<span><span class="va">resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># Create lookup </span></span>
 <span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span> </span>
 <span>  taxa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="st">"Banksia integrifolia"</span>,</span>
@@ -105,18 +107,20 @@
 <span>    <span class="op">)</span>,</span>
 <span>  resources <span class="op">=</span> <span class="va">resources</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 3 × 5</span></span>
-<span><span class="co">#&gt;   original_name      aligned_name apc_name aligned_reason taxonomic_status_of_…¹</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;              &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;                 </span></span>
-<span><span class="co">#&gt; 1 Banksia integrifo… Banksia int… Banksia… match_06. Aut… accepted              </span></span>
-<span><span class="co">#&gt; 2 Acacia longifolia  Acacia long… Acacia … match_06. Aut… accepted              </span></span>
-<span><span class="co">#&gt; 3 Commersonia rosea  Commersonia… Androca… match_06. Aut… basionym              </span></span>
-<span><span class="co">#&gt; # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 3 × 12</span></span>
+<span><span class="co">#&gt;   original_name       aligned_name accepted_name suggested_name genus taxon_rank</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;     </span></span>
+<span><span class="co">#&gt; 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   </span></span>
+<span><span class="co">#&gt; 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   </span></span>
+<span><span class="co">#&gt; 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   </span></span>
+<span><span class="co">#&gt; # ℹ 6 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   scientific_name_authorship &lt;chr&gt;, aligned_reason &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   update_reason &lt;chr&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="learn-more">Learn more<a class="anchor" aria-label="anchor" href="#learn-more"></a>
 </h2>
-<p>Highly recommend looking at our <a href="https://traitecoevo.github.io/APCalign/articles/APCalign.html">Getting Started</a> vignette to learn about how to use ‘APCalign’. You can also learn more about our <a href="https://traitecoevo.github.io/APCalign/articles/taxmatch.html">taxa matching algorithim</a> and how <a href="https://traitecoevo.github.io/APCalign/articles/caching.html">APC/APNI data is cached</a> behind-the-scenes.</p>
+<p>Highly recommend looking at our <a href="https://traitecoevo.github.io/APCalign/articles/APCalign.html">Getting Started</a> vignette to learn about how to use ‘APCalign’. You can also learn more about our <a href="https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html">taxa matching algorithim</a> and how <a href="https://traitecoevo.github.io/APCalign/articles/caching.html">APC/APNI data is cached</a> behind-the-scenes.</p>
 </div>
 <div class="section level2">
 <h2 id="found-a-bug">Found a bug?<a class="anchor" aria-label="anchor" href="#found-a-bug"></a>

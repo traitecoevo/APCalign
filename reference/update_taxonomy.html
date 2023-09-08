@@ -37,7 +37,7 @@ to their current accepted name."><!-- mathjax --><script src="https://cdnjs.clou
     <a class="dropdown-item" href="../articles/caching.html">How is APC/APNI stored in APCalign?</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Taxon matching</h6>
-    <a class="dropdown-item" href="../articles/taxmatch.html">Our fuzzy matching algorithim</a>
+    <a class="dropdown-item" href="../articles/updating-taxon-names.html">Our fuzzy matching algorithim</a>
   </div>
 </li>
 <li class="nav-item">
@@ -131,6 +131,30 @@ If specified, the output will be saved in a CSV file with the given name.</p></d
 <li><p><code>taxon_ID_genus</code>: an identifier for the genus.</p></li>
 <li><p><code>scientific_name_ID</code>: an identifier for the nomenclatural (not taxonomic) details of a scientific name.</p></li>
 <li><p><code>row_number</code>: the row number of a specific original_name in the input.</p></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    
+<ul><li><p>original_name: the original plant name.</p></li>
+<li><p>aligned_name: the input plant name that has been aligned to a taxon name in the APC or APNI by the align_taxa function.</p></li>
+<li><p>accepted_name: the APC-accepted plant name, when available.</p></li>
+<li><p>suggested_name: the suggested plant name to use. Identical to the accepted_name, when an accepted_name exists; otherwise the the suggested_name is the aligned_name.</p></li>
+<li><p>genus: the genus of the accepted (or suggested) name; only APC-accepted genus names are filled in.</p></li>
+<li><p>family: the family of the accepted (or suggested) name; only APC-accepted family names are filled in.</p></li>
+<li><p>taxon_rank: the taxonomic rank of the suggested (and accepted) name.</p></li>
+<li><p>taxonomic_dataset: the source of the suggested (and accepted) names (APC or APNI).</p></li>
+<li><p>taxonomic_status: the taxonomic status of the suggested (and accepted) name.</p></li>
+<li><p>taxonomic_status_aligned: the taxonomic status of the aligned name, before any taxonomic updates have been applied.</p></li>
+<li><p>aligned_reason: the explanation of a specific taxon name alignment (from an original name to an aligned name).</p></li>
+<li><p>update_reason: the explanation of a specific taxon name update (from an aligned name to an accepted or suggested name).</p></li>
+<li><p>subclass: the subclass of the accepted name.</p></li>
+<li><p>taxon_distribution: the distribution of the accepted name; only filled in if an APC accepted_name is available.</p></li>
+<li><p>scientific_name_authorship: the authorship information for the accepted (or known) name; available for both APC and APNI names.</p></li>
+<li><p>taxon_ID: the unique taxon concept identifier for the accepted_name; only filled in if an APC accepted_name is available.</p></li>
+<li><p>taxon_ID_genus: an identifier for the genus; only filled in if an APC-accepted genus name is available.</p></li>
+<li><p>scientific_name_ID: an identifier for the nomenclatural (not taxonomic) details of a scientific name; available for both APC and APNI names.</p></li>
+<li><p>row_number: the row number of a specific original_name in the input.</p></li>
+<li><p>number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon", the number of possible taxon names that have been collapsed.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
