@@ -12,11 +12,6 @@ library(APCalign)
 library(readr)
 library(dplyr)
 
-APC_source_documentation <-
-  readr::read_csv(system.file("extdata", "APC_source_documentation.csv", package = "APCalign"),
-    show_col_types = FALSE
-  )
-
 ```
 
 ![](data_providers.png)
