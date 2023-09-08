@@ -117,10 +117,10 @@ If specified, the output will be saved in a CSV file with the given name.</p></d
 <li><p><code>taxonomic_dataset</code>: the source of the updated taxonomic information (APC or APNI).</p></li>
 <li><p><code>accepted_name_usage_ID</code>: the unique identifier for the accepted name of the input name.</p></li>
 <li><p><code>canonical_name</code>: the accepted (or known) scientific name for the input name.</p></li>
-<li><p><code>scientific_name_authorship</code>: the authorship information for the accepted (or known) name.</p></li>
+<li><p><code>scientific_name</code>: the full scientific name, with authorship.</p></li>
 <li><p><code>taxon_rank</code>: the taxonomic rank of the accepted (or known) name.</p></li>
 <li><p><code>taxonomic_status</code>: the taxonomic status of the accepted (or known) name.</p></li>
-<li><p><code> taxonomic_status_aligned</code>: for taxa where there is ambiguity due to a taxon split, the taxonomic status of each possible match.</p></li>
+<li><p><code>taxonomic_status_aligned</code>: for taxa where there is ambiguity due to a taxon split, the taxonomic status of each possible match.</p></li>
 <li><p><code>aligned_reason</code>: the explanation of a specific taxon name alignment (from an original name to an aligned name).</p></li>
 <li><p><code>update_reason</code>: the explanation of a specific taxon name update (from an aligned name to an accepted name).</p></li>
 <li><p><code>genus</code>: the genus of the accepted (or known) name.</p></li>
@@ -162,7 +162,7 @@ If specified, the output will be saved in a CSV file with the given name.</p></d
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: taxon_rank &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_status &lt;chr&gt;, taxonomic_status_aligned &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_distribution &lt;chr&gt;, scientific_name_authorship &lt;chr&gt;, taxon_ID &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_distribution &lt;chr&gt;, scientific_name &lt;chr&gt;, taxon_ID &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;, canonical_name &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span>
 </code></pre></div>
