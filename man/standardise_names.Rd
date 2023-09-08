@@ -16,7 +16,7 @@ A character vector of standardised taxon names.
 This function standardises taxon names by performing a series of text
 substitutions to remove common inconsistencies in taxonomic nomenclature.
 The function takes a character vector of taxon names as input and returns a
-character vector of standardised taxon names as output. In particular it standardises
+character vector of taxon names using standardised taxonomic syntax as output. In particular it standardises
 the abbreviations used to document infraspecific taxon ranks (subsp., var., f.),
 as people use many variants of these terms. It also standardises or removes a few additional filler
 words used within taxon names (affinis becomes aff.; s.l. and s.s. are removed).
