@@ -102,6 +102,129 @@ match_taxa <- function(
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
+  # START MATCHES
+  # match_05a: Scientific name matches
+  # Taxon names that are an accepted scientific name, with authorship.
+  
+  i <-
+    taxa$tocheck$original_name %in% resources$`APC list (accepted)`$scientific_name
+  
+  ii <-
+    match(
+      taxa$tocheck[i,]$original_name,
+      resources$`APC list (accepted)`$scientific_name
+    )
+  
+  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+    mutate(
+      taxonomic_dataset = "APC",
+      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
+      aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
+      aligned_reason = paste0(
+        "Exact match of taxon name to an APC-accepted scientific name (including authorship) (",
+        Sys.Date(),
+        ")"
+      ),
+      known = TRUE,
+      checked = TRUE,
+      alignment_code = "match_05a_accepted_scientific_name_with_authorship"
+    )
+  
+  taxa <- redistribute(taxa)
+  if (nrow(taxa$tocheck) == 0)
+    return(taxa)
+  
+  # match_05b: Scientific name matches
+  # Taxon names that are an APC-known scientific name, with authorship.
+  
+  i <-
+    taxa$tocheck$original_name %in% resources$`APC list (known names)`$scientific_name
+  
+  ii <-
+    match(
+      taxa$tocheck[i,]$original_name,
+      resources$`APC list (known names)`$scientific_name
+    )
+  
+  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+    mutate(
+      taxonomic_dataset = "APC",
+      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
+      aligned_name = resources$`APC list (known names)`$canonical_name[ii],
+      aligned_reason = paste0(
+        "Exact match of taxon name to an APC-known scientific name (including authorship) (",
+        Sys.Date(),
+        ")"
+      ),
+      known = TRUE,
+      checked = TRUE,
+      alignment_code = "match_05b_known_scientific_name_with_authorship"
+    )
+  
+  taxa <- redistribute(taxa)
+  if (nrow(taxa$tocheck) == 0)
+    return(taxa)
+  
+  # match_06a: APC-accepted canonical name
+  # Taxon names that are exact matches to APC-accepted canonical names, once filler words and punctuation are removed.
+  i <-
+    taxa$tocheck$cleaned_name %in% resources$`APC list (accepted)`$canonical_name
+  
+  ii <-
+    match(
+      taxa$tocheck[i,]$cleaned_name,
+      resources$`APC list (accepted)`$canonical_name
+    )
+  
+  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+    mutate(
+      taxonomic_dataset = "APC",
+      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
+      aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
+      aligned_reason = paste0(
+        "Exact match of taxon name to an APC-accepted canonical name once punctuation and filler words are removed (",
+        Sys.Date(),
+        ")"
+      ),
+      known = TRUE,
+      checked = TRUE,
+      alignment_code = "match_06a_accepted_canonical_name"
+    )
+  
+  taxa <- redistribute(taxa)
+  if (nrow(taxa$tocheck) == 0)
+    return(taxa)
+  
+  # match_06b: APC-known canonical name
+  # Taxon names that are exact matches to APC-known canonical names, once filler words and punctuation are removed.
+  i <-
+    taxa$tocheck$cleaned_name %in% resources$`APC list (known names)`$canonical_name
+  
+  ii <-
+    match(
+      taxa$tocheck[i,]$cleaned_name,
+      resources$`APC list (known names)`$canonical_name
+    )
+  
+  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+    mutate(
+      taxonomic_dataset = "APC",
+      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
+      aligned_name = resources$`APC list (known names)`$canonical_name[ii],
+      aligned_reason = paste0(
+        "Exact match of taxon name to an APC-known canonical name once punctuation and filler words are removed (",
+        Sys.Date(),
+        ")"
+      ),
+      known = TRUE,
+      checked = TRUE,
+      alignment_code = "match_06b_known_canonical_name"
+    )
+  
+  taxa <- redistribute(taxa)
+  if (nrow(taxa$tocheck) == 0)
+    return(taxa)
+  
   # match_01a: Genus-level resolution
   # Exact matches of APC-accepted or APC-known genus for names where the final "word" is `sp` or `spp`
   # Aligned name includes identifier to indicate `genus sp.` refers to a specific species (or infra-specific taxon), associated with a specific dataset/location.
@@ -603,128 +726,6 @@ match_taxa <- function(
     )
   
   # Note:  -- Finished with checking genus sp. above, now continue with full species
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
-  # match_05a: Scientific name matches
-  # Taxon names that are an accepted scientific name, with authorship.
-  
-  i <-
-    taxa$tocheck$original_name %in% resources$`APC list (accepted)`$scientific_name
-  
-  ii <-
-    match(
-      taxa$tocheck[i,]$original_name,
-      resources$`APC list (accepted)`$scientific_name
-    )
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
-      aligned_reason = paste0(
-        "Exact match of taxon name to an APC-accepted scientific name (including authorship) (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      alignment_code = "match_05a_accepted_scientific_name_with_authorship"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
-  # match_05b: Scientific name matches
-  # Taxon names that are an APC-known scientific name, with authorship.
-  
-  i <-
-    taxa$tocheck$original_name %in% resources$`APC list (known names)`$scientific_name
-  
-  ii <-
-    match(
-      taxa$tocheck[i,]$original_name,
-      resources$`APC list (known names)`$scientific_name
-    )
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (known names)`$canonical_name[ii],
-      aligned_reason = paste0(
-        "Exact match of taxon name to an APC-known scientific name (including authorship) (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      alignment_code = "match_05b_known_scientific_name_with_authorship"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
-  # match_06a: APC-accepted canonical name
-  # Taxon names that are exact matches to APC-accepted canonical names, once filler words and punctuation are removed.
-  i <-
-    taxa$tocheck$cleaned_name %in% resources$`APC list (accepted)`$canonical_name
-  
-  ii <-
-    match(
-      taxa$tocheck[i,]$cleaned_name,
-      resources$`APC list (accepted)`$canonical_name
-    )
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
-      aligned_reason = paste0(
-        "Exact match of taxon name to an APC-accepted canonical name once punctuation and filler words are removed (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      alignment_code = "match_06a_accepted_canonical_name"
-    )
-  
-  taxa <- redistribute(taxa)
-  if (nrow(taxa$tocheck) == 0)
-    return(taxa)
-  
-  # match_06b: APC-known canonical name
-  # Taxon names that are exact matches to APC-known canonical names, once filler words and punctuation are removed.
-  i <-
-    taxa$tocheck$cleaned_name %in% resources$`APC list (known names)`$canonical_name
-  
-  ii <-
-    match(
-      taxa$tocheck[i,]$cleaned_name,
-      resources$`APC list (known names)`$canonical_name
-    )
-  
-  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-    mutate(
-      taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (known names)`$canonical_name[ii],
-      aligned_reason = paste0(
-        "Exact match of taxon name to an APC-known canonical name once punctuation and filler words are removed (",
-        Sys.Date(),
-        ")"
-      ),
-      known = TRUE,
-      checked = TRUE,
-      alignment_code = "match_06b_known_canonical_name"
-    )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
