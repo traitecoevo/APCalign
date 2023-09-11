@@ -38,10 +38,10 @@ A tibble with updated taxonomy for the specified plant names. The tibble contain
 \item \code{taxonomic_dataset}: the source of the updated taxonomic information (APC or APNI).
 \item \code{accepted_name_usage_ID}: the unique identifier for the accepted name of the input name.
 \item \code{canonical_name}: the accepted (or known) scientific name for the input name.
-\item \code{scientific_name_authorship}: the authorship information for the accepted (or known) name.
+\item \code{scientific_name}: the full scientific name, with authorship.
 \item \code{taxon_rank}: the taxonomic rank of the accepted (or known) name.
 \item \code{taxonomic_status}: the taxonomic status of the accepted (or known) name.
-\item \code{ taxonomic_status_aligned}: for taxa where there is ambiguity due to a taxon split, the taxonomic status of each possible match.
+\item \code{taxonomic_status_aligned}: for taxa where there is ambiguity due to a taxon split, the taxonomic status of each possible match.
 \item \code{aligned_reason}: the explanation of a specific taxon name alignment (from an original name to an aligned name).
 \item \code{update_reason}: the explanation of a specific taxon name update (from an aligned name to an accepted name).
 \item \code{genus}: the genus of the accepted (or known) name.
@@ -58,6 +58,30 @@ A tibble with updated taxonomy for the specified plant names. The tibble contain
 This function uses the Australia's Virtual Herbarium's taxonomic resources, specifically the Australian Plant
 Census (APC) and the Australian Plant Name Index (APNI), to update taxonomy of plant species, replacing any synonyms
 to their current accepted name.
+}
+\details{
+\itemize{
+\item original_name: the original plant name.
+\item aligned_name: the input plant name that has been aligned to a taxon name in the APC or APNI by the align_taxa function.
+\item accepted_name: the APC-accepted plant name, when available.
+\item suggested_name: the suggested plant name to use. Identical to the accepted_name, when an accepted_name exists; otherwise the the suggested_name is the aligned_name.
+\item genus: the genus of the accepted (or suggested) name; only APC-accepted genus names are filled in.
+\item family: the family of the accepted (or suggested) name; only APC-accepted family names are filled in.
+\item taxon_rank: the taxonomic rank of the suggested (and accepted) name.
+\item taxonomic_dataset: the source of the suggested (and accepted) names (APC or APNI).
+\item taxonomic_status: the taxonomic status of the suggested (and accepted) name.
+\item taxonomic_status_aligned: the taxonomic status of the aligned name, before any taxonomic updates have been applied.
+\item aligned_reason: the explanation of a specific taxon name alignment (from an original name to an aligned name).
+\item update_reason: the explanation of a specific taxon name update (from an aligned name to an accepted or suggested name).
+\item subclass: the subclass of the accepted name.
+\item taxon_distribution: the distribution of the accepted name; only filled in if an APC accepted_name is available.
+\item scientific_name_authorship: the authorship information for the accepted (or known) name; available for both APC and APNI names.
+\item taxon_ID: the unique taxon concept identifier for the accepted_name; only filled in if an APC accepted_name is available.
+\item taxon_ID_genus: an identifier for the genus; only filled in if an APC-accepted genus name is available.
+\item scientific_name_ID: an identifier for the nomenclatural (not taxonomic) details of a scientific name; available for both APC and APNI names.
+\item row_number: the row number of a specific original_name in the input.
+\item number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon", the number of possible taxon names that have been collapsed.
+}
 }
 \examples{
 # Update taxonomy for two plant names and print the result

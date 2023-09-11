@@ -13,10 +13,10 @@ coverage](https://codecov.io/gh/traitecoevo/APCalign/branch/master/graph/badge.s
 ‘APCalign’ uses the [Australian Plant Census
 (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and
 [Australian Plant Name
-Index](https://biodiversity.org.au/nsl/services/search/names) to
-standardise Australian plant taxon names. ‘APCalign’ also supplies
-information about the established status of plant taxa across different
-states/territories.
+Index](https://biodiversity.org.au/nsl/services/search/names) to align
+and update Australian plant taxon name strings. ‘APCalign’ also supplies
+information about the established status (native/introduced) of plant
+taxa across different states/territories.
 
 ## Installation
 
@@ -35,8 +35,10 @@ library(APCalign)
 Generating a look-up table can be done with just one function
 
 ``` r
+# Load APC/APNI resources into R
 resources <- load_taxonomic_resources()
 
+# Create lookup 
 create_taxonomic_update_lookup( 
   taxa = c(
     "Banksia integrifolia",
@@ -45,13 +47,15 @@ create_taxonomic_update_lookup(
     ),
   resources = resources
 )
-#> # A tibble: 3 × 5
-#>   original_name      aligned_name apc_name aligned_reason taxonomic_status_of_…¹
-#>   <chr>              <chr>        <chr>    <chr>          <chr>                 
-#> 1 Banksia integrifo… Banksia int… Banksia… match_06. Aut… accepted              
-#> 2 Acacia longifolia  Acacia long… Acacia … match_06. Aut… accepted              
-#> 3 Commersonia rosea  Commersonia… Androca… match_06. Aut… basionym              
-#> # ℹ abbreviated name: ¹​taxonomic_status_of_aligned_name
+#> # A tibble: 3 × 12
+#>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
+#>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
+#> 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
+#> 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   
+#> 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   
+#> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
+#> #   scientific_name_authorship <chr>, aligned_reason <chr>,
+#> #   update_reason <chr>, number_of_collapsed_taxa <dbl>
 ```
 
 ## Learn more
@@ -60,7 +64,7 @@ Highly recommend looking at our [Getting
 Started](https://traitecoevo.github.io/APCalign/articles/APCalign.html)
 vignette to learn about how to use ‘APCalign’. You can also learn more
 about our [taxa matching
-algorithim](https://traitecoevo.github.io/APCalign/articles/taxmatch.html)
+algorithim](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
 and how [APC/APNI data is
 cached](https://traitecoevo.github.io/APCalign/articles/caching.html)
 behind-the-scenes.

@@ -43,7 +43,7 @@ strip_names <- function(taxon_names) {
 #' @param taxon_names A character vector of taxonomic names to be stripped.
 #'
 #' @return A character vector of stripped taxonomic names, with subtaxa designations, special
-#' characters, additional filled words and extra whitespace removed, and all letters converted to lowercase.
+#' characters, additional filler words and extra whitespace removed, and all letters converted to lowercase.
 #'
 #'
 #' @examples

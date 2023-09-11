@@ -14,9 +14,30 @@
 #' @param imprecise_fuzzy_matches Imprecise fuzzy matches are turned off as a default.
 #' @param identifier A dataset, location or other identifier, which defaults to NA.
 #' @param output file path to save the intermediate output to
-#' @return A lookup table containing the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
+#' @return A lookup table containing the accepted and suggested names for each original name input, and additional taxonomic information such as taxon rank, taxonomic status, taxon IDs and genera. See Details.
+#' 
 #' @details
-#' `update_reason` represents the taxonomic status of the aligned name
+#' - original_name: the original plant name.
+#' - aligned_name: the input plant name that has been aligned to a taxon name in the APC or APNI by the align_taxa function.
+#' - accepted_name: the APC-accepted plant name, when available.
+#' - suggested_name: the suggested plant name to use. Identical to the accepted_name, when an accepted_name exists; otherwise the the suggested_name is the aligned_name.
+#' - genus: the genus of the accepted (or suggested) name; only APC-accepted genus names are filled in.
+#' - family: the family of the accepted (or suggested) name; only APC-accepted family names are filled in.
+#' - taxon_rank: the taxonomic rank of the suggested (and accepted) name.
+#' - taxonomic_dataset: the source of the suggested (and accepted) names (APC or APNI).
+#' - taxonomic_status: the taxonomic status of the suggested (and accepted) name.
+#' - taxonomic_status_aligned: the taxonomic status of the aligned name, before any taxonomic updates have been applied.
+#' - aligned_reason: the explanation of a specific taxon name alignment (from an original name to an aligned name).
+#' - update_reason: the explanation of a specific taxon name update (from an aligned name to an accepted or suggested name).
+#' - subclass: the subclass of the accepted name.
+#' - taxon_distribution: the distribution of the accepted name; only filled in if an APC accepted_name is available.
+#' - scientific_name_authorship: the authorship information for the accepted (or known) name; available for both APC and APNI names.
+#' - taxon_ID: the unique taxon concept identifier for the accepted_name; only filled in if an APC accepted_name is available.
+#' - taxon_ID_genus: an identifier for the genus; only filled in if an APC-accepted genus name is available.
+#' - scientific_name_ID: an identifier for the nomenclatural (not taxonomic) details of a scientific name; available for both APC and APNI names.
+#' - row_number: the row number of a specific original_name in the input.
+#' - number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon", the number of possible taxon names that have been collapsed.
+#' 
 #' @export
 #'
 #' @seealso \code{\link{load_taxonomic_resources}}
@@ -60,7 +81,7 @@ create_taxonomic_update_lookup <- function(taxa,
       updated_data %>%
         dplyr::select(
           dplyr::any_of(c(
-            "original_name", "aligned_name", "accepted_name", "suggested_name", "genus", "taxon_rank", "taxonomic_dataset", "taxonomic_status", "scientific_name_authorship", "aligned_reason", "update_reason", 
+            "original_name", "aligned_name", "accepted_name", "suggested_name", "genus", "taxon_rank", "taxonomic_dataset", "taxonomic_status", "scientific_name", "aligned_reason", "update_reason", 
             "alternative_possible_names", "possible_names_collapsed", "number_of_collapsed_taxa"
           ))
         )        

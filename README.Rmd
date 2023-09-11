@@ -25,8 +25,8 @@ library(APCalign)
 
 # APCalign <img src="man/figures/APCalign_hex.png" align="right" width="120"/>
 
-'APCalign' uses the [Australian Plant Census (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and [Australian Plant Name Index](https://biodiversity.org.au/nsl/services/search/names) to standardise Australian plant taxon names. 'APCalign' also supplies information about
-the established status of plant taxa across different states/territories.
+'APCalign' uses the [Australian Plant Census (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and [Australian Plant Name Index](https://biodiversity.org.au/nsl/services/search/names) to align and update Australian plant taxon name strings. 'APCalign' also supplies information about
+the established status (native/introduced) of plant taxa across different states/territories.
 
 ## Installation
 
@@ -44,8 +44,10 @@ library(APCalign)
 Generating a look-up table can be done with just one function
 
 ```{r,message=FALSE}
+# Load APC/APNI resources into R
 resources <- load_taxonomic_resources()
 
+# Create lookup 
 create_taxonomic_update_lookup( 
   taxa = c(
     "Banksia integrifolia",
@@ -58,7 +60,7 @@ create_taxonomic_update_lookup(
 
 ## Learn more
 
-Highly recommend looking at our [Getting Started](https://traitecoevo.github.io/APCalign/articles/APCalign.html) vignette to learn about how to use 'APCalign'. You can also learn more about our [taxa matching algorithim](https://traitecoevo.github.io/APCalign/articles/taxmatch.html) and how [APC/APNI data is cached](https://traitecoevo.github.io/APCalign/articles/caching.html) behind-the-scenes.
+Highly recommend looking at our [Getting Started](https://traitecoevo.github.io/APCalign/articles/APCalign.html) vignette to learn about how to use 'APCalign'. You can also learn more about our [taxa matching algorithim](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html) and how [APC/APNI data is cached](https://traitecoevo.github.io/APCalign/articles/caching.html) behind-the-scenes.
 
 
 ## Found a bug? 

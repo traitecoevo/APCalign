@@ -25,7 +25,7 @@ navbar:
       - text: -------
       - text: "Taxon matching"
       - text: Our fuzzy matching algorithim
-        href: articles/taxmatch.html
+        href: articles/updating-taxon-names.html
 
 reference:
 - subtitle: Standardise plant taxon names
