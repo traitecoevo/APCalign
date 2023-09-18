@@ -746,38 +746,6 @@ match_taxa <- function(
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_08a: APNI-listed canonical name
-  # Taxon names that are exact matches to APNI-listed canonical names, once filler words and punctuation are removed.
-  if (APNI_matches == TRUE) {
-    i <-
-      taxa$tocheck$cleaned_name %in% resources$`APNI names`$canonical_name
-    
-    ii <-
-      match(
-        taxa$tocheck[i,]$cleaned_name,
-        resources$`APNI names`$canonical_name
-      )
-    
-    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-      mutate(
-        taxonomic_dataset = "APNI",
-        taxon_rank = resources$`APNI names`$taxon_rank[ii],
-        aligned_name = resources$`APNI names`$canonical_name[ii],
-        aligned_reason = paste0(
-          "Exact match of taxon name to an APNI-listed canonical name once punctuation and filler words are removed (",
-          Sys.Date(),
-          ")"
-        ),
-        known = TRUE,
-        checked = TRUE,
-        alignment_code = "match_08a_APNI_canonical_name"
-      )
-    
-    taxa <- redistribute(taxa)
-    if (nrow(taxa$tocheck) == 0)
-      return(taxa)
-  }
-  
   # match_07a: fuzzy match to APC-accepted canonical name
   # Fuzzy match of taxon name to an APC-accepted canonical name, once filler words and punctuation are removed.
   for (i in 1:nrow(taxa$tocheck)) {    
@@ -859,7 +827,39 @@ match_taxa <- function(
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
-  
+    
+  # match_08a: APNI-listed canonical name
+  # Taxon names that are exact matches to APNI-listed canonical names, once filler words and punctuation are removed.
+  if (APNI_matches == TRUE) {
+    i <-
+      taxa$tocheck$cleaned_name %in% resources$`APNI names`$canonical_name
+    
+    ii <-
+      match(
+        taxa$tocheck[i,]$cleaned_name,
+        resources$`APNI names`$canonical_name
+      )
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_dataset = "APNI",
+        taxon_rank = resources$`APNI names`$taxon_rank[ii],
+        aligned_name = resources$`APNI names`$canonical_name[ii],
+        aligned_reason = paste0(
+          "Exact match of taxon name to an APNI-listed canonical name once punctuation and filler words are removed (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        alignment_code = "match_08a_APNI_canonical_name"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
+  }
+
   # match_09a: `genus aff. species` taxa
   # Exact match to APC-accepted or APC-known genus for names where "aff" indicates the taxon has an affinity to another taxon, but isn't the other taxon.
   # Taxon names fitting this pattern that are not APC-accepted, APC-known, or APNI-listed species are automatically aligned to genus,
