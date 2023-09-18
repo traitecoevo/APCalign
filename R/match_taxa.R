@@ -549,7 +549,10 @@ match_taxa <- function(
     (
       stringr::str_detect(taxa$tocheck$cleaned_name, "[:alpha:]\\/") |
         stringr::str_detect(taxa$tocheck$cleaned_name, "\\s\\/")
-    ) &
+    ) & 
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "[:digit:]") &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "\\(") &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "\\'") &
     taxa$tocheck$genus %in% resources$genera_all2$canonical_name
   
   ii <-
@@ -594,6 +597,9 @@ match_taxa <- function(
       stringr::str_detect(taxa$tocheck$cleaned_name, "[:alpha:]\\/") |
         stringr::str_detect(taxa$tocheck$cleaned_name, "\\s\\/")
     ) &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "[:digit:]") &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "\\(") &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "\\'") &
     taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$canonical_name
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -630,6 +636,9 @@ match_taxa <- function(
       stringr::str_detect(taxa$tocheck$cleaned_name, "[:alpha:]\\/") |
         stringr::str_detect(taxa$tocheck$cleaned_name, "\\s\\/")
     ) &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "[:digit:]") &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "\\(") &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "\\'") &
     taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$canonical_name
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -666,6 +675,9 @@ match_taxa <- function(
         stringr::str_detect(taxa$tocheck$cleaned_name, "[:alpha:]\\/") |
           stringr::str_detect(taxa$tocheck$cleaned_name, "\\s\\/")
       ) &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "[:digit:]") &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "\\(") &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "\\'") &
       taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonical_name
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -704,6 +716,9 @@ match_taxa <- function(
       stringr::str_detect(taxa$tocheck$cleaned_name, "[:alpha:]\\/") |
         stringr::str_detect(taxa$tocheck$cleaned_name, "\\s\\/")
     ) &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "[:digit:]") &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "\\(") &
+    !stringr::str_detect(taxa$tocheck$cleaned_name, "\\'") &
     !taxa$tocheck$fuzzy_match_genus %in% resources$genera_all2$canonical_name
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -730,6 +745,38 @@ match_taxa <- function(
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
+  
+  # match_08a: APNI-listed canonical name
+  # Taxon names that are exact matches to APNI-listed canonical names, once filler words and punctuation are removed.
+  if (APNI_matches == TRUE) {
+    i <-
+      taxa$tocheck$cleaned_name %in% resources$`APNI names`$canonical_name
+    
+    ii <-
+      match(
+        taxa$tocheck[i,]$cleaned_name,
+        resources$`APNI names`$canonical_name
+      )
+    
+    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+      mutate(
+        taxonomic_dataset = "APNI",
+        taxon_rank = resources$`APNI names`$taxon_rank[ii],
+        aligned_name = resources$`APNI names`$canonical_name[ii],
+        aligned_reason = paste0(
+          "Exact match of taxon name to an APNI-listed canonical name once punctuation and filler words are removed (",
+          Sys.Date(),
+          ")"
+        ),
+        known = TRUE,
+        checked = TRUE,
+        alignment_code = "match_08a_APNI_canonical_name"
+      )
+    
+    taxa <- redistribute(taxa)
+    if (nrow(taxa$tocheck) == 0)
+      return(taxa)
+  }
   
   # match_07a: fuzzy match to APC-accepted canonical name
   # Fuzzy match of taxon name to an APC-accepted canonical name, once filler words and punctuation are removed.
@@ -812,38 +859,6 @@ match_taxa <- function(
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
-  
-  # match_08a: APNI-listed canonical name
-  # Taxon names that are exact matches to APNI-listed canonical names, once filler words and punctuation are removed.
-  if (APNI_matches == TRUE) {
-    i <-
-      taxa$tocheck$cleaned_name %in% resources$`APNI names`$canonical_name
-    
-    ii <-
-      match(
-        taxa$tocheck[i,]$cleaned_name,
-        resources$`APNI names`$canonical_name
-      )
-    
-    taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
-      mutate(
-        taxonomic_dataset = "APNI",
-        taxon_rank = resources$`APNI names`$taxon_rank[ii],
-        aligned_name = resources$`APNI names`$canonical_name[ii],
-        aligned_reason = paste0(
-          "Exact match of taxon name to an APNI-listed canonical name once punctuation and filler words are removed (",
-          Sys.Date(),
-          ")"
-        ),
-        known = TRUE,
-        checked = TRUE,
-        alignment_code = "match_08a_APNI_canonical_name"
-      )
-    
-    taxa <- redistribute(taxa)
-    if (nrow(taxa$tocheck) == 0)
-      return(taxa)
-  }
   
   # match_09a: `genus aff. species` taxa
   # Exact match to APC-accepted or APC-known genus for names where "aff" indicates the taxon has an affinity to another taxon, but isn't the other taxon.
@@ -1049,7 +1064,8 @@ match_taxa <- function(
           accepted_list = resources$`APC list (accepted)`$stripped_canonical,
           max_distance_abs = imprecise_fuzzy_abs_dist,
           max_distance_rel = imprecise_fuzzy_rel_dist,
-          n_allowed = 1
+          n_allowed = 1,
+          epithet_letters = 2
         )
     }
     
@@ -1094,7 +1110,8 @@ match_taxa <- function(
           accepted_list = resources$`APC list (known names)`$stripped_canonical,
           max_distance_abs = imprecise_fuzzy_abs_dist,
           max_distance_rel = imprecise_fuzzy_rel_dist,
-          n_allowed = 1
+          n_allowed = 1,
+          epithet_letters = 2
         )
     }
     
@@ -1551,7 +1568,8 @@ match_taxa <- function(
           accepted_list = resources$`APC list (accepted)`$binomial,
           max_distance_abs = fuzzy_abs_dist,
           max_distance_rel = fuzzy_rel_dist,
-          n_allowed = 1
+          n_allowed = 1,
+          epithet_letters = 2
         )
     }
   }
@@ -1600,7 +1618,8 @@ match_taxa <- function(
           accepted_list = resources$`APC list (known names)`$binomial,
           max_distance_abs = fuzzy_abs_dist,
           max_distance_rel = fuzzy_rel_dist,
-          n_allowed = 1
+          n_allowed = 1,
+          epithet_letters = 2
         )
     }
   }
@@ -1648,7 +1667,8 @@ match_taxa <- function(
           accepted_list = resources$`APNI names`$stripped_canonical,
           max_distance_abs = fuzzy_abs_dist,
           max_distance_rel = fuzzy_rel_dist,
-          n_allowed = 1
+          n_allowed = 1,
+          epithet_letters = 2
         )
     }
     
@@ -1694,7 +1714,8 @@ match_taxa <- function(
           accepted_list = resources$`APNI names`$canonical_name,
           max_distance_abs = imprecise_fuzzy_abs_dist,
           max_distance_rel = imprecise_fuzzy_rel_dist,
-          n_allowed = 1
+          n_allowed = 1,
+          epithet_letters = 2
         )
     }
     
