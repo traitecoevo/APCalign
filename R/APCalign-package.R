@@ -89,7 +89,11 @@ utils::globalVariables(
     "taxon_ID_genus",
     "possible_names_collapsed",
     "number_of_collapsed_taxa",
-    "row_number"
+    "row_number",
+    "accepted_name_2",
+    "alternative_accepted_name_tmp",
+    "pro_parte",
+    "suggested_collapsed_name"
   )
 )
 

@@ -8,6 +8,7 @@
 #' @param max_distance_abs The maximum allowable number of characters differing between the input string and the match
 #' @param max_distance_rel The maximum proportional difference between the input string and the match
 #' @param n_allowed The number of allowable matches returned. Defaults to 1
+#' @param epithet_letters A string specifying if 1 or 2 letters remain fixed at the start of the species epithet.
 #'
 #' @return A text string that matches a recognised taxon name or scientific name
 #' 
