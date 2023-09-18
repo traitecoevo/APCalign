@@ -22,6 +22,9 @@
 #' @noRd
 fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, n_allowed = 1, epithet_letters = 1) {
   
+  if (!epithet_letters %in% c(1,2)) {
+    stop("Epithet must be 1 or 2.")
+    }
   ## identify number of words in the text to match
   words_in_text <- 1 + stringr::str_count(txt," ")
   
