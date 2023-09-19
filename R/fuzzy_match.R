@@ -8,6 +8,7 @@
 #' @param max_distance_abs The maximum allowable number of characters differing between the input string and the match
 #' @param max_distance_rel The maximum proportional difference between the input string and the match
 #' @param n_allowed The number of allowable matches returned. Defaults to 1
+#' @param epithet_letters A string specifying if 1 or 2 letters remain fixed at the start of the species epithet.
 #'
 #' @return A text string that matches a recognised taxon name or scientific name
 #' 
@@ -19,8 +20,11 @@
 #'                                  max_distance_rel = 1)
 #' 
 #' @noRd
-fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, n_allowed = 1) {
+fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, n_allowed = 1, epithet_letters = 1) {
   
+  if (!epithet_letters %in% c(1,2)) {
+    stop("Epithet must be 1 or 2.")
+    }
   ## identify number of words in the text to match
   words_in_text <- 1 + stringr::str_count(txt," ")
   
@@ -28,7 +32,15 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
   txt_word1_start <- stringr::str_extract(txt, "[:alpha:]")
   
   ## for text matches with 2 or more words, extract the first letter/digit of the second word
-  if(words_in_text > 1) {
+  if(words_in_text > 1 & epithet_letters == 2) 
+    {if(nchar(word(txt,2)) == 1) {
+      txt_word2_start <- stringr::str_extract(word(txt,2), "[:alpha:]|[:digit:]")
+    } else {
+      txt_word2_start <- stringr::str_extract(word(txt,2), "[:alpha:][:alpha:]|[:digit:]")     
+    }
+  }
+
+  if(words_in_text > 1 & epithet_letters == 1) {
     txt_word2_start <- stringr::str_extract(word(txt,2), "[:alpha:]|[:digit:]")
   }
     
@@ -61,10 +73,18 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
     match_word1_start <- stringr::str_extract(accepted_list[i], "[:alpha:]")
     
     ## identify the first letter of the second word in the matched string (if the matched string includes 2+ words)
-    if(words_in_text > 1) {
-      match_word2_start <- stringr::str_extract(word(accepted_list[i],2), "[:alpha:]|[:digit:]")
+    if(words_in_text > 1 & epithet_letters == 2) {
+      if(nchar(word(accepted_list[i],2)) == 1) {
+        match_word2_start <- stringr::str_extract(word(accepted_list[i],2), "[:alpha:]|[:digit:]")
+      } else {
+        match_word2_start <- stringr::str_extract(word(accepted_list[i],2), "[:alpha:][:alpha:]|[:digit:]")
+      }
     }
     
+    if(words_in_text > 1 & epithet_letters == 1) {
+        match_word2_start <- stringr::str_extract(word(accepted_list[i],2), "[:alpha:]|[:digit:]")
+    }
+
     ## identify the first letter of the third word in the matched string (if the matched string includes 3+ words)
     if(words_in_text > 2) {
       match_word3_start <- stringr::str_extract(word(accepted_list[i],3), "[:alpha:]|[:digit:]")
