@@ -47,7 +47,7 @@ standardise_names <- function(taxon_names) {
     ## Capitalise first letter
     f("^([a-z])", "\\U\\1") %>%
     
-    ## sp. not sp or spp or ssp
+    ## sp. not sp or spp
     f("\\ssp(\\s|$)",   " sp. ") %>%
     f("\\sspp.(\\s|$)", " sp. ") %>%
     f("\\sspp(\\s|$)",  " sp. ") %>%
@@ -88,8 +88,10 @@ standardise_names <- function(taxon_names) {
     f("\\ss(\\.\\s|\\s)lat(\\s|$|\\.\\s)", " ") %>%
     f("\\ssensu\\slato(\\s|$|\\.\\s)", " ") %>%
     f("\\ssensu\\sstricto(\\s|$|\\.\\s)", " ") %>%
+    f("(\\s|\\()s\\.lat\\.(\\s|\\))", "") %>%
+    f("(\\s|\\()s\\.str\\.(\\s|\\))", "") %>%
     
-    ## remove "ser" if present
+    ## standarise "ser"
     f("\\sser(\\s|\\.\\s)", " ser. ") %>%
 
     ## clean white space
