@@ -23,7 +23,6 @@ Imports:
     dplyr,
     contentid,
     stringr,
-    stringi,
     arrow,
     crayon
 Suggests:

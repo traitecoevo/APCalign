@@ -15,7 +15,7 @@ test_that("state_diversity() works", {
 
 
 test_that("native_anywhere_in_australia() works", {
-  native_check <-
+  expect_warning(native_check <-
     native_anywhere_in_australia(
       c(
         "Eucalyptus globulus",
@@ -24,7 +24,7 @@ test_that("native_anywhere_in_australia() works", {
         "banksis notaspecies"
       ),
       resources = resources
-    )
+    ))
   # readr::write_csv(native_check,"tests/testthat/benchmarks/native_check.csv")
   previous_check <- readr::read_csv("benchmarks/native_check.csv", show_col_types = FALSE)
   expect_equal(native_check, previous_check)

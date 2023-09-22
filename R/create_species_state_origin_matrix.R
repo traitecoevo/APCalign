@@ -48,7 +48,7 @@ identify_places <- function(sep_state_data) {
 
 #' @noRd
 create_species_df <- function(apc_places, apc_species) {
-  species_df <- dplyr::tibble(species = apc_species$scientific_name)
+  species_df <- dplyr::tibble(species = apc_species$canonical_name)
   for (i in 1:length(apc_places)) {
     species_df <- dplyr::bind_cols(species_df, NA, .name_repair = "minimal")
   }
