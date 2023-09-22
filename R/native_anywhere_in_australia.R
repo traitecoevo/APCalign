@@ -22,15 +22,18 @@ native_anywhere_in_australia <- function(species, resources = load_taxonomic_res
   # Remove duplicates and replace hyphens
   species <- unique(species)
   species_modified <- gsub('-', ' ', species)
+
+  # Create lookup tables  
+  full_lookup <- create_species_state_origin_matrix(resources = resources)
+  full_binomials <- stringr::word(full_lookup$species, 1, 2)
   
   # Count words and issue warnings for non-binomial names
   word_counts <- stringi::stri_count_words(species_modified)
-  if (any(word_counts != 2)) {
-    warning("All input species not binomials; \n this function is designed to work primarily with species-level binomials.")
+  if (any(word_counts != 2) | any(!species_modified %in% full_binomials)) {
+    warning("At least one input species is either not a binomial or not found in APC; 
+            this function is designed to work primarily with species-level binomials 
+            that align with current APC names.")
   }
-  
-  # Create lookup tables
-  full_lookup <- create_species_state_origin_matrix(resources = resources)
   
   # Filter for native species
   full_lookup$native_anywhere <-
@@ -40,7 +43,6 @@ native_anywhere_in_australia <- function(species, resources = load_taxonomic_res
   
   # Get the first two words (assuming these are the binomial names)
   natives_binomials <- stringr::word(native_only$species, 1, 2)
-  full_binomials <- stringr::word(full_lookup$species, 1, 2)
   species_binomials <- stringr::word(species, 1, 2)
   
   # Check membership
