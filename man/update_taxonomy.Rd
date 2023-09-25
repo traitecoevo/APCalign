@@ -85,7 +85,7 @@ to their current accepted name.
 }
 \examples{
 # Update taxonomy for two plant names and print the result
-update_taxonomy(
+\donttest{update_taxonomy(
  tibble::tibble(
    original_name = c("Dryandra preissii", "Banksia acuminata"),
    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
@@ -94,6 +94,7 @@ update_taxonomy(
    aligned_reason = NA_character_
  )
 )
+}
 }
 \seealso{
 load_taxonomic_resources

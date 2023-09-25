@@ -218,7 +218,7 @@ The function `align_taxa` will:
     - The functions `standardise_names`, `strip_names` and `strip_names_2` standardise infraspecific taxon designations and clean up punctuation and whitespaces  
 
 2.  Find best alignment with APC or APNI to your taxonomic name using our the function [match_taxa](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)  
-    - A taxonomic name flows through a progression of [50 match algorithms](https://traitecoevo.github.io/APCalign/articles/tableXXXX) until it is able to be aligned to a name on either the APC or APNI list.  
+    - A taxonomic name flows through a progression of [50 match algorithms](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html) until it is able to be aligned to a name on either the APC or APNI list.  
     - These include [exact and fuzzy matches](#fuzzy-match). Fuzzy matches are designed to capture small spelling mistakes and syntax errors in phrase names.  
     - These include matches to the entire name string and matches on just select words in the sequence.  
     - The sequence of matches has been carefully curated to align names with the fewest mistakes.  
