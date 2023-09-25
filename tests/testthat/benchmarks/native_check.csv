@@ -1,5 +1,5 @@
 species,native_anywhere_in_aus
-Eucalyptus globulus,considered native to Australia by APC
-Pinus radiata,not considered native to Australia by APC
-Brassica rapa,not considered native to Australia by APC
-banksis notaspecies,binomial not found in APC lookup
+Eucalyptus globulus,native
+Pinus radiata,introduced
+Brassica rapa,introduced
+banksis notaspecies,unknown
