@@ -77,7 +77,7 @@
 #'
 #' @examples
 #' # Update taxonomy for two plant names and print the result
-#' update_taxonomy(
+#' \donttest{update_taxonomy(
 #'  tibble::tibble(
 #'    original_name = c("Dryandra preissii", "Banksia acuminata"),
 #'    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
@@ -86,6 +86,7 @@
 #'    aligned_reason = NA_character_
 #'  )
 #' )
+#' }
 
 update_taxonomy <- function(aligned_data,
                             taxonomic_splits = "most_likely_species",

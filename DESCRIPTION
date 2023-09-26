@@ -1,6 +1,6 @@
 Package: APCalign
-Title: Standardising Taxon Names Using The Australian Plant Cenus
-Version: 0.1.1
+Title: Resolving Plant Taxon Names Using the Australian Plant Census
+Version: 0.1.2
 Authors@R: c(
   person(given = "Daniel", family = "Falster", role = c("aut", "cre", "cph"), email = "daniel.falster@unsw.edu.au", comment = c(ORCID = "0000-0002-9814-092X")),
   person(given = "Elizabeth", family = "Wenk", role = c("aut", "ctb"), email = "e.wenk@unsw.edu.au", comment = c(ORCID = "0000-0001-5640-5910")),
@@ -8,7 +8,7 @@ Authors@R: c(
   person(given = "Fonti", family = "Kar", role = c("aut", "ctb"), email = "f.kar@unsw.edu.au", comment = c(ORCID = "0000-0002-2760-3974")),
   person(given = "Carl", family=  "Boettiger", role = c("ctb"), email = "cboettig@gmail.com", comment = c(ORCID = "0000-0002-1642-628X"))
     )
-Description: The process of standardising taxon names is necessary when working with biodiversity data. 'APCalign' uses the Australian Plant Census (APC) and the Australian Plant Name Index (APNI) to align and update plant taxon names to current, accepted standards. 'APCalign' also supplies information about the established status of plant taxa across different states/territories.
+Description: The process of resolving taxon names is necessary when working with biodiversity data. 'APCalign' uses the Australian Plant Census (APC) and the Australian Plant Name Index (APNI) to align and update plant taxon names to current, accepted standards. 'APCalign' also supplies information about the established status of plant taxa across different states/territories.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en

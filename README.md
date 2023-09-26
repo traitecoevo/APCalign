@@ -64,7 +64,7 @@ Highly recommend looking at our [Getting
 Started](https://traitecoevo.github.io/APCalign/articles/APCalign.html)
 vignette to learn about how to use ‘APCalign’. You can also learn more
 about our [taxa matching
-algorithim](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
+ algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
 and how [APC/APNI data is
 cached](https://traitecoevo.github.io/APCalign/articles/caching.html)
 behind-the-scenes.
