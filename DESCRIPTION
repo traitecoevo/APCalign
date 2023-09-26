@@ -1,5 +1,5 @@
 Package: APCalign
-Title: Resolving Plant Taxon Names Using the Australian Plant Cenus
+Title: Resolving Plant Taxon Names Using the Australian Plant Census
 Version: 0.1.2
 Authors@R: c(
   person(given = "Daniel", family = "Falster", role = c("aut", "cre", "cph"), email = "daniel.falster@unsw.edu.au", comment = c(ORCID = "0000-0002-9814-092X")),
