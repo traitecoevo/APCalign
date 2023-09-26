@@ -72,7 +72,7 @@ match_taxa_documentation %>%
 ```
 
 
-# Updating taxononomy
+# Updating taxonomy
 
 XXX
 ```{r, results='show'}
@@ -80,7 +80,7 @@ update_taxonomy_documentation %>%
   my_kable_styling()
 ```
 
-# Ouputs of APCalign
+# Outputs of APCalign
 
 ```{r, results='show'}
 APCalign_outputs_documentation %>%

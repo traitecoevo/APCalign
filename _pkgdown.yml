@@ -24,7 +24,7 @@ navbar:
         href: 'articles/caching.html'
       - text: -------
       - text: "Taxon matching"
-      - text: Our fuzzy matching algorithim
+      - text: Our fuzzy matching  algorithm
         href: articles/updating-taxon-names.html
 
 reference:

@@ -10,4 +10,4 @@
 
 * Refinements to `native_in_australia`
 
-* Reordered naming matching algorithim order
+* Reordered naming matching  algorithm order
