@@ -22,6 +22,7 @@ strip_names <- function(taxon_names) {
     stringr::str_replace_all("\\ \\)", "") %>%
     stringr::str_replace_all("\\(\\ ", "") %>%
     stringr::str_replace_all("[:punct:]", " ") %>%
+    stringr::str_replace_all("\\ ∕ ", " ") %>%
     stringr::str_replace_all("\\,", "") %>%
     stringr::str_replace_all("\\=", " ") %>%
     stringr::str_replace_all("  ", " ") %>%
@@ -58,6 +59,7 @@ strip_names_2 <- function(taxon_names) {
   taxon_names %>%
     stringr::str_replace_all("\\.", "") %>%
     stringr::str_replace_all("[:punct:]", " ") %>%
+    stringr::str_replace_all("\\ ∕ ", " ") %>%
     stringr::str_replace_all(" subsp ", " ") %>%
     stringr::str_replace_all(" var ", " ") %>%   
     stringr::str_replace_all(" ser ", " ") %>%
