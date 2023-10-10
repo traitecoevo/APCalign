@@ -1710,7 +1710,7 @@ match_taxa <- function(
     for (i in 1:nrow(taxa$tocheck)) {
       taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise[i] <-
         fuzzy_match(
-          txt = taxa$tocheck$stripped_name[i],
+          txt = taxa$tocheck$cleaned_name[i],
           accepted_list = resources$`APNI names`$canonical_name,
           max_distance_abs = imprecise_fuzzy_abs_dist,
           max_distance_rel = imprecise_fuzzy_rel_dist,
