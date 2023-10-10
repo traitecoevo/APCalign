@@ -94,7 +94,7 @@ match_taxa <- function(
     )
   
   
-  
+  species_and_infraspecific <- c("species", "form", "variety", "subspecies", "series")
   ## Taxa that have been checked are moved from `taxa$tocheck` to `taxa$checked`
   ## These lines of code are repeated after each matching cycle to progressively move taxa from `tocheck` to `checked`
   
@@ -107,7 +107,8 @@ match_taxa <- function(
   # Taxon names that are an accepted scientific name, with authorship.
   
   i <-
-    taxa$tocheck$original_name %in% resources$`APC list (accepted)`$scientific_name
+    taxa$tocheck$original_name %in% resources$`APC list (accepted)`$scientific_name &&
+    taxa$tocheck$taxon_rank %in% species_and_infraspecific
   
   ii <-
     match(
@@ -138,7 +139,8 @@ match_taxa <- function(
   # Taxon names that are an APC-known scientific name, with authorship.
   
   i <-
-    taxa$tocheck$original_name %in% resources$`APC list (known names)`$scientific_name
+    taxa$tocheck$original_name %in% resources$`APC list (known names)`$scientific_name &&
+    taxa$tocheck$taxon_rank %in% species_and_infraspecific
   
   ii <-
     match(
@@ -168,7 +170,8 @@ match_taxa <- function(
   # match_06a: APC-accepted canonical name
   # Taxon names that are exact matches to APC-accepted canonical names, once filler words and punctuation are removed.
   i <-
-    taxa$tocheck$cleaned_name %in% resources$`APC list (accepted)`$canonical_name
+    taxa$tocheck$cleaned_name %in% resources$`APC list (accepted)`$canonical_name &&
+    taxa$tocheck$taxon_rank %in% species_and_infraspecific
   
   ii <-
     match(
@@ -198,7 +201,8 @@ match_taxa <- function(
   # match_06b: APC-known canonical name
   # Taxon names that are exact matches to APC-known canonical names, once filler words and punctuation are removed.
   i <-
-    taxa$tocheck$cleaned_name %in% resources$`APC list (known names)`$canonical_name
+    taxa$tocheck$cleaned_name %in% resources$`APC list (known names)`$canonical_name &&
+    taxa$tocheck$taxon_rank %in% species_and_infraspecific
   
   ii <-
     match(
