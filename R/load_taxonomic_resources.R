@@ -97,6 +97,7 @@ load_taxonomic_resources <-
       taxonomic_resources$APC %>%
       dplyr::arrange(taxonomic_status) %>%
       dplyr::filter(taxon_rank %in% c("subspecies", "species", "form", "variety")) %>%
+      dplyr::filter(!stringr::str_detect(canonical_name, "[:space:]sp\\.$")) %>%
       dplyr::select(canonical_name,
                     scientific_name,
                     taxonomic_status,
