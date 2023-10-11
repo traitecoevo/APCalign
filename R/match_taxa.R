@@ -93,8 +93,6 @@ match_taxa <- function(
         fuzzy_match_genera(genus, resources$genera_APNI$canonical_name)
     )
   
-  
-  
   ## Taxa that have been checked are moved from `taxa$tocheck` to `taxa$checked`
   ## These lines of code are repeated after each matching cycle to progressively move taxa from `tocheck` to `checked`
   
