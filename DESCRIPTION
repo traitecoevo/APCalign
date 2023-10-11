@@ -25,7 +25,8 @@ Imports:
     stringr,
     stringi,
     arrow,
-    crayon
+    crayon,
+    gh
 Suggests:
     janitor,
     tidyr,

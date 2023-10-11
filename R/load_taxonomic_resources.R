@@ -315,15 +315,21 @@ dataset_access_function <-
 #' @return A character string representing the default version for stable data.
 #'
 #'
-#' @examples
-#' default_version()
-#'
-#' @seealso
-#' align_taxa
-#'
 #' @noRd
-default_version <- function() {
-  "0.0.2.9000"
+default_version <- function(){
+  # Get all the releases
+  output <- gh::gh("GET /repos/{owner}/{repo}/releases",
+                   owner = "traitecoevo", repo = "APCalign")
+  
+  # Determine how many versions there are
+  length(output)
+  
+  # Extract version number
+  versions <- purrr::map_chr(.x = 1:length(output),
+                             ~ purrr::pluck(output, .x, "name"))
+  
+  # Exclude Taxonomy: first upload
+  dplyr::first(versions)
 }
 
 #' @noRd
