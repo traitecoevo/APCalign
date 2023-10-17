@@ -26,7 +26,8 @@ Imports:
     stringi,
     arrow,
     crayon,
-    gh
+    httr,
+    jsonlite
 Suggests:
     janitor,
     tidyr,

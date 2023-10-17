@@ -268,9 +268,9 @@ dataset_access_function <-
       return(dataset_get(version, path))
     }
     if (type == "current") {
-      APC <-
-        readr::read_csv(
-          "https://biodiversity.org.au/nsl/services/export/taxonCsv",
+      tryCatch({
+        APC <- readr::read_csv(
+          "https://biodiversity.org.au/nsl/services/exports/taxonCsv",
           n_max = 110000,
           col_types =
             readr::cols(
@@ -281,30 +281,40 @@ dataset_access_function <-
               modified = readr::col_datetime(format = "")
             )
         )
-      APNI <-
-        readr::read_csv(
-          "https://biodiversity.org.au/nsl/services/export/namesCsv",
-          n_max = 140000,
-          col_types =
-            readr::cols(
-              .default = readr::col_character(),
-              autonym = readr::col_logical(),
-              hybrid = readr::col_logical(),
-              cultivar = readr::col_logical(),
-              formula = readr::col_logical(),
-              scientific = readr::col_logical(),
-              nomInval = readr::col_logical(),
-              nomIlleg = readr::col_logical(),
-              namePublishedInYear = readr::col_double(),
-              taxonRankSortOrder = readr::col_double(),
-              created = readr::col_datetime(format = ""),
-              modified = readr::col_datetime(format = "")
-            )
-        )
-      current_list <- list(APC, APNI)
-      names(current_list) <- c("APC", "APNI")
-      return(current_list)
+        
+        APNI <-
+          readr::read_csv(
+            "https://biodiversity.org.au/nsl/services/export/namesCsv",
+            n_max = 140000,
+            col_types =
+              readr::cols(
+                .default = readr::col_character(),
+                autonym = readr::col_logical(),
+                hybrid = readr::col_logical(),
+                cultivar = readr::col_logical(),
+                formula = readr::col_logical(),
+                scientific = readr::col_logical(),
+                nomInval = readr::col_logical(),
+                nomIlleg = readr::col_logical(),
+                namePublishedInYear = readr::col_double(),
+                taxonRankSortOrder = readr::col_double(),
+                created = readr::col_datetime(format = ""),
+                modified = readr::col_datetime(format = "")
+              )
+          )
+
+        on.exit(
+          close( "https://biodiversity.org.au/nsl/services/export/taxonCsv"),
+          close( "https://biodiversity.org.au/nsl/services/export/namesCsv")
+                )
+      }, error = function(e) abort("Taxonomic resources not currently available, try again later")
+      )
     }
+    
+    current_list <- list(APC, APNI)
+    names(current_list) <- c("APC", "APNI")
+    return(current_list)
+    
   }
 
 #' Get the default version for stable data
@@ -318,15 +328,23 @@ dataset_access_function <-
 #' @noRd
 default_version <- function(){
   # Get all the releases
-  output <- gh::gh("GET /repos/{owner}/{repo}/releases",
-                   owner = "traitecoevo", repo = "APCalign")
+  url <-
+    paste0(
+      "https://api.github.com/repos/",
+      "traitecoevo",
+      "/",
+      "APCalign",
+      "/releases"
+    )
   
-  # Determine how many versions there are
-  length(output)
+  response <- httr::GET(url)
   
-  # Extract version number
-  versions <- purrr::map_chr(.x = 1:length(output),
-                             ~ purrr::pluck(output, .x, "name"))
+  if(httr::http_error(response)){
+    message("No internet connection or API currently down")
+  } 
+  release_data <- httr::content(response, "text") |> jsonlite::fromJSON()
+  
+  versions <- unique(release_data$tag_name)
   
   # Exclude Taxonomy: first upload
   dplyr::first(versions)
