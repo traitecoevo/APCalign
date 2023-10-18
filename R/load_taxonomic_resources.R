@@ -264,9 +264,19 @@ dataset_access_function <-
   function(version = default_version(),
            path = NULL,
            type = "stable") {
+    
+    # Check if there is internet connection
+    if (!curl::has_internet()) {
+      message("No internet connection, please retry with stable connection")
+      return(invisible(NULL))
+    }
+    
+    # Download from Github Release
     if (type == "stable") {
       return(dataset_get(version, path))
     }
+    
+    # Download from NSL
     if (type == "current") {
       tryCatch({
         APC <- readr::read_csv(
@@ -307,10 +317,11 @@ dataset_access_function <-
           close( "https://biodiversity.org.au/nsl/services/export/taxonCsv"),
           close( "https://biodiversity.org.au/nsl/services/export/namesCsv")
                 )
-      }, error = function(e) abort("Taxonomic resources not currently available, try again later")
+      }, error = function(e) rlang::abort("Taxonomic resources not currently available, try again later")
       )
     }
     
+    # Put lists together
     current_list <- list(APC, APNI)
     names(current_list) <- c("APC", "APNI")
     return(current_list)
@@ -327,6 +338,12 @@ dataset_access_function <-
 #'
 #' @noRd
 default_version <- function(){
+  # Check if there is internet connection
+  if (!curl::has_internet()) {
+    message("No internet connection, please retry with stable connection")
+    return(invisible(NULL))
+  }
+  
   # Get all the releases
   url <-
     paste0(
@@ -340,10 +357,11 @@ default_version <- function(){
   response <- httr::GET(url)
   
   if(httr::http_error(response)){
-    message("No internet connection or API currently down")
+    message("API currently down, try again later")
   } 
   release_data <- httr::content(response, "text") |> jsonlite::fromJSON()
   
+  # Pull out versions
   versions <- unique(release_data$tag_name)
   
   # Exclude Taxonomy: first upload
@@ -353,32 +371,50 @@ default_version <- function(){
 #' @noRd
 dataset_get <- function(version = default_version(),
                         path = tools::R_user_dir("APCalign")) {
+  
+  # Check if there is internet connection
+  if (!curl::has_internet()) {
+    message("No internet connection, please retry with stable connection")
+    return(invisible(NULL))
+  }
+  
   #APC
-  url <-
+  apc_url <-
     paste0(
       "https://github.com/traitecoevo/APCalign/releases/download/",
       version,
       "/apc.parquet"
     )
-  apc_hash <- contentid::register(url)
-  apc_file <- contentid::resolve(apc_hash, store = TRUE, path = path)
-  APC <- arrow::read_parquet(apc_file)
   
   #APNI
-  url <-
+  apni_url <-
     paste0(
       "https://github.com/traitecoevo/APCalign/releases/download/",
       version,
       "/apni.parquet"
     )
+  
+  # Register and resolve taxonomic resources content
+  cache_content <- function(url, path){
+    hash <- contentid::register(url)
     
-  apni_hash <- contentid::register(url)
-  apni_file <- contentid::resolve(apni_hash, store = TRUE, path = path)
+    file <- contentid::resolve(hash, store = TRUE, path = path)
+    
+    return(file)
+  }
   
-  #only getting APNI names that are not in APC
+  tryCatch(
+    {
+      apc_file <- cache_content(apc_url, path = path)
+      apni_file <- cache_content(apni_url, path = path)
+    }
+    , 
+    error = function(e) rlang::abort("Taxonomic resources not currently available, try again later")
+  )
+  
+  #only getting APNI names that are not in APC (versions preceding 0.0.3.9000 needs this)
+  APC <- arrow::read_parquet(apc_file)
   APNI <- arrow::open_dataset(apni_file) %>% dplyr::filter(!.data$canonicalName %in% APC$canonicalName) %>% dplyr::collect()
-  
-  
   
   #combine
   current_list <- list(APC, APNI)
