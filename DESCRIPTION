@@ -28,7 +28,8 @@ Imports:
     crayon,
     httr,
     jsonlite,
-    curl
+    curl,
+    rlang
 Suggests:
     janitor,
     tidyr,
