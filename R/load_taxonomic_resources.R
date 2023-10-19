@@ -271,7 +271,7 @@ dataset_access_function <-
     
     
     if (!curl::has_internet() | !network) { # Simulate if network is down
-      message("No internet connection, please retry with stable connection")
+      message("No internet connection, please retry with stable connection (dataset_access_function)")
       return(invisible(NULL))
     } else {
     
@@ -347,7 +347,7 @@ default_version <- function(){
   network <- as.logical(Sys.getenv("NETWORK_UP", unset = FALSE)) 
   
   if (!curl::has_internet() | !network) { # Simulate if network is down
-    message("No internet connection, please retry with stable connection")
+    message("No internet connection, please retry with stable connection (default_version)")
     return(invisible(NULL))
   } else {
   
@@ -385,7 +385,7 @@ dataset_get <- function(version = default_version(),
   network <- as.logical(Sys.getenv("NETWORK_UP", unset = FALSE)) 
   
   if (!curl::has_internet() | !network) { # Simulate if network is down
-    message("No internet connection, please retry with stable connection")
+    message("No internet connection, please retry with stable connection (dataset_get)")
     return(invisible(NULL))
   } else{
   
