@@ -29,6 +29,11 @@ load_taxonomic_resources <-
       dataset_access_function(version = version,
                               path = NULL,
                               type = stable_or_current_data)
+    if(is.null(taxonomic_resources)) {
+      return(NULL)
+    }
+    
+    # Give list names
     names(taxonomic_resources) <- c("APC", "APNI")
     
     ## todo :review this, why zzz
@@ -284,7 +289,7 @@ dataset_access_function <-
     if (type == "current") {
       tryCatch({
         APC <- readr::read_csv(
-          "https://biodiversity.org.au/nsl/services/exports/taxonCsv",
+          "https://biodiversity.org.au/nsl/services/export/taxonCsv",
           n_max = 110000,
           col_types =
             readr::cols(
