@@ -266,7 +266,11 @@ dataset_access_function <-
            type = "stable") {
     
     # Check if there is internet connection
-    if (!curl::has_internet()) {
+    ## Dummy variable to allow testing of network
+    network <- as.logical(Sys.getenv("NETWORK_UP", unset = FALSE)) 
+    
+    
+    if (!curl::has_internet() | !network) { # Simulate if network is down
       message("No internet connection, please retry with stable connection")
       return(invisible(NULL))
     }
@@ -339,7 +343,10 @@ dataset_access_function <-
 #' @noRd
 default_version <- function(){
   # Check if there is internet connection
-  if (!curl::has_internet()) {
+  ## Dummy variable to allow testing of network
+  network <- as.logical(Sys.getenv("NETWORK_UP", unset = FALSE)) 
+  
+  if (!curl::has_internet() | !network) { # Simulate if network is down
     message("No internet connection, please retry with stable connection")
     return(invisible(NULL))
   }
