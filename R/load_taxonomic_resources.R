@@ -329,7 +329,6 @@ dataset_access_function <-
     current_list <- list(APC, APNI)
     names(current_list) <- c("APC", "APNI")
     return(current_list)
-    }
   }
 
 #' Get the default version for stable data
