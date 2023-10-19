@@ -273,7 +273,7 @@ dataset_access_function <-
     if (!curl::has_internet() | !network) { # Simulate if network is down
       message("No internet connection, please retry with stable connection")
       return(invisible(NULL))
-    } else
+    } else {
     
     # Download from Github Release
     if (type == "stable") {
@@ -329,7 +329,7 @@ dataset_access_function <-
     current_list <- list(APC, APNI)
     names(current_list) <- c("APC", "APNI")
     return(current_list)
-    
+    }
   }
 
 #' Get the default version for stable data
@@ -349,7 +349,7 @@ default_version <- function(){
   if (!curl::has_internet() | !network) { # Simulate if network is down
     message("No internet connection, please retry with stable connection")
     return(invisible(NULL))
-  } else
+  } else {
   
   # Get all the releases
   url <-
@@ -373,6 +373,7 @@ default_version <- function(){
   
   # Exclude Taxonomy: first upload
   dplyr::first(versions)
+  }
 }
 
 #' @noRd
