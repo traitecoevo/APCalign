@@ -273,7 +273,7 @@ dataset_access_function <-
     if (!curl::has_internet() | !network) { # Simulate if network is down
       message("No internet connection, please retry with stable connection")
       return(invisible(NULL))
-    }
+    } else
     
     # Download from Github Release
     if (type == "stable") {
@@ -349,7 +349,7 @@ default_version <- function(){
   if (!curl::has_internet() | !network) { # Simulate if network is down
     message("No internet connection, please retry with stable connection")
     return(invisible(NULL))
-  }
+  } else
   
   # Get all the releases
   url <-
