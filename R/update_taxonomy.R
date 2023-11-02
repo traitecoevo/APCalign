@@ -97,7 +97,7 @@ update_taxonomy <- function(aligned_data,
     aligned_data %>%
     dplyr::select(original_name, aligned_name, taxon_rank, taxonomic_dataset, aligned_reason) %>%
     dplyr::mutate(
-      genus = stringr::word(aligned_name, 1),
+      genus = ifelse(stringr::word(aligned_name, 1) == "x", stringr::word(aligned_name, start = 1, end = 2), stringr::word(aligned_name, 1)),
       row_number = dplyr::row_number()
     )
 
@@ -300,7 +300,11 @@ update_taxonomy_APC_genus <- function(data, resources) {
       taxonomic_status = ifelse(is.na(accepted_name_usage_ID), as.character(my_order), paste("genus", taxonomic_status_genus)),
       taxon_ID_genus = resources$genera_all$taxon_ID[match(accepted_name_usage_ID, resources$genera_all$accepted_name_usage_ID)],
       # genus names in `aligned_name` that are not APC-accepted need to be updated to their current name in `suggested_name`
-      aligned_minus_genus = ifelse(is.na(genus_accepted), NA, stringr::str_replace(aligned_name, stringr::word(aligned_name, 1), "")),
+      aligned_minus_genus = ifelse(is.na(genus_accepted), NA, 
+              ifelse(stringr::word(aligned_name, 1) == "x", 
+                     stringr::str_replace(aligned_name, stringr::word(aligned_name, start = 1, end = 2), ""),
+                     stringr::str_replace(aligned_name, stringr::word(aligned_name, 1), ""))
+                    ),
       suggested_name = ifelse(taxonomic_status == "accepted", paste0(genus_accepted, aligned_minus_genus), NA),
       suggested_name = ifelse(taxonomic_status != "accepted", aligned_name, suggested_name),
       # indicate taxonomic_status of the genus name in `aligned_name` and why it needed to be updated for the `suggested_name`
