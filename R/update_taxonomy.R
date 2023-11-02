@@ -499,8 +499,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
         dplyr::select(
           aligned_name,
           taxonomic_status_aligned,
-          accepted_name_usage_ID,
-          scientific_name_ID
+          accepted_name_usage_ID
         )
     ) %>%
     ## Second, find accepted names for each name in the species (and infraspecific taxon) list (sometimes they are the same)
@@ -519,6 +518,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
           accepted_name,
           taxonomic_status,
           scientific_name,
+          scientific_name_ID,
           family,
           subclass,
           taxon_distribution
