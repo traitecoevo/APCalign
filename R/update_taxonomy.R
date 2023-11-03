@@ -267,7 +267,7 @@ relevel_taxonomic_status_preferred_order <- function(taxonomic_status) {
 # Function to update names of taxa whose aligned_names are 
 # taxon_rank = genus and taxonomic_dataset = APC
 update_taxonomy_APC_genus <- function(data, resources) {
-  
+
   if(is.null(data)) return(NULL)
 
   data %>% 
@@ -341,10 +341,10 @@ update_taxonomy_APNI_genus <- function(data, resources) {
     ) %>%
     # the `suggested_name` is set to the aligned_name and other columns are set to NA
     dplyr::mutate(
-      genus = NA_character_, # genera only in APNI don't appear in this column
       accepted_name = NA_character_,
       suggested_name = aligned_name,
-      taxonomic_status_genus = "unplaced"
+      taxonomic_status_genus = "genus unplaced by APC",
+      taxonomic_status = "genus unplaced by APC",
     )
 }
 
@@ -629,7 +629,10 @@ update_taxonomy_APNI_species_and_infraspecific_taxa <- function(data, resources)
     ## have proper columns filled in (`genus` & `taxonomic_ID_genus` & `taxonomic_dataset_genus`),
     ## while APNI names that do not align with an APC-accepted genus have these columns set to NA
     dplyr::mutate(
-      genus = ifelse(is.na(accepted_name_usage_ID_genus), NA_character_, resources$genera_all$canonical_name[match(accepted_name_usage_ID_genus, resources$genera_all$taxon_ID)]),
+      genus = ifelse(
+        is.na(accepted_name_usage_ID_genus), 
+        genus, 
+        resources$genera_all$canonical_name[match(accepted_name_usage_ID_genus, resources$genera_all$taxon_ID)]),
       taxon_ID_genus = resources$genera_all$taxon_ID[match(genus, resources$genera_all$canonical_name)],
       taxonomic_dataset_genus = ifelse(stringr::str_detect(taxonomic_dataset_genus, "APC"), "APC", taxonomic_dataset_genus)
     ) %>%
