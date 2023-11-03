@@ -369,7 +369,7 @@ update_taxonomy_APC_family <- function(data, resources) {
 # Function to update names of taxa whose aligned_names are
 # taxon_rank = species/infraspecific and taxonomic_dataset = APC
 update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, taxonomic_splits) {
-#browser()
+
   if(is.null(data)) return(NULL)
   
   ## All canonical names which can link to multiple accepted name usages, because the taxon has been split
