@@ -56,11 +56,7 @@ load_taxonomic_resources <-
       dataset_name = .data$datasetName
     ) %>%
     mutate(
-      genus = ifelse(
-        stringr::word(canonical_name, 1) == "x",
-        stringr::word(canonical_name, start = 1, end = 2),
-        stringr::word(canonical_name, 1)
-      ),
+      genus = extract_genus(canonical_name),
       taxon_rank = stringr::str_to_lower(taxon_rank),
       taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
       taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
@@ -86,11 +82,7 @@ load_taxonomic_resources <-
       name_element = .data$nameElement
     )  %>%
     mutate(
-      genus = ifelse(
-        stringr::word(canonical_name, 1) == "x",
-        stringr::word(canonical_name, start = 1, end = 2),
-        stringr::word(canonical_name, 1)
-      ),
+      genus = extract_genus(canonical_name),
       taxon_rank = stringr::str_to_lower(taxon_rank),
       taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
       taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
@@ -129,11 +121,7 @@ load_taxonomic_resources <-
         ),
         binomial = ifelse(is.na(binomial), zzz, binomial),
         binomial = base::replace(binomial, duplicated(binomial), zzz),
-        genus = ifelse(
-          stringr::word(stripped_canonical, 1) == "x",
-          stringr::word(stripped_canonical, start = 1, end = 2),
-          stringr::word(stripped_canonical, 1)
-        ),
+        genus = extract_genus(stripped_canonical),
         trinomial = stringr::word(stripped_canonical2, start = 1, end = 3),
         trinomial = ifelse(is.na(trinomial), zzz, trinomial),
         trinomial = base::replace(trinomial, duplicated(trinomial), zzz),
@@ -171,11 +159,7 @@ load_taxonomic_resources <-
         trinomial = stringr::word(stripped_canonical2, start = 1, end = 3),
         trinomial = ifelse(is.na(trinomial), "zzzz zzzz", trinomial),
         trinomial = base::replace(trinomial, duplicated(trinomial), "zzzz zzzz"),
-        genus = ifelse(
-          stringr::word(stripped_canonical, 1) == "x",
-          stringr::word(stripped_canonical, start = 1, end = 2),
-          stringr::word(stripped_canonical, 1)
-        ),
+        genus = extract_genus(stripped_canonical),
         taxonomic_dataset = "APNI"
       ) %>%
       dplyr::distinct() %>%

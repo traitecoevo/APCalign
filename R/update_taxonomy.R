@@ -97,7 +97,7 @@ update_taxonomy <- function(aligned_data,
     aligned_data %>%
     dplyr::select(original_name, aligned_name, taxon_rank, taxonomic_dataset, aligned_reason) %>%
     dplyr::mutate(
-      genus = ifelse(stringr::word(aligned_name, 1) == "x", stringr::word(aligned_name, start = 1, end = 2), stringr::word(aligned_name, 1)),
+      genus = extract_genus(aligned_name),
       row_number = dplyr::row_number()
     )
 
@@ -300,11 +300,7 @@ update_taxonomy_APC_genus <- function(data, resources) {
       taxonomic_status = ifelse(is.na(accepted_name_usage_ID), as.character(my_order), paste("genus", taxonomic_status_genus)),
       taxon_ID_genus = resources$genera_all$taxon_ID[match(accepted_name_usage_ID, resources$genera_all$accepted_name_usage_ID)],
       # genus names in `aligned_name` that are not APC-accepted need to be updated to their current name in `suggested_name`
-      aligned_minus_genus = ifelse(is.na(genus_accepted), NA, 
-              ifelse(stringr::word(aligned_name, 1) == "x", 
-                     stringr::str_replace(aligned_name, stringr::word(aligned_name, start = 1, end = 2), ""),
-                     stringr::str_replace(aligned_name, stringr::word(aligned_name, 1), ""))
-                    ),
+      aligned_minus_genus = ifelse(is.na(genus_accepted), NA, stringr::str_replace(aligned_name, extract_genus(aligned_name), "")),
       suggested_name = ifelse(taxonomic_status == "accepted", paste0(genus_accepted, aligned_minus_genus), NA),
       suggested_name = ifelse(taxonomic_status != "accepted", aligned_name, suggested_name),
       # indicate taxonomic_status of the genus name in `aligned_name` and why it needed to be updated for the `suggested_name`
@@ -373,7 +369,7 @@ update_taxonomy_APC_family <- function(data, resources) {
 # Function to update names of taxa whose aligned_names are
 # taxon_rank = species/infraspecific and taxonomic_dataset = APC
 update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, taxonomic_splits) {
-
+#browser()
   if(is.null(data)) return(NULL)
   
   ## All canonical names which can link to multiple accepted name usages, because the taxon has been split
@@ -383,8 +379,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
     dplyr::filter(species_and_infraspecific(taxon_rank)) %>%
     dplyr::distinct(canonical_name, .keep_all = TRUE) %>%
     dplyr::select(canonical_name, accepted_name_usage_ID)
-  
-  
+    
   split_taxa_table <- 
     resources$APC %>%
     dplyr::filter(species_and_infraspecific(taxon_rank)) %>%
@@ -552,7 +547,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
       suggested_name = ifelse(is.na(suggested_name), aligned_name, suggested_name),
       taxonomic_status = ifelse(is.na(accepted_name),  taxonomic_status_aligned, "accepted"),
       # for APC-accepted species, the `genus` is the first word of the `accepted_name`
-      genus_accepted = stringr::word(suggested_name, 1),
+      genus_accepted = extract_genus(suggested_name),
       taxon_ID_genus = resources$genera_all$taxon_ID[match(genus_accepted, resources$genera_all$canonical_name)],
       update_reason =  taxonomic_status_aligned,
       taxonomic_dataset = "APC",
