@@ -98,3 +98,27 @@ standardise_names <- function(taxon_names) {
     stringr::str_squish()
 }
 
+#' Extract Genus
+#' 
+#' This function extracts the genus component of a scientific name. 
+#' It identifies if the genus is/is not a hybrid. For a hybrid genus,
+#' the first two words of the taxon name are extracted (e.g. "x Cynochloris"),
+#' while for a non-hybrid genus just the first word is extracted (e.g. "Banksia").
+#'
+#' @param taxon_name 
+#'
+#' @return The genus for a scientific name.
+#'
+#' @examples
+#' genus = extract_genus(stripped_name)
+#' 
+#' 
+extract_genus <- function(taxon_name) {
+  genus <- 
+    ifelse(
+      stringr::word(taxon_name, 1) == "x",
+      stringr::word(taxon_name, start = 1, end = 2),
+      stringr::word(taxon_name, 1)
+    )
+  genus
+}

@@ -56,7 +56,7 @@ load_taxonomic_resources <-
       dataset_name = .data$datasetName
     ) %>%
     mutate(
-      genus = stringr::word(canonical_name, 1),
+      genus = extract_genus(canonical_name),
       taxon_rank = stringr::str_to_lower(taxon_rank),
       taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
       taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
@@ -82,7 +82,7 @@ load_taxonomic_resources <-
       name_element = .data$nameElement
     )  %>%
     mutate(
-      genus = stringr::word(canonical_name, 1),
+      genus = extract_genus(canonical_name),
       taxon_rank = stringr::str_to_lower(taxon_rank),
       taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
       taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
@@ -121,7 +121,7 @@ load_taxonomic_resources <-
         ),
         binomial = ifelse(is.na(binomial), zzz, binomial),
         binomial = base::replace(binomial, duplicated(binomial), zzz),
-        genus = stringr::word(stripped_canonical, 1),
+        genus = extract_genus(stripped_canonical),
         trinomial = stringr::word(stripped_canonical2, start = 1, end = 3),
         trinomial = ifelse(is.na(trinomial), zzz, trinomial),
         trinomial = base::replace(trinomial, duplicated(trinomial), zzz),
@@ -159,7 +159,7 @@ load_taxonomic_resources <-
         trinomial = stringr::word(stripped_canonical2, start = 1, end = 3),
         trinomial = ifelse(is.na(trinomial), "zzzz zzzz", trinomial),
         trinomial = base::replace(trinomial, duplicated(trinomial), "zzzz zzzz"),
-        genus = stringr::word(stripped_canonical, 1),
+        genus = extract_genus(stripped_canonical),
         taxonomic_dataset = "APNI"
       ) %>%
       dplyr::distinct() %>%
