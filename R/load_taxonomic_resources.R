@@ -26,90 +26,94 @@ load_taxonomic_resources <-
     on.exit(message("...done"))
     
     taxonomic_resources <-
-      dataset_access_function(version = version,
-                              path = tools::R_user_dir("APCalign"),
-                              type = stable_or_current_data)
+      dataset_access_function(
+        version = version,
+        path = tools::R_user_dir("APCalign"),
+        type = stable_or_current_data
+      )
     names(taxonomic_resources) <- c("APC", "APNI")
     
     ## todo :review this, why zzz
     ### Note: Use `zzzz zzzz` because the fuzzy matching algorithm can't handles NA's
     zzz <- "zzzz zzzz"
     
-  taxonomic_resources$APC <- taxonomic_resources$APC %>%
-    rename(
-      taxon_ID = .data$taxonID,
-      taxon_rank = .data$taxonRank,
-      name_type = .data$nameType,
-      taxonomic_status = .data$taxonomicStatus,
-      pro_parte = .data$proParte,
-      scientific_name = .data$scientificName,
-      scientific_name_ID = .data$scientificNameID,
-      accepted_name_usage_ID = .data$acceptedNameUsageID,
-      accepted_name_usage = .data$acceptedNameUsage,
-      canonical_name = .data$canonicalName,
-      scientific_name_authorship = .data$scientificNameAuthorship,
-      taxon_rank_sort_order = .data$taxonRankSortOrder,
-      taxon_remarks = .data$taxonRemarks,
-      taxon_distribution = .data$taxonDistribution,
-      higher_classification = .data$higherClassification,
-      nomenclatural_code = .data$nomenclaturalCode,
-      dataset_name = .data$datasetName
-    ) %>%
-    mutate(
-      genus = extract_genus(canonical_name),
-      taxon_rank = stringr::str_to_lower(taxon_rank),
-      taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
-      taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
-      taxon_rank = stringr::str_replace(taxon_rank, "ordo", "order"),
-      taxon_rank = stringr::str_replace(taxon_rank, "familia", "family"),
-      taxon_rank = stringr::str_replace(taxon_rank, "varietas", "variety"),
-      taxon_rank = stringr::str_replace(taxon_rank, "forma", "form"),
-      taxon_rank = stringr::str_replace(taxon_rank, "sectio", "section")
-    )
-
-  taxonomic_resources$APNI <- taxonomic_resources$APNI %>%
-    rename(
-      name_type = .data$nameType,
-      taxonomic_status = .data$taxonomicStatus,
-      taxon_rank = .data$taxonRank,
-      scientific_name = .data$scientificName,
-      scientific_name_ID = .data$scientificNameID,
-      canonical_name = .data$canonicalName,
-      scientific_name_authorship = .data$scientificNameAuthorship,
-      taxon_rank_sort_order = .data$taxonRankSortOrder,
-      nomenclatural_code = .data$nomenclaturalCode,
-      dataset_name = .data$datasetName,
-      name_element = .data$nameElement
-    )  %>%
-    mutate(
-      genus = extract_genus(canonical_name),
-      taxon_rank = stringr::str_to_lower(taxon_rank),
-      taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
-      taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
-      taxon_rank = stringr::str_replace(taxon_rank, "ordo", "order"),
-      taxon_rank = stringr::str_replace(taxon_rank, "familia", "family"),
-      taxon_rank = stringr::str_replace(taxon_rank, "varietas", "variety"),
-      taxon_rank = stringr::str_replace(taxon_rank, "forma", "form"),
-      taxon_rank = stringr::str_replace(taxon_rank, "sectio", "section")
-    )
-
+    taxonomic_resources$APC <- taxonomic_resources$APC %>%
+      rename(
+        taxon_ID = .data$taxonID,
+        taxon_rank = .data$taxonRank,
+        name_type = .data$nameType,
+        taxonomic_status = .data$taxonomicStatus,
+        pro_parte = .data$proParte,
+        scientific_name = .data$scientificName,
+        scientific_name_ID = .data$scientificNameID,
+        accepted_name_usage_ID = .data$acceptedNameUsageID,
+        accepted_name_usage = .data$acceptedNameUsage,
+        canonical_name = .data$canonicalName,
+        scientific_name_authorship = .data$scientificNameAuthorship,
+        taxon_rank_sort_order = .data$taxonRankSortOrder,
+        taxon_remarks = .data$taxonRemarks,
+        taxon_distribution = .data$taxonDistribution,
+        higher_classification = .data$higherClassification,
+        nomenclatural_code = .data$nomenclaturalCode,
+        dataset_name = .data$datasetName
+      ) %>%
+      mutate(
+        genus = extract_genus(canonical_name),
+        taxon_rank = stringr::str_to_lower(taxon_rank),
+        taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
+        taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
+        taxon_rank = stringr::str_replace(taxon_rank, "ordo", "order"),
+        taxon_rank = stringr::str_replace(taxon_rank, "familia", "family"),
+        taxon_rank = stringr::str_replace(taxon_rank, "varietas", "variety"),
+        taxon_rank = stringr::str_replace(taxon_rank, "forma", "form"),
+        taxon_rank = stringr::str_replace(taxon_rank, "sectio", "section")
+      )
+    
+    taxonomic_resources$APNI <- taxonomic_resources$APNI %>%
+      rename(
+        name_type = .data$nameType,
+        taxonomic_status = .data$taxonomicStatus,
+        taxon_rank = .data$taxonRank,
+        scientific_name = .data$scientificName,
+        scientific_name_ID = .data$scientificNameID,
+        canonical_name = .data$canonicalName,
+        scientific_name_authorship = .data$scientificNameAuthorship,
+        taxon_rank_sort_order = .data$taxonRankSortOrder,
+        nomenclatural_code = .data$nomenclaturalCode,
+        dataset_name = .data$datasetName,
+        name_element = .data$nameElement
+      )  %>%
+      mutate(
+        genus = extract_genus(canonical_name),
+        taxon_rank = stringr::str_to_lower(taxon_rank),
+        taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
+        taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
+        taxon_rank = stringr::str_replace(taxon_rank, "ordo", "order"),
+        taxon_rank = stringr::str_replace(taxon_rank, "familia", "family"),
+        taxon_rank = stringr::str_replace(taxon_rank, "varietas", "variety"),
+        taxon_rank = stringr::str_replace(taxon_rank, "forma", "form"),
+        taxon_rank = stringr::str_replace(taxon_rank, "sectio", "section")
+      )
+    
     APC_tmp <-
       taxonomic_resources$APC %>%
       dplyr::arrange(taxonomic_status) %>%
       dplyr::filter(taxon_rank %in% c("subspecies", "species", "form", "variety")) %>%
       dplyr::filter(!stringr::str_detect(canonical_name, "[:space:]sp\\.$")) %>%
-      dplyr::select(canonical_name,
-                    scientific_name,
-                    taxonomic_status,
-                    taxon_ID,
-                    scientific_name_ID,
-                    accepted_name_usage_ID,
-                    name_type,
-                    taxon_rank,
-                    genus) %>%
+      dplyr::select(
+        canonical_name,
+        scientific_name,
+        taxonomic_status,
+        taxon_ID,
+        scientific_name_ID,
+        accepted_name_usage_ID,
+        name_type,
+        taxon_rank,
+        genus
+      ) %>%
       dplyr::mutate(
         # strip_names removes punctuation and filler words associated with infraspecific taxa (subsp, var, f, ser)
-        stripped_canonical = strip_names(canonical_name),        
+        stripped_canonical = strip_names(canonical_name),
         ## strip_names2 removes punctuation, filler words associated with infraspecific taxa (subsp, var, f, ser), and filler words associated with species name cases (x, sp)
         ## strip_names2 is essential for the matches involving 2 or 3 words, since you want those words to not count filler words
         stripped_canonical2 = strip_names_2(canonical_name),
@@ -143,7 +147,11 @@ load_taxonomic_resources <-
       taxonomic_resources$APNI %>%
       dplyr::filter(name_element != "sp.") %>%
       dplyr::filter(!canonical_name %in% APC_tmp$canonical_name) %>%
-      dplyr::select(canonical_name, scientific_name, scientific_name_ID, name_type, taxon_rank) %>%
+      dplyr::select(canonical_name,
+                    scientific_name,
+                    scientific_name_ID,
+                    name_type,
+                    taxon_rank) %>%
       dplyr::filter(taxon_rank %in% c("series", "subspecies", "species", "form", "variety")) %>%
       dplyr::mutate(
         taxonomic_status = "unplaced for APC",
@@ -232,7 +240,7 @@ load_taxonomic_resources <-
     taxonomic_resources[["family_accepted"]] <-
       taxonomic_resources$APC %>%
       dplyr::filter(taxon_rank %in% c("family"), taxonomic_status == "accepted")
-  
+    
     return(taxonomic_resources)
   }
 
@@ -316,10 +324,11 @@ dataset_access_function <-
 #'
 #'
 #' @noRd
-default_version <- function(){
+default_version <- function() {
   # Get all the releases
   output <- gh::gh("GET /repos/{owner}/{repo}/releases",
-                   owner = "traitecoevo", repo = "APCalign")
+                   owner = "traitecoevo",
+                   repo = "APCalign")
   
   # Determine how many versions there are
   length(output)
@@ -343,7 +352,6 @@ dataset_get <- function(version = default_version(),
       "/apc.parquet"
     )
   
-  
   apni.url <-
     paste0(
       "https://github.com/traitecoevo/APCalign/releases/download/",
@@ -353,24 +361,25 @@ dataset_get <- function(version = default_version(),
   
   download_and_read_parquet <- function(url, path_to_file) {
     tryCatch({
-      download.file(url, path_to_file, mode = "wb")
+      utils::download.file(url, path_to_file, mode = "wb")
       message("File downloaded successfully.")
       return(arrow::read_parquet(path_to_file))
     }, error = function(e) {
-      message("The whole internet or just the server may be down; error in downloading or reading the file: ", e$message)
+      message(
+        "The whole internet or just the server may be down; error in downloading or reading the file: ",
+        e$message
+      )
       return(NULL)
     })
   }
   
-  
-  if(!dir.exists(path)) {
+  if (!dir.exists(path)) {
     dir.create(path, recursive = TRUE)
   }
   
-  
   path_to_apc <- file.path(path, paste0("apc", version, ".parquet"))
-  path_to_apni <- file.path(path, paste0("apni", version, ".parquet"))
-  
+  path_to_apni <-
+    file.path(path, paste0("apni", version, ".parquet"))
   
   APC <- if (!file.exists(path_to_apc)) {
     download_and_read_parquet(apc.url, path_to_apc)
@@ -379,16 +388,13 @@ dataset_get <- function(version = default_version(),
   }
   
   APNI <- if (!file.exists(path_to_apni)) {
-    download_and_read_parquet(apni.url, path_to_apni) 
+    download_and_read_parquet(apni.url, path_to_apni)
   } else {
     arrow::read_parquet(path_to_apni)
   }
-  
-  
   
   #combine
   current_list <- list(APC, APNI)
   names(current_list) <- c("APC", "APNI")
   return(current_list)
 }
-
