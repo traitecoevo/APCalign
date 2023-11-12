@@ -364,8 +364,9 @@ dataset_get <- function(version = default_version(),
   
   
   if(!dir.exists(path)) {
-    dir.create(path)
+    dir.create(path, recursive = TRUE)
   }
+  
   
   path_to_apc <- file.path(path, paste0("apc", version, ".parquet"))
   path_to_apni <- file.path(path, paste0("apni", version, ".parquet"))
