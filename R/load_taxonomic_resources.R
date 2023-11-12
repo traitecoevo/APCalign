@@ -27,7 +27,7 @@ load_taxonomic_resources <-
     
     taxonomic_resources <-
       dataset_access_function(version = version,
-                              path = NULL,
+                              path = tools::R_user_dir("APCalign"),
                               type = stable_or_current_data)
     names(taxonomic_resources) <- c("APC", "APNI")
     
@@ -262,7 +262,7 @@ load_taxonomic_resources <-
 ##' @noRd
 dataset_access_function <-
   function(version = default_version(),
-           path = NULL,
+           path = tools::R_user_dir("APCalign"),
            type = "stable") {
     if (type == "stable") {
       return(dataset_get(version, path))
@@ -336,29 +336,52 @@ default_version <- function(){
 dataset_get <- function(version = default_version(),
                         path = tools::R_user_dir("APCalign")) {
   #APC
-  url <-
+  apc.url <-
     paste0(
       "https://github.com/traitecoevo/APCalign/releases/download/",
       version,
       "/apc.parquet"
     )
-  apc_hash <- contentid::register(url)
-  apc_file <- contentid::resolve(apc_hash, store = TRUE, path = path)
-  APC <- arrow::read_parquet(apc_file)
   
-  #APNI
-  url <-
+  
+  apni.url <-
     paste0(
       "https://github.com/traitecoevo/APCalign/releases/download/",
       version,
       "/apni.parquet"
     )
-    
-  apni_hash <- contentid::register(url)
-  apni_file <- contentid::resolve(apni_hash, store = TRUE, path = path)
   
-  #only getting APNI names that are not in APC
-  APNI <- arrow::open_dataset(apni_file) %>% dplyr::filter(!.data$canonicalName %in% APC$canonicalName) %>% dplyr::collect()
+  download_and_read_parquet <- function(url, path_to_file) {
+    tryCatch({
+      download.file(url, path_to_file, mode = "wb")
+      message("File downloaded successfully.")
+      return(arrow::read_parquet(path_to_file))
+    }, error = function(e) {
+      message("The whole internet or just the server may be down; error in downloading or reading the file: ", e$message)
+      return(NULL)
+    })
+  }
+  
+  
+  if(!dir.exists(path)) {
+    dir.create(path)
+  }
+  
+  path_to_apc <- file.path(path, paste0("apc", version, ".parquet"))
+  path_to_apni <- file.path(path, paste0("apni", version, ".parquet"))
+  
+  
+  APC <- if (!file.exists(path_to_apc)) {
+    download_and_read_parquet(apc.url, path_to_apc)
+  } else {
+    arrow::read_parquet(path_to_apc)
+  }
+  
+  APNI <- if (!file.exists(path_to_apni)) {
+    download_and_read_parquet(apni.url, path_to_apni) 
+  } else {
+    arrow::read_parquet(path_to_apni)
+  }
   
   
   
