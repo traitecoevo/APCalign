@@ -112,7 +112,8 @@ standardise_names <- function(taxon_names) {
 #' @examples
 #' genus = extract_genus(stripped_name)
 #' 
-#' 
+#' @keywords internal
+#' @noRd
 extract_genus <- function(taxon_name) {
   genus <- 
     ifelse(
