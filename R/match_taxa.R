@@ -84,7 +84,7 @@ match_taxa <- function(
         update_na_with(strip_names_2(cleaned_name)),
       trinomial = stringr::word(stripped_name2, start = 1, end = 3),
       binomial = stringr::word(stripped_name2, start = 1, end = 2),
-      genus = stringr::word(original_name, start = 1, end = 1),
+      genus = extract_genus(original_name),
       fuzzy_match_genus =
         fuzzy_match_genera(genus, resources$genera_accepted$canonical_name),
       fuzzy_match_genus_known =
