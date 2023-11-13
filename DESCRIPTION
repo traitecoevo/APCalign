@@ -21,7 +21,6 @@ Imports:
     forcats,
     tibble,
     dplyr,
-    contentid,
     stringr,
     stringi,
     arrow,
