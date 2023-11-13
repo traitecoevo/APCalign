@@ -25,12 +25,17 @@ load_taxonomic_resources <-
     message("Loading resources...", appendLF = FALSE)
     on.exit(message("...done"))
     
-    taxonomic_resources <-
-      dataset_access_function(
-        version = version,
-        path = tools::R_user_dir("APCalign"),
-        type = stable_or_current_data
-      )
+    taxonomic_resources <- dataset_access_function(
+      version = version,
+      path = tools::R_user_dir("APCalign"),
+      type = stable_or_current_data
+    )
+      
+    if(is.null(taxonomic_resources)) {
+      return(NULL)
+    }
+    
+    # Give list names
     names(taxonomic_resources) <- c("APC", "APNI")
     
     ## todo :review this, why zzz
@@ -272,12 +277,26 @@ dataset_access_function <-
   function(version = default_version(),
            path = tools::R_user_dir("APCalign"),
            type = "stable") {
+    
+    # Check if there is internet connection
+    ## Dummy variable to allow testing of network
+    network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE)) 
+    
+    
+    if (!curl::has_internet() | !network) { # Simulate if network is down
+      message("No internet connection, please retry with stable connection (dataset_access_function)")
+      return(invisible(NULL))
+    } 
+    
+    # Download from Github Release
     if (type == "stable") {
       return(dataset_get(version, path))
     }
+    
+    # Download from NSL
     if (type == "current") {
-      APC <-
-        readr::read_csv(
+      tryCatch({
+        APC <- readr::read_csv(
           "https://biodiversity.org.au/nsl/services/export/taxonCsv",
           n_max = 110000,
           col_types =
@@ -289,30 +308,40 @@ dataset_access_function <-
               modified = readr::col_datetime(format = "")
             )
         )
-      APNI <-
-        readr::read_csv(
-          "https://biodiversity.org.au/nsl/services/export/namesCsv",
-          n_max = 140000,
-          col_types =
-            readr::cols(
-              .default = readr::col_character(),
-              autonym = readr::col_logical(),
-              hybrid = readr::col_logical(),
-              cultivar = readr::col_logical(),
-              formula = readr::col_logical(),
-              scientific = readr::col_logical(),
-              nomInval = readr::col_logical(),
-              nomIlleg = readr::col_logical(),
-              namePublishedInYear = readr::col_double(),
-              taxonRankSortOrder = readr::col_double(),
-              created = readr::col_datetime(format = ""),
-              modified = readr::col_datetime(format = "")
-            )
-        )
-      current_list <- list(APC, APNI)
-      names(current_list) <- c("APC", "APNI")
-      return(current_list)
+        
+        APNI <-
+          readr::read_csv(
+            "https://biodiversity.org.au/nsl/services/export/namesCsv",
+            n_max = 140000,
+            col_types =
+              readr::cols(
+                .default = readr::col_character(),
+                autonym = readr::col_logical(),
+                hybrid = readr::col_logical(),
+                cultivar = readr::col_logical(),
+                formula = readr::col_logical(),
+                scientific = readr::col_logical(),
+                nomInval = readr::col_logical(),
+                nomIlleg = readr::col_logical(),
+                namePublishedInYear = readr::col_double(),
+                taxonRankSortOrder = readr::col_double(),
+                created = readr::col_datetime(format = ""),
+                modified = readr::col_datetime(format = "")
+              )
+          )
+
+        on.exit(
+          close( "https://biodiversity.org.au/nsl/services/export/taxonCsv"),
+          close( "https://biodiversity.org.au/nsl/services/export/namesCsv")
+                )
+      }, error = function(e) rlang::abort("Taxonomic resources not currently available, try again later")
+      )
     }
+    
+    # Put lists together
+    current_list <- list(APC, APNI)
+    names(current_list) <- c("APC", "APNI")
+    return(current_list)
   }
 
 #' Get the default version for stable data
@@ -324,26 +353,55 @@ dataset_access_function <-
 #'
 #'
 #' @noRd
+
 default_version <- function() {
-  # Get all the releases
-  output <- gh::gh("GET /repos/{owner}/{repo}/releases",
-                   owner = "traitecoevo",
-                   repo = "APCalign")
+  # Check if there is internet connection
+  ## Dummy variable to allow testing of network
+  network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE)) 
   
-  # Determine how many versions there are
-  length(output)
+  if (!curl::has_internet() | !network) { # Simulate if network is down
+    message("No internet connection, please retry with stable connection (default_version)")
+    return(invisible(NULL))
+  } else {
+    
+    # Get all the releases
+    url <-
+      paste0(
+        "https://api.github.com/repos/",
+        "traitecoevo",
+        "/",
+        "APCalign",
+        "/releases"
+      )
+    
+    response <- httr::GET(url)
   
-  # Extract version number
-  versions <- purrr::map_chr(.x = 1:length(output),
-                             ~ purrr::pluck(output, .x, "name"))
+  if(httr::http_error(response)){
+    message("API currently down, try again later")
+  } 
+  release_data <- httr::content(response, "text") |> jsonlite::fromJSON()
+  
+  # Pull out versions
+  versions <- unique(release_data$tag_name)
   
   # Exclude Taxonomy: first upload
   dplyr::first(versions)
+  }
 }
 
 #' @noRd
 dataset_get <- function(version = default_version(),
                         path = tools::R_user_dir("APCalign")) {
+  
+  # Check if there is internet connection
+  ## Dummy variable to allow testing of network
+  network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE)) 
+  
+  if (!curl::has_internet() | !network) { # Simulate if network is down
+    message("No internet connection, please retry with stable connection (dataset_get)")
+    return(invisible(NULL))
+  } else{
+  
   #APC
   apc.url <-
     paste0(
@@ -352,12 +410,14 @@ dataset_get <- function(version = default_version(),
       "/apc.parquet"
     )
   
+  # APNI
   apni.url <-
     paste0(
       "https://github.com/traitecoevo/APCalign/releases/download/",
       version,
       "/apni.parquet"
     )
+  
   
   download_and_read_parquet <- function(url, path_to_file) {
     tryCatch({
@@ -366,7 +426,7 @@ dataset_get <- function(version = default_version(),
       return(arrow::read_parquet(path_to_file))
     }, error = function(e) {
       message(
-        "The whole internet or just the server may be down; error in downloading or reading the file: ",
+        "Internet or server may be down; error in downloading or reading the file: ",
         e$message
       )
       return(NULL)
@@ -378,8 +438,7 @@ dataset_get <- function(version = default_version(),
   }
   
   path_to_apc <- file.path(path, paste0("apc", version, ".parquet"))
-  path_to_apni <-
-    file.path(path, paste0("apni", version, ".parquet"))
+  path_to_apni <- file.path(path, paste0("apni", version, ".parquet"))
   
   APC <- if (!file.exists(path_to_apc)) {
     download_and_read_parquet(apc.url, path_to_apc)
@@ -392,9 +451,11 @@ dataset_get <- function(version = default_version(),
   } else {
     arrow::read_parquet(path_to_apni)
   }
-  
+
   #combine
   current_list <- list(APC, APNI)
   names(current_list) <- c("APC", "APNI")
   return(current_list)
+  
+  }
 }
