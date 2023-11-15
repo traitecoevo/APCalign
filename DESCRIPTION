@@ -42,4 +42,5 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-URL: https://traitecoevo.github.io/APCalign/
+URL: https://traitecoevo.github.io/APCalign/, https://github.com/traitecoevo/APCalign
+BugReports: https://github.com/traitecoevo/APCalign/issues
