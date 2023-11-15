@@ -57,9 +57,7 @@ create_taxonomic_update_lookup <- function(taxa,
                                            APNI_matches = TRUE, 
                                            imprecise_fuzzy_matches = FALSE, 
                                            identifier = NA_character_,
-                                           resources = load_taxonomic_resources(stable_or_current_data =
-                                                                                  stable_or_current_data,
-                                                                                version = version),
+                                           resources = load_taxonomic_resources(),
                                            output = NULL) {
 
   validate_taxonomic_splits_input(taxonomic_splits)

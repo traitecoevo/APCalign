@@ -4,10 +4,7 @@
 \alias{state_diversity_counts}
 \title{Calculate Australian plant state-level diversity for native, introduced, and more complicated species origins}
 \usage{
-state_diversity_counts(
-  state,
-  resources = load_taxonomic_resources(version = default_version())
-)
+state_diversity_counts(state, resources = load_taxonomic_resources())
 }
 \arguments{
 \item{state}{A character string indicating the Australian state or territory to calculate the diversity for. Possible values are "NSW", "NT", "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI", "MDI", "CoI", "CSI", and "AR".}
