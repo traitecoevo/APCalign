@@ -14,9 +14,7 @@
 #' @param imprecise_fuzzy_matches Imprecise fuzzy matches are turned off as a default.
 #' @param identifier A dataset, location or other identifier, which defaults to NA.
 #' @param output file path to save the intermediate output to
-#' @return A lookup table containing the accepted and suggested names for each original name input, and additional taxonomic information such as taxon rank, taxonomic status, taxon IDs and genera. See Details.
-#' 
-#' @details
+#' @return A lookup table containing the accepted and suggested names for each original name input, and additional taxonomic information such as taxon rank, taxonomic status, taxon IDs and genera. 
 #' - original_name: the original plant name.
 #' - aligned_name: the input plant name that has been aligned to a taxon name in the APC or APNI by the align_taxa function.
 #' - accepted_name: the APC-accepted plant name, when available.

@@ -6,7 +6,7 @@
 #' @family diversity methods
 #' @param resources the taxonomic resources required to make the summary statistics.  Loading this can be slow, so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.
 #'
-#' @return A data frame with columns representing each state and rows representing each species. The values in each cell represent the origin of the species in that state.
+#' @return A tibble with columns representing each state and rows representing each species. The values in each cell represent the origin of the species in that state.
 #'
 #' @import dplyr
 #' @import stringr

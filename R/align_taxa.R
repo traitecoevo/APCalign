@@ -18,9 +18,7 @@
 #' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default.
 #' @param identifier A dataset, location or other identifier, which defaults to NA.
 #'
-#' @return A tibble with columns that include original_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code. See Details
-#' 
-#' @details 
+#' @return A tibble with columns that include original_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code. 
 #' - original_name: the original plant name input.
 #' - aligned_name: the original plant name after the function standardise_names has standardised the syntax of infraspecific taxon designations.
 #' - taxonomic_dataset: the source of the aligned names (APC or APNI).

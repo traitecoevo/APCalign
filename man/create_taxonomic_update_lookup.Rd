@@ -39,12 +39,7 @@ create_taxonomic_update_lookup(
 \item{output}{file path to save the intermediate output to}
 }
 \value{
-A lookup table containing the accepted and suggested names for each original name input, and additional taxonomic information such as taxon rank, taxonomic status, taxon IDs and genera. See Details.
-}
-\description{
-This function takes a list of Australian plant species that needs to be reconciled with current taxonomy and generates a lookup table to help fix the taxonomy. The lookup table contains the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
-}
-\details{
+A lookup table containing the accepted and suggested names for each original name input, and additional taxonomic information such as taxon rank, taxonomic status, taxon IDs and genera.
 \itemize{
 \item original_name: the original plant name.
 \item aligned_name: the input plant name that has been aligned to a taxon name in the APC or APNI by the align_taxa function.
@@ -67,6 +62,9 @@ This function takes a list of Australian plant species that needs to be reconcil
 \item row_number: the row number of a specific original_name in the input.
 \item number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon", the number of possible taxon names that have been collapsed.
 }
+}
+\description{
+This function takes a list of Australian plant species that needs to be reconciled with current taxonomy and generates a lookup table to help fix the taxonomy. The lookup table contains the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
 }
 \examples{
 \donttest{resources <- load_taxonomic_resources()
