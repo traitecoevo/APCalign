@@ -27,7 +27,7 @@ create_taxonomic_update_lookup(
 
 \item{taxonomic_splits}{How to handle one_to_many taxonomic matches.  Default is "return_all".  The other options are "collapse_to_higher_taxon" and "most_likely_species". most_likely_species defaults to the original_name if that name is accepted by the APC; this will be right for certain species subsets, but make errors in other cases, use with caution.}
 
-\item{full}{logical for whether the full lookup table is returned or just the two key columns}
+\item{full}{logical for whether the full lookup table is returned or just key columns}
 
 \item{APNI_matches}{Name matches to the APNI (Australian Plant Names Index) are turned off as a default.}
 

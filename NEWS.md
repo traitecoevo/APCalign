@@ -5,3 +5,5 @@
 * Refined testing for `load_taxonomic_resources` 
 
 * Revised hex - now is .svg!
+
+* Minor update to documentation for 'create_taxonomic_update_lookup'
