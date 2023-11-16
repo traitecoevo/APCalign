@@ -60,7 +60,7 @@ to their current accepted name."><!-- mathjax --><script src="https://cdnjs.clou
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Use APC and APNI to update taxonomy, replacing synonyms to current taxa where relevant</h1>
-      
+      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/HEAD/R/update_taxonomy.R" class="external-link"><code>R/update_taxonomy.R</code></a></small>
       <div class="d-none name"><code>update_taxonomy.Rd</code></div>
     </div>
 
@@ -110,32 +110,7 @@ If specified, the output will be saved in a CSV file with the given name.</p></d
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A tibble with updated taxonomy for the specified plant names. The tibble contains the following columns:</p><ul><li><p><code>original_name</code>: the original plant name.</p></li>
-<li><p><code>aligned_name</code>: the input plant name.</p></li>
-<li><p><code>accepted_name</code>: the APC-accepted plant name, when available.</p></li>
-<li><p><code>suggested_name</code>: the suggested plant name to use. Identical to the accepted_name, when an accepted_name exists.</p></li>
-<li><p><code>taxonomic_dataset</code>: the source of the updated taxonomic information (APC or APNI).</p></li>
-<li><p><code>accepted_name_usage_ID</code>: the unique identifier for the accepted name of the input name.</p></li>
-<li><p><code>canonical_name</code>: the accepted (or known) scientific name for the input name.</p></li>
-<li><p><code>scientific_name</code>: the full scientific name, with authorship.</p></li>
-<li><p><code>taxon_rank</code>: the taxonomic rank of the accepted (or known) name.</p></li>
-<li><p><code>taxonomic_status</code>: the taxonomic status of the accepted (or known) name.</p></li>
-<li><p><code>taxonomic_status_aligned</code>: for taxa where there is ambiguity due to a taxon split, the taxonomic status of each possible match.</p></li>
-<li><p><code>aligned_reason</code>: the explanation of a specific taxon name alignment (from an original name to an aligned name).</p></li>
-<li><p><code>update_reason</code>: the explanation of a specific taxon name update (from an aligned name to an accepted name).</p></li>
-<li><p><code>genus</code>: the genus of the accepted (or known) name.</p></li>
-<li><p><code>family</code>: the family of the accepted (or known) name.</p></li>
-<li><p><code>subclass</code>: the subclass of the accepted name.</p></li>
-<li><p><code>taxon_distribution</code>: the distribution of the accepted name.</p></li>
-<li><p><code>taxon_ID</code>: an identifier for a specific taxon concept.</p></li>
-<li><p><code>taxon_ID_genus</code>: an identifier for the genus.</p></li>
-<li><p><code>scientific_name_ID</code>: an identifier for the nomenclatural (not taxonomic) details of a scientific name.</p></li>
-<li><p><code>row_number</code>: the row number of a specific original_name in the input.</p></li>
-</ul></div>
-    <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    
-<ul><li><p>original_name: the original plant name.</p></li>
+<p>A tibble with updated taxonomy for the specified plant names. The tibble contains the following columns:</p><ul><li><p>original_name: the original plant name.</p></li>
 <li><p>aligned_name: the input plant name that has been aligned to a taxon name in the APC or APNI by the align_taxa function.</p></li>
 <li><p>accepted_name: the APC-accepted plant name, when available.</p></li>
 <li><p>suggested_name: the suggested plant name to use. Identical to the accepted_name, when an accepted_name exists; otherwise the the suggested_name is the aligned_name.</p></li>

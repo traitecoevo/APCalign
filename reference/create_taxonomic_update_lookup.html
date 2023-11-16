@@ -56,7 +56,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Create a lookup table to help fix the taxonomy for a list of Australian plant species</h1>
-      
+      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/HEAD/R/create_taxonomic_update_lookup.R" class="external-link"><code>R/create_taxonomic_update_lookup.R</code></a></small>
       <div class="d-none name"><code>create_taxonomic_update_lookup.Rd</code></div>
     </div>
 
@@ -75,8 +75,7 @@
 <span>  APNI_matches <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  imprecise_fuzzy_matches <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  identifier <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
-<span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>stable_or_current_data <span class="op">=</span> <span class="va">stable_or_current_data</span>,</span>
-<span>    version <span class="op">=</span> <span class="va">version</span><span class="op">)</span>,</span>
+<span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  output <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -100,7 +99,7 @@
 
 
 <dt>full</dt>
-<dd><p>logical for whether the full lookup table is returned or just the two key columns</p></dd>
+<dd><p>logical for whether the full lookup table is returned or just key columns</p></dd>
 
 
 <dt>APNI_matches</dt>
@@ -127,12 +126,7 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A lookup table containing the accepted and suggested names for each original name input, and additional taxonomic information such as taxon rank, taxonomic status, taxon IDs and genera. See Details.</p>
-    </div>
-    <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    
-<ul><li><p>original_name: the original plant name.</p></li>
+<p>A lookup table containing the accepted and suggested names for each original name input, and additional taxonomic information such as taxon rank, taxonomic status, taxon IDs and genera.</p><ul><li><p>original_name: the original plant name.</p></li>
 <li><p>aligned_name: the input plant name that has been aligned to a taxon name in the APC or APNI by the align_taxa function.</p></li>
 <li><p>accepted_name: the APC-accepted plant name, when available.</p></li>
 <li><p>suggested_name: the suggested plant name to use. Identical to the accepted_name, when an accepted_name exists; otherwise the the suggested_name is the aligned_name.</p></li>
