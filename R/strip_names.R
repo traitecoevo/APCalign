@@ -54,7 +54,7 @@ strip_names <- function(taxon_names) {
 #'               "Acacia sp.",
 #'               "Lepidium sp. Tanguin Hill (K.R.Newbey 10501)"))
 #'
-#' @noRd
+#' @export
 strip_names_2 <- function(taxon_names) {
   taxon_names %>%
     stringr::str_replace_all("\\.", "") %>%
