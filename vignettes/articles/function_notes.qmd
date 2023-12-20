@@ -29,7 +29,15 @@ APCalign exports [9 functions](https://traitecoevo.github.io/APCalign/reference/
 ``` {r, eval = FALSE, echo = TRUE}
 input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", "Banksea serrata", "Banksia serrrrata", "Dryandra")
 
-APCalign::create_taxonomic_update_lookup(taxa = input, identifier = "APCalign test")
+updated_taxa <- APCalign::create_taxonomic_update_lookup(taxa = input, identifier = "APCalign test", resources = resources, full = TRUE)
+```
+
+or, start with a csv file where there is a column of taxon names to align
+
+``` {r, eval = FALSE, echo = TRUE}
+test_matches_alignments_updates <- readr::read_csv("data/taxon_list.csv") #or load data through the R studio menu
+
+updated_taxa <- APCalign::create_taxonomic_update_lookup(original_name = input, identifier = "APCalign test")
 ```
 
 ### align_taxa
@@ -55,9 +63,10 @@ APCalign::create_taxonomic_update_lookup(taxa = input, identifier = "APCalign te
 
 **example**:  
 ``` {r, eval = FALSE, echo = TRUE}
-input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", "Banksia serrrrata", "Dryandra")
+input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", "Banksia serrrrata", "Dryandra sp.", "Banksia big red flowers")
 
-APCalign::align_taxa(original_name = input, identifier = "APCalign test")
+
+aligned_taxa <- APCalign::align_taxa(original_name = input, identifier = "APCalign test", resources=resources, full = TRUE)
 ```
 
 ### update_taxonomy
