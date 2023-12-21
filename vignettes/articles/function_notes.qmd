@@ -1,6 +1,6 @@
 # APCalign functions
 
-APCalign exports [9 functions](https://traitecoevo.github.io/APCalign/reference/index.html) to facilitate the alignment of submitted plant names to scientific names on the APC and APNI lists. They are listed in order of likelihood of use. 
+APCalign exports [10 functions](https://traitecoevo.github.io/APCalign/reference/index.html) to facilitate the alignment of submitted plant names to scientific names on the APC and APNI lists. They are listed in order of likelihood of use. 
 
 ## Taxon name alignment and updating functions
 
@@ -31,6 +31,8 @@ input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", "Banksea ser
 
 updated_taxa <- APCalign::create_taxonomic_update_lookup(taxa = input, identifier = "APCalign test", resources = resources, full = TRUE)
 ```
+
+Note: The name `Banksia cerrata` does not align as the fuzzy matching algorithm does not allow the first letter of the genus and species epithet to change. 
 
 or, start with a csv file where there is a column of taxon names to align
 
@@ -147,6 +149,16 @@ aligned_taxa <- APCalign::align_taxa(original_name = input, identifier = "APCali
 **output**: A character vector of standardised taxon names.   
 
 ### strip_names
+
+**description**: Given a vector of taxonomic names, this function removes subtaxa designations ("subsp.", "var.", "f.", and "ser"), special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The resulting vector of names is also converted to lowercase.    
+
+**arguments**:
+```
+  -   taxon_names                                   #input vector of taxon names   
+```  
+**output**: A character vector of stripped taxonomic names, with subtaxa designations, special characters, and extra whitespace removed, and all letters converted to lowercase.  
+
+### strip_names_2
 
 **description**: Given a vector of taxonomic names, this function removes subtaxa designations ("subsp.", "var.", "f.", and "ser"), additional filler words and characters (" x " [hybrid taxa], "sp.", "cf"), special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The resulting vector of names is also converted to lowercase.    
 
