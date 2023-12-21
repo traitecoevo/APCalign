@@ -29,18 +29,23 @@ APCalign exports [10 functions](https://traitecoevo.github.io/APCalign/reference
 ``` {r, eval = FALSE, echo = TRUE}
 input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", "Banksea serrata", "Banksia serrrrata", "Dryandra")
 
-updated_taxa <- APCalign::create_taxonomic_update_lookup(taxa = input, identifier = "APCalign test", resources = resources, full = TRUE)
+updated_taxa <- APCalign::create_taxonomic_update_lookup(taxa = input, identifier = "APCalign test", full = TRUE)
 ```
-
-Note: The name `Banksia cerrata` does not align as the fuzzy matching algorithm does not allow the first letter of the genus and species epithet to change. 
 
 or, start with a csv file where there is a column of taxon names to align
 
 ``` {r, eval = FALSE, echo = TRUE}
-test_matches_alignments_updates <- readr::read_csv("data/taxon_list.csv") #or load data through the R studio menu
+taxon_list <- readr::read_csv("data/test_taxa.csv") #or load data through the R studio menu
 
-updated_taxa <- APCalign::create_taxonomic_update_lookup(original_name = input, identifier = "APCalign test")
+updated_taxa <- APCalign::create_taxonomic_update_lookup(taxa = taxon_list$original_name, identifier = "APCalign test", full = TRUE)
 ```
+
+*notes*
+-   If you will be running the function `APCalign::create_taxonomic_update_lookup` many times, it is best to load the taxonomic resources separately using `resources <- load_taxonomic_resources()`, then add the argument `resources = resources`
+-   The name `Banksia cerrata` does not align as the fuzzy matching algorithm does not allow the first letter of the genus and species epithet to change.
+-   It is recommended that you begin with `imprecise_fuzzy_matches = FALSE` (the default), as quite a few of the less precise fuzzy matches are likely to be erroneous. This argument should be turned on only if you plan to check all alignments manually. 
+-   The argument `taxonomic_splits` allows you to choose the outcome for updating the names of taxa with ambiguous taxonomic histories; this applies to scientific names that were once attached to a more broadly circumscribed taxon concept, that was then split into several more narrowly circumscribed taxon concepts, one of which retains the original name. There are three options: `most_likely_species` returns the name that is retained, with alternative names documented in square brackets; `return_all` adds additional rows to the output, one for each possible taxon concept; `collapse_to_higher_taxon` returns the genus with possible names in square brackets.
+-   The argument `identifier` allows you to add a fix text string to all genus- and family- level names, such as `identifier = "Royal NP"` would return `Acacia sp. [Royal NP].
 
 ### align_taxa
 
@@ -70,6 +75,13 @@ input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", "Banksia ser
 
 aligned_taxa <- APCalign::align_taxa(original_name = input, identifier = "APCalign test", resources=resources, full = TRUE)
 ```
+
+*notes*
+-   If you will be running the function `APCalign::create_taxonomic_update_lookup` many times, it is best to load the taxonomic resources separately using `resources <- load_taxonomic_resources()`, then add the argument `resources = resources`
+-   The name `Banksia cerrata` does not align as the fuzzy matching algorithm does not allow the first letter of the genus and species epithet to change.
+-   With this function you have the option of changing the fuzzy matching parameters. The defaults, with fuzzy matches only allowing changes of 3 (or fewer) characters AND 20% (or less) of characters has been carefully calibrated to catch just about all typos, but very, very rarely mis-align a name. If you wish to introduce less conservative fuzzy matching it is recommended you manually check the aligned names.
+-   It is recommended that you begin with `imprecise_fuzzy_matches = FALSE` (the default), as quite a few of the less precise fuzzy matches are likely to be erroneous. This argument should be turned on only if you plan to check all alignments manually. 
+-   The argument `identifier` allows you to add a fix text string to all genus- and family- level names, such as `identifier = "Royal NP"` would return `Acacia sp. [Royal NP].
 
 ### update_taxonomy
 
