@@ -149,14 +149,13 @@ update_taxonomy <- function(aligned_data,
     dplyr::bind_rows(taxa_blank) %>%
     dplyr::mutate(
       suggested_name = ifelse(is.na(suggested_name), aligned_name, suggested_name),
-      suggested_name = ifelse(is.na(suggested_name), original_name, suggested_name),
       update_reason = ifelse(taxonomic_status_aligned == "accepted", "aligned name accepted by APC", update_reason),
       taxonomic_status = ifelse(is.na(taxonomic_status), "unknown", taxonomic_status),
       taxonomic_dataset = ifelse(stringr::str_detect(taxonomic_dataset, "APC"), "APC", taxonomic_dataset),
       ## `genus` was the first word of the `aligned_name` in the input table; now needs to be set to NA for unknown taxa
       genus = ifelse(taxonomic_status == "unknown", NA_character_, genus),
       taxon_rank = ifelse(taxonomic_status == "unknown", NA_character_, taxon_rank),
-      # the next line makes everythign incosistent. If we want low, should do on loading APC
+      # the next line makes everything inconsistent. If we want low, should do on loading APC
       taxon_rank = stringr::str_to_lower(taxon_rank),
       canonical_name = suggested_name,
       taxonomic_status_aligned = ifelse(is.na(taxonomic_status_aligned), NA_character_, taxonomic_status_aligned)
@@ -245,14 +244,14 @@ relevel_taxonomic_status_preferred_order <- function(taxonomic_status) {
 update_taxonomy_APC_genus <- function(data, resources) {
 
   if(is.null(data)) return(NULL)
-
+  
   data %>% 
   # merge in columns from APC, at the genus-level
   dplyr::left_join(
     by = "genus",
     resources$genera_all %>%
       dplyr::filter(stringr::str_detect(taxonomic_dataset, "APC")) %>%
-      dplyr::arrange(canonical_name, taxonomic_status) %>% ### how do I specify that I want to arrange by `preferred order`
+      dplyr::arrange(canonical_name, taxonomic_status) %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE) %>%
       dplyr::mutate(
         genus = canonical_name,
@@ -277,8 +276,8 @@ update_taxonomy_APC_genus <- function(data, resources) {
       taxon_ID_genus = resources$genera_all$taxon_ID[match(accepted_name_usage_ID, resources$genera_all$accepted_name_usage_ID)],
       # genus names in `aligned_name` that are not APC-accepted need to be updated to their current name in `suggested_name`
       aligned_minus_genus = ifelse(is.na(genus_accepted), NA, stringr::str_replace(aligned_name, extract_genus(aligned_name), "")),
-      suggested_name = ifelse(taxonomic_status == "accepted", paste0(genus_accepted, aligned_minus_genus), NA),
-      suggested_name = ifelse(taxonomic_status != "accepted", aligned_name, suggested_name),
+      # if there is an APC-accepted genus, replace whatever the initial genus was with the accepted genus, otherwise the suggested name is the aligned name
+      suggested_name = ifelse(taxonomic_status == "genus accepted", paste0(genus_accepted, aligned_minus_genus), aligned_name),
       # indicate taxonomic_status of the genus name in `aligned_name` and why it needed to be updated for the `suggested_name`
       genus_update_reason = as.character(my_order),
       genus = genus_accepted,
