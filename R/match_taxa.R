@@ -519,10 +519,7 @@ match_taxa <- function(
       taxonomic_dataset = NA_character_,
       taxon_rank = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
-      aligned_name = ifelse(is.na(identifier_string2),
-                            paste0(aligned_name_tmp, "]"),
-                            paste0(aligned_name_tmp, identifier_string2, "]")
-      ),
+      aligned_name = NA,
       aligned_reason = paste0(
         "Taxon name includes '--' (double dash) indicating an intergrade between two taxa, but exact and fuzzy matches fail to align to a genus in the APC or APNI (",
         Sys.Date(),
@@ -724,10 +721,7 @@ match_taxa <- function(
       taxonomic_dataset = NA_character_,
       taxon_rank = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
-      aligned_name = ifelse(is.na(identifier_string2),
-                            paste0(aligned_name_tmp, "]"),
-                            paste0(aligned_name_tmp, identifier_string2, "]")
-      ),
+      aligned_name = NA,
       aligned_reason = paste0(
         "Taxon name includes '/' (slash) indicating an uncertain species identification but an accepted genus and taxon can only be aligned to genus-rank. Exact and fuzzy matches fail to align to a genus in the APC or APNI (",
         Sys.Date(),
@@ -1032,10 +1026,7 @@ match_taxa <- function(
       taxonomic_dataset = NA_character_,
       taxon_rank = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
-      aligned_name = ifelse(is.na(identifier_string2),
-                            paste0(aligned_name_tmp, "]"),
-                            paste0(aligned_name_tmp, identifier_string2, "]")
-      ),
+      aligned_name = NA,
       aligned_reason = paste0(
         "Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank. Exact and fuzzy matches fail to align to a genus in the APC or APNI ",
         Sys.Date(),
@@ -1299,10 +1290,7 @@ match_taxa <- function(
       taxonomic_dataset = NA_character_,
       taxon_rank = "genus",
       aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " x [", cleaned_name),
-      aligned_name = ifelse(is.na(identifier_string2),
-                            paste0(aligned_name_tmp, "]"),
-                            paste0(aligned_name_tmp, identifier_string2, "]")
-      ),
+      aligned_name = NA,
       aligned_reason = paste0(
         "Taxon name includes ' x ' indicating a hybrid taxon and taxon can only be aligned to genus-rank. Exact and fuzzy matches fail to align to a genus in the APC or APNI (",
         Sys.Date(),
