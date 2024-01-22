@@ -1,13 +1,11 @@
 
 #' Standardise Taxon Names
 #'
-#' This function standardises taxon names by performing a series of text 
-#' substitutions to remove common inconsistencies in taxonomic nomenclature.
-#' The function takes a character vector of taxon names as input and returns a
-#' character vector of taxon names using standardised taxonomic syntax as output. In particular it standardises
-#' the abbreviations used to document infraspecific taxon ranks (subsp., var., f.),
-#' as people use many variants of these terms. It also standardises or removes a few additional filler
-#' words used within taxon names (affinis becomes aff.; s.l. and s.s. are removed).
+#' Standardises taxon names by performing a series of text substitutions to remove common inconsistencies in taxonomic nomenclature. 
+#' The function takes a character vector of taxon names as input and 
+#' returns a character vector of taxon names using standardised taxonomic syntax as output. 
+#' In particular it standardises taxon rank abbreviations and qualifiers (subsp., var., f.), as people use many variants of these terms. 
+#' It also standardises or removes a few additional filler words used within taxon names (affinis becomes aff.; s.l. and s.s. are removed).
 #'
 #' @param taxon_names A character vector of taxon names that need to be standardised.
 #'

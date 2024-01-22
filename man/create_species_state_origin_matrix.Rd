@@ -13,7 +13,8 @@ create_species_state_origin_matrix(resources = load_taxonomic_resources())
 A tibble with columns representing each state and rows representing each species. The values in each cell represent the origin of the species in that state.
 }
 \description{
-This function processes the geographic data available in the current or any version of the Australian Plant Census and returns state level diversity for native, introduced and more complicated species origins.
+This function processes the geographic data available in the APC and
+returns state level diversity for native, introduced and more complicated species origins.
 }
 \examples{
 \donttest{create_species_state_origin_matrix()}

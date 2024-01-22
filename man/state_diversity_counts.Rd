@@ -16,7 +16,8 @@ A tibble of diversity counts for the specified state or territory, including nat
 The tibble has three columns: "origin" indicating the origin of the species, "state" indicating the Australian state or territory, and "num_species" indicating the number of species for that origin and state.
 }
 \description{
-This function calculates state-level diversity for native, introduced, and more complicated species origins based on the geographic data available in the current Australian Plant Census.
+This function calculates state-level diversity for native, introduced, and more complicated species origins
+based on the geographic data available in the APC.
 }
 \examples{
  \donttest{state_diversity_counts(state = "NSW")}

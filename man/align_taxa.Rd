@@ -70,11 +70,14 @@ A tibble with columns that include original_name, aligned_name, taxonomic_datase
 }
 }
 \description{
-This function uses Australian Plant Census (APC) & the Australian Plant Name Index (APNI) to find taxonomic alignments for a list of names.
+Finds taxonomic alignments in the APC or APNI.
 It uses the internal function \code{match_taxa} to attempt to match input strings to taxon names in the APC/APNI.
-It sequentially searches for matches against more than 20 different string patterns, prioritising exact matches (to accepted names as well as  synonyms, orthographic variants)
-over fuzzy matches. It prioritises matches to taxa in the APC over names in the APNI.
-It identifies string patterns in input names that suggest a name can only be aligned to a genus (hybrids that are not in the APC/ANI; graded species; taxa not identified to species), and indicates these names only have a genus-rank match.
+It sequentially searches for matches against more than 20 different string patterns,
+prioritising exact matches (to accepted names as well as synonyms, orthographic variants) over fuzzy matches.
+It prioritises matches to taxa in the APC over names in the APNI.
+It identifies string patterns in input names that suggest a name can only be aligned to a genus
+(hybrids that are not in the APC/ANI; graded species; taxa not identified to species),
+and indicates these names only have a genus-rank match.
 }
 \examples{
 \donttest{align_taxa(c("Poa annua", "Abies alba"))}

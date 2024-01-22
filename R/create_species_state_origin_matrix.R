@@ -1,6 +1,7 @@
 #' Process geographic data and return state level species origin and diversity counts
 #'
-#' This function processes the geographic data available in the current or any version of the Australian Plant Census and returns state level diversity for native, introduced and more complicated species origins.
+#' This function processes the geographic data available in the APC and 
+#' returns state level diversity for native, introduced and more complicated species origins.
 #'
 #'
 #' @family diversity methods

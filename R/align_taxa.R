@@ -1,10 +1,13 @@
 #' Find taxonomic alignments for a list of names to a version of the Australian Plant Census (APC) through standardizing formatting and checking for spelling issues
 #'
-#' This function uses Australian Plant Census (APC) & the Australian Plant Name Index (APNI) to find taxonomic alignments for a list of names. 
-#' It uses the internal function `match_taxa` to attempt to match input strings to taxon names in the APC/APNI. 
-#' It sequentially searches for matches against more than 20 different string patterns, prioritising exact matches (to accepted names as well as  synonyms, orthographic variants) 
-#' over fuzzy matches. It prioritises matches to taxa in the APC over names in the APNI. 
-#' It identifies string patterns in input names that suggest a name can only be aligned to a genus (hybrids that are not in the APC/ANI; graded species; taxa not identified to species), and indicates these names only have a genus-rank match.
+#' Finds taxonomic alignments in the APC or APNI. 
+#' It uses the internal function `match_taxa` to attempt to match input strings to taxon names in the APC/APNI.
+#' It sequentially searches for matches against more than 20 different string patterns, 
+#' prioritising exact matches (to accepted names as well as synonyms, orthographic variants) over fuzzy matches. 
+#' It prioritises matches to taxa in the APC over names in the APNI. 
+#' It identifies string patterns in input names that suggest a name can only be aligned to a genus 
+#' (hybrids that are not in the APC/ANI; graded species; taxa not identified to species), 
+#' and indicates these names only have a genus-rank match.
 #'
 #' @param original_name A list of names to query for taxonomic alignments.
 #' @param output (optional) The name of the file to save the results to.

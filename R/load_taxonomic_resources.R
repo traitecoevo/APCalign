@@ -1,6 +1,8 @@
 #' Load taxonomic resources from either stable or current versions of APC and APNI
 #'
-#' Loads taxonomic resources into the global environment. This function accesses taxonomic data from a dataset using the provided version number or the default version. The loaded data contains two lists: APC and APNI, which contain taxonomic information about plant species in Australia. The function creates several tibbles by filtering and selecting data from the loaded lists.
+#' This function loads two taxonomic datasets for Australia's vascular plants, the APC and APNI, into the global environment. 
+#' It accesses taxonomic data from a dataset using the provided version number or the default version.  
+#' The function creates several data frames by filtering and selecting data from the loaded lists.
 #'
 #' @param stable_or_current_data Type of dataset to access. The default is "stable", which loads the
 #'   dataset from a github archived file. If set to "current", the dataset will be loaded from
