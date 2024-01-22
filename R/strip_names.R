@@ -37,7 +37,7 @@ strip_names <- function(taxon_names) {
 #' Strip taxonomic names of subtaxa designations, filled words and special characters
 #'
 #' Given a vector of taxonomic names, this function removes subtaxa designations ("subsp.", "var.", "f.", and "ser"),
-#' additional filler words and characters (" x " [hybrid taxa], "sp.", "cf"), 
+#' additional filler words and characters (" x " [hybrid taxa], "sp."), 
 #' special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The resulting vector
 #' of names is also converted to lowercase.
 #'
@@ -69,7 +69,6 @@ strip_names_2 <- function(taxon_names) {
     stringr::str_replace_all(" sp ", " ") %>%
     stringr::str_replace_all(" sp1", " 1") %>%
     stringr::str_replace_all(" sp2", " 2") %>%
-    stringr::str_replace_all(" cf | cf$", " ") %>%
     stringr::str_replace_all("\\=", " ") %>%
     stringr::str_replace_all("  ", " ") %>%
     stringr::str_squish() %>%
