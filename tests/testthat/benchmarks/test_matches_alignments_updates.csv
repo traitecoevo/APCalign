@@ -31,8 +31,8 @@ Aporuelliaa abc--def,match_03c,Aporuellia sp. [Aporuelliaa abc--def; test_all_ma
 Driandra abc--def,match_03c,Dryandra sp. [Driandra abc--def; test_all_matches_TRUE],APC,genus,Banksia,FALSE,https://id.biodiversity.org.au/instance/apni/865048,https://id.biodiversity.org.au/name/apni/77744,Dryandra R.Br.
 Xyystidium abc--def,match_03d,Xystidium sp. [Xyystidium abc--def; test_all_matches_TRUE],APNI,genus,Xystidium,FALSE,NA,https://id.biodiversity.org.au/name/apni/244613,Xystidium Trin.
 Zygiaa abc--def,match_03d,Zygia sp. [Zygiaa abc--def; test_all_matches_TRUE],APNI,genus,Zygia,FALSE,NA,https://id.biodiversity.org.au/name/apni/65077,Zygia P.Browne
-Abcde fgh -- ijk,match_03e,Abcde sp. [Abcde fgh -- ijk; test_all_matches_TRUE],NA,genus,NA,FALSE,NA,NA,NA
-Ryandra abc--def,match_03e,Ryandra sp. [Ryandra abc--def; test_all_matches_TRUE],NA,genus,NA,FALSE,NA,NA,NA
+Abcde fgh -- ijk,match_03e,Abcde sp. [Abcde fgh -- ijk; test_all_matches_TRUE],NA,NA,NA,TRUE,NA,NA,NA
+Ryandra abc--def,match_03e,Ryandra sp. [Ryandra abc--def; test_all_matches_TRUE],NA,NA,NA,TRUE,NA,NA,NA
 Abildgaardia odontocarpa / Abildgaardia oxystachya,match_04a,Abildgaardia sp. [Abildgaardia odontocarpa / Abildgaardia oxystachya; test_all_matches_TRUE],APC,genus,Abildgaardia,FALSE,https://id.biodiversity.org.au/node/apni/2905759,https://id.biodiversity.org.au/name/apni/55984,Abildgaardia Vahl
 Acanthocarpus fimbriatus / Acanthocarpus mucronatus,match_04a,Acanthocarpus sp. [Acanthocarpus fimbriatus / Acanthocarpus mucronatus; test_all_matches_TRUE],APC,genus,Acanthocarpus,FALSE,https://id.biodiversity.org.au/node/apni/2899190,https://id.biodiversity.org.au/name/apni/72610,Acanthocarpus Lehm.
 Acanthocarpus fimbriatus / mucronatus,match_04a,Acanthocarpus sp. [Acanthocarpus fimbriatus / mucronatus; test_all_matches_TRUE],APC,genus,Acanthocarpus,FALSE,https://id.biodiversity.org.au/node/apni/2899190,https://id.biodiversity.org.au/name/apni/72610,Acanthocarpus Lehm.
@@ -51,8 +51,8 @@ Aporuelliaa abc / def,match_04c,Aporuellia sp. [Aporuelliaa abc / def; test_all_
 Drrandra abc / def,match_04c,Dryandra sp. [Drrandra abc / def; test_all_matches_TRUE],APC,genus,Banksia,FALSE,https://id.biodiversity.org.au/instance/apni/865048,https://id.biodiversity.org.au/name/apni/77744,Dryandra R.Br.
 Xyystidium abc/def,match_04d,Xystidium sp. [Xyystidium abc/def; test_all_matches_TRUE],APNI,genus,Xystidium,FALSE,NA,https://id.biodiversity.org.au/name/apni/244613,Xystidium Trin.
 Zygiaa abc / def,match_04d,Zygia sp. [Zygiaa abc / def; test_all_matches_TRUE],APNI,genus,Zygia,FALSE,NA,https://id.biodiversity.org.au/name/apni/65077,Zygia P.Browne
-Abcde fgh / ijk,match_04e,Abcde sp. [Abcde fgh / ijk; test_all_matches_TRUE],NA,genus,NA,FALSE,NA,NA,NA
-Ryandra abc / def,match_04e,Ryandra sp. [Ryandra abc / def; test_all_matches_TRUE],NA,genus,NA,FALSE,NA,NA,NA
+Abcde fgh / ijk,match_04e,Abcde sp. [Abcde fgh / ijk; test_all_matches_TRUE],NA,NA,NA,TRUE,NA,NA,NA
+Ryandra abc / def,match_04e,Ryandra sp. [Ryandra abc / def; test_all_matches_TRUE],NA,NA,NA,TRUE,NA,NA,NA
 Cycas candida K.D.Hill,match_05a,Cycas candida,APC,species,Cycas candida,TRUE,https://id.biodiversity.org.au/node/apni/2893335,https://id.biodiversity.org.au/name/apni/188177,Cycas candida K.D.Hill
 Eremophila papillata Chinnock,match_05a,Eremophila papillata,APC,species,Eremophila papillata,TRUE,https://id.biodiversity.org.au/node/apni/2910890,https://id.biodiversity.org.au/name/apni/207453,Eremophila papillata Chinnock
 Acalypha indica var. australis F.M.Bailey,match_05b,Acalypha indica var. australis,APC,variety,Acalypha lanceolata,TRUE,https://id.biodiversity.org.au/instance/apni/889946,https://id.biodiversity.org.au/name/apni/72588,Acalypha indica var. australis F.M.Bailey
@@ -125,7 +125,7 @@ Aporuelliaa aff def,match_09c,Aporuellia sp. [Aporuelliaa aff. def; test_all_mat
 Drrandra affinis def,match_09c,Dryandra sp. [Drrandra aff. def; test_all_matches_TRUE],APC,genus,Banksia,FALSE,https://id.biodiversity.org.au/instance/apni/865048,https://id.biodiversity.org.au/name/apni/77744,Dryandra R.Br.
 Xyystidium aff. abc,match_09d,Xystidium sp. [Xyystidium aff. abc; test_all_matches_TRUE],APNI,genus,Xystidium,FALSE,NA,https://id.biodiversity.org.au/name/apni/244613,Xystidium Trin.
 Zygiaa aff. abc,match_09d,Zygia sp. [Zygiaa aff. abc; test_all_matches_TRUE],APNI,genus,Zygia,FALSE,NA,https://id.biodiversity.org.au/name/apni/65077,Zygia P.Browne
-Abcde affinis fgh,match_09e,Abcde sp. [Abcde aff. fgh; test_all_matches_TRUE],NA,genus,NA,FALSE,NA,NA,NA
+Abcde affinis fgh,match_09e,Abcde sp. [Abcde aff. fgh; test_all_matches_TRUE],NA,NA,NA,TRUE,NA,NA,NA
 Rryandra aff def,match_09e,Rryandra sp. [Rryandra aff. def; test_all_matches_TRUE],NA,genus,NA,FALSE,NA,NA,NA
 Aceeena x ovinaaa,match_10a,Acaena x ovina,APC,species,Acaena x ovina,FALSE,https://id.biodiversity.org.au/taxon/apni/51446291,https://id.biodiversity.org.au/name/apni/72209,Acaena x ovina A.Cunn.
 Banksiia  serrratte,match_10a,Banksia serrata,APC,species,Banksia serrata,TRUE,https://id.biodiversity.org.au/taxon/apni/51293610,https://id.biodiversity.org.au/name/apni/109014,Banksia serrata L.f.
@@ -154,8 +154,8 @@ Aporuelliaa abc x def,match_11c,Aporuellia x [Aporuelliaa abc x def; test_all_ma
 Drrandra x def,match_11c,Dryandra x [Drrandra x def; test_all_matches_TRUE],APC,genus,Banksia,FALSE,https://id.biodiversity.org.au/instance/apni/865048,https://id.biodiversity.org.au/name/apni/77744,Dryandra R.Br.
 Xyystidium x def,match_11d,Xystidium x [Xyystidium x def; test_all_matches_TRUE],APNI,genus,Xystidium,FALSE,NA,https://id.biodiversity.org.au/name/apni/244613,Xystidium Trin.
 Zygiaa abc x Zygia def,match_11d,Zygia x [Zygiaa abc x Zygia def; test_all_matches_TRUE],APNI,genus,Zygia,FALSE,NA,https://id.biodiversity.org.au/name/apni/65077,Zygia P.Browne
-Abcde fgh x ijk,match_11e,Abcde x [Abcde fgh x ijk; test_all_matches_TRUE],NA,genus,NA,FALSE,NA,NA,NA
-Ryandra abc x def,match_11e,Ryandra x [Ryandra abc x def; test_all_matches_TRUE],NA,genus,NA,FALSE,NA,NA,NA
+Abcde fgh x ijk,match_11e,Abcde x [Abcde fgh x ijk; test_all_matches_TRUE],NA,NA,NA,TRUE,NA,NA,NA
+Ryandra abc x def,match_11e,Ryandra x [Ryandra abc x def; test_all_matches_TRUE],NA,NA,NA,TRUE,NA,NA,NA
 Baeckea sp. murchison river,match_12a,Baeckea sp. Murchison River (M.E.Trudgen 12009),APC,species,Baeckea sp. Murchison River (M.E.Trudgen 12009),TRUE,https://id.biodiversity.org.au/node/apni/2888052,https://id.biodiversity.org.au/name/apni/191267,Baeckea sp. Murchison River (M.E.Trudgen 12009) WA Herbarium
 Eremophila oppositifolia rubra (needle leaves),match_12a,Eremophila oppositifolia subsp. rubra,APC,subspecies,Eremophila oppositifolia subsp. rubra,TRUE,https://id.biodiversity.org.au/node/apni/7951458,https://id.biodiversity.org.au/name/apni/117903,Eremophila oppositifolia subsp. rubra (C.T.White & W.D.Francis) Chinnock
 Eremophila oppositifolia rubra early collection,match_12a,Eremophila oppositifolia subsp. rubra,APC,subspecies,Eremophila oppositifolia subsp. rubra,TRUE,https://id.biodiversity.org.au/node/apni/7951458,https://id.biodiversity.org.au/name/apni/117903,Eremophila oppositifolia subsp. rubra (C.T.White & W.D.Francis) Chinnock
