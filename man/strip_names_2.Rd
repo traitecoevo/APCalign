@@ -15,7 +15,7 @@ characters, additional filler words and extra whitespace removed, and all letter
 }
 \description{
 Given a vector of taxonomic names, this function removes subtaxa designations ("subsp.", "var.", "f.", and "ser"),
-additional filler words and characters (" x " \link{hybrid taxa}, "sp.", "cf"),
+additional filler words and characters (" x " for hybrid taxa, "sp.", "cf"),
 special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The resulting vector
 of names is also converted to lowercase.
 }
