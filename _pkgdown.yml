@@ -19,9 +19,9 @@ navbar:
       - text: "Data providers"
       - text: APC and APNI
         href: articles/data-providers.html
-      - text: "Data caching"
-      - text: How is APC/APNI stored in APCalign? 
-        href: 'articles/caching.html'
+      - text: "Functions"
+      - text: Details on the 10 exported functions, including examples of usage
+        href: function_notes.html
       - text: -------
       - text: "Taxon matching"
       - text: Our fuzzy matching  algorithm

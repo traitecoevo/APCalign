@@ -2,7 +2,7 @@
 % Please edit documentation in R/state_diversity_counts.R
 \name{state_diversity_counts}
 \alias{state_diversity_counts}
-\title{Calculate Australian plant state-level diversity for native, introduced, and more complicated species origins}
+\title{For Australian states and territories, use data from the APC to calculate state-level diversity for native, introduced, and more complicated species origins}
 \usage{
 state_diversity_counts(state, resources = load_taxonomic_resources())
 }

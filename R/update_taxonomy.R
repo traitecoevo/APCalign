@@ -1,4 +1,4 @@
-#' Use APC and APNI to update taxonomy, replacing synonyms to current taxa where relevant
+#' For a list of taxon names aligned to the APC, update the name to an accepted taxon concept per the APC and add scientific name and taxon concept metadata to names aligned to either the APC or APNI. 
 #'
 #' This function uses the APC to update the taxonomy of names aligned to a taxon concept listed in the APC to the currently accepted name for the taxon concept. 
 #' The aligned_data data frame that is input must contain 5 columns, 

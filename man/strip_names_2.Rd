@@ -2,7 +2,7 @@
 % Please edit documentation in R/strip_names.R
 \name{strip_names_2}
 \alias{strip_names_2}
-\title{Strip taxonomic names of subtaxa designations, filled words and special characters}
+\title{Strip taxonomic names of taxon rank abbreviations and qualifiers, filler words and special characters}
 \usage{
 strip_names_2(taxon_names)
 }

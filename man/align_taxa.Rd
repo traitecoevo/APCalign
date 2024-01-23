@@ -2,7 +2,7 @@
 % Please edit documentation in R/align_taxa.R
 \name{align_taxa}
 \alias{align_taxa}
-\title{Find taxonomic alignments for a list of names to a version of the Australian Plant Census (APC) through standardizing formatting and checking for spelling issues}
+\title{For a list of Australian plant names, find taxonomic or scientific name alignments to the APC or APNI through standardizing formatting and fixing spelling errors}
 \usage{
 align_taxa(
   original_name,
@@ -70,7 +70,7 @@ A tibble with columns that include original_name, aligned_name, taxonomic_datase
 }
 }
 \description{
-Finds taxonomic alignments in the APC or APNI.
+This function finds taxonomic alignments in APC or scientific name alignments in APNI.
 It uses the internal function \code{match_taxa} to attempt to match input strings to taxon names in the APC/APNI.
 It sequentially searches for matches against more than 20 different string patterns,
 prioritising exact matches (to accepted names as well as synonyms, orthographic variants) over fuzzy matches.

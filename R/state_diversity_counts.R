@@ -1,4 +1,4 @@
-#' Calculate Australian plant state-level diversity for native, introduced, and more complicated species origins
+#' For Australian states and territories, use data from the APC to calculate state-level diversity for native, introduced, and more complicated species origins
 #'
 #' This function calculates state-level diversity for native, introduced, and more complicated species origins 
 #' based on the geographic data available in the APC.

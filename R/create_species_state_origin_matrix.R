@@ -1,7 +1,7 @@
-#' Process geographic data and return state level species origin and diversity counts
+#' Use the taxon distribution data from the APC to determine state level native and introduced origin status
 #'
 #' This function processes the geographic data available in the APC and 
-#' returns state level diversity for native, introduced and more complicated species origins.
+#' returns state level native, introduced and more complicated origins status for all taxa.
 #'
 #'
 #' @family diversity methods

@@ -1,4 +1,4 @@
-#' Create a lookup table to help fix the taxonomy for a list of Australian plant species
+#' Create a lookup table with the best-possible scientific name match for a list of Australian plant names
 #'
 #' This function takes a list of Australian plant names that need to be reconciled with current taxonomy and 
 #' generates a lookup table of the best-possible scientific name match for each input name. 

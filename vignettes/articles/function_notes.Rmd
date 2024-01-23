@@ -1,3 +1,10 @@
+---
+title: "Function notes"
+author: "Elizabeth Wenk"
+date: "2024-01-22"
+output: html_document
+---
+
 # APCalign functions
 
 APCalign exports [10 functions](https://traitecoevo.github.io/APCalign/reference/index.html) to facilitate the alignment of submitted plant names to scientific names on the APC and APNI lists. They are listed in order of likelihood of use.
@@ -60,9 +67,8 @@ updated_taxa <-
 **notes**\
 - If you will be running the function `APCalign::create_taxonomic_update_lookup` many times, it is best to load the taxonomic resources separately using `resources <- load_taxonomic_resources()`, then add the argument `resources = resources`\
 - The name `Banksia cerrata` does not align as the fuzzy matching algorithm does not allow the first letter of the genus and species epithet to change.\
-- It is recommended that you begin with `imprecise_fuzzy_matches = FALSE` (the default), as quite a few of the less precise fuzzy matches are likely to be erroneous. This argument should be turned on only if you plan to check all alignments manually.\
 - The argument `taxonomic_splits` allows you to choose the outcome for updating the names of taxa with ambiguous taxonomic histories; this applies to scientific names that were once attached to a more broadly circumscribed taxon concept, that was then split into several more narrowly circumscribed taxon concepts, one of which retains the original name. There are three options: `most_likely_species` returns the name that is retained, with alternative names documented in square brackets; `return_all` adds additional rows to the output, one for each possible taxon concept; `collapse_to_higher_taxon` returns the genus with possible names in square brackets.\
-- The argument `identifier` allows you to add a fix text string to all genus- and family- level names, such as `identifier = "Royal NP"` would return \`Acacia sp. \[Royal NP\].
+- The argument `identifier` allows you to add a fix text string to all genus- and family- level names, such as `identifier = "Royal NP"` would return \`Acacia sp. [Royal NP]`.
 
 ### align_taxa
 
@@ -131,7 +137,7 @@ resources = load_taxonomic_resources()
 
 ### create_species_state_origin_matrix
 
-**description**: This function processes the geographic data available in the APC and returns state level diversity for native, introduced and more complicated species origins.
+**description**: This function processes the geographic data available in the APC and returns state level native, introduced and more complicated origins status for all taxa.
 
 **arguments**:
 
@@ -211,7 +217,7 @@ taxon_names            #input vector of taxon names
 
 ### strip_names_2
 
-**description**: Given a vector of taxonomic names, this function removes subtaxa designations ("subsp.", "var.", "f.", and "ser"), additional filler words and characters (" x " \[hybrid taxa\], "sp."), special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The resulting vector of names is also converted to lowercase.
+**description**: Given a vector of taxonomic names, this function removes subtaxa designations ("subsp.", "var.", "f.", and "ser"), additional filler words and characters (" x " [hybrid taxa], "sp."), special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The resulting vector of names is also converted to lowercase.
 
 **arguments**:
 
@@ -220,3 +226,4 @@ taxon_names             #input vector of taxon names
 ```
 
 **output**: A character vector of stripped taxonomic names, with subtaxa designations, special characters, additional filler words and extra whitespace removed, and all letters converted to lowercase.
+

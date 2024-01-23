@@ -2,7 +2,7 @@
 % Please edit documentation in R/update_taxonomy.R
 \name{update_taxonomy}
 \alias{update_taxonomy}
-\title{Use APC and APNI to update taxonomy, replacing synonyms to current taxa where relevant}
+\title{For a list of taxon names aligned to the APC, update the name to an accepted taxon concept per the APC and add scientific name and taxon concept metadata to names aligned to either the APC or APNI.}
 \usage{
 update_taxonomy(
   aligned_data,

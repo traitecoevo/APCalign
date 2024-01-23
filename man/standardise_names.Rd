@@ -2,7 +2,7 @@
 % Please edit documentation in R/standardise_names.R
 \name{standardise_names}
 \alias{standardise_names}
-\title{Standardise Taxon Names}
+\title{Standardises taxon names by performing a series of text substitutions to remove common inconsistencies in taxonomic nomenclature.}
 \usage{
 standardise_names(taxon_names)
 }
@@ -13,7 +13,6 @@ standardise_names(taxon_names)
 A character vector of standardised taxon names.
 }
 \description{
-Standardises taxon names by performing a series of text substitutions to remove common inconsistencies in taxonomic nomenclature.
 The function takes a character vector of taxon names as input and
 returns a character vector of taxon names using standardised taxonomic syntax as output.
 In particular it standardises taxon rank abbreviations and qualifiers (subsp., var., f.), as people use many variants of these terms.

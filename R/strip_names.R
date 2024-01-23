@@ -1,4 +1,4 @@
-#' Strip taxonomic names of subtaxa designations and special characters
+#' Strip taxonomic names of taxon rank abbreviations and qualifiers and special characters
 #'
 #' Given a vector of taxonomic names, this function removes subtaxa designations ("subsp.", "var.", "f.", and "ser"),
 #' special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The resulting vector
@@ -34,7 +34,7 @@ strip_names <- function(taxon_names) {
     tolower()
 }
 
-#' Strip taxonomic names of subtaxa designations, filled words and special characters
+#' Strip taxonomic names of taxon rank abbreviations and qualifiers, filler words and special characters
 #'
 #' Given a vector of taxonomic names, this function removes subtaxa designations ("subsp.", "var.", "f.", and "ser"),
 #' additional filler words and characters (" x " for hybrid taxa, "sp."), 

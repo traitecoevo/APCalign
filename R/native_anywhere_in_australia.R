@@ -1,4 +1,4 @@
-#' Check if a vector of species are native anywhere in Australia
+#' For a vector of taxon names in to the APC, check if the species are native anywhere in Australia
 #'
 #' This function checks if the given species is native anywhere in Australia according to the APC. 
 #' Note that this will not detect within-Australia introductions, e.g. if a species is from Western Australia and is invasive on the east coast.

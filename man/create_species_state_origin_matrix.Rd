@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_species_state_origin_matrix.R
 \name{create_species_state_origin_matrix}
 \alias{create_species_state_origin_matrix}
-\title{Process geographic data and return state level species origin and diversity counts}
+\title{Use the taxon distribution data from the APC to determine state level native and introduced origin status}
 \usage{
 create_species_state_origin_matrix(resources = load_taxonomic_resources())
 }
@@ -14,7 +14,7 @@ A tibble with columns representing each state and rows representing each species
 }
 \description{
 This function processes the geographic data available in the APC and
-returns state level diversity for native, introduced and more complicated species origins.
+returns state level native, introduced and more complicated origins status for all taxa.
 }
 \examples{
 \donttest{create_species_state_origin_matrix()}

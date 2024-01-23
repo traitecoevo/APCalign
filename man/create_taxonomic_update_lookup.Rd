@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_taxonomic_update_lookup.R
 \name{create_taxonomic_update_lookup}
 \alias{create_taxonomic_update_lookup}
-\title{Create a lookup table to help fix the taxonomy for a list of Australian plant species}
+\title{Create a lookup table with the best-possible scientific name match for a list of Australian plant names}
 \usage{
 create_taxonomic_update_lookup(
   taxa,

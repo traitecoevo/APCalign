@@ -2,7 +2,7 @@
 % Please edit documentation in R/native_anywhere_in_australia.R
 \name{native_anywhere_in_australia}
 \alias{native_anywhere_in_australia}
-\title{Check if a vector of species are native anywhere in Australia}
+\title{For a vector of taxon names in to the APC, check if the species are native anywhere in Australia}
 \usage{
 native_anywhere_in_australia(species, resources = load_taxonomic_resources())
 }
