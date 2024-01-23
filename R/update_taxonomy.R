@@ -1,8 +1,9 @@
-#' Use APC and APNI to update taxonomy, replacing synonyms to current taxa where relevant
+#' For a list of taxon names aligned to the APC, update the name to an accepted taxon concept per the APC and add scientific name and taxon concept metadata to names aligned to either the APC or APNI. 
 #'
-#' This function uses the Australia's Virtual Herbarium's taxonomic resources, specifically the Australian Plant
-#' Census (APC) and the Australian Plant Name Index (APNI), to update taxonomy of plant species, replacing any synonyms
-#' to their current accepted name.
+#' This function uses the APC to update the taxonomy of names aligned to a taxon concept listed in the APC to the currently accepted name for the taxon concept. 
+#' The aligned_data data frame that is input must contain 5 columns, 
+#' `original_name`, `aligned_name`, `taxon_rank`, `taxonomic_dataset`, and `aligned_reason`. 
+#' The aligned name is a plant name that has been aligned to a taxon name in the APC or APNI by the align_taxa function.
 #'
 #' @family taxonomic alignment functions
 #'

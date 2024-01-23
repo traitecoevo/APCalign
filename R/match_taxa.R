@@ -852,8 +852,9 @@ match_taxa <- function(
       return(taxa)
   }
 
-  # match_09a: `genus aff. species` taxa
+  # match_09a: `genus aff. species` and `genus cf. species`taxa
   # Exact match to APC-accepted or APC-known genus for names where "aff" indicates the taxon has an affinity to another taxon, but isn't the other taxon.
+  # Similarly, "cf" indicates that a comparison should be made between the specific taxon and another taxon, but again, isn't the other taxon.
   # Taxon names fitting this pattern that are not APC-accepted, APC-known, or APNI-listed species are automatically aligned to genus,
   # since this is the highest taxon rank that can be attached to the plant name.
   # This alignment can only be made after exact matches of complete taxon names to APC/APNI + fuzzy matches to APC are complete,
@@ -862,7 +863,8 @@ match_taxa <- function(
   i <-
     (
       stringr::str_detect(taxa$tocheck$cleaned_name, "[Aa]ff[\\.\\s]") |
-        stringr::str_detect(taxa$tocheck$cleaned_name, " affinis ")
+        stringr::str_detect(taxa$tocheck$cleaned_name, " affinis ")  |
+        stringr::str_detect(taxa$tocheck$cleaned_name, " cf[\\.\\s]")
     ) &
     taxa$tocheck$genus %in% resources$genera_all2$canonical_name
   

@@ -2,7 +2,7 @@
 % Please edit documentation in R/strip_names.R
 \name{strip_names_2}
 \alias{strip_names_2}
-\title{Strip taxonomic names of subtaxa designations, filled words and special characters}
+\title{Strip taxonomic names of taxon rank abbreviations and qualifiers, filler words and special characters}
 \usage{
 strip_names_2(taxon_names)
 }
@@ -15,7 +15,7 @@ characters, additional filler words and extra whitespace removed, and all letter
 }
 \description{
 Given a vector of taxonomic names, this function removes subtaxa designations ("subsp.", "var.", "f.", and "ser"),
-additional filler words and characters (" x " for hybrid taxa, "sp.", "cf"),
+additional filler words and characters (" x " for hybrid taxa, "sp."),
 special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The resulting vector
 of names is also converted to lowercase.
 }

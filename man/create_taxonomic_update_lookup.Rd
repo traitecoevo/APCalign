@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_taxonomic_update_lookup.R
 \name{create_taxonomic_update_lookup}
 \alias{create_taxonomic_update_lookup}
-\title{Create a lookup table to help fix the taxonomy for a list of Australian plant species}
+\title{Create a lookup table with the best-possible scientific name match for a list of Australian plant names}
 \usage{
 create_taxonomic_update_lookup(
   taxa,
@@ -64,7 +64,9 @@ A lookup table containing the accepted and suggested names for each original nam
 }
 }
 \description{
-This function takes a list of Australian plant species that needs to be reconciled with current taxonomy and generates a lookup table to help fix the taxonomy. The lookup table contains the original species names, the aligned species names, and additional taxonomic information such as taxon IDs and genera.
+This function takes a list of Australian plant names that need to be reconciled with current taxonomy and
+generates a lookup table of the best-possible scientific name match for each input name.
+It uses first the function \code{align_taxa}, then the function \code{update_taxonomy} to achieve the output.
 }
 \examples{
 \donttest{resources <- load_taxonomic_resources()
