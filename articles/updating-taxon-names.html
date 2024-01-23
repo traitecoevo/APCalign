@@ -46,8 +46,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <h6 class="dropdown-header" data-toc-skip>Data providers</h6>
     <a class="dropdown-item" href="../articles/data-providers.html">APC and APNI</a>
-    <h6 class="dropdown-header" data-toc-skip>Data caching</h6>
-    <a class="dropdown-item" href="../articles/caching.html">How is APC/APNI stored in APCalign?</a>
+    <h6 class="dropdown-header" data-toc-skip>Functions</h6>
+    <a class="dropdown-item" href="../function_notes.html">Details on the 10 exported functions, including examples of usage</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Taxon matching</h6>
     <a class="dropdown-item" href="../articles/updating-taxon-names.html">Our fuzzy matching  algorithm</a>
@@ -90,10 +90,13 @@
     
     
 <div class="section level2">
-<h2 id="aligning-taxa-with-apc-and-apni">Aligning taxa with APC and APNI<a class="anchor" aria-label="anchor" href="#aligning-taxa-with-apc-and-apni"></a>
+<h2 id="aligning-taxon-names-with-taxon-conceptsnames-in-apc-and-apni">Aligning taxon names with taxon concepts/names in APC and APNI<a class="anchor" aria-label="anchor" href="#aligning-taxon-names-with-taxon-conceptsnames-in-apc-and-apni"></a>
 </h2>
-<p>XXXX</p>
-<p>The following</p>
+<p>The following table indicates the rules for each of the 51 separate
+algorithms sequentially applied to attempt to align each submitted name
+to a taxon concept in APC or scientific names in APNI.</p>
+<p>Note, if the table is truncated on your screen, use horizontal scroll
+to view the entire table.</p>
 <table class="table table table-striped table-hover table-condensed table-responsive" style="margin-left:30px; width: auto !important; ">
 <thead><tr>
 <th style="text-align:left;">
@@ -331,7 +334,7 @@ no match
 NA
 </td>
 <td style="text-align:left;">
-genus
+NA
 </td>
 <td style="text-align:left;">
 NA
@@ -449,7 +452,7 @@ no match
 NA
 </td>
 <td style="text-align:left;">
-genus
+NA
 </td>
 <td style="text-align:left;">
 NA
@@ -733,7 +736,7 @@ no match
 NA
 </td>
 <td style="text-align:left;">
-genus
+NA
 </td>
 <td style="text-align:left;">
 NA
@@ -897,7 +900,7 @@ no match
 NA
 </td>
 <td style="text-align:left;">
-genus
+NA
 </td>
 <td style="text-align:left;">
 NA
@@ -1330,11 +1333,35 @@ NA
 <div class="section level2">
 <h2 id="updating-taxonomy">Updating taxonomy<a class="anchor" aria-label="anchor" href="#updating-taxonomy"></a>
 </h2>
-XXX
+<p>The following table indicates the separate functions used to:</p>
+<ul>
+<li>update aligned names to accepted names in the APC</li>
+<li>add best-practice suggested names to all submitted names</li>
+<li>add identifiers to taxon concepts (in the APC) or scientific names
+(in the APC or APNI)</li>
+</ul>
+<p>Different functions are used depending on the taxon rank of the
+aligned name and the taxonomic dataset to which the name was aligned
+(APC vs APNI).</p>
 <table class="table table table-striped table-hover table-condensed table-responsive" style="margin-left:30px; width: auto !important; ">
-<thead><tr>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+categories of aligned names processed
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+columns filled in
+</div>
+</th>
+</tr>
+<tr>
 <th style="text-align:left;">
-…1
+function name
 </th>
 <th style="text-align:left;">
 taxonomic dataset
@@ -1357,7 +1384,8 @@ genus (&amp; taxon_ID_genus)
 <th style="text-align:left;">
 scientific_name_ID
 </th>
-</tr></thead>
+</tr>
+</thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
@@ -1465,7 +1493,7 @@ yes
 </tr>
 <tr>
 <td style="text-align:left;">
-taxonomic_splits = “most_likely_species”
+– taxonomic_splits = “most_likely_species”
 </td>
 <td style="text-align:left;">
 NA
@@ -1491,7 +1519,7 @@ yes
 </tr>
 <tr>
 <td style="text-align:left;">
-taxonomic_splits = “return_all”
+– taxonomic_splits = “return_all”
 </td>
 <td style="text-align:left;">
 NA
@@ -1517,7 +1545,7 @@ yes
 </tr>
 <tr>
 <td style="text-align:left;">
-taxonomic_splits = “collapse_to_higher_taxon”
+– taxonomic_splits = “collapse_to_higher_taxon”
 </td>
 <td style="text-align:left;">
 NA
@@ -1569,7 +1597,7 @@ yes
 </tr>
 <tr>
 <td style="text-align:left;">
-not required
+(names not aligned)
 </td>
 <td style="text-align:left;">
 (not aligned)
@@ -1593,91 +1621,17 @@ no
 no
 </td>
 </tr>
-<tr>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<ul><li>genus updated to APC accepted genus if possible
-</li></ul>
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-** species or infraspecific taxon name
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
 </tbody>
 </table>
+<p>-* genus updated to APC accepted genus if possible; ** species or
+infraspecific taxon name</p>
 </div>
 <div class="section level2">
 <h2 id="outputs-of-apcalign">Outputs of APCalign<a class="anchor" aria-label="anchor" href="#outputs-of-apcalign"></a>
 </h2>
+<p>The following columns are output by the core function
+<code>create_taxonomic_update_lookup</code> and the two component
+functions <code>align_taxa</code> and <code>update_taxonomy</code>.</p>
 <table class="table table table-striped table-hover table-condensed table-responsive" style="margin-left:30px; width: auto !important; ">
 <thead><tr>
 <th style="text-align:left;">
@@ -1734,8 +1688,8 @@ default
 </td>
 <td style="text-align:left;">
 The suggested plant name to use. Identical to the accepted_name when an
-accepted_name exists; otherwise the the suggested_name is the
-aligned_name.
+accepted_name exists; otherwise the suggested_name is the aligned_name
+or the aligned name with an outdated genus updated.
 </td>
 </tr>
 <tr>

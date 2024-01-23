@@ -29,8 +29,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <h6 class="dropdown-header" data-toc-skip>Data providers</h6>
     <a class="dropdown-item" href="../articles/data-providers.html">APC and APNI</a>
-    <h6 class="dropdown-header" data-toc-skip>Data caching</h6>
-    <a class="dropdown-item" href="../articles/caching.html">How is APC/APNI stored in APCalign?</a>
+    <h6 class="dropdown-header" data-toc-skip>Functions</h6>
+    <a class="dropdown-item" href="../function_notes.html">Details on the 10 exported functions, including examples of usage</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Taxon matching</h6>
     <a class="dropdown-item" href="../articles/updating-taxon-names.html">Our fuzzy matching  algorithm</a>
@@ -78,32 +78,32 @@
           
           <code><a href="create_taxonomic_update_lookup.html">create_taxonomic_update_lookup()</a></code> 
         </dt>
-        <dd>Create a lookup table to help fix the taxonomy for a list of Australian plant species</dd>
+        <dd>Create a lookup table with the best-possible scientific name match for a list of Australian plant names</dd>
       </dl><dl><dt>
           
           <code><a href="align_taxa.html">align_taxa()</a></code> 
         </dt>
-        <dd>Find taxonomic alignments for a list of names to a version of the Australian Plant Census (APC) through standardizing formatting and checking for spelling issues</dd>
+        <dd>For a list of Australian plant names, find taxonomic or scientific name alignments to the APC or APNI through standardizing formatting and fixing spelling errors</dd>
       </dl><dl><dt>
           
           <code><a href="update_taxonomy.html">update_taxonomy()</a></code> 
         </dt>
-        <dd>Use APC and APNI to update taxonomy, replacing synonyms to current taxa where relevant</dd>
+        <dd>For a list of taxon names aligned to the APC, update the name to an accepted taxon concept per the APC and add scientific name and taxon concept metadata to names aligned to either the APC or APNI.</dd>
       </dl><dl><dt>
           
           <code><a href="standardise_names.html">standardise_names()</a></code> 
         </dt>
-        <dd>Standardise Taxon Names</dd>
+        <dd>Standardises taxon names by performing a series of text substitutions to remove common inconsistencies in taxonomic nomenclature.</dd>
       </dl><dl><dt>
           
           <code><a href="strip_names.html">strip_names()</a></code> 
         </dt>
-        <dd>Strip taxonomic names of subtaxa designations and special characters</dd>
+        <dd>Strip taxonomic names of taxon rank abbreviations and qualifiers and special characters</dd>
       </dl><dl><dt>
           
           <code><a href="strip_names_2.html">strip_names_2()</a></code> 
         </dt>
-        <dd>Strip taxonomic names of subtaxa designations, filled words and special characters</dd>
+        <dd>Strip taxonomic names of taxon rank abbreviations and qualifiers, filler words and special characters</dd>
       </dl></div><div class="section level2">
       
       <h3 id="established-status-across-states-territories">Established status across states/territories<a class="anchor" aria-label="anchor" href="#established-status-across-states-territories"></a></h3>
@@ -119,17 +119,17 @@
           
           <code><a href="create_species_state_origin_matrix.html">create_species_state_origin_matrix()</a></code> 
         </dt>
-        <dd>Process geographic data and return state level species origin and diversity counts</dd>
+        <dd>Use the taxon distribution data from the APC to determine state level native and introduced origin status</dd>
       </dl><dl><dt>
           
           <code><a href="state_diversity_counts.html">state_diversity_counts()</a></code> 
         </dt>
-        <dd>Calculate Australian plant state-level diversity for native, introduced, and more complicated species origins</dd>
+        <dd>For Australian states and territories, use data from the APC to calculate state-level diversity for native, introduced, and more complicated species origins</dd>
       </dl><dl><dt>
           
           <code><a href="native_anywhere_in_australia.html">native_anywhere_in_australia()</a></code> 
         </dt>
-        <dd>Check if a vector of species are native anywhere in Australia</dd>
+        <dd>For a vector of taxon names in to the APC, check if the species are native anywhere in Australia</dd>
       </dl></div><div class="section level2">
       <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a></h2>
       

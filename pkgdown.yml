@@ -5,8 +5,9 @@ articles:
   APCalign: APCalign.html
   caching: caching.html
   data-providers: data-providers.html
+  function_notes: function_notes.html
   updating-taxon-names: updating-taxon-names.html
-last_built: 2024-01-22T09:51Z
+last_built: 2024-01-23T05:43Z
 urls:
   reference: https://traitecoevo.github.io/APCalign/reference
   article: https://traitecoevo.github.io/APCalign/articles
