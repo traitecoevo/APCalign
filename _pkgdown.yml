@@ -21,7 +21,7 @@ navbar:
         href: articles/data-providers.html
       - text: "Functions"
       - text: Details on the 10 exported functions, including examples of usage
-        href: function_notes.html
+        href: articles/function_notes.html
       - text: -------
       - text: "Taxon matching"
       - text: Our fuzzy matching  algorithm
