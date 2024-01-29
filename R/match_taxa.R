@@ -86,11 +86,11 @@ match_taxa <- function(
       binomial = stringr::word(stripped_name2, start = 1, end = 2),
       genus = extract_genus(original_name),
       fuzzy_match_genus =
-        fuzzy_match_genera(genus, resources$genera_accepted$canonical_name),
+        fuzzy_match_genera(genus, resources$genera_accepted$genus),
       fuzzy_match_genus_known =
-        fuzzy_match_genera(genus, resources$genera_known$canonical_name),
+        fuzzy_match_genera(genus, resources$genera_known$genus),
       fuzzy_match_genus_APNI =
-        fuzzy_match_genera(genus, resources$genera_APNI$canonical_name)
+        fuzzy_match_genera(genus, resources$genera_APNI$genus)
     )
   
   ## Taxa that have been checked are moved from `taxa$tocheck` to `taxa$checked`
@@ -229,20 +229,20 @@ match_taxa <- function(
   
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "[:space:]sp\\.$") &
-    taxa$tocheck$genus %in% resources$genera_all2$canonical_name &
+    taxa$tocheck$genus %in% resources$genera_all2$genus &
     stringr::word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
   
   ii <-
     match(
       taxa$tocheck[i,]$genus,
-      resources$genera_all2$canonical_name
+      resources$genera_all2$genus
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = resources$genera_all2$taxonomic_dataset[ii],
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(resources$genera_all2$canonical_name[ii], " sp."),
+      aligned_name_tmp = paste0(resources$genera_all2$genus[ii], " sp."),
       aligned_name = ifelse(is.na(identifier_string),
                             aligned_name_tmp,
                             paste0(aligned_name_tmp, identifier_string)
@@ -270,13 +270,13 @@ match_taxa <- function(
   
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "[:space:]sp\\.$") &
-    taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$canonical_name &
+    taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$genus &
     stringr::word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
   
   ii <-
     match(
       taxa$tocheck[i,]$fuzzy_match_genus,
-      resources$genera_accepted$canonical_name
+      resources$genera_accepted$genus
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -284,7 +284,7 @@ match_taxa <- function(
       taxonomic_dataset = resources$genera_accepted$taxonomic_dataset[ii],
       taxon_rank = "genus",      
       aligned_name_tmp = 
-        paste0(resources$genera_accepted$canonical_name[ii], " sp."),
+        paste0(resources$genera_accepted$genus[ii], " sp."),
       aligned_name = ifelse(is.na(identifier_string),
                             aligned_name_tmp,
                             paste0(aligned_name_tmp, identifier_string)
@@ -309,20 +309,20 @@ match_taxa <- function(
   # Aligned name includes identifier to indicate `genus sp.` refers to a specific species (or infra-specific taxon), associated with a specific dataset/location.
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "[:space:]sp\\.$") &
-    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$canonical_name &
+    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$genus &
     stringr::word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
   
   ii <-
     match(
       taxa$tocheck[i,]$fuzzy_match_genus_known,
-      resources$genera_known$canonical_name
+      resources$genera_known$genus
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = resources$genera_known$taxonomic_dataset[ii],
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(resources$genera_known$canonical_name[ii], " sp."),
+      aligned_name_tmp = paste0(resources$genera_known$genus[ii], " sp."),
       aligned_name = ifelse(is.na(identifier_string),
                             aligned_name_tmp,
                             paste0(aligned_name_tmp, identifier_string)
@@ -376,19 +376,19 @@ match_taxa <- function(
   # since this is the highest taxon rank that can be attached to the plant name
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- |\\--") &
-    taxa$tocheck$genus %in% resources$genera_all2$canonical_name
+    taxa$tocheck$genus %in% resources$genera_all2$genus
   
   ii <-
     match(
       taxa$tocheck[i,]$genus,
-      resources$genera_all2$canonical_name
+      resources$genera_all2$genus
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = resources$genera_all2$taxonomic_dataset[ii],
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(resources$genera_all2$canonical_name[ii], " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(resources$genera_all2$genus[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
                             paste0(aligned_name_tmp, identifier_string2, "]")
@@ -416,7 +416,7 @@ match_taxa <- function(
   
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- |\\--") &
-    taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$canonical_name
+    taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -448,7 +448,7 @@ match_taxa <- function(
   
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- |\\--") &
-    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$canonical_name
+    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -480,7 +480,7 @@ match_taxa <- function(
   if (APNI_matches == TRUE) {
     i <-
       stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- |\\--") &
-      taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonical_name
+      taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$genus
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate( 
@@ -512,7 +512,7 @@ match_taxa <- function(
   # Neither perfect nor fuzzy matches identify the genus.
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- |\\--") &
-    !taxa$tocheck$fuzzy_match_genus %in% resources$genera_all2$canonical_name
+    !taxa$tocheck$fuzzy_match_genus %in% resources$genera_all2$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -548,19 +548,19 @@ match_taxa <- function(
     !stringr::str_detect(taxa$tocheck$cleaned_name, "[:digit:]") &
     !stringr::str_detect(taxa$tocheck$cleaned_name, "\\(") &
     !stringr::str_detect(taxa$tocheck$cleaned_name, "\\'") &
-    taxa$tocheck$genus %in% resources$genera_all2$canonical_name
+    taxa$tocheck$genus %in% resources$genera_all2$genus
   
   ii <-
     match(
       taxa$tocheck[i,]$genus,
-      resources$genera_all2$canonical_name
+      resources$genera_all2$genus
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = resources$genera_all2$taxonomic_dataset[ii],
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(resources$genera_all2$canonical_name[ii], " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(resources$genera_all2$genus[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
                             paste0(aligned_name_tmp, identifier_string2, "]")
@@ -595,7 +595,7 @@ match_taxa <- function(
     !stringr::str_detect(taxa$tocheck$cleaned_name, "[:digit:]") &
     !stringr::str_detect(taxa$tocheck$cleaned_name, "\\(") &
     !stringr::str_detect(taxa$tocheck$cleaned_name, "\\'") &
-    taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$canonical_name
+    taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -634,7 +634,7 @@ match_taxa <- function(
     !stringr::str_detect(taxa$tocheck$cleaned_name, "[:digit:]") &
     !stringr::str_detect(taxa$tocheck$cleaned_name, "\\(") &
     !stringr::str_detect(taxa$tocheck$cleaned_name, "\\'") &
-    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$canonical_name
+    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(  
@@ -673,7 +673,7 @@ match_taxa <- function(
     !stringr::str_detect(taxa$tocheck$cleaned_name, "[:digit:]") &
     !stringr::str_detect(taxa$tocheck$cleaned_name, "\\(") &
     !stringr::str_detect(taxa$tocheck$cleaned_name, "\\'") &
-      taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonical_name
+      taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$genus
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
@@ -714,7 +714,7 @@ match_taxa <- function(
     !stringr::str_detect(taxa$tocheck$cleaned_name, "[:digit:]") &
     !stringr::str_detect(taxa$tocheck$cleaned_name, "\\(") &
     !stringr::str_detect(taxa$tocheck$cleaned_name, "\\'") &
-    !taxa$tocheck$fuzzy_match_genus %in% resources$genera_all2$canonical_name
+    !taxa$tocheck$fuzzy_match_genus %in% resources$genera_all2$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -866,19 +866,19 @@ match_taxa <- function(
         stringr::str_detect(taxa$tocheck$cleaned_name, " affinis ")  |
         stringr::str_detect(taxa$tocheck$cleaned_name, " cf[\\.\\s]")
     ) &
-    taxa$tocheck$genus %in% resources$genera_all2$canonical_name
+    taxa$tocheck$genus %in% resources$genera_all2$genus
   
   ii <-
     match(
       taxa$tocheck[i,]$genus,
-      resources$genera_all2$canonical_name
+      resources$genera_all2$genus
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = resources$genera_all2$taxonomic_dataset[ii],
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(resources$genera_all2$canonical_name[ii], " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(resources$genera_all2$genus[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
                             paste0(aligned_name_tmp, identifier_string2, "]")
@@ -910,7 +910,7 @@ match_taxa <- function(
       stringr::str_detect(taxa$tocheck$cleaned_name, "[Aa]ff[\\.\\s]") |
         stringr::str_detect(taxa$tocheck$cleaned_name, " affinis ")
     ) &
-    taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$canonical_name
+    taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -946,7 +946,7 @@ match_taxa <- function(
       stringr::str_detect(taxa$tocheck$cleaned_name, "[Aa]ff[\\.\\s]") |
         stringr::str_detect(taxa$tocheck$cleaned_name, " affinis ")
     ) &
-    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$canonical_name
+    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -983,7 +983,7 @@ match_taxa <- function(
         stringr::str_detect(taxa$tocheck$cleaned_name, "[Aa]ff[\\.\\s]") |
           stringr::str_detect(taxa$tocheck$cleaned_name, " affinis ")
       ) &
-      taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonical_name
+      taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$genus
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
@@ -1021,7 +1021,7 @@ match_taxa <- function(
       stringr::str_detect(taxa$tocheck$cleaned_name, "[Aa]ff[\\.\\s]") |
         stringr::str_detect(taxa$tocheck$cleaned_name, " affinis ")
     ) &
-    !taxa$tocheck$fuzzy_match_genus %in% resources$genera_all2$canonical_name
+    !taxa$tocheck$fuzzy_match_genus %in% resources$genera_all2$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -1143,19 +1143,19 @@ match_taxa <- function(
   # because there are hybrid taxa listed in both APC & APNI.
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, " [xX] ") &
-    taxa$tocheck$genus %in% resources$genera_all2$canonical_name
+    taxa$tocheck$genus %in% resources$genera_all2$genus
   
   ii <-
     match(
       taxa$tocheck[i,]$genus,
-      resources$genera_all2$canonical_name
+      resources$genera_all2$genus
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = resources$genera_all2$taxonomic_dataset[ii],
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(resources$genera_all2$canonical_name[ii], " x [", cleaned_name),
+      aligned_name_tmp = paste0(resources$genera_all2$genus[ii], " x [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
                             paste0(aligned_name_tmp, identifier_string2, "]")
@@ -1184,7 +1184,7 @@ match_taxa <- function(
   # because there are hybrid taxa listed in both APC & APNI.
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, " [xX] ") &
-    taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$canonical_name
+    taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -1217,7 +1217,7 @@ match_taxa <- function(
   # because there are hybrid taxa listed in both APC & APNI.
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, " [xX] ") &
-    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$canonical_name
+    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -1251,7 +1251,7 @@ match_taxa <- function(
   if (APNI_matches == TRUE) {
     i <-
       stringr::str_detect(taxa$tocheck$cleaned_name, " [xX] ") &
-      taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$canonical_name
+      taxa$tocheck$fuzzy_match_genus_APNI %in% resources$genera_APNI$genus
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
@@ -1285,7 +1285,7 @@ match_taxa <- function(
   # because there are hybrid taxa listed in both APC & APNI.
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, " [xX] ") &
-    !taxa$tocheck$fuzzy_match_genus %in% resources$genera_all2$canonical_name
+    !taxa$tocheck$fuzzy_match_genus %in% resources$genera_all2$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -1813,19 +1813,19 @@ match_taxa <- function(
   # Toward the end of the alignment function, see if first word of unmatched taxa is an APC-accepted genus.
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   i <-
-    taxa$tocheck$genus %in% resources$genera_accepted$canonical_name
+    taxa$tocheck$genus %in% resources$genera_accepted$genus
   
   ii <-
     match(
       taxa$tocheck[i,]$genus,
-      resources$genera_accepted$canonical_name
+      resources$genera_accepted$genus
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = "APC",
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(resources$genera_accepted$canonical_name[ii], " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(resources$genera_accepted$genus[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
                             paste0(aligned_name_tmp, identifier_string2, "]")
@@ -1848,19 +1848,19 @@ match_taxa <- function(
   # Toward the end of the alignment function, see if first word of unmatched taxa is an APC-known genus.
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   i <-
-    taxa$tocheck$genus %in% resources$genera_known$canonical_name
+    taxa$tocheck$genus %in% resources$genera_known$genus
   
   ii <-
     match(
       taxa$tocheck[i,]$genus,
-      resources$genera_known$canonical_name
+      resources$genera_known$genus
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = "APC",
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(resources$genera_known$canonical_name[ii], " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(resources$genera_known$genus[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
                             paste0(aligned_name_tmp, identifier_string2, "]")
@@ -1884,19 +1884,19 @@ match_taxa <- function(
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   if (APNI_matches == TRUE) {
     i <-
-      (taxa$tocheck$genus %in% resources$genera_APNI$canonical_name)
+      (taxa$tocheck$genus %in% resources$genera_APNI$genus)
     
     ii <-
       match(
         taxa$tocheck[i,]$genus,
-        resources$genera_APNI$canonical_name
+        resources$genera_APNI$genus
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       mutate(
         taxonomic_dataset = "APNI",
         taxon_rank = "genus",
-        aligned_name_tmp = paste0(resources$genera_APNI$canonical_name[ii], " sp. [", cleaned_name),
+        aligned_name_tmp = paste0(resources$genera_APNI$genus[ii], " sp. [", cleaned_name),
         aligned_name = ifelse(is.na(identifier_string2),
                               paste0(aligned_name_tmp, "]"),
                               paste0(aligned_name_tmp, identifier_string2, "]")
@@ -1952,7 +1952,7 @@ match_taxa <- function(
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   
   i <-
-    taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$canonical_name
+    taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -1982,7 +1982,7 @@ match_taxa <- function(
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   
   i <-
-    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$canonical_name
+    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(

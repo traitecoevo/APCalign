@@ -115,9 +115,9 @@ standardise_names <- function(taxon_names) {
 extract_genus <- function(taxon_name) {
   genus <- 
     ifelse(
-      stringr::word(taxon_name, 1) == "x",
-      stringr::word(taxon_name, start = 1, end = 2),
-      stringr::word(taxon_name, 1)
+      stringr::word(taxon_name, 1) %>% stringr::str_to_lower() == "x",
+      paste(stringr::word(taxon_name, 1) %>% stringr::str_to_lower(), stringr::word(taxon_name, 2) %>% stringr::str_to_sentence()),
+      stringr::word(taxon_name, 1) %>% stringr::str_to_sentence()
     )
   genus
 }
