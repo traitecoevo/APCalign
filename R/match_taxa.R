@@ -101,7 +101,7 @@ match_taxa <- function(
     return(taxa)
   
   # START MATCHES
-  # match_05a: Scientific name matches
+  # match_01a: Scientific name matches
   # Taxon names that are an accepted scientific name, with authorship.
   
   i <-
@@ -125,14 +125,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_05a_accepted_scientific_name_with_authorship"
+      alignment_code = "match_01a_accepted_scientific_name_with_authorship"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_05b: Scientific name matches
+  # match_01b: Scientific name matches
   # Taxon names that are an APC-known scientific name, with authorship.
   
   i <-
@@ -156,14 +156,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_05b_known_scientific_name_with_authorship"
+      alignment_code = "match_01b_known_scientific_name_with_authorship"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_06a: APC-accepted canonical name
+  # match_01c: APC-accepted canonical name
   # Taxon names that are exact matches to APC-accepted canonical names, once filler words and punctuation are removed.
   i <-
     taxa$tocheck$cleaned_name %in% resources$`APC list (accepted)`$canonical_name
@@ -186,14 +186,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_06a_accepted_canonical_name"
+      alignment_code = "match_01c_accepted_canonical_name"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_06b: APC-known canonical name
+  # match_01d: APC-known canonical name
   # Taxon names that are exact matches to APC-known canonical names, once filler words and punctuation are removed.
   i <-
     taxa$tocheck$cleaned_name %in% resources$`APC list (known names)`$canonical_name
@@ -216,14 +216,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_06b_known_canonical_name"
+      alignment_code = "match_01d_known_canonical_name"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_01a: Genus-level resolution
+  # match_02a: Genus-level resolution
   # Exact matches of APC-accepted or APC-known genus for names where the final "word" is `sp` or `spp`
   # Aligned name includes identifier to indicate `genus sp.` refers to a specific species (or infra-specific taxon), associated with a specific dataset/location.
   
@@ -256,14 +256,14 @@ match_taxa <- function(
       ),
       checked = TRUE,
       known = TRUE,
-      alignment_code = "match_01a_exact_genus_accepted_or_known"
+      alignment_code = "match_02a_exact_genus_accepted_or_known"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_01b: Genus-level resolution
+  # match_02b: Genus-level resolution
   # Fuzzy matches of APC accepted genera for names where the final "word" is `sp` or `spp` and 
   # there isn't an exact match to an APC accepted genus name
   # Aligned name includes identifier to indicate `genus sp.` refers to a specific species (or infra-specific taxon), associated with a specific dataset/location.
@@ -296,14 +296,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_01b_fuzzy_genus_accepted"
+      alignment_code = "match_02b_fuzzy_genus_accepted"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_01c: Genus-level resolution
+  # match_02c: Genus-level resolution
   # Fuzzy matches of APC known genera for names where the final "word" is `sp` or `spp` and 
   # there isn't an exact match to an APC known genus name.
   # Aligned name includes identifier to indicate `genus sp.` refers to a specific species (or infra-specific taxon), associated with a specific dataset/location.
@@ -334,14 +334,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_01c_fuzzy_genus_known"
+      alignment_code = "match_02c_fuzzy_genus_known"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_02: Family-level resolution
+  # match_02d: Family-level resolution
   # Exact matches of APC-accepted family for names where the final "word" is `sp` or `spp`.
   # Aligned name includes identifier to indicate `family sp.` refers to a specific species (or infra-specific taxon), associated with a specific dataset/location.
   i <-
@@ -363,7 +363,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_02a_exact_family_accepted"
+      alignment_code = "match_02d_exact_family_accepted"
     )
   
   taxa <- redistribute(taxa)
@@ -738,7 +738,7 @@ match_taxa <- function(
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_07a: fuzzy match to APC-accepted canonical name
+  # match_05a: fuzzy match to APC-accepted canonical name
   # Fuzzy match of taxon name to an APC-accepted canonical name, once filler words and punctuation are removed.
   for (i in 1:nrow(taxa$tocheck)) {    
     taxa$tocheck$fuzzy_match_cleaned_APC[i] <-
@@ -772,14 +772,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_07a_fuzzy_accepted_canonical_name"
+      alignment_code = "match_05a_fuzzy_accepted_canonical_name"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_07b: fuzzy match to APC-known canonical name
+  # match_05b: fuzzy match to APC-known canonical name
   # Fuzzy match of taxon name to an APC-known canonical name, once filler words and punctuation are removed.
   for (i in 1:nrow(taxa$tocheck)) {    
     taxa$tocheck$fuzzy_match_cleaned_APC_known[i] <-
@@ -813,14 +813,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_07b_fuzzy_known_canonical_name"
+      alignment_code = "match_05b_fuzzy_known_canonical_name"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
     
-  # match_08a: APNI-listed canonical name
+  # match_05c: APNI-listed canonical name
   # Taxon names that are exact matches to APNI-listed canonical names, once filler words and punctuation are removed.
   if (APNI_matches == TRUE) {
     i <-
@@ -844,7 +844,7 @@ match_taxa <- function(
         ),
         known = TRUE,
         checked = TRUE,
-        alignment_code = "match_08a_APNI_canonical_name"
+        alignment_code = "match_05c_APNI_canonical_name"
       )
     
     taxa <- redistribute(taxa)
@@ -852,7 +852,7 @@ match_taxa <- function(
       return(taxa)
   }
 
-  # match_09a: `genus aff. species` and `genus cf. species`taxa
+  # match_06a: `genus aff. species` and `genus cf. species`taxa
   # Exact match to APC-accepted or APC-known genus for names where "aff" indicates the taxon has an affinity to another taxon, but isn't the other taxon.
   # Similarly, "cf" indicates that a comparison should be made between the specific taxon and another taxon, but again, isn't the other taxon.
   # Taxon names fitting this pattern that are not APC-accepted, APC-known, or APNI-listed species are automatically aligned to genus,
@@ -892,14 +892,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_09a_species_affinis_APC_exact"
+      alignment_code = "match_06a_species_affinis_APC_exact"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_09b: `genus aff. species` taxa
+  # match_06b: `genus aff. species` taxa
   # Fuzzy match to APC-accepted genus for names where "aff" indicates the taxon has an affinity to another taxon, but isn't the other taxon.
   # Taxon names fitting this pattern that are not APC-accepted, APC-known, or APNI-listed species are automatically aligned to genus,
   # since this is the highest taxon rank that can be attached to the plant name.
@@ -928,14 +928,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_09b_species_affinis_APC_accepted_fuzzy"
+      alignment_code = "match_06b_species_affinis_APC_accepted_fuzzy"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_09c: `genus aff. species` taxa
+  # match_06c: `genus aff. species` taxa
   # Fuzzy match to APC-known genus for names where "aff" indicates the taxon has an affinity to another taxon, but isn't the other taxon.
   # Taxon names fitting this pattern that are not APC-accepted, APC-known, or APNI-listed species are automatically aligned to genus,
   # since this is the highest taxon rank that can be attached to the plant name.
@@ -964,14 +964,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_09c_species_affinis_APC_known_fuzzy"
+      alignment_code = "match_06c_species_affinis_APC_known_fuzzy"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_09d: `genus aff. species` taxa
+  # match_06d: `genus aff. species` taxa
   # Fuzzy match to APNI_listed genus for names where "aff" indicates the taxon has an affinity to another taxon, but isn't the other taxon.
   # Taxon names fitting this pattern that are not APC-accepted, APC-known, or APNI-listed species are automatically aligned to genus,
   # since this is the highest taxon rank that can be attached to the plant name.
@@ -1001,7 +1001,7 @@ match_taxa <- function(
         ),
         known = TRUE,
         checked = TRUE,
-        alignment_code = "match_09d_species_affinis_APNI_fuzzy"
+        alignment_code = "match_06d_species_affinis_APNI_fuzzy"
       )
     
     taxa <- redistribute(taxa)
@@ -1009,7 +1009,7 @@ match_taxa <- function(
       return(taxa)
   }
 
-  # match_09e: `genus aff. species` taxa
+  # match_06e: `genus aff. species` taxa
   # Taxon names where "aff" indicates the taxon has an affinity to another taxon, but isn't the other taxon, 
   # when an exact or fuzzy genus-level match to APC & APNI genera cannot be made.
   # Taxon names fitting this pattern that are not APC-accepted, APC-known, or APNI-listed species are automatically aligned to genus,
@@ -1036,14 +1036,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_09e_species_affinis_unknown_genus"
+      alignment_code = "match_06e_species_affinis_unknown_genus"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_10a: imprecise fuzzy match
+  # match_07a: imprecise fuzzy match
   # Imprecise fuzzy match of taxon name to an APC-accepted canonical name, once filler words and punctuation are removed.
   # For imprecise fuzzy matches, the taxon name can differ from the `APC-accepted` names by 5 characters & up to 25% of the string length.
   # These matches require individual review and are turned off as a default.
@@ -1081,7 +1081,7 @@ match_taxa <- function(
         ),
         known = TRUE,
         checked = TRUE,
-        alignment_code = "match_10a_imprecise_fuzzy_accepted_canonical_name"
+        alignment_code = "match_07a_imprecise_fuzzy_accepted_canonical_name"
       )
     
     taxa <- redistribute(taxa)
@@ -1089,7 +1089,7 @@ match_taxa <- function(
       return(taxa)
   }
   
-  # match_10b: imprecise fuzzy match
+  # match_07b: imprecise fuzzy match
   # Imprecise fuzzy match of taxon name to an APC-known canonical name, once filler words and punctuation are removed.
   # For imprecise fuzzy matches, the taxon name can differ from the `APC -known` names by 5 characters & up to 25% of the string length.
   # These matches require individual review and are turned off as a default.
@@ -1127,7 +1127,7 @@ match_taxa <- function(
         ),
         known = TRUE,
         checked = TRUE,
-        alignment_code = "match_10b_imprecise_fuzzy_known_canonical_name"
+        alignment_code = "match_07b_imprecise_fuzzy_known_canonical_name"
       )
     
     taxa <- redistribute(taxa)
@@ -1135,7 +1135,7 @@ match_taxa <- function(
       return(taxa)
   }
   
-  # match_11a: hybrid taxa
+  # match_08a: hybrid taxa
   # Exact match to APC-accepted, APC-known, or APNI-listed genus for names where " x " indicates taxon is a hybrid.
   # Taxon names fitting this pattern that are not APC-accepted, APC-known, or APNI-listed species are automatically aligned to genus,
   # since this is the highest taxon rank that can be attached to the plant name.
@@ -1169,14 +1169,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_11a_hybrid_taxon_exact"
+      alignment_code = "match_08a_hybrid_taxon_exact"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_11b: hybrid taxa
+  # match_08b: hybrid taxa
   # Fuzzy match to APC-accepted genus for names where " x " indicates taxon is a hybrid.
   # Taxon names fitting this pattern that are not APC-accepted, APC-known, or APNI-listed species are automatically aligned to genus,
   # since this is the highest taxon rank that can be attached to the plant name.
@@ -1202,14 +1202,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_11b_hybrid_taxon_accepted_fuzzy"
+      alignment_code = "match_08b_hybrid_taxon_accepted_fuzzy"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_11c: hybrid taxa
+  # match_08c: hybrid taxa
   # Fuzzy match to APC-known genus for names where " x " indicates taxon is a hybrid.
   # Taxon names fitting this pattern that are not APC-accepted, APC-known, or APNI-listed species are automatically aligned to genus,
   # since this is the highest taxon rank that can be attached to the plant name.
@@ -1235,14 +1235,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_11c_hybrid_taxon_known_fuzzy"
+      alignment_code = "match_08c_hybrid_taxon_known_fuzzy"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_11d: hybrid taxa
+  # match_08d: hybrid taxa
   # Fuzzy match to APNI-listed genus for names where " x " indicates taxon is a hybrid.
   # Taxon names fitting this pattern that are not APC-accepted, APC-known, or APNI-listed species are automatically aligned to genus,
   # since this is the highest taxon rank that can be attached to the plant name.
@@ -1269,7 +1269,7 @@ match_taxa <- function(
         ),
         known = TRUE,
         checked = TRUE,
-        alignment_code = "match_11d_hybrid_taxon_APNI_fuzzy"
+        alignment_code = "match_08d_hybrid_taxon_APNI_fuzzy"
       )
     
     taxa <- redistribute(taxa)
@@ -1277,7 +1277,7 @@ match_taxa <- function(
       return(taxa)
   }
   
-  # match_11e: hybrid taxa
+  # match_08e: hybrid taxa
   # Taxon names where " x " indicates taxon is a hybrid, but an exact or fuzzy genus-level match to APC & APNI genera cannot be made.
   # Taxon names fitting this pattern that are not APC-accepted, APC-known, or APNI-listed species are automatically aligned to genus,
   # since this is the highest taxon rank that can be attached to the plant name.
@@ -1300,14 +1300,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_11e_hybrid_taxon_unknown"
+      alignment_code = "match_08e_hybrid_taxon_unknown"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_12a: exact trinomial matches, APC
+  # match_09a: exact trinomial matches, APC
   # Exact match of first three words of taxon name ("trinomial") to APC-accepted canonical name.
   # The purpose of matching only the first three words only to APC-accepted names is that
   # sometimes the submitted taxon name is a valid trinomial + notes and 
@@ -1334,14 +1334,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_12a_trinomial_exact_accepted"
+      alignment_code = "match_09a_trinomial_exact_accepted"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_12b: exact trinomial matches, APC
+  # match_09b: exact trinomial matches, APC
   # Exact match of first three words of taxon name ("trinomial") to APC-known canonical name.
   # The purpose of matching only the first three words only to APC-known names is that
   # sometimes the submitted taxon name is a valid trinomial + notes and 
@@ -1368,14 +1368,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_12b_trinomial_exact_known"
+      alignment_code = "match_09b_trinomial_exact_known"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_13a: fuzzy trinomial matches, APC
+  # match_09c: fuzzy trinomial matches, APC
   # Fuzzy match of first three words of taxon name ("trinomial") to APC-accepted canonical name.
   # The purpose of matching only the first three words only to APC-accepted names is that
   # sometimes the submitted taxon name is a valid trinomial + notes and 
@@ -1415,14 +1415,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_13a_trinomial_fuzzy_accepted"
+      alignment_code = "match_09c_trinomial_fuzzy_accepted"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_13b: fuzzy trinomial matches, APC
+  # match_09d: fuzzy trinomial matches, APC
   # Fuzzy match of first three words of taxon name ("trinomial") to APC-known canonical name.
   # The purpose of matching only the first three words only to APC-known names is that
   # sometimes the submitted taxon name is a valid trinomial + notes and 
@@ -1462,14 +1462,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_13b_trinomial_fuzzy_known"
+      alignment_code = "match_09d_trinomial_fuzzy_known"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_14a: exact binomial matches, APC
+  # match_10a: exact binomial matches, APC
   # Exact match of first two words of taxon name ("binomial") to APC-accepted canonical name.
   # The purpose of matching only the first two words only to APC-accepted names is that
   # sometimes the submitted taxon name is a valid binomial + notes 
@@ -1498,14 +1498,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_14a_binomial_exact_accepted"
+      alignment_code = "match_10a_binomial_exact_accepted"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_14b: exact binomial matches, APC
+  # match_10b: exact binomial matches, APC
   # Exact match of first two words of taxon name ("binomial") to APC-known canonical name.
   # The purpose of matching only the first two words only to APC-known names is that
   # sometimes the submitted taxon name is a valid binomial + notes 
@@ -1533,14 +1533,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_14b_binomial_exact_known"
+      alignment_code = "match_10b_binomial_exact_known"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_15a: fuzzy binomial matches, APC
+  # match_10c: fuzzy binomial matches, APC
   # Fuzzy match of first two words of taxon name ("binomial") to APC-accepted canonical name.
   # The purpose of matching only the first two words only to APC-accepted names is that
   # sometimes the submitted taxon name is a valid binomial + notes 
@@ -1583,14 +1583,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_15a_binomial_fuzzy_accepted"
+      alignment_code = "match_10c_binomial_fuzzy_accepted"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_15b: fuzzy binomial matches, APC
+  # match_10d: fuzzy binomial matches, APC
   # Fuzzy match of first two words of taxon name ("binomial") to APC-known canonical name.
   # The purpose of matching only the first two words only to APC-known names is that
   # sometimes the submitted taxon name is a valid binomial + notes 
@@ -1633,14 +1633,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_15b_binomial_fuzzy_known"
+      alignment_code = "match_10d_binomial_fuzzy_known"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_16a: fuzzy match to APNI-listed canonical name
+  # match_11a: fuzzy match to APNI-listed canonical name
   # Fuzzy match of taxon name to an APNI-listed canonical name, once filler words and punctuation are removed.
   # Fuzzy matches to APNI names occur toward the end of the alignment function, 
   # because names exclusively in the APNI are often misspellings of APC accepted/known taxa and
@@ -1681,7 +1681,7 @@ match_taxa <- function(
         ),
         known = TRUE,
         checked = TRUE,
-        alignment_code = "match_16a_fuzzy_APNI_canonical"
+        alignment_code = "match_11a_fuzzy_APNI_canonical"
       )
     
     taxa <- redistribute(taxa)
@@ -1689,7 +1689,7 @@ match_taxa <- function(
       return(taxa)
   }
   
-  # match_17a: imprecise fuzzy APNI match
+  # match_11b: imprecise fuzzy APNI match
   # Imprecise fuzzy match of taxon name to an APNI-listed canonical name, once filler words and punctuation are removed.
   # For imprecise fuzzy matches, the taxon name can differ from the `APNI-listed` names by 5 characters & up to 25% of the string length.
   # These matches require individual review and are turned off as a default.
@@ -1728,7 +1728,7 @@ match_taxa <- function(
         ),
         known = TRUE,
         checked = TRUE,
-        alignment_code = "match_17a_imprecise_fuzzy_APNI_canonical_name"
+        alignment_code = "match_11b_imprecise_fuzzy_APNI_canonical_name"
       )
     
     taxa <- redistribute(taxa)
@@ -1736,7 +1736,7 @@ match_taxa <- function(
       return(taxa)
   }
   
-  # match_18a: exact trinomial matches, APNI
+  # match_11c: exact trinomial matches, APNI
   # Exact match of first three words of taxon name ("trinomial") to APNI-listed canonical name.
   # The purpose of matching only the first three words only to APNI-listed names is that
   # sometimes the submitted taxon name is a valid trinomial + notes and 
@@ -1764,7 +1764,7 @@ match_taxa <- function(
         ),
         known = TRUE,
         checked = TRUE,
-        alignment_code = "match_18a_trinomial_exact_APNI"
+        alignment_code = "match_11c_trinomial_exact_APNI"
       )
     
     taxa <- redistribute(taxa)
@@ -1772,7 +1772,7 @@ match_taxa <- function(
       return(taxa)
   }
   
-  # match_19a: exact binomial matches, APNI
+  # match_11d: exact binomial matches, APNI
   # Exact match of first two words of taxon name ("binomial") to APNI-listed canonical name.
   # The purpose of matching only the first two words only to APNI-listed names is that
   # sometimes the submitted taxon name is a valid binomial + notes 
@@ -1801,7 +1801,7 @@ match_taxa <- function(
         ),
         known = TRUE,
         checked = TRUE,
-        alignment_code = "match_19a_binomial_exact_APNI"
+        alignment_code = "match_11d_binomial_exact_APNI"
       )
     
     taxa <- redistribute(taxa)
@@ -1809,7 +1809,7 @@ match_taxa <- function(
       return(taxa)
   }
   
-  # match_20a: genus-level alignment
+  # match_12a: genus-level alignment
   # Toward the end of the alignment function, see if first word of unmatched taxa is an APC-accepted genus.
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   i <-
@@ -1837,14 +1837,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_20a_genus_exact_accepted"
+      alignment_code = "match_12a_genus_exact_accepted"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_20b: genus-level alignment
+  # match_12b: genus-level alignment
   # Toward the end of the alignment function, see if first word of unmatched taxa is an APC-known genus.
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   i <-
@@ -1872,14 +1872,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_20b_genus_exact_known"
+      alignment_code = "match_12b_genus_exact_known"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_20c: genus-level alignment
+  # match_12c: genus-level alignment
   # Toward the end of the alignment function, see if first word of unmatched taxa is an APNI-listed genus.
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   if (APNI_matches == TRUE) {
@@ -1908,7 +1908,7 @@ match_taxa <- function(
         ),
         known = TRUE,
         checked = TRUE,
-        alignment_code = "match_20c_genus_exact_APNI"
+        alignment_code = "match_12c_genus_exact_APNI"
       )
     
     taxa <- redistribute(taxa)
@@ -1916,7 +1916,7 @@ match_taxa <- function(
       return(taxa)
   }
   
-  # match_21a: family-level alignment
+  # match_12d: family-level alignment
   # Toward the end of the alignment function, see if first word of unmatched taxa is an APC-accepted family.
   # The 'taxon name' is then reformatted  as `family sp.` with the original name in square brackets.
   
@@ -1940,14 +1940,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_21a_family_exact_accepted"
+      alignment_code = "match_12d_family_exact_accepted"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_22a: genus-level fuzzy alignment
+  # match_12e: genus-level fuzzy alignment
   # The final alignment step is to see if a fuzzy match can be made for the first word of unmatched taxa to an APC-accepted genus .
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   
@@ -1970,14 +1970,14 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_22a_genus_fuzzy_accepted"
+      alignment_code = "match_12e_genus_fuzzy_accepted"
     )
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
   
-  # match_22b: genus-level fuzzy alignment
+  # match_12f: genus-level fuzzy alignment
   # The final alignment step is to see if a fuzzy match can be made for the first word of unmatched taxa to an APC-known genus .
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   
@@ -2000,7 +2000,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_22b_genus_fuzzy_known"
+      alignment_code = "match_12f_genus_fuzzy_known"
     )
   
   taxa <- redistribute(taxa)
