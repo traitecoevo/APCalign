@@ -197,7 +197,7 @@ load_taxonomic_resources <-
       dplyr::filter(taxon_rank %in% c("genus"), taxonomic_status == "accepted") %>%
       dplyr::mutate(taxonomic_dataset = "APC")
     
-    taxonomic_resources[["genera_known"]] <-
+    taxonomic_resources[["genera_synonym"]] <-
       taxonomic_resources$APC %>%
       dplyr::select(
         canonical_name,
@@ -235,7 +235,7 @@ load_taxonomic_resources <-
     taxonomic_resources[["genera_all"]] <-
       dplyr::bind_rows(
         taxonomic_resources$genera_accepted,
-        taxonomic_resources$genera_known,
+        taxonomic_resources$genera_synonym,
         taxonomic_resources$genera_APNI
       ) %>%
       dplyr::mutate(

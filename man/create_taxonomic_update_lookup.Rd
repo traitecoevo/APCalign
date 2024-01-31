@@ -55,7 +55,7 @@ A lookup table containing the accepted and suggested names for each original nam
 \item update_reason: the explanation of a specific taxon name update (from an aligned name to an accepted or suggested name).
 \item subclass: the subclass of the accepted name.
 \item taxon_distribution: the distribution of the accepted name; only filled in if an APC accepted_name is available.
-\item scientific_name_authorship: the authorship information for the accepted (or known) name; available for both APC and APNI names.
+\item scientific_name_authorship: the authorship information for the accepted (or synonymous) name; available for both APC and APNI names.
 \item taxon_ID: the unique taxon concept identifier for the accepted_name; only filled in if an APC accepted_name is available.
 \item taxon_ID_genus: an identifier for the genus; only filled in if an APC-accepted genus name is available.
 \item scientific_name_ID: an identifier for the nomenclatural (not taxonomic) details of a scientific name; available for both APC and APNI names.

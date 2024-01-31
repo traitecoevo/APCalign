@@ -94,7 +94,7 @@ APNI_matches = TRUE                     #include (TRUE) or exclude (FALSE) APNI 
 identifier = NA_character               #include a unique identifier as part of informal names
 ```
 
-**output**: A data frame with rows representing each taxon and with columns documenting the alignment made, the reason for this alignment, and a selection of taxon name mutations to which the original name was compared (*original_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code, cleaned_name, stripped_name, stripped_name2, trinomial, binomial, genus, fuzzy_match_genus, fuzzy_match_genus_known, fuzzy_match_genus_APNI, fuzzy_match_cleaned_APC, fuzzy_match_cleaned_APC_known, fuzzy_match_cleaned_APC_imprecise, fuzzy_match_cleaned_APC_known_imprecise, fuzzy_match_binomial, fuzzy_match_binomial_APC_known, fuzzy_match_trinomial, fuzzy_match_trinomial_known, fuzzy_match_cleaned_APNI, fuzzy_match_cleaned_APNI_imprecise*).
+**output**: A data frame with rows representing each taxon and with columns documenting the alignment made, the reason for this alignment, and a selection of taxon name mutations to which the original name was compared (*original_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code, cleaned_name, stripped_name, stripped_name2, trinomial, binomial, genus, fuzzy_match_genus, fuzzy_match_genus_synonym, fuzzy_match_genus_APNI, fuzzy_match_cleaned_APC, fuzzy_match_cleaned_APC_synonym, fuzzy_match_cleaned_APC_imprecise, fuzzy_match_cleaned_APC_synonym_imprecise, fuzzy_match_binomial, fuzzy_match_binomial_APC_synonym, fuzzy_match_trinomial, fuzzy_match_trinomial_synonym, fuzzy_match_cleaned_APNI, fuzzy_match_cleaned_APNI_imprecise*).
 
 **example**:
 

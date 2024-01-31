@@ -87,8 +87,8 @@ match_taxa <- function(
       genus = extract_genus(original_name),
       fuzzy_match_genus =
         fuzzy_match_genera(genus, resources$genera_accepted$genus),
-      fuzzy_match_genus_known =
-        fuzzy_match_genera(genus, resources$genera_known$genus),
+      fuzzy_match_genus_synonym =
+        fuzzy_match_genera(genus, resources$genera_synonym$genus),
       fuzzy_match_genus_APNI =
         fuzzy_match_genera(genus, resources$genera_APNI$genus)
     )
@@ -156,7 +156,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_01b_known_scientific_name_with_authorship"
+      alignment_code = "match_01b_synonym_scientific_name_with_authorship"
     )
   
   taxa <- redistribute(taxa)
@@ -216,7 +216,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_01d_known_canonical_name"
+      alignment_code = "match_01d_synonym_canonical_name"
     )
   
   taxa <- redistribute(taxa)
@@ -256,7 +256,7 @@ match_taxa <- function(
       ),
       checked = TRUE,
       known = TRUE,
-      alignment_code = "match_02a_exact_genus_accepted_or_known"
+      alignment_code = "match_02a_exact_genus_accepted_or_synonym"
     )
   
   taxa <- redistribute(taxa)
@@ -309,20 +309,20 @@ match_taxa <- function(
   # Aligned name includes identifier to indicate `genus sp.` refers to a specific species (or infra-specific taxon), associated with a specific dataset/location.
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "[:space:]sp\\.$") &
-    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$genus &
+    taxa$tocheck$fuzzy_match_genus_synonym %in% resources$genera_synonym$genus &
     stringr::word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
   
   ii <-
     match(
-      taxa$tocheck[i,]$fuzzy_match_genus_known,
-      resources$genera_known$genus
+      taxa$tocheck[i,]$fuzzy_match_genus_synonym,
+      resources$genera_synonym$genus
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
-      taxonomic_dataset = resources$genera_known$taxonomic_dataset[ii],
+      taxonomic_dataset = resources$genera_synonym$taxonomic_dataset[ii],
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(resources$genera_known$genus[ii], " sp."),
+      aligned_name_tmp = paste0(resources$genera_synonym$genus[ii], " sp."),
       aligned_name = ifelse(is.na(identifier_string),
                             aligned_name_tmp,
                             paste0(aligned_name_tmp, identifier_string)
@@ -334,7 +334,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_02c_fuzzy_genus_known"
+      alignment_code = "match_02c_fuzzy_genus_synonym"
     )
   
   taxa <- redistribute(taxa)
@@ -402,7 +402,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_03a_intergrade_accepted_or_known_genus"
+      alignment_code = "match_03a_intergrade_accepted_or_synonym_genus"
     )
   
   taxa <- redistribute(taxa)
@@ -448,13 +448,13 @@ match_taxa <- function(
   
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "\\ -- |\\--") &
-    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$genus
+    taxa$tocheck$fuzzy_match_genus_synonym %in% resources$genera_synonym$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = "APC",
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(fuzzy_match_genus_known, " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(fuzzy_match_genus_synonym, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
                             paste0(aligned_name_tmp, identifier_string2, "]")
@@ -466,7 +466,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_03c_intergrade_fuzzy_known_genus"
+      alignment_code = "match_03c_intergrade_fuzzy_synonym_genus"
     )
   
   taxa <- redistribute(taxa)
@@ -574,7 +574,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_04a_indecision_accepted_or_known_genus"
+      alignment_code = "match_04a_indecision_accepted_or_synonym_genus"
     )
   
   taxa <- redistribute(taxa)
@@ -634,13 +634,13 @@ match_taxa <- function(
     !stringr::str_detect(taxa$tocheck$cleaned_name, "[:digit:]") &
     !stringr::str_detect(taxa$tocheck$cleaned_name, "\\(") &
     !stringr::str_detect(taxa$tocheck$cleaned_name, "\\'") &
-    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$genus
+    taxa$tocheck$fuzzy_match_genus_synonym %in% resources$genera_synonym$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(  
       taxonomic_dataset = "APC",
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(fuzzy_match_genus_known, " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(fuzzy_match_genus_synonym, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
                             paste0(aligned_name_tmp, identifier_string2, "]")
@@ -652,7 +652,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_04c_indecision_fuzzy_known_genus"
+      alignment_code = "match_04c_indecision_fuzzy_synonym_genus"
     )
   
   taxa <- redistribute(taxa)
@@ -782,7 +782,7 @@ match_taxa <- function(
   # match_05b: fuzzy match to APC-known canonical name
   # Fuzzy match of taxon name to an APC-known canonical name, once filler words and punctuation are removed.
   for (i in 1:nrow(taxa$tocheck)) {    
-    taxa$tocheck$fuzzy_match_cleaned_APC_known[i] <-
+    taxa$tocheck$fuzzy_match_cleaned_APC_synonym[i] <-
       fuzzy_match(
         txt = taxa$tocheck$stripped_name[i],
         accepted_list = resources$`APC list (known names)`$stripped_canonical,
@@ -793,11 +793,11 @@ match_taxa <- function(
   }
   
   i <-
-    taxa$tocheck$fuzzy_match_cleaned_APC_known %in% resources$`APC list (known names)`$stripped_canonical
+    taxa$tocheck$fuzzy_match_cleaned_APC_synonym %in% resources$`APC list (known names)`$stripped_canonical
   
   ii <-
     match(
-      taxa$tocheck[i,]$fuzzy_match_cleaned_APC_known,
+      taxa$tocheck[i,]$fuzzy_match_cleaned_APC_synonym,
       resources$`APC list (known names)`$stripped_canonical
     )
   
@@ -813,7 +813,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_05b_fuzzy_known_canonical_name"
+      alignment_code = "match_05b_fuzzy_synonym_canonical_name"
     )
   
   taxa <- redistribute(taxa)
@@ -946,13 +946,13 @@ match_taxa <- function(
       stringr::str_detect(taxa$tocheck$cleaned_name, "[Aa]ff[\\.\\s]") |
         stringr::str_detect(taxa$tocheck$cleaned_name, " affinis ")
     ) &
-    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$genus
+    taxa$tocheck$fuzzy_match_genus_synonym %in% resources$genera_synonym$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = "APC",
       taxon_rank = "genus",      
-      aligned_name_tmp = paste0(fuzzy_match_genus_known, " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(fuzzy_match_genus_synonym, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
                             paste0(aligned_name_tmp, identifier_string2, "]")
@@ -964,7 +964,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_06c_species_affinis_APC_known_fuzzy"
+      alignment_code = "match_06c_species_affinis_APC_synonym_fuzzy"
     )
   
   taxa <- redistribute(taxa)
@@ -1095,7 +1095,7 @@ match_taxa <- function(
   # These matches require individual review and are turned off as a default.
   if (imprecise_fuzzy_matches == TRUE) {
     for (i in 1:nrow(taxa$tocheck)) {
-      taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise[i] <-
+      taxa$tocheck$fuzzy_match_cleaned_APC_synonym_imprecise[i] <-
         fuzzy_match(
           txt = taxa$tocheck$stripped_name[i],
           accepted_list = resources$`APC list (known names)`$stripped_canonical,
@@ -1107,11 +1107,11 @@ match_taxa <- function(
     }
     
     i <-
-      taxa$tocheck$fuzzy_match_cleaned_APC_known_imprecise %in% resources$`APC list (known names)`$stripped_canonical
+      taxa$tocheck$fuzzy_match_cleaned_APC_synonym_imprecise %in% resources$`APC list (known names)`$stripped_canonical
     
     ii <-
       match(
-        taxa$tocheck[i,]$fuzzy_match_cleaned_APC_known_imprecise,
+        taxa$tocheck[i,]$fuzzy_match_cleaned_APC_synonym_imprecise,
         resources$`APC list (known names)`$stripped_canonical
       )
     
@@ -1127,7 +1127,7 @@ match_taxa <- function(
         ),
         known = TRUE,
         checked = TRUE,
-        alignment_code = "match_07b_imprecise_fuzzy_known_canonical_name"
+        alignment_code = "match_07b_imprecise_fuzzy_synonym_canonical_name"
       )
     
     taxa <- redistribute(taxa)
@@ -1217,13 +1217,13 @@ match_taxa <- function(
   # because there are hybrid taxa listed in both APC & APNI.
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, " [xX] ") &
-    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$genus
+    taxa$tocheck$fuzzy_match_genus_synonym %in% resources$genera_synonym$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = "APC",
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(fuzzy_match_genus_known, " x [", cleaned_name),
+      aligned_name_tmp = paste0(fuzzy_match_genus_synonym, " x [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
                             paste0(aligned_name_tmp, identifier_string2, "]")
@@ -1235,7 +1235,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_08c_hybrid_taxon_known_fuzzy"
+      alignment_code = "match_08c_hybrid_taxon_synonym_fuzzy"
     )
   
   taxa <- redistribute(taxa)
@@ -1368,7 +1368,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_09b_trinomial_exact_known"
+      alignment_code = "match_09b_trinomial_exact_synonym"
     )
   
   taxa <- redistribute(taxa)
@@ -1430,7 +1430,7 @@ match_taxa <- function(
   # This match also does a good job aligning and correcting syntax of phrase names
   for (i in 1:nrow(taxa$tocheck)) {
     if (!is.na(taxa$tocheck$trinomial[i])) {
-      taxa$tocheck$fuzzy_match_trinomial_known[i] <-
+      taxa$tocheck$fuzzy_match_trinomial_synonym[i] <-
         fuzzy_match(
           txt = taxa$tocheck$trinomial[i],
           accepted_list = resources$`APC list (known names)`$trinomial,
@@ -1442,11 +1442,11 @@ match_taxa <- function(
   }
   
   i <-
-    taxa$tocheck$fuzzy_match_trinomial_known %in% resources$`APC list (known names)`$trinomial
+    taxa$tocheck$fuzzy_match_trinomial_synonym %in% resources$`APC list (known names)`$trinomial
   
   ii <-
     match(
-      taxa$tocheck[i,]$fuzzy_match_trinomial_known,
+      taxa$tocheck[i,]$fuzzy_match_trinomial_synonym,
       resources$`APC list (known names)`$trinomial
     )
   
@@ -1462,7 +1462,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_09d_trinomial_fuzzy_known"
+      alignment_code = "match_09d_trinomial_fuzzy_synonym"
     )
   
   taxa <- redistribute(taxa)
@@ -1533,7 +1533,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_10b_binomial_exact_known"
+      alignment_code = "match_10b_binomial_exact_synonym"
     )
   
   taxa <- redistribute(taxa)
@@ -1599,8 +1599,8 @@ match_taxa <- function(
   # This match also does a good job aligning and correcting syntax of phrase names.
   for (i in 1:nrow(taxa$tocheck)) {
     if (!is.na(taxa$tocheck$binomial[i]) &
-        is.na(taxa$tocheck$fuzzy_match_binomial_APC_known[i])) {
-      taxa$tocheck$fuzzy_match_binomial_APC_known[i] <-
+        is.na(taxa$tocheck$fuzzy_match_binomial_APC_synonym[i])) {
+      taxa$tocheck$fuzzy_match_binomial_APC_synonym[i] <-
         fuzzy_match(
           txt = taxa$tocheck$binomial[i],
           accepted_list = resources$`APC list (known names)`$binomial,
@@ -1613,11 +1613,11 @@ match_taxa <- function(
   }
   
   i <-
-    taxa$tocheck$fuzzy_match_binomial_APC_known %in% resources$`APC list (known names)`$binomial
+    taxa$tocheck$fuzzy_match_binomial_APC_synonym %in% resources$`APC list (known names)`$binomial
   
   ii <-
     match(
-      taxa$tocheck[i,]$fuzzy_match_binomial_APC_known,
+      taxa$tocheck[i,]$fuzzy_match_binomial_APC_synonym,
       resources$`APC list (known names)`$binomial
     )
   
@@ -1633,7 +1633,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_10d_binomial_fuzzy_known"
+      alignment_code = "match_10d_binomial_fuzzy_synonym"
     )
   
   taxa <- redistribute(taxa)
@@ -1848,19 +1848,19 @@ match_taxa <- function(
   # Toward the end of the alignment function, see if first word of unmatched taxa is an APC-known genus.
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   i <-
-    taxa$tocheck$genus %in% resources$genera_known$genus
+    taxa$tocheck$genus %in% resources$genera_synonym$genus
   
   ii <-
     match(
       taxa$tocheck[i,]$genus,
-      resources$genera_known$genus
+      resources$genera_synonym$genus
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = "APC",
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(resources$genera_known$genus[ii], " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(resources$genera_synonym$genus[ii], " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
                             paste0(aligned_name_tmp, identifier_string2, "]")
@@ -1872,7 +1872,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_12b_genus_exact_known"
+      alignment_code = "match_12b_genus_exact_synonym"
     )
   
   taxa <- redistribute(taxa)
@@ -1982,13 +1982,13 @@ match_taxa <- function(
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   
   i <-
-    taxa$tocheck$fuzzy_match_genus_known %in% resources$genera_known$genus
+    taxa$tocheck$fuzzy_match_genus_synonym %in% resources$genera_synonym$genus
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = "APC",
       taxon_rank = "genus",
-      aligned_name_tmp = paste0(fuzzy_match_genus_known, " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(fuzzy_match_genus_synonym, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
                             paste0(aligned_name_tmp, identifier_string2, "]")
@@ -2000,7 +2000,7 @@ match_taxa <- function(
       ),
       known = TRUE,
       checked = TRUE,
-      alignment_code = "match_12f_genus_fuzzy_known"
+      alignment_code = "match_12f_genus_fuzzy_synonym"
     )
   
   taxa <- redistribute(taxa)
