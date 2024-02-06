@@ -195,6 +195,7 @@ load_taxonomic_resources <-
         genus
       ) %>%
       dplyr::filter(taxon_rank %in% c("genus"), taxonomic_status == "accepted") %>%
+      dplyr::filter(!stringr::str_detect(stringr::word(genus, 1), "aceae$")) %>%
       dplyr::mutate(taxonomic_dataset = "APC")
     
     taxonomic_resources[["genera_synonym"]] <-
@@ -213,6 +214,7 @@ load_taxonomic_resources <-
       ) %>%
       dplyr::filter(taxon_rank %in% c("genus")) %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$genera_accepted$canonical_name) %>%
+      dplyr::filter(!stringr::str_detect(stringr::word(genus, 1), "aceae$")) %>%
       dplyr::mutate(taxonomic_dataset = "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
     
