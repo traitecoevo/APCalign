@@ -229,6 +229,7 @@ load_taxonomic_resources <-
       ) %>%
       dplyr::filter(taxon_rank %in% c("genus")) %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$APC$canonical_name) %>%
+      dplyr::filter(!stringr::str_detect(stringr::word(genus, 1), "aceae$")) %>%
       dplyr::mutate(taxonomic_dataset = "APNI") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
     

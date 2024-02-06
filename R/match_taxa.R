@@ -304,8 +304,8 @@ match_taxa <- function(
     return(taxa)
   
   # match_02c: Genus-level resolution
-  # Fuzzy matches of APC known genera for names where the final "word" is `sp` or `spp` and 
-  # there isn't an exact match to an APC known genus name.
+  # Fuzzy matches of APC synonymous genera for names where the final "word" is `sp` or `spp` and 
+  # there isn't an exact match to an APC synonymous genus name.
   # Aligned name includes identifier to indicate `genus sp.` refers to a specific species (or infra-specific taxon), associated with a specific dataset/location.
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "[:space:]sp\\.$") &
