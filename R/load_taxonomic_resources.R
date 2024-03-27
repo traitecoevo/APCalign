@@ -381,9 +381,10 @@ default_version <- function() {
     
     response <- httr::GET(url)
   
-  if(httr::http_error(response)){
+  if(httr::http_error(response) | !network){
     message("API currently down, try again later")
-  } 
+    return(invisible(NULL))
+  } else
   release_data <- httr::content(response, "text") |> jsonlite::fromJSON()
   
   # Pull out versions
