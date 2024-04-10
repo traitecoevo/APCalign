@@ -740,7 +740,7 @@ match_taxa <- function(
   
   # match_05a: fuzzy match to APC-accepted canonical name
   # Fuzzy match of taxon name to an APC-accepted canonical name, once filler words and punctuation are removed.
-  for (i in 1:nrow(taxa$tocheck)) {    
+  for (i in seq_along(nrow(taxa$tocheck))) {    
     taxa$tocheck$fuzzy_match_cleaned_APC[i] <-
       fuzzy_match(
         txt = taxa$tocheck$stripped_name[i],
@@ -781,7 +781,7 @@ match_taxa <- function(
   
   # match_05b: fuzzy match to APC-known canonical name
   # Fuzzy match of taxon name to an APC-known canonical name, once filler words and punctuation are removed.
-  for (i in 1:nrow(taxa$tocheck)) {    
+  for (i in seq_along(nrow(taxa$tocheck))) {    
     taxa$tocheck$fuzzy_match_cleaned_APC_synonym[i] <-
       fuzzy_match(
         txt = taxa$tocheck$stripped_name[i],
@@ -863,7 +863,7 @@ match_taxa <- function(
   i <-
     (
       stringr::str_detect(taxa$tocheck$cleaned_name, "[Aa]ff[\\.\\s]") |
-        stringr::str_detect(taxa$tocheck$cleaned_name, " affinis ")  |
+        stringr::str_detect(taxa$tocheck$cleaned_name, " affinis[\\s|$]")  |
         stringr::str_detect(taxa$tocheck$cleaned_name, " cf[\\.\\s]")
     ) &
     taxa$tocheck$genus %in% resources$genera_all2$genus
@@ -1048,7 +1048,7 @@ match_taxa <- function(
   # For imprecise fuzzy matches, the taxon name can differ from the `APC-accepted` names by 5 characters & up to 25% of the string length.
   # These matches require individual review and are turned off as a default.
   if (imprecise_fuzzy_matches == TRUE) {
-    for (i in 1:nrow(taxa$tocheck)) {
+    for (i in seq_along(nrow(taxa$tocheck))) {
       taxa$tocheck$fuzzy_match_cleaned_APC_imprecise[i] <-
         fuzzy_match(
           txt = taxa$tocheck$stripped_name[i],
@@ -1094,7 +1094,7 @@ match_taxa <- function(
   # For imprecise fuzzy matches, the taxon name can differ from the `APC -known` names by 5 characters & up to 25% of the string length.
   # These matches require individual review and are turned off as a default.
   if (imprecise_fuzzy_matches == TRUE) {
-    for (i in 1:nrow(taxa$tocheck)) {
+    for (i in seq_along(nrow(taxa$tocheck))) {
       taxa$tocheck$fuzzy_match_cleaned_APC_synonym_imprecise[i] <-
         fuzzy_match(
           txt = taxa$tocheck$stripped_name[i],
@@ -1381,7 +1381,7 @@ match_taxa <- function(
   # sometimes the submitted taxon name is a valid trinomial + notes and 
   # such names will only be aligned by matches considering only the first three words of the stripped name.
   # This match also does a good job aligning and correcting syntax of phrase names
-  for (i in 1:nrow(taxa$tocheck)) {
+  for (i in seq_along(nrow(taxa$tocheck))) {
     if (!is.na(taxa$tocheck$trinomial[i])) {
       taxa$tocheck$fuzzy_match_trinomial[i] <-
         fuzzy_match(
@@ -1428,7 +1428,7 @@ match_taxa <- function(
   # sometimes the submitted taxon name is a valid trinomial + notes and 
   # such names will only be aligned by matches considering only the first three words of the stripped name.
   # This match also does a good job aligning and correcting syntax of phrase names
-  for (i in 1:nrow(taxa$tocheck)) {
+  for (i in seq_along(nrow(taxa$tocheck))) {
     if (!is.na(taxa$tocheck$trinomial[i])) {
       taxa$tocheck$fuzzy_match_trinomial_synonym[i] <-
         fuzzy_match(
@@ -1547,7 +1547,7 @@ match_taxa <- function(
   # or a valid binomial + invalid infraspecific epithet.
   # Such names will only be aligned by matches considering only the first two words of the stripped name.
   # This match also does a good job aligning and correcting syntax of phrase names.
-  for (i in 1:nrow(taxa$tocheck)) {
+  for (i in seq_along(nrow(taxa$tocheck))) {
     if (!is.na(taxa$tocheck$binomial[i]) &
         is.na(taxa$tocheck$fuzzy_match_binomial[i])) {
       taxa$tocheck$fuzzy_match_binomial[i] <-
@@ -1597,7 +1597,7 @@ match_taxa <- function(
   # or a valid binomial + invalid infraspecific epithet.
   # Such names will only be aligned by matches considering only the first two words of the stripped name.
   # This match also does a good job aligning and correcting syntax of phrase names.
-  for (i in 1:nrow(taxa$tocheck)) {
+  for (i in seq(nrow(taxa$tocheck))) {
     if (!is.na(taxa$tocheck$binomial[i]) &
         is.na(taxa$tocheck$fuzzy_match_binomial_APC_synonym[i])) {
       taxa$tocheck$fuzzy_match_binomial_APC_synonym[i] <-
@@ -1648,7 +1648,7 @@ match_taxa <- function(
   # to avoid incorrectly aligning an APC accepted/known taxa to an APNI name.
   # This is especially true to accurately align phrase names.
   if (APNI_matches == TRUE) {
-    for (i in 1:nrow(taxa$tocheck)) {
+    for (i in seq_along(nrow(taxa$tocheck))) {
       taxa$tocheck$fuzzy_match_cleaned_APNI[i] <-
         fuzzy_match(
           txt = taxa$tocheck$stripped_name[i],
@@ -1695,7 +1695,7 @@ match_taxa <- function(
   # These matches require individual review and are turned off as a default.
   if (APNI_matches == TRUE & imprecise_fuzzy_matches == TRUE) {
     
-    for (i in 1:nrow(taxa$tocheck)) {
+    for (i in seq_along(nrow(taxa$tocheck))) {
       taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise[i] <-
         fuzzy_match(
           txt = taxa$tocheck$cleaned_name[i],
