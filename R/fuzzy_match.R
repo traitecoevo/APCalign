@@ -51,7 +51,7 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
   
   ## subset accepted list to taxa that begin with the same first letter to reduce the number of fuzzy matches that are made in the next step.
   ## has also wanted to do this for the second word, but then need to separate different lists of reference names - smaller time saving and not worth it.
-    accepted_list <- accepted_list[(stringr::str_extract(accepted_list, "[:alpha:]") %>% stringr::str_to_lower() == txt_word1_start %>% stringr::str_to_lower())]
+  #  accepted_list <- accepted_list[(stringr::str_extract(accepted_list, "[:alpha:]") %>% stringr::str_to_lower() == txt_word1_start %>% stringr::str_to_lower())]
   
   ## identify the number of characters that must change for the text string to match each of the possible accepted names
   distance_c <- utils::adist(txt, accepted_list, fixed=TRUE)[1,]
@@ -61,7 +61,7 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
   min_dist_per_c <-  min(distance_c) / stringr::str_length(txt)
 
   i <- which(distance_c==min_dist_abs_c)
-  keep = FALSE
+  keep <- FALSE
   
   if(
     ## Within allowable number of characters (absolute)
@@ -72,7 +72,7 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
     #length(i) <= n_allowed
     ) {
     
-    for (j in 1:length(i)) {
+    for (j in seq_length(i)) {
   
       if (keep == TRUE) {
         
@@ -108,18 +108,18 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
     
         if(words_in_text == 1) {
           if (txt_word1_start == match_word1_start) {
-            keep = TRUE }
+            keep <- TRUE }
           
         } else if(words_in_text == 2) {
           if (txt_word1_start == match_word1_start & txt_word2_start == match_word2_start) {
-            keep = TRUE }
+            keep <- TRUE }
           
         } else if(words_in_text > 2) {
           if (words_in_match > 2) {
             if (txt_word1_start == match_word1_start & txt_word2_start == match_word2_start & txt_word3_start == match_word3_start) {
-              keep = TRUE }
+              keep <- TRUE }
           } else if (txt_word1_start == match_word1_start & txt_word2_start == match_word2_start) {
-            keep = TRUE }
+            keep <- TRUE }
         }
     
         
