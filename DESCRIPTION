@@ -38,7 +38,7 @@ Suggests:
     here,
     testthat (>= 3.0.0)
 Remotes:
-    r-universe::apache.r-universe.dev
+    arrow::apache.r-universe.dev
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Config/testthat/edition: 3
