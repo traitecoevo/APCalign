@@ -25,7 +25,7 @@ version:
 
 ``` r
 # install.packages("remotes")
-# remotes::install_github("traitecoevo/APCalign")
+# remotes::install_github("traitecoevo/APCalign", dependencies = TRUE, upgrade = "ask")
 
 library(APCalign)
 ```

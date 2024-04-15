@@ -34,7 +34,7 @@ the established status (native/introduced) of plant taxa across different states
 
 ```{r install, eval= FALSE}
 # install.packages("remotes")
-# remotes::install_github("traitecoevo/APCalign")
+# remotes::install_github("traitecoevo/APCalign", dependencies = TRUE, upgrade = "ask")
 
 library(APCalign)
 ```
