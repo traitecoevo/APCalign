@@ -3,7 +3,7 @@
 
 * Update installation instructions 
 
-* Added how to cite and version APCalign 
+* Added how to cite and version APCalign as an article
 
-
+* Exported `default_version`
 
