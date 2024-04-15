@@ -7,3 +7,5 @@
 
 * Exported `default_version`
 
+* Adding citing method for R package
+

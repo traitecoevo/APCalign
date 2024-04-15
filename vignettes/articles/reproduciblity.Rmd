@@ -68,5 +68,9 @@ resources <- load_taxonomic_resources(
 )
 ```
 
+#### Citing the R package
 
+```{r}
+citation("APCalign")
+```
 
