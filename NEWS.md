@@ -1,9 +1,9 @@
-# APCalign 0.1.4
+# APCalign 0.1.5
 
 
-* Better handling of errors when API/network connection is down for `load_taxonomic_resources` 
+* Update installation instructions 
 
-* Refined testing for `load_taxonomic_resources` 
+* Added how to cite and version APCalign 
 
 
 
