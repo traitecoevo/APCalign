@@ -70,7 +70,9 @@ resources <- load_taxonomic_resources(
 
 #### Citing the R package
 
-```{r}
+For completion, you can also cite the R package by calling `citation()`. We also have a research article introducing the `APCalign`, we will share the details of its citation when it is in press. 
+
+```{r, eval=TRUE}
 citation("APCalign")
 ```
 
