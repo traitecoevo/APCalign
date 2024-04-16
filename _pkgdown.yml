@@ -18,19 +18,22 @@ navbar:
       menu:
       - text: "Data providers"
       - text: APC and APNI
-        href: articles/data-providers.html
+        href: articles/articles/data-providers.html
       - text: "Functions"
       - text: Details on the 10 exported functions, including examples of usage
         href: articles/function_notes.html
-      - text: -------
       - text: "Taxon matching"
       - text: Our fuzzy matching  algorithm
         href: articles/updating-taxon-names.html
+      - text: "Reproducibility with APCalign"
+        href:  articles/reproducibility.html
+        
 
 reference:
 - subtitle: Standardise plant taxon names
 - contents:
   - load_taxonomic_resources
+  - default_version
   - create_taxonomic_update_lookup
   - align_taxa
   - update_taxonomy
