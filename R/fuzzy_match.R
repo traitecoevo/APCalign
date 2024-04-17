@@ -72,7 +72,7 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
     #length(i) <= n_allowed
     ) {
     
-    for (j in seq_length(i)) {
+    for (j in seq_len(i)) {
   
       if (keep == TRUE) {
         
