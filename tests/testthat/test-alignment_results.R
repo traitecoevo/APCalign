@@ -181,5 +181,3 @@ test_that("taxon name alignment matches and updates work as expected", {
   # these are known and expected failures.
   expect_equal(benchmarks$updated_name_passes, output_updates$test_column)
   })
-
-
