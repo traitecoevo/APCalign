@@ -10,10 +10,11 @@ test_that("Extract genus retruns expected results", {
       "Hibbertia",
       "Rostellularia long leaves",
       "Hibbertia sericea var  silliafolius",
-      "Hibbertia sp."
+      "Hibbertia sp.",
+      NA
     )
 
-  expected <- c("Banksia", "Acacia", "Commersonia", "Thelymitra", "Justicia", "Hibbertia", "Rostellularia", "Hibbertia", "Hibbertia")
+  expected <- c("Banksia", "Acacia", "Commersonia", "Thelymitra", "Justicia", "Hibbertia", "Rostellularia", "Hibbertia", "Hibbertia", NA)
   out <- extract_genus(taxa)
   expect_equal(out, expected)
   })

@@ -118,7 +118,7 @@ extract_genus <- function(taxon_name) {
   
   # Deal with names that being with x, 
   # e.g."x Taurodium x toveyanum" or "x Glossadenia tutelata"
-  i <- stringr::str_to_lower(genus) == "x"
+  i <- !is.na(genus) & stringr::str_to_lower(genus) == "x"
   genus[i] <- 
     str_split_i(taxon_name[i], " ", 2) %>%  paste("x", .)
   
