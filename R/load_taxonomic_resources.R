@@ -98,14 +98,7 @@ load_taxonomic_resources <-
       ) %>%
       mutate(
         genus = extract_genus(canonical_name),
-        taxon_rank = stringr::str_to_lower(taxon_rank),
-        taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
-        taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
-        taxon_rank = stringr::str_replace(taxon_rank, "ordo", "order"),
-        taxon_rank = stringr::str_replace(taxon_rank, "familia", "family"),
-        taxon_rank = stringr::str_replace(taxon_rank, "varietas", "variety"),
-        taxon_rank = stringr::str_replace(taxon_rank, "forma", "form"),
-        taxon_rank = stringr::str_replace(taxon_rank, "sectio", "section")
+        taxon_rank = standardise_taxon_rank(taxon_rank)
       )
     
     taxonomic_resources$APNI <- taxonomic_resources$APNI %>%
@@ -124,14 +117,7 @@ load_taxonomic_resources <-
       )  %>%
       mutate(
         genus = extract_genus(canonical_name),
-        taxon_rank = stringr::str_to_lower(taxon_rank),
-        taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
-        taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
-        taxon_rank = stringr::str_replace(taxon_rank, "ordo", "order"),
-        taxon_rank = stringr::str_replace(taxon_rank, "familia", "family"),
-        taxon_rank = stringr::str_replace(taxon_rank, "varietas", "variety"),
-        taxon_rank = stringr::str_replace(taxon_rank, "forma", "form"),
-        taxon_rank = stringr::str_replace(taxon_rank, "sectio", "section")
+        taxon_rank = standardise_taxon_rank(taxon_rank)
       )
     
     APC_tmp <-

@@ -31,7 +31,7 @@ standardise_names <- function(taxon_names) {
     f("\\*", "x") %>%
   
     ## remove ".."
-    stringr::str_replace("\\.\\.", "\\.") %>%
+    f("\\.\\.", "\\.") %>%
 
     ## Weird formatting
     f("[\\n\\t]", " ") %>%
@@ -123,4 +123,42 @@ extract_genus <- function(taxon_name) {
     str_split_i(taxon_name[i], " ", 2) %>%  paste("x", .)
   
   genus %>% stringr::str_to_sentence()
+}
+
+
+#' Standardises taxon names by performing a series of text substitutions to remove common inconsistencies in taxonomic nomenclature.
+#'
+#' The function takes a character vector of taxon names as input and 
+#' returns a character vector of taxon names using standardised taxonomic syntax as output. 
+#' In particular it standardises taxon rank abbreviations and qualifiers (subsp., var., f.), as people use many variants of these terms. 
+#' It also standardises or removes a few additional filler words used within taxon names (affinis becomes aff.; s.l. and s.s. are removed).
+#'
+#' @param taxon_names A character vector of taxon names that need to be standardised.
+#'
+#' @return A character vector of standardised taxon names.
+#'
+#'
+#' @examples
+#' standardise_names(c("Quercus suber",
+#'                     "Eucalyptus sp.",
+#'                     "Eucalyptus spp.",
+#'                     "Agave americana var. marginata",
+#'                     "Agave americana v marginata",
+#'                     "Notelaea longifolia forma longifolia",
+#'                     "Notelaea longifolia f longifolia"))
+#' @export
+standardise_taxon_rank <- function(taxon_rank) {
+  f <- function(x, find, replace) {
+    gsub(find, replace, x, fixed = TRUE)
+  }
+  
+  taxon_rank %>%
+  stringr::str_to_lower() %>%
+  f("regnum", "kingdom") %>%
+  f("classis", "class") %>%
+  f("ordo", "order") %>%
+  f("familia", "family") %>%
+  f("varietas", "variety") %>%
+  f("forma", "form") %>%
+  f("sectio", "section")
 }
