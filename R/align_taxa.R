@@ -149,7 +149,7 @@ align_taxa <- function(original_name,
     # take unique values so each name only processed once
     dplyr::filter(!duplicated(original_name))
   
-  if (all(taxa$tocheck$checked)) {
+  if (all(taxa$tocheck$checked)|all(is.na(taxa$tocheck$checked))) {
     message("  - all taxa are already checked, yay!")
     return(invisible(taxa$tocheck))
   }
@@ -157,6 +157,7 @@ align_taxa <- function(original_name,
   # move all checked taxa to "checked"
   taxa <- redistribute(taxa)
   
+  if (!is.null(output) && file.exists(output)) {
   # check unknown taxa
   message(
     "  -> ",
@@ -171,7 +172,7 @@ align_taxa <- function(original_name,
     crayon::blue(sum(!taxa$tocheck$checked)),
     " taxa yet to be checked"
   )
-  
+  }
   # do the actual matching
   taxa <- 
     match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches, identifier) %>%
