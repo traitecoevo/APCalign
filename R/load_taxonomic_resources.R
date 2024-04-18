@@ -334,11 +334,6 @@ dataset_access_function <-
                 modified = readr::col_datetime(format = "")
               )
           )
-
-        on.exit(
-          close( "https://biodiversity.org.au/nsl/services/export/taxonCsv"),
-          close( "https://biodiversity.org.au/nsl/services/export/namesCsv")
-                )
       }, error = function(e) rlang::abort("Taxonomic resources not currently available, try again later")
       )
     }
