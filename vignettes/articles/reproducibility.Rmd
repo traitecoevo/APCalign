@@ -59,13 +59,28 @@ In order to be more transparent, we recommend you to check what is the latest `d
 default_version()
 ```
 
-Then copying and pasting the output into `load_taxonomic_resources()` directly. This way makes the version of taxonomic resources more explicit in your code.
+Then copying and pasting the output into `load_taxonomic_resources()` directly. This way makes the version of taxonomic resources more explicit in your code. 
+
+To ensure the specific version of taxonomic resources is availabe for subsequent functions make sure to assign them to an object: 
 
 ```{r}
-resources <- load_taxonomic_resources(
+resources_0.0.4.9000 <- load_taxonomic_resources(
   stable_or_current_data = "stable",
   version = "0.0.4.9000"
 )
+```
+
+Then during alignment and update, make sure you supply your version of taxonomic resources using the `resources` argument:
+
+```{r}
+# Align taxa
+aligned_taxa <- align_taxa(gbif_lite$species, resources = resources_0.0.4.9000)
+
+# Update taxonomy 
+updated_taxa <- update_taxonomy(aligned_taxa, resources = resources_0.0.4.9000)
+
+# Align and update all-in-one
+aligned_updated_taxa <- create_taxonomic_update_lookup(gbif_lite$species, resources = resources_0.0.4.9000)
 ```
 
 #### Citing the R package
