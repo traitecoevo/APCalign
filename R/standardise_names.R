@@ -63,7 +63,7 @@ standardise_names <- function(taxon_names) {
     f("\\saffin(\\s|$)",    " aff. ") %>%
     f("\\saff(\\s|$)",      " aff. ") %>%
     f("\\saffn(\\s|$|\\.)", " aff. ") %>%
-    f("\\saffinis(\\s|$)",  " aff. ") %>%
+    f("\\saffinis(\\s)",  " aff. ") %>%
     
     ## f. not forma or form or form. or f
     f("\\sforma(\\s|$)",       " f. ") %>%
