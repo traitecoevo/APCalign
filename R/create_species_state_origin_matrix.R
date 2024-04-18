@@ -50,7 +50,7 @@ identify_places <- function(sep_state_data) {
 #' @noRd
 create_species_df <- function(apc_places, apc_species) {
   species_df <- dplyr::tibble(species = apc_species$canonical_name)
-  for (i in 1:length(apc_places)) {
+  for (i in seq_along(apc_places)) {
     species_df <- dplyr::bind_cols(species_df, NA, .name_repair = "minimal")
   }
   names(species_df) <- c("species", apc_places)
@@ -76,7 +76,7 @@ state_parse_and_add_column <- function(species_df, state, apc_species) {
 
 #' @noRd
 parse_states <- function(species_df, apc_places, apc_species) {
-  for (i in 1:length(apc_places)) {
+  for (i in seq_along(apc_places)) {
     species_df <- state_parse_and_add_column(species_df, apc_places[i], apc_species)
   }
   return(species_df)
