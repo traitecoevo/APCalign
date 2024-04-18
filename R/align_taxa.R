@@ -91,7 +91,10 @@ align_taxa <- function(original_name,
         )
       )
     
+    #
     # TODO: check taxa_ raw has correct columns
+    # IT DOESN'T
+    #
   }
   else {
     taxa_raw <-
@@ -200,6 +203,8 @@ align_taxa <- function(original_name,
   ## save outputs to file, useful for caching results 
   if (!is.null(output)) {
     dir.create(dirname(output), FALSE, TRUE)
+    taxa$checked<-TRUE
+    taxa$known<-!is.na(taxa$aligned_name)
     readr::write_csv(taxa, output)
     message("  - output saved in file: ", output)
   }
