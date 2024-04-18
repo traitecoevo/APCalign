@@ -1,5 +1,5 @@
 bibentry(
-  bibtype  = "Preprint",
+  bibtype  = "Unpublished",
   title    = "APCalign: an R package workflow and app for aligning and updating flora names to the Australian Plant Census",
   author   = c(
     person(given = "Elizabeth", family = "Wenk", role = c("aut", "ctb"), email = "e.wenk@unsw.edu.au", comment = c(ORCID = "0000-0001-5640-5910")),
