@@ -38,7 +38,7 @@ packageVersion("APCalign")
 
 `APCalign` allows users to load static downloads of taxonomic resources the APC and APNI or the latest version from the National Species List website. This functionality is specified using the `stable_or_current_data` argument of `load_taxonomic_resources()`. 
 
-We recommend to always use `stable_or_current_data = "stable"` if you want your taxonomic alignment and update to be reproducible. The preset value is `stable_or_current_data = "stable"`. These static downloads are version controlled and stored in our repository as [releases](https://github.com/traitecoevo/APCalign/releases). 
+If you want your taxonomic alignment and update to be reproducible, we recommend to always use `stable_or_current_data = "stable"`. The default value is `stable_or_current_data = "stable"`. These static downloads are version controlled and stored in our repository as [releases](https://github.com/traitecoevo/APCalign/releases). 
 
 ```{r}
 load_taxonomic_resources(stable_or_current_data = "stable")
