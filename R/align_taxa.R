@@ -164,10 +164,10 @@ align_taxa <- function(original_name,
   # check unknown taxa
   message(
     "  -> ",
-    crayon::blue(sum(taxa$tocheck$known, na.rm = T)),
+    crayon::blue(sum(taxa$known, na.rm = T)),
     " names already matched; ",
     crayon::blue(sum(
-      taxa$tocheck$checked &
+      taxa$checked &
         !taxa$tocheck$known,
       na.rm = T
     )),
