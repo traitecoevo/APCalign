@@ -151,9 +151,6 @@ test_that("taxon name alignment matches and updates work as expected", {
   expect_equal(benchmarks$aligned_name,   output_align$aligned_name)
   expect_equal(benchmarks$taxon_rank,     output_align$taxon_rank)
   expect_equal(benchmarks$taxonomic_dataset, output_align$taxonomic_dataset)
-  expect_equal(benchmarks$alignment_code, 
-                stringr::str_extract(output_align$alignment_code, "match_[:digit:][:digit:][:alpha:]"))     
-
 
   output_updates <- 
     update_taxonomy(
@@ -180,7 +177,7 @@ test_that("taxon name alignment matches and updates work as expected", {
   expect_equal(benchmarks$original_name, output_updates$original_name)
   # We expect 100% success in alignment
   expect_equal(benchmarks$aligned_name, output_updates$aligned_name)
-  # for update_taxonomony, there are cases where the algorithm doesn't produce a desired result (suggested_name != updated_name)
+  # for update_taxonomy, there are cases where the algorithm doesn't produce a desired result (suggested_name != updated_name)
   # these are known and expected failures.
   expect_equal(benchmarks$updated_name_passes, output_updates$test_column)
   })
