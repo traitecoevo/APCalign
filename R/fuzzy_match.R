@@ -72,68 +72,68 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
     #length(i) <= n_allowed
     ) {
     
-    for (j in 1:length(i)) {
-  
-      if (keep == TRUE) {
-        
-        break()
-        
-      } else {
-        ## identify number of words in the matched string
-        words_in_match <- 1 + stringr::str_count(accepted_list[i][j]," ")
-        
-        ## identify the first letter of the first word in the matched string
-        match_word1_start <- stringr::str_extract(accepted_list[i][j], "[:alpha:]")
-        
-        ## identify the first letter of the second word in the matched string (if the matched string includes 2+ words)
-        if(words_in_text > 1 & epithet_letters == 2) {
-          if(nchar(word(accepted_list[i][j],2)) == 1) {
-            match_word2_start <- stringr::str_extract(word(accepted_list[i][j],2), "[:alpha:]|[:digit:]")
-          } else {
-            match_word2_start <- stringr::str_extract(word(accepted_list[i][j],2), "[:alpha:][:alpha:]|[:digit:]")
-          }
-        }
-        
-        if(words_in_text > 1 & epithet_letters == 1) {
-            match_word2_start <- stringr::str_extract(word(accepted_list[i][j],2), "[:alpha:]|[:digit:]")
-        }
-    
-        ## identify the first letter of the third word in the matched string (if the matched string includes 3+ words)
-        if(words_in_text > 2) {
-          match_word3_start <- stringr::str_extract(word(accepted_list[i][j],3), "[:alpha:]|[:digit:]")
-        }
-        
-        ## keep match if the first letters of the first three words (or fewer if applicable) in the string to match 
-        ## are identical to the first letters of the first three words in the matched string
-    
-        if(words_in_text == 1) {
-          if (txt_word1_start == match_word1_start) {
-            keep = TRUE }
-          
-        } else if(words_in_text == 2) {
-          if (txt_word1_start == match_word1_start & txt_word2_start == match_word2_start) {
-            keep = TRUE }
-          
-        } else if(words_in_text > 2) {
-          if (words_in_match > 2) {
-            if (txt_word1_start == match_word1_start & txt_word2_start == match_word2_start & txt_word3_start == match_word3_start) {
-              keep = TRUE }
-          } else if (txt_word1_start == match_word1_start & txt_word2_start == match_word2_start) {
-            keep = TRUE }
-        }
-    
-        
-        if(keep == TRUE) {
-          
-          return(accepted_list[i][j])
-          
-        }
-        
-        return(NA)
-      }
+  for (j in 1:length(i)) {
 
+    if (keep == TRUE) {
+      
+      break()
+      
+    } else {
+      ## identify number of words in the matched string
+      words_in_match <- 1 + stringr::str_count(accepted_list[i][j]," ")
+      
+      ## identify the first letter of the first word in the matched string
+      match_word1_start <- stringr::str_extract(accepted_list[i][j], "[:alpha:]")
+      
+      ## identify the first letter of the second word in the matched string (if the matched string includes 2+ words)
+      if(words_in_text > 1 & epithet_letters == 2) {
+        if(nchar(word(accepted_list[i][j],2)) == 1) {
+          match_word2_start <- stringr::str_extract(word(accepted_list[i][j],2), "[:alpha:]|[:digit:]")
+        } else {
+          match_word2_start <- stringr::str_extract(word(accepted_list[i][j],2), "[:alpha:][:alpha:]|[:digit:]")
+        }
+      }
+      
+      if(words_in_text > 1 & epithet_letters == 1) {
+          match_word2_start <- stringr::str_extract(word(accepted_list[i][j],2), "[:alpha:]|[:digit:]")
+      }
+  
+      ## identify the first letter of the third word in the matched string (if the matched string includes 3+ words)
+      if(words_in_text > 2) {
+        match_word3_start <- stringr::str_extract(word(accepted_list[i][j],3), "[:alpha:]|[:digit:]")
+      }
+      
+      ## keep match if the first letters of the first three words (or fewer if applicable) in the string to match 
+      ## are identical to the first letters of the first three words in the matched string
+  
+      if(words_in_text == 1) {
+        if (txt_word1_start == match_word1_start) {
+          keep = TRUE }
+        
+      } else if(words_in_text == 2) {
+        if (txt_word1_start == match_word1_start & txt_word2_start == match_word2_start) {
+          keep = TRUE }
+        
+      } else if(words_in_text > 2) {
+        if (words_in_match > 2) {
+          if (txt_word1_start == match_word1_start & txt_word2_start == match_word2_start & txt_word3_start == match_word3_start) {
+            keep = TRUE }
+        } else if (txt_word1_start == match_word1_start & txt_word2_start == match_word2_start) {
+          keep = TRUE }
+      }
+  
+      
+      if(keep == TRUE) {
+        
+        return(accepted_list[i][j])
+        
+      }
+      
       return(NA)
     }
+
+    return(NA)
+  }
     
     return(NA)
   }
