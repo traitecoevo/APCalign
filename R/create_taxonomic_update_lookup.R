@@ -66,7 +66,8 @@ create_taxonomic_update_lookup <- function(taxa,
     align_taxa(taxa, resources = resources, 
                APNI_matches = APNI_matches, 
                identifier = identifier, 
-               imprecise_fuzzy_matches = imprecise_fuzzy_matches)
+               imprecise_fuzzy_matches = imprecise_fuzzy_matches,
+               output=output)
 
   updated_data <- 
     update_taxonomy(aligned_data, 
