@@ -58,6 +58,12 @@ create_taxonomic_update_lookup(
 #> #   number_of_collapsed_taxa <dbl>
 ```
 
+## Shiny application
+
+We also developed a shiny application for non-R users to update and
+align their taxonomic names. You can find the application here:
+<https://unsw.shinyapps.io/APCalign-app>
+
 ## Learn more
 
 Highly recommend looking at our [Getting
