@@ -44,6 +44,38 @@ load_taxonomic_resources <-
     ### Note: Use `zzzz zzzz` because the fuzzy matching algorithm can't handles NA's
     zzz <- "zzzz zzzz"
     
+    word <- function(string, start = 1L, end = start) {
+      if(end == start) {
+        str_split_i(string, " ", start)
+      } else if(end == start+1) {
+        w1 <- str_split_i(string, " ", start)
+        w2 <- str_split_i(string, " ", start+1)
+        
+        out <- paste(w1, w2) 
+        out[is.na(w2)] <- NA_character_
+        
+        out
+      } else if(end == start+2) {
+        
+        w1 <- str_split_i(string, " ", start)
+        w2 <- str_split_i(string, " ", start+1)
+        w3 <- str_split_i(string, " ", start+2)
+        
+        out <- paste(w1, w2, w3) 
+        out[is.na(w2) | is.na(w3)] <- NA_character_
+        
+        out
+      } else {
+        i <- seq(start, end)
+        
+        txt <- str_split(string, " ")
+        lngth <- purrr::map_int(txt, length)
+        out <- purrr::map(txt, ~paste(.x[i], collapse = " "))
+        out[lngth < end] <- NA
+        out
+      }
+    }
+    
     taxonomic_resources$APC <- taxonomic_resources$APC %>%
       rename(
         taxon_ID = .data$taxonID,
@@ -133,7 +165,7 @@ load_taxonomic_resources <-
         binomial = ifelse(is.na(binomial), zzz, binomial),
         binomial = base::replace(binomial, duplicated(binomial), zzz),
         genus = extract_genus(stripped_canonical),
-        trinomial = stringr::word(stripped_canonical2, start = 1, end = 3),
+        trinomial = word(stripped_canonical2, start = 1, end = 3),
         trinomial = ifelse(is.na(trinomial), zzz, trinomial),
         trinomial = base::replace(trinomial, duplicated(trinomial), zzz),
       ) %>%
@@ -167,11 +199,11 @@ load_taxonomic_resources <-
         stripped_scientific = strip_names(scientific_name),
         binomial = ifelse(
           taxon_rank == "species",
-          stringr::word(stripped_canonical2, start = 1, end = 2),
+          word(stripped_canonical2, start = 1, end = 2),
           "zzzz zzzz"
         ),
         binomial = ifelse(is.na(binomial), "zzzz zzzz", binomial),
-        trinomial = stringr::word(stripped_canonical2, start = 1, end = 3),
+        trinomial = word(stripped_canonical2, start = 1, end = 3),
         trinomial = ifelse(is.na(trinomial), "zzzz zzzz", trinomial),
         trinomial = base::replace(trinomial, duplicated(trinomial), "zzzz zzzz"),
         genus = extract_genus(stripped_canonical),
@@ -195,7 +227,7 @@ load_taxonomic_resources <-
         genus
       ) %>%
       dplyr::filter(taxon_rank %in% c("genus"), taxonomic_status == "accepted") %>%
-      dplyr::filter(!stringr::str_detect(stringr::word(genus, 1), "aceae$")) %>%
+      dplyr::filter(!stringr::str_detect(word(genus, 1), "aceae$")) %>%
       dplyr::mutate(taxonomic_dataset = "APC")
     
     taxonomic_resources[["genera_synonym"]] <-
@@ -242,7 +274,7 @@ load_taxonomic_resources <-
         taxonomic_resources$genera_APNI
       ) %>%
       dplyr::mutate(
-        cleaned_name = stringr::word(accepted_name_usage, 1),
+        cleaned_name = word(accepted_name_usage, 1),
         cleaned_name = ifelse(is.na(cleaned_name), canonical_name, cleaned_name)
       ) %>%
       dplyr::distinct(cleaned_name, canonical_name, scientific_name, .keep_all = TRUE)
