@@ -139,13 +139,13 @@ load_taxonomic_resources <-
       dplyr::mutate(
         # strip_names removes punctuation and filler words associated with infraspecific taxa (subsp, var, f, ser)
         stripped_canonical = strip_names(canonical_name),
-        ## strip_names2 removes punctuation, filler words associated with infraspecific taxa (subsp, var, f, ser), and filler words associated with species name cases (x, sp)
-        ## strip_names2 is essential for the matches involving 2 or 3 words, since you want those words to not count filler words
-        stripped_canonical2 = strip_names_2(canonical_name),
+        ## strip_names_extra removes extra filler words associated with species name cases (x, sp)
+        ## strip_names_extra is essential for the matches involving 2 or 3 words, since you want those words to not count filler words
+        stripped_canonical2 = strip_names_extra(stripped_canonical),
         stripped_scientific = strip_names(scientific_name),
         binomial = ifelse(
           taxon_rank == "species",
-          stringr::word(stripped_canonical2, start = 1, end = 2),
+          word(stripped_canonical2, start = 1, end = 2),
           zzz
         ),
         binomial = ifelse(is.na(binomial), zzz, binomial),
@@ -181,7 +181,7 @@ load_taxonomic_resources <-
       dplyr::mutate(
         taxonomic_status = "unplaced for APC",
         stripped_canonical = strip_names(canonical_name),
-        stripped_canonical2 = strip_names_2(canonical_name),
+        stripped_canonical2 = strip_names_extra(stripped_canonical),
         stripped_scientific = strip_names(scientific_name),
         binomial = ifelse(
           taxon_rank == "species",
