@@ -8,7 +8,7 @@ bibentry(
     person(given = "Fonti", family = "Kar", role = c("aut", "ctb"), email = "f.kar@unsw.edu.au", comment = c(ORCID = "0000-0002-2760-3974")),
     person(given = "Anna", family=  "Monro", role = c("aut"), email = "anna.monro@dcceew.gov.au", comment = c(ORCID = "0000-0001-9031-2670")),
     person(given = "Herve", family=  "Sauquet", role = c("aut"), email = "herve.sauquet@botanicgardens.nsw.gov.au", comment = c(ORCID = "0000-0001-8305-3236")),
-    person(given = "Ruby", family=  "Stephens", role = c("aut"), email = "stephenseruby@gmail.com", comment = c(ORCID = "0000-0002-3767-2690)),
+    person(given = "Ruby", family=  "Stephens", role = c("aut"), email = "stephenseruby@gmail.com", comment = c(ORCID = "0000-0002-3767-2690")),
     person(given = "Daniel", family = "Falster", role = c("aut", "cre", "cph"), email = "daniel.falster@unsw.edu.au", comment = c(ORCID = "0000-0002-9814-092X"))
     ),
   year   = 2024,
