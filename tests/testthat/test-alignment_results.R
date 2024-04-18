@@ -9,6 +9,20 @@ test_that("consistency with previous runs", {
 
   taxa <-
     c(
+      "Banksia integrifolia",
+      "Acacia longifolia",
+      "Commersonia rosea",
+      "Thelymitra pauciflora",
+      "Justicia procumbens",
+      "Hibbertia stricta",
+      "Rostellularia adscendens",
+      "Hibbertia sericea",
+      "Hibbertia sp.",
+      "Athrotaxis laxiflolia",
+      "Genoplesium insigne",
+      "Polypogon viridis",
+      "Acacia aneura",
+      "Acacia paraneura",
       "Galactia striata"
     )
   
