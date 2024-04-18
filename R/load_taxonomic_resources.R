@@ -24,18 +24,23 @@ load_taxonomic_resources <-
   function(stable_or_current_data = "stable",
            version = default_version(),
            reload = FALSE) {
-    message("Loading resources...", appendLF = FALSE)
-    on.exit(message("...done"))
+    
+    
     
     taxonomic_resources <- dataset_access_function(
       version = version,
       path = tools::R_user_dir("APCalign"),
       type = stable_or_current_data
     )
-      
+    
+    total_steps <- 3  # Define how many steps you expect in the function
+    pb <- txtProgressBar(min = 0, max = total_steps, style = 2)
+    message("Loading resources into memory...")
+    setTxtProgressBar(pb, 1)  
     if(is.null(taxonomic_resources)) {
       return(NULL)
     }
+    
     
     # Give list names
     names(taxonomic_resources) <- c("APC", "APNI")
@@ -149,6 +154,7 @@ load_taxonomic_resources <-
       dplyr::filter(taxonomic_status != "accepted") %>%
       dplyr::mutate(taxonomic_dataset = "APC")
     
+    setTxtProgressBar(pb, 2) 
     # Repeated from above - bionomial, tronomials etc
     taxonomic_resources[["APNI names"]] <-
       taxonomic_resources$APNI %>%
@@ -218,6 +224,7 @@ load_taxonomic_resources <-
       dplyr::mutate(taxonomic_dataset = "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
     
+    setTxtProgressBar(pb, 3) 
     taxonomic_resources[["genera_APNI"]] <-
       taxonomic_resources$APNI %>%
       dplyr::select(
@@ -251,6 +258,8 @@ load_taxonomic_resources <-
       taxonomic_resources$APC %>%
       dplyr::filter(taxon_rank %in% c("family"), taxonomic_status == "accepted")
     
+    close(pb)
+    message("...done")
     return(taxonomic_resources)
   }
 
@@ -442,6 +451,7 @@ dataset_get <- function(version = default_version(),
   path_to_apni <- file.path(path, paste0("apni", version, ".parquet"))
   
   APC <- if (!file.exists(path_to_apc)) {
+    message("Downloading...")
     download_and_read_parquet(apc.url, path_to_apc)
   } else {
     arrow::read_parquet(path_to_apc)
