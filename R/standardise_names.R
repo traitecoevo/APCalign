@@ -107,11 +107,10 @@ standardise_names <- function(taxon_names) {
 #' @return The genus for a scientific name.
 #'
 #' @examples
-#' genus = extract_genus(stripped_name)
+#' extract_genus(c("Banksia integrifolia", "Acacia longifolia"))
 #' 
 #' @keywords internal
 #' @noRd
-
 extract_genus <- function(taxon_name) {
   
   genus <- str_split_i(taxon_name, " ", 1) %>% stringr::str_to_sentence()
@@ -127,26 +126,18 @@ extract_genus <- function(taxon_name) {
 }
 
 
-#' Standardises taxon names by performing a series of text substitutions to remove common inconsistencies in taxonomic nomenclature.
+#' Standardise taxon ranks from latin into english.
 #'
-#' The function takes a character vector of taxon names as input and 
-#' returns a character vector of taxon names using standardised taxonomic syntax as output. 
-#' In particular it standardises taxon rank abbreviations and qualifiers (subsp., var., f.), as people use many variants of these terms. 
-#' It also standardises or removes a few additional filler words used within taxon names (affinis becomes aff.; s.l. and s.s. are removed).
+#' The function takes a character vector of taxon ranks as input and 
+#' returns a character vector of taxon ranks using standardised english terms.
 #'
-#' @param taxon_names A character vector of taxon names that need to be standardised.
+#' @param taxon_rank A character vector of taxon ranks that need to be standardised.
 #'
 #' @return A character vector of standardised taxon names.
 #'
 #'
 #' @examples
-#' standardise_names(c("Quercus suber",
-#'                     "Eucalyptus sp.",
-#'                     "Eucalyptus spp.",
-#'                     "Agave americana var. marginata",
-#'                     "Agave americana v marginata",
-#'                     "Notelaea longifolia forma longifolia",
-#'                     "Notelaea longifolia f longifolia"))
+#' standardise_taxon_rank(c("regnum", "kingdom", "classis", "class"))
 #' @export
 standardise_taxon_rank <- function(taxon_rank) {
   f <- function(x, find, replace) {

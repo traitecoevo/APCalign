@@ -74,8 +74,3 @@ strip_names_extra <- function(taxon_names) {
     f(" sp2", " 2") %>%
     stringr::str_squish() 
 }
-
-strip_names_2 <- function(taxon_names) {
-  strip_names(taxon_names) %>%
-    strip_names_extra()
-}

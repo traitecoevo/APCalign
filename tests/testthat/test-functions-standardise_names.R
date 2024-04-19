@@ -33,7 +33,7 @@ test_that("Standardise names names", {
         standardised_names = standardise_names(taxon_names),
         genus = extract_genus(standardised_names),  
         stripped_names = strip_names(standardised_names), 
-        stripped_names_extra = strip_names_2(standardised_names),
+        stripped_names_extra = strip_names_extra(stripped_names),
         ) 
   #out %>% readr::write_csv("benchmarks/standardise_names.csv")
   for(v in names(out)){
