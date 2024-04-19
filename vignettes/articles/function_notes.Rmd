@@ -220,7 +220,7 @@ taxon_names            #input vector of taxon names
 
 ### strip_names_extra
 
-**description**: Sugegested to run after strip_names, given a vector of taxonomic names, this function removes additional filler words and characters (" x " [hybrid taxa], "sp."). The resulting vector of names is also converted to lowercase.
+**description**: Suggested to run after strip_names, given a vector of taxonomic names, this function removes additional filler words and characters (" x " [hybrid taxa], "sp."). The resulting vector of names is also converted to lowercase.
 
 **arguments**:
 
