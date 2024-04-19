@@ -114,15 +114,16 @@ standardise_names <- function(taxon_names) {
 
 extract_genus <- function(taxon_name) {
   
-  genus <- str_split_i(taxon_name, " ", 1)
+  genus <- str_split_i(taxon_name, " ", 1) %>% stringr::str_to_sentence()
   
   # Deal with names that being with x, 
   # e.g."x Taurodium x toveyanum" or "x Glossadenia tutelata"
-  i <- !is.na(genus) & stringr::str_to_lower(genus) == "x"
-  genus[i] <- 
-    str_split_i(taxon_name[i], " ", 2) %>%  paste("x", .)
+  i <- !is.na(genus) & genus =="X"
   
-  genus %>% stringr::str_to_sentence()
+  genus[i] <- 
+    str_split_i(taxon_name[i], " ", 2) %>% stringr::str_to_sentence() %>%  paste("x", .)
+  
+  genus
 }
 
 
