@@ -31,7 +31,7 @@ standardise_names <- function(taxon_names) {
     f("\\*", "x") %>%
   
     ## remove ".."
-    stringr::str_replace("\\.\\.", "\\.") %>%
+    f("\\.\\.", "\\.") %>%
 
     ## Weird formatting
     f("[\\n\\t]", " ") %>%
@@ -63,7 +63,7 @@ standardise_names <- function(taxon_names) {
     f("\\saffin(\\s|$)",    " aff. ") %>%
     f("\\saff(\\s|$)",      " aff. ") %>%
     f("\\saffn(\\s|$|\\.)", " aff. ") %>%
-    f("\\saffinis(\\s|$)",  " aff. ") %>%
+    f("\\saffinis(\\s)",  " aff. ") %>%
     
     ## f. not forma or form or form. or f
     f("\\sforma(\\s|$)",       " f. ") %>%
@@ -107,17 +107,50 @@ standardise_names <- function(taxon_names) {
 #' @return The genus for a scientific name.
 #'
 #' @examples
-#' genus = extract_genus(stripped_name)
+#' extract_genus(c("Banksia integrifolia", "Acacia longifolia"))
 #' 
 #' @keywords internal
 #' @noRd
-
 extract_genus <- function(taxon_name) {
-  genus <- 
-    ifelse(
-      stringr::word(taxon_name, 1) %>% stringr::str_to_lower() == "x",
-      paste(stringr::word(taxon_name, 1) %>% stringr::str_to_lower(), stringr::word(taxon_name, 2) %>% stringr::str_to_sentence()),
-      stringr::word(taxon_name, 1) %>% stringr::str_to_sentence()
-    )
+  
+  genus <- str_split_i(taxon_name, " ", 1) %>% stringr::str_to_sentence()
+  
+  # Deal with names that being with x, 
+  # e.g."x Taurodium x toveyanum" or "x Glossadenia tutelata"
+  i <- !is.na(genus) & genus =="X"
+  
+  genus[i] <- 
+    str_split_i(taxon_name[i], " ", 2) %>% stringr::str_to_sentence() %>%  paste("x", .)
+  
   genus
+}
+
+
+#' Standardise taxon ranks from latin into english.
+#'
+#' The function takes a character vector of taxon ranks as input and 
+#' returns a character vector of taxon ranks using standardised english terms.
+#'
+#' @param taxon_rank A character vector of taxon ranks that need to be standardised.
+#'
+#' @return A character vector of standardised taxon names.
+#'
+#'
+#' @examples
+#' standardise_taxon_rank(c("regnum", "kingdom", "classis", "class"))
+#' @export
+standardise_taxon_rank <- function(taxon_rank) {
+  f <- function(x, find, replace) {
+    gsub(find, replace, x, fixed = TRUE)
+  }
+  
+  taxon_rank %>%
+  stringr::str_to_lower() %>%
+  f("regnum", "kingdom") %>%
+  f("classis", "class") %>%
+  f("ordo", "order") %>%
+  f("familia", "family") %>%
+  f("varietas", "variety") %>%
+  f("forma", "form") %>%
+  f("sectio", "section")
 }
