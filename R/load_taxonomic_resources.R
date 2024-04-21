@@ -10,6 +10,8 @@
 #' @param version The version number of the dataset to use. Defaults to the default version.
 #'
 #' @param reload A logical indicating whether to reload the dataset from the data source. Defaults to FALSE.
+#' 
+#' @param quiet A logical indicating whether to print status of loading to screen. Defaults to FALSE.
 #'
 #' @return The taxonomic resources data loaded into the global environment.
 #' @export
@@ -23,7 +25,8 @@
 load_taxonomic_resources <-
   function(stable_or_current_data = "stable",
            version = default_version(),
-           reload = FALSE) {
+           reload = FALSE,
+           quiet = FALSE) {
     
     
     
@@ -33,10 +36,13 @@ load_taxonomic_resources <-
       type = stable_or_current_data
     )
     
+    
     total_steps <- 3  # Define how many steps you expect in the function
-    pb <- txtProgressBar(min = 0, max = total_steps, style = 2)
-    message("Loading resources into memory...")
-    setTxtProgressBar(pb, 1)  
+    pb <- utils::txtProgressBar(min = 0, max = total_steps, style = 2)
+    if(!quiet){
+      message("Loading resources into memory...")
+      utils::setTxtProgressBar(pb, 1)  
+    }
     if(is.null(taxonomic_resources)) {
       return(NULL)
     }
@@ -172,7 +178,8 @@ load_taxonomic_resources <-
       dplyr::filter(taxonomic_status != "accepted") %>%
       dplyr::mutate(taxonomic_dataset = "APC")
     
-    setTxtProgressBar(pb, 2) 
+    
+    if(!quiet) utils::setTxtProgressBar(pb, 2) 
     # Repeated from above - bionomial, tronomials etc
     taxonomic_resources[["APNI names"]] <-
       taxonomic_resources$APNI %>%
@@ -242,7 +249,7 @@ load_taxonomic_resources <-
       dplyr::mutate(taxonomic_dataset = "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
     
-    setTxtProgressBar(pb, 3) 
+    if(!quiet) utils::setTxtProgressBar(pb, 3) 
     taxonomic_resources[["genera_APNI"]] <-
       taxonomic_resources$APNI %>%
       dplyr::select(
@@ -277,7 +284,7 @@ load_taxonomic_resources <-
       dplyr::filter(taxon_rank %in% c("family"), taxonomic_status == "accepted")
     
     close(pb)
-    message("...done")
+    if(!quiet) message("...done")
     return(taxonomic_resources)
   }
 
