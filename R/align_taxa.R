@@ -165,22 +165,21 @@ align_taxa <- function(original_name,
   # move all checked taxa to "checked"
   taxa <- redistribute(taxa)
   
-  # if (!is.null(output) && file.exists(output)) {
-  # # check unknown taxa
-  # message(
-  #   "  -> ",
-  #   crayon::blue(sum(taxa$known, na.rm = T)),
-  #   " names already matched; ",
-  #   crayon::blue(sum(
-  #     taxa$checked &
-  #       !taxa$tocheck$known,
-  #     na.rm = T
-  #   )),
-  #   " names checked but without a match; ",
-  #   crayon::blue(sum(!taxa$tocheck$checked)),
-  #   " taxa yet to be checked"
-  # )
-  # }
+  if (!is.null(output) && file.exists(output) && !all(taxa$tocheck$checked)) {
+  # check unknown taxa
+  message(
+    "  -> ",
+    crayon::blue(sum(!is.na(taxa$checked$accepted_name), na.rm = T)),
+    " names already matched; ",
+    crayon::blue(sum(
+      is.na(taxa$checked$accepted_name),
+      na.rm = T
+    )),
+    " names checked but without a species-level match; ",
+    crayon::blue(sum(!is.na(taxa$tocheck$original_name))),
+    " taxa yet to be checked"
+  )
+  }
   # do the actual matching
   taxa <- 
     match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches, identifier) %>%
