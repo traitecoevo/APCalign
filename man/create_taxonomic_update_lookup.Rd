@@ -36,7 +36,7 @@ create_taxonomic_update_lookup(
 
 \item{resources}{These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using \code{\link{load_taxonomic_resources}} separately and pass the data in.}
 
-\item{output}{file path to save the intermediate output to}
+\item{output}{file path to save the output. If this file already exists, this function will check if it's a subset of the species passed in and try to add to this file. This can be useful for large and growing projects.}
 }
 \value{
 A lookup table containing the accepted and suggested names for each original name input, and additional taxonomic information such as taxon rank, taxonomic status, taxon IDs and genera.
