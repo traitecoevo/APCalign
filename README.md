@@ -25,7 +25,7 @@ version:
 
 ``` r
 # install.packages("remotes")
-# remotes::install_github("traitecoevo/APCalign")
+# remotes::install_github("traitecoevo/APCalign", dependencies = TRUE, upgrade = "ask")
 
 library(APCalign)
 ```
@@ -58,16 +58,19 @@ create_taxonomic_update_lookup(
 #> #   number_of_collapsed_taxa <dbl>
 ```
 
+## Shiny application
+
+We also developed a shiny application for non-R users to update and
+align their taxonomic names. You can find the application here:
+<https://unsw.shinyapps.io/APCalign-app>
+
 ## Learn more
 
 Highly recommend looking at our [Getting
 Started](https://traitecoevo.github.io/APCalign/articles/APCalign.html)
 vignette to learn about how to use ‘APCalign’. You can also learn more
 about our [taxa matching
-algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
-and how [APC/APNI data is
-cached](https://traitecoevo.github.io/APCalign/articles/caching.html)
-behind-the-scenes.
+algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html).
 
 ## Found a bug?
 

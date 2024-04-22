@@ -386,7 +386,7 @@ dataset_access_function <-
 #' @return A character string representing the default version for stable data.
 #'
 #'
-#' @noRd
+#' @export
 
 default_version <- function() {
   # Check if there is internet connection
