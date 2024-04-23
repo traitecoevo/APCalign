@@ -26,9 +26,25 @@ standardise_names <- function(taxon_names) {
   }
   
   taxon_names %>%
-    ## for hybrid markers
+    ## remove ? throughout
+    f("\\?", "") %>%
+
+    ## remove all punct at start of string
+    stringr::str_replace("^[:punct:]", "") %>%
+
+    ## remove * at end of string
+    f("\\*$", "") %>%
+
+    ## replace hybrid x marker with standard x 
+    ## for certain hybrid x's that aren't dealt with below
+    f("\u00D7", "x") %>%
+
+    ## hybrid markers and other non-standard characters used are replaced with 
+    ## the standard equivalent (e.g. x, \)
     stringi::stri_trans_general("Any-Latin; Latin-ASCII") %>%
-    f("\\*", "x") %>%
+
+    ## add spaces between letters and /
+    f("([a-zA-Z])/([a-zA-Z])", "\\1 / \\2") %>%
   
     ## remove ".."
     f("\\.\\.", "\\.") %>%
@@ -90,6 +106,7 @@ standardise_names <- function(taxon_names) {
     
     ## standarise "ser"
     f("\\sser(\\s|\\.\\s)", " ser. ") %>%
+    f("\\sseries(\\s|\\.\\s)", " ser. ") %>%
 
     ## clean white space
     stringr::str_squish()
@@ -113,14 +130,16 @@ standardise_names <- function(taxon_names) {
 #' @noRd
 extract_genus <- function(taxon_name) {
   
-  genus <- str_split_i(taxon_name, " ", 1) %>% stringr::str_to_sentence()
+  taxon_name <- standardise_names(taxon_name)
+
+  genus <- str_split_i(taxon_name, " |\\/", 1) %>% stringr::str_to_sentence()
   
   # Deal with names that being with x, 
   # e.g."x Taurodium x toveyanum" or "x Glossadenia tutelata"
   i <- !is.na(genus) & genus =="X"
   
   genus[i] <- 
-    str_split_i(taxon_name[i], " ", 2) %>% stringr::str_to_sentence() %>%  paste("x", .)
+    str_split_i(taxon_name[i], " |\\/", 2) %>% stringr::str_to_sentence() %>%  paste("x", .)
   
   genus
 }
