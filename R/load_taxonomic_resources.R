@@ -282,6 +282,25 @@ load_taxonomic_resources <-
     taxonomic_resources[["family_accepted"]] <-
       taxonomic_resources$APC %>%
       dplyr::filter(taxon_rank %in% c("family"), taxonomic_status == "accepted")
+
+    taxonomic_resources[["family_synonym"]] <-
+      taxonomic_resources$APC %>%
+      dplyr::select(
+        canonical_name,
+        accepted_name_usage,
+        accepted_name_usage_ID,
+        scientific_name,
+        taxonomic_status,
+        taxon_ID,
+        scientific_name_ID,
+        name_type,
+        taxon_rank,
+        genus
+      ) %>%
+      dplyr::filter(taxon_rank %in% c("family")) %>%
+      dplyr::filter(!canonical_name %in% taxonomic_resources$family_accepted$canonical_name) %>%
+      dplyr::mutate(taxonomic_dataset = "APC") %>%
+      dplyr::distinct(canonical_name, .keep_all = TRUE)
     
     close(pb)
     if(!quiet) message("...done")

@@ -37,6 +37,7 @@
 #' - fuzzy_match_genus: fuzzy match of genus column to best match among APC-accepted names; required for fuzzy matches of genus-rank names.
 #' - fuzzy_match_genus_synonym: fuzzy match of genus column to best match among APC-known names, only considering different matches to those documented under APC-accepted genera; required for fuzzy matches of genus-rank names.
 #' - fuzzy_match_genus_APNI: fuzzy match of genus column to best match among APNI names, only considering different matches to those documented under APC-accepted and APC-known genera; required for fuzzy matches of genus-rank names.
+#' - fuzzy_match_family: fuzzy match of genus column to best match among APC-accepted family names; required for fuzzy matches of family-rank names.
 #' - fuzzy_match_cleaned_APC: fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 07a in the function `match_taxa`.
 #' - fuzzy_match_cleaned_APC_synonym: fuzzy match of stripped_name to APC-known names; created for yet-to-be-aligned names at the match step 07b in the function `match_taxa`.
 #' - fuzzy_match_cleaned_APC_imprecise: imprecise fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 10a in the function `match_taxa`.
@@ -137,6 +138,7 @@ align_taxa <- function(original_name,
         fuzzy_match_genus = NA_character_,
         fuzzy_match_genus_synonym = NA_character_,
         fuzzy_match_genus_APNI = NA_character_,
+        fuzzy_match_family = NA_character_,
         fuzzy_match_binomial = NA_character_,
         fuzzy_match_binomial_APC_synonym = NA_character_,
         fuzzy_match_trinomial = NA_character_,
