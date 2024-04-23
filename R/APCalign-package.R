@@ -75,6 +75,8 @@ utils::globalVariables(
     "taxon_ID",
     "taxon_ID_aligned",
     "taxon_rank",
+    "txtProgressBar",
+    "setTxtProgressBar",
     "taxonomic_status",
     "taxonomic_status_aligned",
     "taxonomic_status_genus",

@@ -191,6 +191,8 @@ update_taxonomy <- function(aligned_data,
   taxa_out <- taxa_out  %>% dplyr::arrange(row_number)
 
   if (!is.null(output)) {
+    taxa_out$checked<-TRUE
+    taxa_out$known<-!is.na(taxa_out$accepted_name)
     readr::write_csv(taxa_out, output)
     message("  - output saved in file: ", output)
   }

@@ -1,5 +1,5 @@
 ---
-title: "Function notes"
+title: "APCalign functions"
 author: "Elizabeth Wenk"
 date: "2024-01-22"
 output: html_document
@@ -218,9 +218,9 @@ taxon_names            #input vector of taxon names
 
 **output**: A character vector of stripped taxonomic names, with subtaxa designations, special characters, and extra whitespace removed, and all letters converted to lowercase.
 
-### strip_names_2
+### strip_names_extra
 
-**description**: Given a vector of taxonomic names, this function removes subtaxa designations ("subsp.", "var.", "f.", and "ser"), additional filler words and characters (" x " [hybrid taxa], "sp."), special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The resulting vector of names is also converted to lowercase.
+**description**: Suggested to run after strip_names, given a vector of taxonomic names, this function removes additional filler words and characters (" x " [hybrid taxa], "sp."). The resulting vector of names is also converted to lowercase.
 
 **arguments**:
 

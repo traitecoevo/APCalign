@@ -10,6 +10,8 @@
 #' @param version The version number of the dataset to use. Defaults to the default version.
 #'
 #' @param reload A logical indicating whether to reload the dataset from the data source. Defaults to FALSE.
+#' 
+#' @param quiet A logical indicating whether to print status of loading to screen. Defaults to FALSE.
 #'
 #' @return The taxonomic resources data loaded into the global environment.
 #' @export
@@ -23,19 +25,28 @@
 load_taxonomic_resources <-
   function(stable_or_current_data = "stable",
            version = default_version(),
-           reload = FALSE) {
-    message("Loading resources...", appendLF = FALSE)
-    on.exit(message("...done"))
+           reload = FALSE,
+           quiet = FALSE) {
+    
+    
     
     taxonomic_resources <- dataset_access_function(
       version = version,
       path = tools::R_user_dir("APCalign"),
       type = stable_or_current_data
     )
-      
+    
+    
+    total_steps <- 3  # Define how many steps you expect in the function
+    pb <- utils::txtProgressBar(min = 0, max = total_steps, style = 2)
+    if(!quiet){
+      message("Loading resources into memory...")
+      utils::setTxtProgressBar(pb, 1)  
+    }
     if(is.null(taxonomic_resources)) {
       return(NULL)
     }
+    
     
     # Give list names
     names(taxonomic_resources) <- c("APC", "APNI")
@@ -43,6 +54,38 @@ load_taxonomic_resources <-
     ## todo :review this, why zzz
     ### Note: Use `zzzz zzzz` because the fuzzy matching algorithm can't handles NA's
     zzz <- "zzzz zzzz"
+    
+    word <- function(string, start = 1L, end = start) {
+      if(end == start) {
+        str_split_i(string, " ", start)
+      } else if(end == start+1) {
+        w1 <- str_split_i(string, " ", start)
+        w2 <- str_split_i(string, " ", start+1)
+        
+        out <- paste(w1, w2) 
+        out[is.na(w2)] <- NA_character_
+        
+        out
+      } else if(end == start+2) {
+        
+        w1 <- str_split_i(string, " ", start)
+        w2 <- str_split_i(string, " ", start+1)
+        w3 <- str_split_i(string, " ", start+2)
+        
+        out <- paste(w1, w2, w3) 
+        out[is.na(w2) | is.na(w3)] <- NA_character_
+        
+        out
+      } else {
+        i <- seq(start, end)
+        
+        txt <- str_split(string, " ")
+        lngth <- purrr::map_int(txt, length)
+        out <- purrr::map(txt, ~paste(.x[i], collapse = " "))
+        out[lngth < end] <- NA
+        out
+      }
+    }
     
     taxonomic_resources$APC <- taxonomic_resources$APC %>%
       rename(
@@ -66,14 +109,7 @@ load_taxonomic_resources <-
       ) %>%
       mutate(
         genus = extract_genus(canonical_name),
-        taxon_rank = stringr::str_to_lower(taxon_rank),
-        taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
-        taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
-        taxon_rank = stringr::str_replace(taxon_rank, "ordo", "order"),
-        taxon_rank = stringr::str_replace(taxon_rank, "familia", "family"),
-        taxon_rank = stringr::str_replace(taxon_rank, "varietas", "variety"),
-        taxon_rank = stringr::str_replace(taxon_rank, "forma", "form"),
-        taxon_rank = stringr::str_replace(taxon_rank, "sectio", "section")
+        taxon_rank = standardise_taxon_rank(taxon_rank)
       )
     
     taxonomic_resources$APNI <- taxonomic_resources$APNI %>%
@@ -92,14 +128,7 @@ load_taxonomic_resources <-
       )  %>%
       mutate(
         genus = extract_genus(canonical_name),
-        taxon_rank = stringr::str_to_lower(taxon_rank),
-        taxon_rank = stringr::str_replace(taxon_rank, "regnum", "kingdom"),
-        taxon_rank = stringr::str_replace(taxon_rank, "classis", "class"),
-        taxon_rank = stringr::str_replace(taxon_rank, "ordo", "order"),
-        taxon_rank = stringr::str_replace(taxon_rank, "familia", "family"),
-        taxon_rank = stringr::str_replace(taxon_rank, "varietas", "variety"),
-        taxon_rank = stringr::str_replace(taxon_rank, "forma", "form"),
-        taxon_rank = stringr::str_replace(taxon_rank, "sectio", "section")
+        taxon_rank = standardise_taxon_rank(taxon_rank)
       )
     
     APC_tmp <-
@@ -121,19 +150,19 @@ load_taxonomic_resources <-
       dplyr::mutate(
         # strip_names removes punctuation and filler words associated with infraspecific taxa (subsp, var, f, ser)
         stripped_canonical = strip_names(canonical_name),
-        ## strip_names2 removes punctuation, filler words associated with infraspecific taxa (subsp, var, f, ser), and filler words associated with species name cases (x, sp)
-        ## strip_names2 is essential for the matches involving 2 or 3 words, since you want those words to not count filler words
-        stripped_canonical2 = strip_names_2(canonical_name),
+        ## strip_names_extra removes extra filler words associated with species name cases (x, sp)
+        ## strip_names_extra is essential for the matches involving 2 or 3 words, since you want those words to not count filler words
+        stripped_canonical2 = strip_names_extra(stripped_canonical),
         stripped_scientific = strip_names(scientific_name),
         binomial = ifelse(
           taxon_rank == "species",
-          stringr::word(stripped_canonical2, start = 1, end = 2),
+          word(stripped_canonical2, start = 1, end = 2),
           zzz
         ),
         binomial = ifelse(is.na(binomial), zzz, binomial),
         binomial = base::replace(binomial, duplicated(binomial), zzz),
         genus = extract_genus(stripped_canonical),
-        trinomial = stringr::word(stripped_canonical2, start = 1, end = 3),
+        trinomial = word(stripped_canonical2, start = 1, end = 3),
         trinomial = ifelse(is.na(trinomial), zzz, trinomial),
         trinomial = base::replace(trinomial, duplicated(trinomial), zzz),
       ) %>%
@@ -149,6 +178,8 @@ load_taxonomic_resources <-
       dplyr::filter(taxonomic_status != "accepted") %>%
       dplyr::mutate(taxonomic_dataset = "APC")
     
+    
+    if(!quiet) utils::setTxtProgressBar(pb, 2) 
     # Repeated from above - bionomial, tronomials etc
     taxonomic_resources[["APNI names"]] <-
       taxonomic_resources$APNI %>%
@@ -163,15 +194,15 @@ load_taxonomic_resources <-
       dplyr::mutate(
         taxonomic_status = "unplaced for APC",
         stripped_canonical = strip_names(canonical_name),
-        stripped_canonical2 = strip_names_2(canonical_name),
+        stripped_canonical2 = strip_names_extra(stripped_canonical),
         stripped_scientific = strip_names(scientific_name),
         binomial = ifelse(
           taxon_rank == "species",
-          stringr::word(stripped_canonical2, start = 1, end = 2),
+          word(stripped_canonical2, start = 1, end = 2),
           "zzzz zzzz"
         ),
         binomial = ifelse(is.na(binomial), "zzzz zzzz", binomial),
-        trinomial = stringr::word(stripped_canonical2, start = 1, end = 3),
+        trinomial = word(stripped_canonical2, start = 1, end = 3),
         trinomial = ifelse(is.na(trinomial), "zzzz zzzz", trinomial),
         trinomial = base::replace(trinomial, duplicated(trinomial), "zzzz zzzz"),
         genus = extract_genus(stripped_canonical),
@@ -195,7 +226,7 @@ load_taxonomic_resources <-
         genus
       ) %>%
       dplyr::filter(taxon_rank %in% c("genus"), taxonomic_status == "accepted") %>%
-      dplyr::filter(!stringr::str_detect(stringr::word(genus, 1), "aceae$")) %>%
+      dplyr::filter(!stringr::str_detect(genus, "aceae$")) %>%
       dplyr::mutate(taxonomic_dataset = "APC")
     
     taxonomic_resources[["genera_synonym"]] <-
@@ -214,10 +245,11 @@ load_taxonomic_resources <-
       ) %>%
       dplyr::filter(taxon_rank %in% c("genus")) %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$genera_accepted$canonical_name) %>%
-      dplyr::filter(!stringr::str_detect(stringr::word(genus, 1), "aceae$")) %>%
+      dplyr::filter(!stringr::str_detect(genus, "aceae$")) %>%
       dplyr::mutate(taxonomic_dataset = "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
     
+    if(!quiet) utils::setTxtProgressBar(pb, 3) 
     taxonomic_resources[["genera_APNI"]] <-
       taxonomic_resources$APNI %>%
       dplyr::select(
@@ -231,7 +263,7 @@ load_taxonomic_resources <-
       ) %>%
       dplyr::filter(taxon_rank %in% c("genus")) %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$APC$canonical_name) %>%
-      dplyr::filter(!stringr::str_detect(stringr::word(genus, 1), "aceae$")) %>%
+      dplyr::filter(!stringr::str_detect(genus, "aceae$")) %>%
       dplyr::mutate(taxonomic_dataset = "APNI") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
     
@@ -242,7 +274,7 @@ load_taxonomic_resources <-
         taxonomic_resources$genera_APNI
       ) %>%
       dplyr::mutate(
-        cleaned_name = stringr::word(accepted_name_usage, 1),
+        cleaned_name = word(accepted_name_usage, 1),
         cleaned_name = ifelse(is.na(cleaned_name), canonical_name, cleaned_name)
       ) %>%
       dplyr::distinct(cleaned_name, canonical_name, scientific_name, .keep_all = TRUE)
@@ -251,6 +283,8 @@ load_taxonomic_resources <-
       taxonomic_resources$APC %>%
       dplyr::filter(taxon_rank %in% c("family"), taxonomic_status == "accepted")
     
+    close(pb)
+    if(!quiet) message("...done")
     return(taxonomic_resources)
   }
 
@@ -352,7 +386,7 @@ dataset_access_function <-
 #' @return A character string representing the default version for stable data.
 #'
 #'
-#' @noRd
+#' @export
 
 default_version <- function() {
   # Check if there is internet connection
@@ -442,6 +476,7 @@ dataset_get <- function(version = default_version(),
   path_to_apni <- file.path(path, paste0("apni", version, ".parquet"))
   
   APC <- if (!file.exists(path_to_apc)) {
+    message("Downloading...")
     download_and_read_parquet(apc.url, path_to_apc)
   } else {
     arrow::read_parquet(path_to_apc)

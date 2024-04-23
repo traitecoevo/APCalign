@@ -90,8 +90,16 @@ align_taxa <- function(original_name,
           .default = readr::col_character()
         )
       )
-    
-    # TODO: check taxa_ raw has correct columns
+    correct_names <- c("original_name", "aligned_name", "accepted_name", "suggested_name", 
+                           "genus", "family", "taxon_rank", "taxonomic_dataset", "taxonomic_status", 
+                           "taxonomic_status_aligned", "aligned_reason", "update_reason", 
+                           "subclass", "taxon_distribution", "scientific_name", "taxon_ID", 
+                           "taxon_ID_genus", "scientific_name_ID", "canonical_name", "row_number", 
+                           "number_of_collapsed_taxa", "checked", "known")
+    if(!identical(names(taxa_raw), correct_names)) {
+      stop("Your output file already exists and it's not in the right format. 
+         Please check that the file you are passing in to the output option.")
+    }
   }
   else {
     taxa_raw <-
@@ -149,7 +157,7 @@ align_taxa <- function(original_name,
     # take unique values so each name only processed once
     dplyr::filter(!duplicated(original_name))
   
-  if (all(taxa$tocheck$checked)) {
+  if (all(taxa$tocheck$checked)|all(is.na(taxa$tocheck$checked))) {
     message("  - all taxa are already checked, yay!")
     return(invisible(taxa$tocheck))
   }
@@ -157,21 +165,21 @@ align_taxa <- function(original_name,
   # move all checked taxa to "checked"
   taxa <- redistribute(taxa)
   
+  if (!is.null(output) && file.exists(output) && !all(taxa$tocheck$checked)) {
   # check unknown taxa
   message(
     "  -> ",
-    crayon::blue(sum(taxa$tocheck$known, na.rm = T)),
+    crayon::blue(sum(!is.na(taxa$checked$accepted_name), na.rm = T)),
     " names already matched; ",
     crayon::blue(sum(
-      taxa$tocheck$checked &
-        !taxa$tocheck$known,
+      is.na(taxa$checked$accepted_name),
       na.rm = T
     )),
-    " names checked but without a match; ",
-    crayon::blue(sum(!taxa$tocheck$checked)),
+    " names checked but without a species-level match; ",
+    crayon::blue(sum(!is.na(taxa$tocheck$original_name))),
     " taxa yet to be checked"
   )
-  
+  }
   # do the actual matching
   taxa <- 
     match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches, identifier) %>%
@@ -199,8 +207,10 @@ align_taxa <- function(original_name,
   ## save outputs to file, useful for caching results 
   if (!is.null(output)) {
     dir.create(dirname(output), FALSE, TRUE)
+    taxa$checked<-TRUE
+    taxa$known<-!is.na(taxa$aligned_name)
     readr::write_csv(taxa, output)
-    message("  - output saved in file: ", output)
+    #message("  - output saved in file: ", output)
   }
 
   return(taxa)

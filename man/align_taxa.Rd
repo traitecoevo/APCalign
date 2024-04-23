@@ -35,7 +35,7 @@ so call \code{\link{load_taxonomic_resources}} separately to greatly speed this 
 
 \item{imprecise_fuzzy_matches}{Imprecise fuzzy matches are turned off as a default.}
 
-\item{APNI_matches}{Name matches to the APNI (Australian Plant Names Index) are turned off as a default.}
+\item{APNI_matches}{Name matches to the APNI (Australian Plant Names Index) are turned on as a default.}
 
 \item{identifier}{A dataset, location or other identifier, which defaults to NA.}
 }
