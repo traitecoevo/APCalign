@@ -1949,7 +1949,7 @@ match_taxa <- function(
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
 
-  # match_12e: family-level alignment
+  # match_12e: family-level synonym alignment
   # Toward the end of the alignment function, see if first word of unmatched taxa is an APC-known family.
   # The 'taxon name' is then reformatted  as `family sp.` with the original name in square brackets.
 

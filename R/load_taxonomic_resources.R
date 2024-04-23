@@ -297,8 +297,7 @@ load_taxonomic_resources <-
         taxon_rank,
         genus
       ) %>%
-      dplyr::filter(taxon_rank %in% c("family")) %>%
-      dplyr::filter(!canonical_name %in% taxonomic_resources$family_accepted$canonical_name) %>%
+      dplyr::filter(taxon_rank %in% c("family"), taxonomic_status != "accepted") %>%
       dplyr::mutate(taxonomic_dataset = "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
     
