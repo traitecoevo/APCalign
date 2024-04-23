@@ -18,7 +18,7 @@ test_that("Extract genus", {
 
   expected <- c(NA, "Banksia", "Acacia", "Commersonia", "Thelymitra", 
                 "Justicia", "Hibbertia", "Rostellularia", "Hibbertia", 
-                "Hibbertia", "x Cynochloris", "(Dockrillia")
+                "Hibbertia", "x Cynochloris", "Dockrillia")
   out <- extract_genus(taxa)
   expect_equal(out, expected)
 })
