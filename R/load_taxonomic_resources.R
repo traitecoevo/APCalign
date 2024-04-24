@@ -337,7 +337,6 @@ dataset_access_function <-
       tryCatch({
         APC <- readr::read_csv(
           "https://biodiversity.org.au/nsl/services/export/taxonCsv",
-          n_max = 110000,
           col_types =
             readr::cols(
               .default = readr::col_character(),
@@ -351,7 +350,6 @@ dataset_access_function <-
         APNI <-
           readr::read_csv(
             "https://biodiversity.org.au/nsl/services/export/namesCsv",
-            n_max = 140000,
             col_types =
               readr::cols(
                 .default = readr::col_character(),
