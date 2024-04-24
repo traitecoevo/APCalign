@@ -23,7 +23,6 @@ download_taxonomic_resources_for_release<- function(version_name = NULL, path = 
  APC <-
    readr::read_csv(
           "https://biodiversity.org.au/nsl/services/export/taxonCsv",
-          n_max = 110000,
           col_types =
             readr::cols(
               .default = readr::col_character(),
@@ -43,7 +42,6 @@ readr::write_csv(APC, file = paste0(path,"apc.tar.gz"))
  APNI <-
    readr::read_csv(
      "https://biodiversity.org.au/nsl/services/export/namesCsv",
-     n_max = 140000,
      col_types =
        readr::cols(
          .default = readr::col_character(),
