@@ -155,7 +155,8 @@ align_taxa <- function(original_name,
       )
     ) %>% 
     # take unique values so each name only processed once
-    dplyr::filter(!duplicated(original_name))
+    dplyr::filter(!duplicated(original_name)) %>%
+    dplyr::filter(original_name %>% standardise_names() != "")
   
   if (all(taxa$tocheck$checked)|all(is.na(taxa$tocheck$checked))) {
     message("  - all taxa are already checked, yay!")

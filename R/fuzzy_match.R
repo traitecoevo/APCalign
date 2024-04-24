@@ -73,6 +73,7 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
     ## Within allowable number of characters (relative)
     min_dist_per_c <= max_distance_rel #&
     ## Is a unique solution
+    ## For now allowing multiple closest matches - should be retaining the first choice
     #length(i) <= n_allowed
     ) {
     
