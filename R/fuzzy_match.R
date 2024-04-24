@@ -29,7 +29,7 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
   words_in_text <- 1 + stringr::str_count(txt," ")
   
   ## extract first letter of first word
-  txt_word1_start <- stringr::str_extract(txt, "[:alpha:]")
+  txt_word1_start <- stringr::str_extract(txt, "[:alpha:]") %>% stringr::str_to_lower()
   
   ## for text matches with 2 or more words, extract the first letter/digit of the second word
   if(words_in_text > 1 & epithet_letters == 2) 
@@ -53,9 +53,9 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
   ## reduce the number of fuzzy matches that are made in the next step.
   ## has also wanted to do this for the second word, but then need to separate
   ## different lists of reference names - smaller time saving and not worth it.
-  accepted_list <- accepted_list[(stringr::str_extract(accepted_list, "[:alpha:]") %>% 
-                                    stringr::str_to_lower() == txt_word1_start %>% 
-                                    stringr::str_to_lower())]
+  accepted_list <- accepted_list[stringr::str_extract(accepted_list, "[:alpha:]") %>% 
+                                    stringr::str_to_lower() == 
+                                    txt_word1_start]
 
   ## identify the number of characters that must change for the text string to match each of the possible accepted names
   distance_c <- utils::adist(txt, accepted_list, fixed=TRUE)[1,]
@@ -71,16 +71,14 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
     ## Within allowable number of characters (absolute)
     min_dist_abs_c <= max_distance_abs &
     ## Within allowable number of characters (relative)
-    min_dist_per_c <= max_distance_rel #&
-    ## Is a unique solution
-    ## For now allowing multiple closest matches - should be retaining the first choice
-    ## Otherwise lots of genus-level matches were being thrown out (some valid), because multiple closest matches
-    ## TO DO: Add column that indicates other matches -- nothing further will happen with these, but they should be documented.
-    #length(i) <= n_allowed
+    min_dist_per_c <= max_distance_rel &
+    ## Is a unique solution.
+    length(i) <= n_allowed
     ) {
     
+  # need the loop with j if n_allowed is set < 1; previously this wouldn't have worked
   for (j in 1:length(i)) {
-
+  
     if (keep == TRUE) {
       
       break()
@@ -90,7 +88,8 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
       words_in_match <- 1 + stringr::str_count(accepted_list[i][j]," ")
       
       ## identify the first letter of the first word in the matched string
-      match_word1_start <- stringr::str_extract(accepted_list[i][j], "[:alpha:]")
+      match_word1_start <- stringr::str_extract(accepted_list[i][j], "[:alpha:]") %>% 
+                            stringr::str_to_lower()
       
       ## identify the first letter of the second word in the matched string (if the matched string includes 2+ words)
       if(words_in_text > 1 & epithet_letters == 2) {
@@ -114,7 +113,8 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
       ## are identical to the first letters of the first three words in the matched string
   
       if(words_in_text == 1) {
-        if (txt_word1_start == match_word1_start) {
+      ## next line is no longer being used, since only comparing to first-letter matches
+        if (txt_word1_start == match_word1_start) {  
           keep = TRUE }
         
       } else if(words_in_text == 2) {

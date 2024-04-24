@@ -240,7 +240,7 @@ test_that("no matches to APC accepted names are required", {
   # all garbage
   out2 <- create_taxonomic_update_lookup(taxa = c("Aucalyptus", "Danksia asdasd", "Ryandra sp"), resources = resources)
   expect_equal(nrow(out2), 3)
-  expect_equal(out2$aligned_name, c("Acicalyptus sp. [Aucalyptus]", "Dansiea sp. [Danksia asdasd]", "Randia sp."))
+  expect_equal(out2$aligned_name, c(NA, "Dansiea sp. [Danksia asdasd]", "Randia sp."))
 })
 
 test_that("returns same number of rows as input, even with duplicates", {
