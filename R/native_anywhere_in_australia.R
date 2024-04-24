@@ -1,10 +1,11 @@
 #' For a vector of taxon names in to the APC, check if the species are native anywhere in Australia
 #'
-#' This function checks if the given species is native anywhere in Australia according to the APC. 
-#' Note that this will not detect within-Australia introductions, e.g. if a species is from Western Australia and is invasive on the east coast.
-#' And recent invasions are unlikely to be documented yet in APC. 
+#' This function checks which species from a list is thought to be native anywhere in Australia according to the APC. 
+#' Important caveats: this will not detect within-Australia introductions, e.g. if a species is from Western Australia and is invasive on the east coast.
+#' Also, very recent invasions are unlikely to be documented yet in APC. 
+#' Ideally check spelling and taxonomy updates first via \link{create_taxonomic_update_lookup}.
 #' For the complete matrix of species by states that also represents within-Australia invasions,
-#' use \link{create_species_state_origin_matrix}.  For spelling checks and taxonomy updates please see \link{create_taxonomic_update_lookup}.
+#' use \link{create_species_state_origin_matrix}.  
 #'
 #' @family diversity methods
 #' @param species A character string typically representing the binomial for the species.  
