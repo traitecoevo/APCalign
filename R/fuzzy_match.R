@@ -74,6 +74,8 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
     min_dist_per_c <= max_distance_rel #&
     ## Is a unique solution
     ## For now allowing multiple closest matches - should be retaining the first choice
+    ## Otherwise lots of genus-level matches were being thrown out (some valid), because multiple closest matches
+    ## TO DO: Add column that indicates other matches -- nothing further will happen with these, but they should be documented.
     #length(i) <= n_allowed
     ) {
     
