@@ -38,6 +38,7 @@ reference:
   - align_taxa
   - update_taxonomy
   - standardise_names
+  - standardise_taxon_rank
   - strip_names
   - strip_names_extra
 - subtitle: Established status across states/territories
