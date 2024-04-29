@@ -167,6 +167,7 @@ align_taxa <- function(original_name,
   # move all checked taxa to "checked"
   taxa <- redistribute(taxa)
   
+  # messages if there is an saved list being added to
   if (!is.null(output) && file.exists(output) && !all(taxa$tocheck$checked)) {
   # check unknown taxa
   message(
@@ -182,6 +183,23 @@ align_taxa <- function(original_name,
     " taxa yet to be checked"
   )
   }
+
+  # otherwise if there are taxa that require checking add 
+  # simple message that indicates number of perfect matches.
+  if (!all(taxa$tocheck$checked)) {
+
+  perfect_matches <- taxa$tocheck %>%
+    filter(original_name %in% resources$`APC list (accepted)`$canonical_name) %>%
+    distinct() %>%
+    nrow()
+
+  message(
+    "  -> of these ",
+    crayon::blue(perfect_matches),
+    " names have a perfect match to a scientific name in the APC. Alignments being sought for remaining names."
+  )
+  }
+
   # do the actual matching
   taxa <- 
     match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches, identifier) %>%
