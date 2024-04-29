@@ -293,7 +293,7 @@ test_that("returns same number of rows as input, even with duplicates", {
   expect_equal(subset(out2$aligned_name, !duplicated(out2$aligned_name)), subset(out1$aligned_name, !duplicated(out1$aligned_name)))
   expect_gte(length(out2$aligned_name), length(out1$aligned_name))
   expect_equal(ncol(out1), 7) #limited columns (full = FALSE, the default)
-  expect_equal(ncol(out4), 24) #all columns (full = TRUE)
+  expect_equal(ncol(out4), 26) #all columns (full = TRUE)
   
   #
   expect_equal(out3$original_name, original_name)

@@ -92,7 +92,9 @@ match_taxa <- function(
       fuzzy_match_genus_APNI =
         fuzzy_match_genera(genus, resources$genera_APNI$genus),
       fuzzy_match_family =
-        fuzzy_match_genera(genus, resources$family_accepted$canonical_name)
+        fuzzy_match_genera(genus, resources$family_accepted$canonical_name),
+      fuzzy_match_family_synonym =
+        fuzzy_match_genera(genus, resources$family_synonym$canonical_name)
     )
   
   ## Taxa that have been checked are moved from `taxa$tocheck` to `taxa$checked`
@@ -2041,7 +2043,7 @@ match_taxa <- function(
     return(taxa)    
 
   # match_12h: family-level fuzzy alignment
-  # The final alignment step is to see if a fuzzy match can be made for the first word of unmatched taxa to an APC-accepted genus.
+  # Alignment step is to see if a fuzzy match can be made for the first word of unmatched taxa to an APC-accepted family.
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   
   i <-
@@ -2064,6 +2066,36 @@ match_taxa <- function(
       known = TRUE,
       checked = TRUE,
       alignment_code = "match_12h_family_fuzzy_accepted"
+    )
+  
+  taxa <- redistribute(taxa)
+  if (nrow(taxa$tocheck) == 0)
+    return(taxa)
+  
+  # match_12i: family-level fuzzy alignment for synonyms
+  # The final alignment step is to see if a fuzzy match can be made for the first word of unmatched taxa to an APC-synonymous family.
+  # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
+  
+  i <-
+    taxa$tocheck$fuzzy_match_family %in% resources$family_synonym$canonical_name
+  
+  taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
+    mutate(
+      taxonomic_dataset = "APC",
+      taxon_rank = "family",
+      aligned_name_tmp = paste0(fuzzy_match_family, " sp. [", cleaned_name),
+      aligned_name = ifelse(is.na(identifier_string2),
+                            paste0(aligned_name_tmp, "]"),
+                            paste0(aligned_name_tmp, identifier_string2, "]")
+      ),
+      aligned_reason = paste0(
+        "Fuzzy match of the first word of the taxon name to an APC-synonymous family (",
+        Sys.Date(),
+        ")"
+      ),
+      known = TRUE,
+      checked = TRUE,
+      alignment_code = "match_12i_family_fuzzy_synonym"
     )
   
   taxa <- redistribute(taxa)
