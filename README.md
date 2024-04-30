@@ -20,9 +20,6 @@ taxa across different states/territories.
 
 ## Installation
 
-‘APCalign’ is current not on CRAN. Install the currently development
-version:
-
 ``` r
 # install.packages("remotes")
 # remotes::install_github("traitecoevo/APCalign", dependencies = TRUE, upgrade = "ask")
@@ -92,6 +89,17 @@ create_taxonomic_update_lookup(
 #> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
 #> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
 #> #   number_of_collapsed_taxa <dbl>
+```
+
+Checking for Australian natives:
+
+``` r
+native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"),resources = tax_resources)
+#> # A tibble: 2 × 2
+#>   species             native_anywhere_in_aus
+#>   <chr>               <chr>                 
+#> 1 Eucalyptus globulus native                
+#> 2 Pinus radiata       introduced
 ```
 
 ## Shiny application

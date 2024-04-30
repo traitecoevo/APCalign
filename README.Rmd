@@ -30,8 +30,6 @@ the established status (native/introduced) of plant taxa across different states
 
 ## Installation
 
-'APCalign' is current not on CRAN. Install the currently development version: 
-
 ```{r install, eval= FALSE}
 # install.packages("remotes")
 # remotes::install_github("traitecoevo/APCalign", dependencies = TRUE, upgrade = "ask")
@@ -81,6 +79,11 @@ create_taxonomic_update_lookup(
 )
 ```
 
+Checking for Australian natives:
+
+```{r}
+native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"),resources = tax_resources)
+```
 ## Shiny application
 
 We also developed a shiny application for non-R users to update and align their taxonomic names. You can find the application here: https://unsw.shinyapps.io/APCalign-app
