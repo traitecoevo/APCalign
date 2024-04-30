@@ -272,7 +272,7 @@ test_that("no matches to APC accepted names are required", {
     taxa = c("Aucalyptus", "Danksia asdasd", "Ryandra sp"), 
     resources = resources, quiet = TRUE)
   expect_equal(nrow(out2), 3)
-  expect_equal(out2$aligned_name, c(NA_character_, NA_character_, NA_character_))
+  expect_equal(out2$aligned_name, c(NA, "Dansiea sp. [Danksia asdasd]", "Randia sp."))
 })
 
 test_that("returns same number of rows as input, even with duplicates", {

@@ -21,7 +21,7 @@
 #' 
 #' @noRd
 fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, n_allowed = 1, epithet_letters = 1) {
-  
+
   if (!epithet_letters %in% c(1,2)) {
     stop("Epithet must be 1 or 2.")
     }
@@ -49,10 +49,14 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
     txt_word3_start <- stringr::str_extract(word(txt,3), "[:alpha:]|[:digit:]")
   }
   
-  ## subset accepted list to taxa that begin with the same first letter to reduce the number of fuzzy matches that are made in the next step.
-  ## has also wanted to do this for the second word, but then need to separate different lists of reference names - smaller time saving and not worth it.
-  #  accepted_list <- accepted_list[(stringr::str_extract(accepted_list, "[:alpha:]") %>% stringr::str_to_lower() == txt_word1_start %>% stringr::str_to_lower())]
-  
+  ## subset accepted list to taxa that begin with the same first letter to
+  ## reduce the number of fuzzy matches that are made in the next step.
+  ## has also wanted to do this for the second word, but then need to separate
+  ## different lists of reference names - smaller time saving and not worth it.
+  accepted_list <- accepted_list[(stringr::str_extract(accepted_list, "[:alpha:]") %>% 
+                                    stringr::str_to_lower()) == 
+                                    (txt_word1_start  %>% stringr::str_to_lower())]
+
   ## identify the number of characters that must change for the text string to match each of the possible accepted names
   distance_c <- utils::adist(txt, accepted_list, fixed=TRUE)[1,]
   

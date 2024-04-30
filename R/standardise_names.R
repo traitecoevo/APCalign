@@ -29,9 +29,13 @@ standardise_names <- function(taxon_names) {
     ## remove ? throughout
     f("\\?", "") %>%
 
-    ## remove all punct at start of string
-    stringr::str_replace("^[:punct:]", "") %>%
-
+    ## remove all punct and symbols at start of string
+    ## this combination should catch almost everything
+    ## it is essential there are no stray characters at the start of strings
+    ## for fuzzy-matching to work once the reference list is split by first-character
+    stringr::str_replace("^[~!@#$%^&*()_+-=`;',./<>?:{}|]+", "") %>%
+    stringr::str_replace("^[:punct:]+", "") %>%
+    
     ## remove * at end of string
     f("\\*$", "") %>%
 
