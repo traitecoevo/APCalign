@@ -8,8 +8,6 @@
 #'   dataset from a github archived file. If set to "current", the dataset will be loaded from
 #'   a URL which is the cutting edge version, but this may change at any time without notice.
 #' @param version The version number of the dataset to use. Defaults to the default version.
-#'
-#' @param reload A logical indicating whether to reload the dataset from the data source. Defaults to FALSE.
 #' 
 #' @param quiet A logical indicating whether to print status of loading to screen. Defaults to FALSE.
 #'
@@ -25,7 +23,6 @@
 load_taxonomic_resources <-
   function(stable_or_current_data = "stable",
            version = default_version(),
-           reload = FALSE,
            quiet = FALSE) {
     
     

@@ -30,29 +30,65 @@ version:
 library(APCalign)
 ```
 
+for MacOS there is currently an extra line needed to install a working
+binary of the `arrow` dependency:
+
+``` r
+# install.packages("arrow", repos = c('https://apache.r-universe.dev', 'https://cloud.r-project.org'))
+# remotes::install_github("traitecoevo/APCalign")
+```
+
 ## A quick demo
 
 Generating a look-up table can be done with just one function
 
 ``` r
-# Load APC/APNI resources into R
-resources <- load_taxonomic_resources()
 
-# Create lookup 
+# Create lookup for a vector of names
 create_taxonomic_update_lookup( 
   taxa = c(
     "Banksia integrifolia",
     "Acacia longifolia",
     "Commersonia rosea"
-    ),
-  resources = resources
+    )
 )
+#> ================================================================================================================================================================
 #> # A tibble: 3 × 12
 #>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
 #>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
 #> 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
 #> 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   
 #> 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   
+#> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
+#> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
+#> #   number_of_collapsed_taxa <dbl>
+```
+
+if you’re going to use APCalign more than once, it will save you time to
+load the taxonomic resources into memory first:
+
+``` r
+
+tax_resources <- load_taxonomic_resources()
+#> ================================================================================================================================================================
+
+# Create lookup 
+create_taxonomic_update_lookup( 
+  taxa = c(
+    "Banksia integrifolia",
+    "Acacia longifolia",
+    "Commersonia rosea",
+    "not a species"
+    ),
+  resources = tax_resources
+)
+#> # A tibble: 4 × 12
+#>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
+#>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
+#> 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
+#> 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   
+#> 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   
+#> 4 not a species       <NA>         <NA>          <NA>           <NA>  <NA>      
 #> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
 #> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
 #> #   number_of_collapsed_taxa <dbl>
