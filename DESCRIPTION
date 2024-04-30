@@ -27,7 +27,7 @@ Imports:
     httr,
     jsonlite,
     curl,
-    arrow,
+    arrow (==14.0.2.1),
     rlang
 Suggests:
     janitor,
