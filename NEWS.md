@@ -9,3 +9,13 @@
 
 * Add citing method for R package
 
+* Update GitHub Actions
+
+* Improved family alignments 
+
+* Added `standardise_taxon_rank`
+
+* Improved messaging during alignment
+
+
+
