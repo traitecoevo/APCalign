@@ -30,28 +30,33 @@ the established status (native/introduced) of plant taxa across different states
 
 ## Installation
 
+For Windows and Linux:
+
 ```{r install, eval= FALSE}
+
 # install.packages("remotes")
 # remotes::install_github("traitecoevo/APCalign", dependencies = TRUE, upgrade = "ask")
 
-library(APCalign)
 ```
 
-for MacOS there is currently an extra line needed to install a working binary of the `arrow` dependency:
+for MacOS there is currently an extra line needed to install a working binary of the `arrow` dependency from r-universe instead of CRAN:
 
-```{r}
+```{r install_mac, eval= FALSE}
+
 # install.packages("arrow", repos = c('https://apache.r-universe.dev', 'https://cloud.r-project.org'))
-# remotes::install_github("traitecoevo/APCalign")
+# remotes::install_github("traitecoevo/APCalign", dependencies = TRUE, upgrade = "ask")
+
 ```
 
 
 ## A quick demo
 
-Generating a look-up table can be done with just one function
+Generating a look-up table can be done with just one function:
 
-```{r,message=FALSE}
+```{r}
 
-# Create lookup for a vector of names
+library(APCalign)
+
 create_taxonomic_update_lookup( 
   taxa = c(
     "Banksia integrifolia",
@@ -63,11 +68,10 @@ create_taxonomic_update_lookup(
 
 if you're going to use APCalign more than once, it will save you time to load the taxonomic resources into memory first:
 
-```{r,message=FALSE}
+```{r}
 
 tax_resources <- load_taxonomic_resources()
 
-# Create lookup 
 create_taxonomic_update_lookup( 
   taxa = c(
     "Banksia integrifolia",
@@ -81,8 +85,10 @@ create_taxonomic_update_lookup(
 
 Checking for Australian natives:
 
-```{r}
-native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"),resources = tax_resources)
+```{r, message=FALSE}
+
+native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources = tax_resources)
+
 ```
 ## Shiny application
 
