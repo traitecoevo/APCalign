@@ -15,6 +15,7 @@
 #' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default. 
 #' @param imprecise_fuzzy_matches Imprecise fuzzy matches are turned on as a default.
 #' @param identifier A dataset, location or other identifier, which defaults to NA.
+#' @param quiet Logical to indicate whether to display messages while aligning taxa.
 #' @param output file path to save the output. If this file already exists, this function will check if it's a subset of the species passed in and try to add to this file. This can be useful for large and growing projects. 
 #' @return A lookup table containing the accepted and suggested names for each original name input, and additional taxonomic information such as taxon rank, taxonomic status, taxon IDs and genera. 
 #' - original_name: the original plant name.
@@ -58,6 +59,7 @@ create_taxonomic_update_lookup <- function(taxa,
                                            imprecise_fuzzy_matches = FALSE, 
                                            identifier = NA_character_,
                                            resources = load_taxonomic_resources(),
+                                           quiet = FALSE,
                                            output = NULL) {
 
   validate_taxonomic_splits_input(taxonomic_splits)
@@ -67,12 +69,14 @@ create_taxonomic_update_lookup <- function(taxa,
                APNI_matches = APNI_matches, 
                identifier = identifier, 
                imprecise_fuzzy_matches = imprecise_fuzzy_matches,
+               quiet = quiet,
                output=output)
 
   updated_data <- 
     update_taxonomy(aligned_data, 
       taxonomic_splits = taxonomic_splits,
-      resources = resources, 
+      resources = resources,
+      quiet = quiet,
       output = output)
   
   if (!full) {

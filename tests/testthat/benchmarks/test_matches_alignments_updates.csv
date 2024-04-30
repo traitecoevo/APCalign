@@ -222,3 +222,6 @@ Drryandra,match_22b,match_12f,Dryandra sp. [Drryandra; test_all_matches_TRUE],AP
 Dryandraa,match_22b,match_12f,Dryandra sp. [Dryandraa; test_all_matches_TRUE],APC,genus,Banksia,FALSE,https://id.biodiversity.org.au/instance/apni/865048,https://id.biodiversity.org.au/name/apni/77744,Dryandra R.Br.
 Actiniladum sp.,NA,NA,NA,NA,NA,NA,TRUE,NA,NA,NA
 Ecalypha indica australis,NA,NA,NA,NA,NA,NA,TRUE,NA,NA,NA
+Asteracee sp.,,,Asteraceae sp. [Asteracee sp.; test_all_matches_TRUE],APC,family,Asteraceae,FALSE,https://id.biodiversity.org.au/taxon/apni/51695393,https://id.biodiversity.org.au/name/apni/54580,Asteraceae Bercht. & J.Presl
+Compositeae sp.,,,Compositae sp. [Compositeae sp.; test_all_matches_TRUE],APC,family,Asteraceae,FALSE,https://id.biodiversity.org.au/taxon/apni/51695393,https://id.biodiversity.org.au/name/apni/54580,Asteraceae Bercht. & J.Presl
+Compositae sp.,,,Compositae sp. [Compositae sp.; test_all_matches_TRUE],APC,family,Asteraceae,FALSE,https://id.biodiversity.org.au/taxon/apni/51695393,https://id.biodiversity.org.au/name/apni/54580,Asteraceae Bercht. & J.Presl

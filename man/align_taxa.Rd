@@ -9,6 +9,7 @@ align_taxa(
   output = NULL,
   full = FALSE,
   resources = load_taxonomic_resources(),
+  quiet = FALSE,
   fuzzy_abs_dist = 3,
   fuzzy_rel_dist = 0.2,
   fuzzy_matches = TRUE,
@@ -26,6 +27,8 @@ align_taxa(
 
 \item{resources}{the taxonomic resources used to align the taxa names. Loading this can be slow,
 so call \code{\link{load_taxonomic_resources}} separately to greatly speed this function up and pass the resources in.}
+
+\item{quiet}{Logical to indicate whether to display messages while aligning taxa.}
 
 \item{fuzzy_abs_dist}{The number of characters allowed to be different for a fuzzy match.}
 
@@ -55,16 +58,18 @@ A tibble with columns that include original_name, aligned_name, taxonomic_datase
 \item binomial: the first two words in \code{stripped_name2}, required for matches that ignore all other text in the original_name; improves phrase name matches.
 \item genus: the first two words in \code{cleaned_name}; required for genus-rank matches and reprocessing of genus-rank names.
 \item fuzzy_match_genus: fuzzy match of genus column to best match among APC-accepted names; required for fuzzy matches of genus-rank names.
-\item fuzzy_match_genus_synonym: fuzzy match of genus column to best match among APC-known names, only considering different matches to those documented under APC-accepted genera; required for fuzzy matches of genus-rank names.
+\item fuzzy_match_genus_synonym: fuzzy match of genus column to best match among APC-synonymous names, only considering different matches to those documented under APC-accepted genera; required for fuzzy matches of genus-rank names.
 \item fuzzy_match_genus_APNI: fuzzy match of genus column to best match among APNI names, only considering different matches to those documented under APC-accepted and APC-known genera; required for fuzzy matches of genus-rank names.
+\item fuzzy_match_family: fuzzy match of genus column to best match among APC-accepted family names; required for fuzzy matches of family-rank names.
+\item fuzzy_match_family_synonym: fuzzy match of genus column to best match among APC-synonymous family names; required for fuzzy matches of family-rank names.
 \item fuzzy_match_cleaned_APC: fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 07a in the function \code{match_taxa}.
-\item fuzzy_match_cleaned_APC_synonym: fuzzy match of stripped_name to APC-known names; created for yet-to-be-aligned names at the match step 07b in the function \code{match_taxa}.
+\item fuzzy_match_cleaned_APC_synonym: fuzzy match of stripped_name to APC-synonymous names; created for yet-to-be-aligned names at the match step 07b in the function \code{match_taxa}.
 \item fuzzy_match_cleaned_APC_imprecise: imprecise fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 10a in the function \code{match_taxa}.
 \item fuzzy_match_cleaned_APC_synonym_imprecise: imprecise fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 10b in the function \code{match_taxa}.
 \item fuzzy_match_binomial: fuzzy match of binomial column to best match among APC-accepted names; created for yet-to-be-aligned names at match step 15a in the function \code{match_taxa}.
-\item fuzzy_match_binomial_APC_synonym: fuzzy match of binomial column to best match among APC-known names; created for yet-to-be-aligned names at match step 15a in the function \code{match_taxa}.
+\item fuzzy_match_binomial_APC_synonym: fuzzy match of binomial column to best match among APC-synonymous names; created for yet-to-be-aligned names at match step 15a in the function \code{match_taxa}.
 \item fuzzy_match_trinomial: fuzzy match of trinomial column to best match among APC-accepted names; created for yet-to-be-aligned names at match step 16a in the function \code{match_taxa}.
-\item fuzzy_match_trinomial_synonym: fuzzy match of trinomial column to best match among APC-known names; created for yet-to-be-aligned names at match step 16b in the function \code{match_taxa}.
+\item fuzzy_match_trinomial_synonym: fuzzy match of trinomial column to best match among APC-synonymous names; created for yet-to-be-aligned names at match step 16b in the function \code{match_taxa}.
 \item fuzzy_match_cleaned_APNI: fuzzy match of stripped_name to APNI names; created for yet-to-be-aligned names at the match step 16a in the function \code{match_taxa}.
 \item fuzzy_match_cleaned_APNI_imprecise: imprecise fuzzy match of stripped_name to APNI names; created for yet-to-be-aligned names at the match step 17a in the function \code{match_taxa}.
 }

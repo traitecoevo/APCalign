@@ -17,7 +17,7 @@
 #'    most_likely_species, which returns the species name in use before the split; alternative names are returned in a separate column
 #'    return_all, which returns all possible names
 #'    collapse_to_higher_taxon, which declares that an ambiguous name cannot be aligned to an accepted species/infraspecific name and the name is demoted to genus rank
-#' 
+#' @param quiet Logical to indicate whether to display messages while updating taxa.
 #' @param output (optional) Name of the file where results are saved. The default is NULL and no file is created.
 #' If specified, the output will be saved in a CSV file with the given name.
 #'
@@ -66,6 +66,7 @@
 
 update_taxonomy <- function(aligned_data,
                             taxonomic_splits = "most_likely_species",
+                            quiet = TRUE,
                             output = NULL,
                             resources = load_taxonomic_resources()) {
     
@@ -194,7 +195,8 @@ update_taxonomy <- function(aligned_data,
     taxa_out$checked<-TRUE
     taxa_out$known<-!is.na(taxa_out$accepted_name)
     readr::write_csv(taxa_out, output)
-    message("  - output saved in file: ", output)
+    if(!quiet)
+      message("  - output saved in file: ", output)
   }
   
   taxa_out
@@ -331,16 +333,44 @@ update_taxonomy_APC_family <- function(data, resources) {
 
   if(is.null(data)) return(NULL)
 
+  families <- resources$family_accepted %>% 
+                dplyr::bind_rows(resources$family_synonym) %>%
+                dplyr::mutate(family = genus)
+
   data %>%
     dplyr::mutate(
-      suggested_name = aligned_name,
-      accepted_name = NA_character_,
       family = genus,
       genus = NA_character_,
-      taxonomic_status_genus = NA_character_,
+      taxonomic_status_genus = NA_character_
+    ) %>%  
+    dplyr::left_join(
+      by = "family",
+      families %>%
+        dplyr::arrange(canonical_name, taxonomic_status) %>%
+        dplyr::distinct(canonical_name, .keep_all = TRUE) %>%
+        dplyr::select(
+          family,
+          accepted_name_usage_ID,
+          taxonomic_status
+        )
+    ) %>%
+    dplyr::mutate(my_order = relevel_taxonomic_status_preferred_order(taxonomic_status)) %>%
+    dplyr::arrange(aligned_name, my_order) %>%
+    dplyr::mutate(
+      # if required, update the family name in the `aligned_name` to the currently APC-accepted family
+      family_accepted = families$canonical_name[match(accepted_name_usage_ID, families$taxon_ID)]
+    ) %>%
+    dplyr::mutate(
+      accepted_name = NA_character_,
+      # family names in `aligned_name` that are not APC-accepted need to be updated to their current name in `suggested_name`
+      aligned_minus_genus = stringr::str_replace(aligned_name, family, ""),
+      # if there is an APC-accepted genus, replace whatever the initial genus was with the accepted genus, otherwise the suggested name is the aligned name
+      suggested_name = ifelse(my_order == "accepted", aligned_name, paste0(family_accepted, aligned_minus_genus)),
       taxonomic_status = "family accepted",
-      taxonomic_dataset = "APC"
-    )
+      taxonomic_dataset = "APC",
+      family = family_accepted
+    ) %>%
+    dplyr::select(-accepted_name_usage_ID, -family_accepted, -my_order)
 }
 
 # Function to update names of taxa whose aligned_names are
