@@ -54,6 +54,8 @@ utils::globalVariables(
     "fuzzy_match_genus",
     "fuzzy_match_genus_APNI",
     "fuzzy_match_genus_synonym",
+    "fuzzy_match_family",
+    "fuzzy_match_family_synonym",
     "genus",
     "genus_accepted",
     "known",
