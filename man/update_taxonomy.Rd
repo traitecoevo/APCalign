@@ -7,6 +7,7 @@
 update_taxonomy(
   aligned_data,
   taxonomic_splits = "most_likely_species",
+  quiet = TRUE,
   output = NULL,
   resources = load_taxonomic_resources()
 )
@@ -22,6 +23,8 @@ The three options are:
 most_likely_species, which returns the species name in use before the split; alternative names are returned in a separate column
 return_all, which returns all possible names
 collapse_to_higher_taxon, which declares that an ambiguous name cannot be aligned to an accepted species/infraspecific name and the name is demoted to genus rank}
+
+\item{quiet}{Logical to indicate whether to display messages while updating taxa.}
 
 \item{output}{(optional) Name of the file where results are saved. The default is NULL and no file is created.
 If specified, the output will be saved in a CSV file with the given name.}

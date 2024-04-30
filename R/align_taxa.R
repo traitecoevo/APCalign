@@ -14,6 +14,7 @@
 #' @param full Parameter to determine how many columns are output
 #' @param resources the taxonomic resources used to align the taxa names. Loading this can be slow,
 #' so call \code{\link{load_taxonomic_resources}} separately to greatly speed this function up and pass the resources in.
+#' @param quiet Logical to indicate whether to display messages while aligning taxa.
 #' @param fuzzy_abs_dist The number of characters allowed to be different for a fuzzy match.
 #' @param fuzzy_rel_dist The proportion of characters allowed to be different for a fuzzy match. 
 #' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters `fuzzy_abs_dist` and `fuzzy_rel_dist`
@@ -69,6 +70,7 @@ align_taxa <- function(original_name,
                        output = NULL,
                        full = FALSE,
                        resources = load_taxonomic_resources(),
+                       quiet = FALSE,
                        fuzzy_abs_dist = 3, 
                        fuzzy_rel_dist = 0.2, 
                        fuzzy_matches = TRUE, 
@@ -76,10 +78,12 @@ align_taxa <- function(original_name,
                        APNI_matches = TRUE,
                        identifier = NA_character_) {
   
-  message("Checking alignments of ", dplyr::n_distinct(original_name, na.rm = TRUE), " taxa\n")
+  if(!quiet)
+    message("Checking alignments of ", dplyr::n_distinct(original_name, na.rm = TRUE), " taxa\n")
 
   if (!is.null(output) && file.exists(output)) {
-    message("  - reading existing data from ", output)
+    if(!quiet)
+      message("  - reading existing data from ", output)
     
     taxa_raw <-
       readr::read_csv(
@@ -158,7 +162,8 @@ align_taxa <- function(original_name,
     dplyr::filter(!duplicated(original_name))
   
   if (all(taxa$tocheck$checked)|all(is.na(taxa$tocheck$checked))) {
-    message("  - all taxa are already checked, yay!")
+    if(!quiet)
+      message("  - all taxa are already checked, yay!")
     return(invisible(taxa$tocheck))
   }
   
@@ -166,9 +171,9 @@ align_taxa <- function(original_name,
   taxa <- redistribute(taxa)
   
   # messages if there is an saved list being added to
-  if (!is.null(output) && file.exists(output) && !all(taxa$tocheck$checked)) {
-  # check unknown taxa
-  message(
+  if (!is.null(output) && file.exists(output) && !all(taxa$tocheck$checked) && !quiet) {
+    # check unknown taxa
+    message(
     "  -> ",
     crayon::blue(sum(!is.na(taxa$checked$accepted_name), na.rm = T)),
     " names already matched; ",
@@ -190,12 +195,13 @@ align_taxa <- function(original_name,
     filter(original_name %in% resources$`APC list (accepted)`$canonical_name) %>%
     distinct() %>%
     nrow()
-
-  message(
-    "  -> of these ",
-    crayon::blue(perfect_matches),
-    " names have a perfect match to a scientific name in the APC. Alignments being sought for remaining names."
-  )
+  
+  if(!quiet)
+    message(
+      "  -> of these ",
+      crayon::blue(perfect_matches),
+      " names have a perfect match to a scientific name in the APC. Alignments being sought for remaining names."
+    )
   }
 
   # do the actual matching
@@ -228,7 +234,8 @@ align_taxa <- function(original_name,
     taxa$checked<-TRUE
     taxa$known<-!is.na(taxa$aligned_name)
     readr::write_csv(taxa, output)
-    #message("  - output saved in file: ", output)
+    if(!quiet)
+      message("  - output saved in file: ", output)
   }
 
   return(taxa)

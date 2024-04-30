@@ -9,6 +9,7 @@ align_taxa(
   output = NULL,
   full = FALSE,
   resources = load_taxonomic_resources(),
+  quiet = FALSE,
   fuzzy_abs_dist = 3,
   fuzzy_rel_dist = 0.2,
   fuzzy_matches = TRUE,
@@ -26,6 +27,8 @@ align_taxa(
 
 \item{resources}{the taxonomic resources used to align the taxa names. Loading this can be slow,
 so call \code{\link{load_taxonomic_resources}} separately to greatly speed this function up and pass the resources in.}
+
+\item{quiet}{Logical to indicate whether to display messages while aligning taxa.}
 
 \item{fuzzy_abs_dist}{The number of characters allowed to be different for a fuzzy match.}
 

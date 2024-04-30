@@ -31,7 +31,8 @@ test_that("consistency with previous runs", {
       taxa,
       resources = resources,
       full = TRUE,
-      taxonomic_splits = "return_all"
+      taxonomic_splits = "return_all", 
+      quiet = TRUE
     ) %>%
     dplyr::arrange(original_name, accepted_name)
 
@@ -60,7 +61,9 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
       benchmarks$original_name,
       taxonomic_splits = "most_likely_species",
       resources = resources,
-      full = TRUE) %>%
+      full = TRUE, 
+      quiet = TRUE
+      ) %>%
       arrange(original_name, taxon_ID, taxonomic_status)
   
   expect_equal(benchmarks$original_name, out1$original_name)
@@ -72,7 +75,9 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
       benchmarks$original_name,
       taxonomic_splits = "return_all",
       resources = resources,
-      full = TRUE) %>%
+      full = TRUE, 
+      quiet = TRUE
+      ) %>%
       arrange(original_name, taxon_ID, taxonomic_status)
   
   expect_gte(nrow(out2), 60)
@@ -84,7 +89,8 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
       benchmarks$original_name,
       taxonomic_splits = "collapse_to_higher_taxon",
       resources = resources,
-      full = TRUE) %>%
+      full = TRUE, 
+      quiet = TRUE) %>%
     arrange(original_name, taxon_ID, taxonomic_status) %>%
     mutate(number_of_collapsed_taxa = ifelse(is.na(number_of_collapsed_taxa), 1, number_of_collapsed_taxa))
   
@@ -103,7 +109,8 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
     create_taxonomic_update_lookup(
       benchmarks$original_name,
       resources = resources,
-      full = TRUE) %>%
+      full = TRUE, 
+      quiet = TRUE) %>%
     arrange(original_name, taxon_ID, taxonomic_status)
   
   expect_equal(out1, out4)
@@ -144,7 +151,8 @@ test_that("taxon name alignment matches and updates work as expected", {
       imprecise_fuzzy_matches = TRUE,
       APNI_matches = TRUE,
       fuzzy_matches = TRUE,
-      identifier = "test_all_matches_TRUE"
+      identifier = "test_all_matches_TRUE", 
+      quiet = TRUE
     )
   
   expect_equal(benchmarks$original_name,  output_align$original_name)
