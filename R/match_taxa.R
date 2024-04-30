@@ -84,17 +84,7 @@ match_taxa <- function(
         update_na_with(strip_names_extra(stripped_name)),
       trinomial = stringr::word(stripped_name2, start = 1, end = 3),
       binomial = stringr::word(stripped_name2, start = 1, end = 2),
-      genus = extract_genus(original_name),
-      fuzzy_match_genus =
-        fuzzy_match_genera(genus, resources$genera_accepted$genus),
-      fuzzy_match_genus_synonym =
-        fuzzy_match_genera(genus, resources$genera_synonym$genus),
-      fuzzy_match_genus_APNI =
-        fuzzy_match_genera(genus, resources$genera_APNI$genus),
-      fuzzy_match_family =
-        fuzzy_match_genera(genus, resources$family_accepted$canonical_name),
-      fuzzy_match_family_synonym =
-        fuzzy_match_genera(genus, resources$family_synonym$canonical_name)
+      genus = extract_genus(original_name)
     )
   
   ## Taxa that have been checked are moved from `taxa$tocheck` to `taxa$checked`
@@ -266,6 +256,18 @@ match_taxa <- function(
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)
     return(taxa)
+  
+  # Add some extra columns - checking for fuzzy matches in genus and family
+  # Not including this above, as fuzzy matching is slow
+  taxa$tocheck <- taxa$tocheck %>%
+    dplyr::mutate(
+      fuzzy_match_genus =
+        fuzzy_match_genera(genus, resources$genera_accepted$genus),
+      fuzzy_match_genus_synonym =
+        fuzzy_match_genera(genus, resources$genera_synonym$genus),
+      fuzzy_match_genus_APNI =
+        fuzzy_match_genera(genus, resources$genera_APNI$genus)
+    )
   
   # match_02b: Genus-level resolution
   # Fuzzy matches of APC accepted genera for names where the final "word" is `sp` or `spp` and 
@@ -2046,13 +2048,23 @@ match_taxa <- function(
   # Alignment step is to see if a fuzzy match can be made for the first word of unmatched taxa to an APC-accepted family.
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   
-  i <-
-    taxa$tocheck$fuzzy_match_family %in% resources$family_accepted$canonical_name
+  # Add some extra columns - checking for fuzzy matches in family
+  # Not including this above, as fuzzy matching is slow
+  taxa$tocheck <- taxa$tocheck %>%
+    dplyr::mutate(
+      fuzzy_match_family =
+        fuzzy_match_genera(genus, resources$family_accepted$canonical_name),
+      fuzzy_match_family_synonym =
+        fuzzy_match_genera(genus, resources$family_synonym$canonical_name)
+    )
   
+  i <- 
+    taxa$tocheck$fuzzy_match_family %in% resources$family_accepted$canonical_name
+
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = "family",
+      taxon_rank = "family", 
       aligned_name_tmp = paste0(fuzzy_match_family, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
@@ -2077,13 +2089,13 @@ match_taxa <- function(
   # The 'taxon name' is then reformatted  as `genus sp.` with the original name in square brackets.
   
   i <-
-    taxa$tocheck$fuzzy_match_family %in% resources$family_synonym$canonical_name
+    taxa$tocheck$fuzzy_match_family_synonym %in% resources$family_synonym$canonical_name
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
       taxonomic_dataset = "APC",
       taxon_rank = "family",
-      aligned_name_tmp = paste0(fuzzy_match_family, " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(fuzzy_match_family_synonym, " sp. [", cleaned_name),
       aligned_name = ifelse(is.na(identifier_string2),
                             paste0(aligned_name_tmp, "]"),
                             paste0(aligned_name_tmp, identifier_string2, "]")
