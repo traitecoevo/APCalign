@@ -29,7 +29,7 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
   words_in_text <- 1 + stringr::str_count(txt," ")
   
   ## extract first letter of first word
-  txt_word1_start <- stringr::str_extract(txt, "[:alpha:]")
+  txt_word1_start <- stringr::str_extract(txt, "[:alpha:]") %>% stringr::str_to_lower()
   
   ## for text matches with 2 or more words, extract the first letter/digit of the second word
   if(words_in_text > 1 & epithet_letters == 2) 
@@ -65,66 +65,77 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
   min_dist_per_c <-  min(distance_c) / stringr::str_length(txt)
 
   i <- which(distance_c==min_dist_abs_c)
-
-  if(
+  potential_matches <- accepted_list[i]
+  
+  ## Is there an acceptable fuzzy match? if not, break here
+  if(!(
     ## Within allowable number of characters (absolute)
     min_dist_abs_c <= max_distance_abs &
     ## Within allowable number of characters (relative)
     min_dist_per_c <= max_distance_rel &
-    ## Is a unique solution
-    length(i)<= n_allowed
-  ) {
+    ## Solution has up to n_allowed matches
+    length(potential_matches) <= n_allowed
+    ) ) { 
+    return(NA)
+  }
+  
+  # function to check if a match is ok
+  check_match <- function(potential_match) {
+  
     ## identify number of words in the matched string
-    words_in_match <- 1 + stringr::str_count(accepted_list[i]," ")
+    words_in_match <- 1 + stringr::str_count(potential_match," ")
     
     ## identify the first letter of the first word in the matched string
-    match_word1_start <- stringr::str_extract(accepted_list[i], "[:alpha:]")
+    match_word1_start <- stringr::str_extract(potential_match, "[:alpha:]") %>% 
+                          stringr::str_to_lower()
     
     ## identify the first letter of the second word in the matched string (if the matched string includes 2+ words)
     if(words_in_text > 1 & epithet_letters == 2) {
-      if(nchar(word(accepted_list[i],2)) == 1) {
-        match_word2_start <- stringr::str_extract(word(accepted_list[i],2), "[:alpha:]|[:digit:]")
+      x <- word(potential_match,2)
+      if(nchar(x) == 1) {
+        match_word2_start <- stringr::str_extract(x, "[:alpha:]|[:digit:]")
       } else {
-        match_word2_start <- stringr::str_extract(word(accepted_list[i],2), "[:alpha:][:alpha:]|[:digit:]")
+        match_word2_start <- stringr::str_extract(x, "[:alpha:][:alpha:]|[:digit:]")
       }
     }
     
     if(words_in_text > 1 & epithet_letters == 1) {
-        match_word2_start <- stringr::str_extract(word(accepted_list[i],2), "[:alpha:]|[:digit:]")
+        match_word2_start <- stringr::str_extract(word(potential_match,2), "[:alpha:]|[:digit:]")
     }
 
     ## identify the first letter of the third word in the matched string (if the matched string includes 3+ words)
     if(words_in_text > 2) {
-      match_word3_start <- stringr::str_extract(word(accepted_list[i],3), "[:alpha:]|[:digit:]")
+      match_word3_start <- stringr::str_extract(word(potential_match,3), "[:alpha:]|[:digit:]")
     }
-    
-    keep = FALSE
     
     ## keep match if the first letters of the first three words (or fewer if applicable) in the string to match 
     ## are identical to the first letters of the first three words in the matched string
 
     if(words_in_text == 1) {
-      if (txt_word1_start == match_word1_start) {
-        keep = TRUE }
+    ## next line is no longer being used, since only comparing to first-letter matches
+      if (txt_word1_start == match_word1_start) {  
+        return(TRUE)
+      }
       
     } else if(words_in_text == 2) {
       if (txt_word1_start == match_word1_start & txt_word2_start == match_word2_start) {
-        keep = TRUE }
-      
+        return(TRUE)
+      }
     } else if(words_in_text > 2) {
       if (words_in_match > 2) {
         if (txt_word1_start == match_word1_start & txt_word2_start == match_word2_start & txt_word3_start == match_word3_start) {
-          keep = TRUE }
+          return(TRUE)
+        }
       } else if (txt_word1_start == match_word1_start & txt_word2_start == match_word2_start) {
-        keep = TRUE }
+          return(TRUE)}
     }
-    
-    if(keep == TRUE) {
-      
-      return(accepted_list[i])
-      
-    }
-    return(NA)
+    return(FALSE)
   }
-  return(NA)
+  
+  j <- purrr::map_lgl(potential_matches, check_match)
+  
+  if(!any(j)) return(NA)
+  
+  return(potential_matches[j])
 }
+
