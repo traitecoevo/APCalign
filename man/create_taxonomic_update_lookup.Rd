@@ -14,6 +14,7 @@ create_taxonomic_update_lookup(
   imprecise_fuzzy_matches = FALSE,
   identifier = NA_character_,
   resources = load_taxonomic_resources(),
+  quiet = FALSE,
   output = NULL
 )
 }
@@ -35,6 +36,8 @@ create_taxonomic_update_lookup(
 \item{identifier}{A dataset, location or other identifier, which defaults to NA.}
 
 \item{resources}{These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using \code{\link{load_taxonomic_resources}} separately and pass the data in.}
+
+\item{quiet}{Logical to indicate whether to display messages while aligning taxa.}
 
 \item{output}{file path to save the output. If this file already exists, this function will check if it's a subset of the species passed in and try to add to this file. This can be useful for large and growing projects.}
 }
