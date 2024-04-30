@@ -38,7 +38,7 @@ Suggests:
     kableExtra,
     here,
     testthat (>= 3.0.0)
-Remotes: apache/arrow/r
+Remotes: apache/arrow/r@740889f
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Config/testthat/edition: 3
