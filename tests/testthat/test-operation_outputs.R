@@ -188,4 +188,29 @@ test_that("taxon name alignment matches and updates work as expected", {
   # for update_taxonomy, there are cases where the algorithm doesn't produce a desired result (suggested_name != updated_name)
   # these are known and expected failures.
   expect_equal(benchmarks$updated_name_passes, output_updates$test_column)
+
+  expect_length(
+    fuzzy_match(
+      txt = "Danksia",
+      accepted_list = resources$genera_all$canonical_name,
+      max_distance_abs = 4, 
+      max_distance_rel = 0.4, 
+      n_allowed = 4,
+      epithet_letters = 1
+    ),
+    1
+  )
+  
+  expect_length(
+    fuzzy_match(
+      txt = "Aucalyptus",
+      accepted_list = resources$genera_all$canonical_name,
+      max_distance_abs = 4, 
+      max_distance_rel = 0.4, 
+      n_allowed = 4,
+      epithet_letters = 1
+    ),
+    2
+  ) 
+  
   })
