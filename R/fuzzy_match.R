@@ -9,8 +9,6 @@
 #' @param max_distance_rel The maximum proportional difference between the input string and the match
 #' @param n_allowed The number of allowable matches returned. Defaults to 1
 #' @param epithet_letters A string specifying if 1 or 2 letters remain fixed at the start of the species epithet.
-#' @param select_first_match If there are multiple equidistant matches, a variable indicating the first should be used, to avoid 
-#' a returning NA
 #'
 #' @return A text string that matches a recognised taxon name or scientific name
 #' 
