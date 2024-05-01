@@ -12,10 +12,11 @@
 #'
 #' @return A text string that matches a recognised taxon name or scientific name
 #' 
-#'
+#' @importFrom stringdist stringdist
+#' 
 #' @examples
 #' fuzzy_match("Baksia serrata", c("Banksia serrata", 
-#'                                  "Banksia integrifolia"), 
+#'                                 "Banksia integrifolia"), 
 #'                                  max_distance_abs = 1, 
 #'                                  max_distance_rel = 1)
 #' 
@@ -53,12 +54,15 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
   ## reduce the number of fuzzy matches that are made in the next step.
   ## has also wanted to do this for the second word, but then need to separate
   ## different lists of reference names - smaller time saving and not worth it.
+  ## need to add `unique`, because for `APC-known`, sometimes duplicate canonical names
+  ## each with a different taxonomic status, and then you just want to retain the first one
   accepted_list <- accepted_list[(stringr::str_extract(accepted_list, "[:alpha:]") %>% 
                                     stringr::str_to_lower()) == 
-                                    (txt_word1_start  %>% stringr::str_to_lower())]
+                                    (txt_word1_start  %>% stringr::str_to_lower())] %>%
+                    unique()
 
   ## identify the number of characters that must change for the text string to match each of the possible accepted names
-  distance_c <- utils::adist(txt, accepted_list, fixed=TRUE)[1,]
+  distance_c <- stringdist::stringdist(txt, accepted_list, method = "dl")
   
   ## identify the minimum number of characters that must change for the text string to match a string in the list of accepted names
   min_dist_abs_c <-  min(distance_c)
