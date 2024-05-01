@@ -201,7 +201,7 @@ align_taxa <- function(original_name,
 
   perfect_matches <- taxa$tocheck %>%
     filter(original_name %in% resources$`APC list (accepted)`$canonical_name) %>%
-    distinct() %>%
+    distinct(original_name) %>%
     nrow()
   
   if(!quiet)
