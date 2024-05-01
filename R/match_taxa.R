@@ -82,8 +82,8 @@ match_taxa <- function(
         update_na_with(strip_names(cleaned_name)),
       stripped_name2 = stripped_name2 %>%
         update_na_with(strip_names_extra(stripped_name)),
-      trinomial = stringr::word(stripped_name2, start = 1, end = 3),
-      binomial = stringr::word(stripped_name2, start = 1, end = 2),
+      trinomial = word(stripped_name2, start = 1, end = 3),
+      binomial = word(stripped_name2, start = 1, end = 2),
       genus = extract_genus(original_name)
     )
   
@@ -224,7 +224,7 @@ match_taxa <- function(
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "[:space:]sp\\.$") &
     taxa$tocheck$genus %in% resources$genera_all2$genus &
-    stringr::word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
+    word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
   
   ii <-
     match(
@@ -277,7 +277,7 @@ match_taxa <- function(
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "[:space:]sp\\.$") &
     taxa$tocheck$fuzzy_match_genus %in% resources$genera_accepted$genus &
-    stringr::word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
+    word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
   
   ii <-
     match(
@@ -316,7 +316,7 @@ match_taxa <- function(
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "[:space:]sp\\.$") &
     taxa$tocheck$fuzzy_match_genus_synonym %in% resources$genera_synonym$genus &
-    stringr::word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
+    word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
   
   ii <-
     match(
@@ -353,7 +353,7 @@ match_taxa <- function(
   i <-
     stringr::str_detect(taxa$tocheck$cleaned_name, "[:space:]sp\\.$") &
     taxa$tocheck$genus %in% resources$family_accepted$canonical_name &
-    stringr::word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
+    word(taxa$tocheck$cleaned_name, 2) %in% c("sp.")
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     mutate(
@@ -524,7 +524,7 @@ match_taxa <- function(
     mutate(
       taxonomic_dataset = NA_character_,
       taxon_rank = NA,
-      aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(word(cleaned_name,1), " sp. [", cleaned_name),
       aligned_name = NA,
       aligned_reason = paste0(
         "Taxon name includes '--' (double dash) indicating an intergrade between two taxa, but exact and fuzzy matches fail to align to a genus in the APC or APNI (",
@@ -726,7 +726,7 @@ match_taxa <- function(
     mutate(
       taxonomic_dataset = NA_character_,
       taxon_rank = NA,
-      aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(word(cleaned_name,1), " sp. [", cleaned_name),
       aligned_name = NA,
       aligned_reason = paste0(
         "Taxon name includes '/' (slash) indicating an uncertain species identification  but exact and fuzzy matches fail to align to a genus in the APC or APNI (",
@@ -1033,7 +1033,7 @@ match_taxa <- function(
     mutate(
       taxonomic_dataset = NA_character_,
       taxon_rank = NA,
-      aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " sp. [", cleaned_name),
+      aligned_name_tmp = paste0(word(cleaned_name,1), " sp. [", cleaned_name),
       aligned_name = NA,
       aligned_reason = paste0(
         "Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus,  but exact and fuzzy matches fail to align to a genus in the APC or APNI (",
@@ -1297,7 +1297,7 @@ match_taxa <- function(
     mutate(
       taxonomic_dataset = NA_character_,
       taxon_rank = NA,
-      aligned_name_tmp = paste0(stringr::word(cleaned_name,1), " x [", cleaned_name),
+      aligned_name_tmp = paste0(word(cleaned_name,1), " x [", cleaned_name),
       aligned_name = NA,
       aligned_reason = paste0(
         "Taxon name includes ' x ' indicating a hybrid,  but exact and fuzzy matches fail to align to a genus in the APC or APNI (",
@@ -1927,7 +1927,7 @@ match_taxa <- function(
   # The 'taxon name' is then reformatted  as `family sp.` with the original name in square brackets.
   
   i <-
-    stringr::str_detect(stringr::word(taxa$tocheck$cleaned_name, 1), "aceae$") &
+    stringr::str_detect(word(taxa$tocheck$cleaned_name, 1), "aceae$") &
     taxa$tocheck$genus %in% resources$family_accepted$canonical_name
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
@@ -1958,7 +1958,7 @@ match_taxa <- function(
   # The 'taxon name' is then reformatted  as `family sp.` with the original name in square brackets.
 
   i <-
-    stringr::str_detect(stringr::word(taxa$tocheck$cleaned_name, 1), "ae$") &
+    stringr::str_detect(word(taxa$tocheck$cleaned_name, 1), "ae$") &
     taxa$tocheck$genus %in% resources$family_synonym$canonical_name
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%

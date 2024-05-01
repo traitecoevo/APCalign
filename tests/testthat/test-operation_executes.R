@@ -170,7 +170,7 @@ test_that("handles NAs inn inputs", {
   expect_equal(original_name, out2$original_name)
   expect_equal(original_name, out2$aligned_name)
   expect_equal(original_name, out2$accepted_name)
-  expect_equal(original_name[1], stringr::word(out2$suggested_name[1], start = 1, end = 2))
+  expect_equal(original_name[1], word(out2$suggested_name[1], start = 1, end = 2))
 
   })
 

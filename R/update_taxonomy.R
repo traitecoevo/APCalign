@@ -456,7 +456,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
     dplyr::group_by(canonical_name) %>%
     dplyr::mutate(
       number_of_collapsed_taxa = sum(number_of_collapsed_taxa),
-      accepted_name_2 = paste(stringr::word(accepted_name_2, 1), "sp."),
+      accepted_name_2 = paste(word(accepted_name_2, 1), "sp."),
       alternative_possible_names = 
                     alternative_accepted_name_tmp %>%
                     unique() %>%
@@ -469,7 +469,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
     dplyr::mutate(
       alternative_possible_names = ifelse(taxonomic_status_aligned != "accepted" & canonical_name %in% resources$'APC list (accepted)'$canonical_name, NA, alternative_possible_names),
       alternative_possible_names = stringr::str_replace_all(alternative_possible_names, "\\ \\|\\ NA", ""),
-      suggested_collapsed_name = paste(stringr::word(accepted_name_2, 1), "sp. [collapsed names:", alternative_possible_names, "]"),
+      suggested_collapsed_name = paste(word(accepted_name_2, 1), "sp. [collapsed names:", alternative_possible_names, "]"),
       taxon_rank = ifelse(number_of_collapsed_taxa > 1 & species_and_infraspecific(taxon_rank), "genus", taxon_rank)
     ) %>%
     dplyr::select(-alternative_accepted_name_tmp, -alternative_possible_names)
@@ -561,7 +561,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
       ## there are rare cases of names within the APC that do not align to an accepted name.
       ## For these taxa, the `suggested_name` is the `aligned_name` and the family name must be added
       genus = ifelse(is.na(genus_accepted), genus, genus_accepted),
-      family = ifelse(is.na(family), resources$APC$family[match(stringr::word(suggested_name, 1), resources$APC$genus)], family),
+      family = ifelse(is.na(family), resources$APC$family[match(word(suggested_name, 1), resources$APC$genus)], family),
       update_reason = ifelse(
           (number_of_collapsed_taxa > 1) & !is.na(number_of_collapsed_taxa),
           "collapsed to genus due to ambiguity",
@@ -609,7 +609,7 @@ update_taxonomy_APNI_species_and_infraspecific_taxa <- function(data, resources)
         aligned_name,
         suggested_name
       ),
-      genus = stringr::word(suggested_name, 1)
+      genus = word(suggested_name, 1)
     ) %>%
     # when possible the genus of APNI names is matched to an APC-accepted genus and the appropriate genus-level taxon_ID is added
     dplyr::left_join(
