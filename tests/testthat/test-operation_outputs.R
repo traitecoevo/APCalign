@@ -188,7 +188,11 @@ test_that("taxon name alignment matches and updates work as expected", {
   # for update_taxonomy, there are cases where the algorithm doesn't produce a desired result (suggested_name != updated_name)
   # these are known and expected failures.
   expect_equal(benchmarks$updated_name_passes, output_updates$test_column)
-
+}
+)
+  
+test_that("fuzzy_match works as expected when n_allowed > 1", {
+    
   expect_length(
     fuzzy_match(
       txt = "Danksia",
@@ -212,5 +216,68 @@ test_that("taxon name alignment matches and updates work as expected", {
     ),
     2
   ) 
+}
+)
+
+test_that("identifier column works when mismatch between unique taxa and unique identifiers", {
+  taxa <-
+    c(
+      "Banksia integrifolia",
+      "Acacia longifolia",
+      "Commersonia rosea",
+      "Thelymitra pauciflora",
+      "Justicia procumbens",
+      "Hibbertia stricta",
+      "Rostellularia adscendens",
+      "Hibbertia sericea",
+      "Hibbertia sp.",
+      "Athrotaxis laxiflolia",
+      "Genoplesium insigne",
+      "Polypogon viridis",
+      "Acacia aneura",
+      "Acacia paraneura",
+      "Galactia striata",
+      "Acacia sp.",
+      "Acacia sp.",
+      "Acacia sp.",
+      "Acacia sp."
+    )
   
-  })
+  identifiers <-
+    c(
+      "message_01",
+      "message_02",
+      "message_03",
+      "message_04",
+      "message_05",
+      "message_06",
+      "message_07",
+      "message_08",
+      "message_09",
+      "message_10",
+      "message_11",
+      "message_12",
+      "message_13",
+      "message_14",
+      "message_15",
+      "message_16",
+      "message_17",
+      "message_18",
+      "message_19"
+    )
+  
+  output <-
+    align_taxa(
+      original_name = taxa,
+      identifier = identifiers,
+      resources = resources,
+      full = TRUE,
+      quiet = TRUE
+    )
+  
+  expect_length(
+    output$aligned_name, 19
+  )
+}  
+  
+)
