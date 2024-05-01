@@ -44,7 +44,7 @@ separate_states <- function(data) {
 #' @noRd
 identify_places <- function(sep_state_data) {
   all_codes <- unique(stringr::str_trim(unlist(sep_state_data)))
-  unique(stringr::word(all_codes[!is.na(all_codes)], 1, 1))
+  unique(word(all_codes[!is.na(all_codes)], 1, 1))
 }
 
 #' @noRd
