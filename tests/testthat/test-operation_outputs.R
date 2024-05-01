@@ -109,6 +109,7 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
     create_taxonomic_update_lookup(
       benchmarks$original_name,
       resources = resources,
+      fuzzy_matches = FALSE,
       full = TRUE, 
       quiet = TRUE) %>%
     arrange(original_name, taxon_ID, taxonomic_status)
@@ -280,4 +281,18 @@ test_that("identifier column works when mismatch between unique taxa and unique 
   )
 }  
   
+)
+
+test_that("No warnings if trying to match input name to empty accepted name set.", {
+  
+ expect_equal(
+    fuzzy_match(
+      txt = "Kallstroemie",
+      accepted_list = resources$family_synonym$canonical_name,
+      max_distance_abs = 2, 
+      max_distance_rel = 0.3, 
+      n_allowed = 1,
+      epithet_letters = 1
+    ), NA)
+}
 )

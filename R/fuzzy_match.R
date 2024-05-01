@@ -62,6 +62,7 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
                     unique()
 
   ## identify the number of characters that must change for the text string to match each of the possible accepted names
+  if (length(accepted_list) > 0) {
   distance_c <- stringdist::stringdist(txt, accepted_list, method = "dl")
   
   ## identify the minimum number of characters that must change for the text string to match a string in the list of accepted names
@@ -80,6 +81,10 @@ fuzzy_match <- function(txt, accepted_list, max_distance_abs, max_distance_rel, 
     ## Solution has up to n_allowed matches
     length(potential_matches) <= n_allowed
     ) ) { 
+    return(NA)
+  }
+  
+  } else {
     return(NA)
   }
   
