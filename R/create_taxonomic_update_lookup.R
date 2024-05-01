@@ -10,7 +10,7 @@
 #' @param stable_or_current_data either "stable" for a consistent version, or "current" for the leading edge version.
 #' @param version The version number of the dataset to use.
 #' @param taxonomic_splits How to handle one_to_many taxonomic matches.  Default is "return_all".  The other options are "collapse_to_higher_taxon" and "most_likely_species". most_likely_species defaults to the original_name if that name is accepted by the APC; this will be right for certain species subsets, but make errors in other cases, use with caution.
-#' @param full logical for whether the full lookup table is returned or just key columns#' 
+#' @param full logical for whether the full lookup table is returned or just key columns 
 #' @param fuzzy_abs_dist The number of characters allowed to be different for a fuzzy match.
 #' @param fuzzy_rel_dist The proportion of characters allowed to be different for a fuzzy match. 
 #' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters `fuzzy_abs_dist` and `fuzzy_rel_dist`
