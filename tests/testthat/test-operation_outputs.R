@@ -109,6 +109,7 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
     create_taxonomic_update_lookup(
       benchmarks$original_name,
       resources = resources,
+      fuzzy_matches = FALSE,
       full = TRUE, 
       quiet = TRUE) %>%
     arrange(original_name, taxon_ID, taxonomic_status)
