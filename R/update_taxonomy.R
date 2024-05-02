@@ -233,8 +233,7 @@ relevel_taxonomic_status_preferred_order <- function(taxonomic_status) {
       "included"
     )
   
-  forcats::fct_relevel(
-    taxonomic_status,
+  factor(taxonomic_status, levels =
     subset(
       preferred_order, 
       preferred_order %in% taxonomic_status

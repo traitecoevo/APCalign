@@ -18,7 +18,6 @@ Depends:
 Imports:
     readr,
     purrr,
-    forcats,
     dplyr,
     stringr,
     stringi,
