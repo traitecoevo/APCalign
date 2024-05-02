@@ -20,42 +20,99 @@ taxa across different states/territories.
 
 ## Installation
 
-‘APCalign’ is current not on CRAN. Install the currently development
-version:
+For Windows and Linux:
 
 ``` r
+
 # install.packages("remotes")
 # remotes::install_github("traitecoevo/APCalign", dependencies = TRUE, upgrade = "ask")
+```
 
-library(APCalign)
+for MacOS there is currently an extra line needed to install a working
+binary of the `arrow` dependency from r-universe instead of CRAN:
+
+``` r
+
+# install.packages("arrow", repos = c('https://apache.r-universe.dev', 'https://cloud.r-project.org'))
+# remotes::install_github("traitecoevo/APCalign", dependencies = TRUE, upgrade = "ask")
 ```
 
 ## A quick demo
 
-Generating a look-up table can be done with just one function
+Generating a look-up table can be done with just one function:
 
 ``` r
-# Load APC/APNI resources into R
-resources <- load_taxonomic_resources()
 
-# Create lookup 
+library(APCalign)
+
 create_taxonomic_update_lookup( 
   taxa = c(
     "Banksia integrifolia",
     "Acacia longifolia",
     "Commersonia rosea"
-    ),
-  resources = resources
+    )
 )
-#> # A tibble: 3 × 12
-#>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
-#>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
-#> 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
-#> 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   
-#> 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   
-#> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
-#> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
-#> #   number_of_collapsed_taxa <dbl>
+#> Checking alignments of 3 taxa
+```
+
+    #> Loading resources into memory...
+    #> ================================================================================================================================================================
+    #> ...done
+    #>   -> of these 2 names have a perfect match to a scientific name in the APC. Alignments being sought for remaining names.
+    #> # A tibble: 3 × 12
+    #>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
+    #>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
+    #> 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
+    #> 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   
+    #> 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   
+    #> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
+    #> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
+    #> #   number_of_collapsed_taxa <dbl>
+
+if you’re going to use APCalign more than once, it will save you time to
+load the taxonomic resources into memory first:
+
+``` r
+
+tax_resources <- load_taxonomic_resources()
+```
+
+    #> Loading resources into memory...
+    #> ================================================================================================================================================================
+    #> ...done
+
+    create_taxonomic_update_lookup( 
+      taxa = c(
+        "Banksia integrifolia",
+        "Acacia longifolia",
+        "Commersonia rosea",
+        "not a species"
+        ),
+      resources = tax_resources
+    )
+    #> Checking alignments of 4 taxa
+    #>   -> of these 2 names have a perfect match to a scientific name in the APC. Alignments being sought for remaining names.
+    #> # A tibble: 4 × 12
+    #>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
+    #>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
+    #> 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
+    #> 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   
+    #> 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   
+    #> 4 not a species       <NA>         <NA>          <NA>           <NA>  <NA>      
+    #> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
+    #> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
+    #> #   number_of_collapsed_taxa <dbl>
+
+Checking for Australian natives:
+
+``` r
+
+native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources = tax_resources)
+#> # A tibble: 2 × 2
+#>   species             native_anywhere_in_aus
+#>   <chr>               <chr>                 
+#> 1 Eucalyptus globulus native                
+#> 2 Pinus radiata       introduced
 ```
 
 ## Shiny application
