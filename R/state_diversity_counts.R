@@ -51,7 +51,7 @@ state_diversity_counts <- function(state,
     create_species_state_origin_matrix(resources = resources)
   test2 <- test[test[[state]] != "not present", ]
   state_table <- table(test2[[state]])
-  return(tibble(
+  return(dplyr::tibble(
     origin = names(state_table),
     state = state,
     num_species = state_table
@@ -63,11 +63,11 @@ state_diversity_counts <- function(state,
 #' @noRd
 get_apc_genus_family_lookup <-
   function(resources = load_taxonomic_resources()) {
-    apc_s <- filter(resources$APC,
+    apc_s <- dplyr::filter(resources$APC,
                     taxon_rank == "species")
-    tibble(genus = word(apc_s$scientific_name, 1, 1),
+    dplyr::tibble(genus = word(apc_s$scientific_name, 1, 1),
            family = apc_s$family) %>%
-      distinct() -> lu
+      dplyr::distinct() -> lu
     return(lu)
   }
 

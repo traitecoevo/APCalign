@@ -241,7 +241,7 @@ test_that("handles APNI taxa and genus level IDs",{
   
   expect_gte(nrow(out1), 4)
   
-  expect_false(any(str_detect(out2$suggested_name, "NA sp.")))
+  expect_false(any(stringr::str_detect(out2$suggested_name, "NA sp.")))
   expect_equal(out2$accepted_name, rep(NA_character_, nrow(out2)))
   
   })

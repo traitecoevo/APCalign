@@ -54,7 +54,7 @@
 #' @examples
 #' # Update taxonomy for two plant names and print the result
 #' \donttest{update_taxonomy(
-#'  tibble::tibble(
+#'  dplyr::tibble(
 #'    original_name = c("Dryandra preissii", "Banksia acuminata"),
 #'    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
 #'    taxon_rank = c("species", "species"),
@@ -117,7 +117,7 @@ update_taxonomy <- function(aligned_data,
   
   ## create a blank tibble with all columns, for taxon lists where some columns aren't created in any of the individual tibbles
   taxa_blank <-
-      tibble::tibble(
+      dplyr::tibble(
         original_name = character(0L),
         aligned_name = character(0L),
         accepted_name = character(0L),

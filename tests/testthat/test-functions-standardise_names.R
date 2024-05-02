@@ -29,7 +29,7 @@ test_that("Standardise names names", {
     readr::read_csv("benchmarks/standardise_names.csv", show_col_types = FALSE)
   
   out <-
-    tibble(taxon_names = expected$taxon_names, 
+    dplyr::tibble(taxon_names = expected$taxon_names, 
         standardised_names = standardise_names(taxon_names),
         genus = extract_genus(standardised_names),  
         stripped_names = strip_names(standardised_names), 

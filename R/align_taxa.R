@@ -107,7 +107,7 @@ align_taxa <- function(original_name,
   }
   else {
     taxa_raw <-
-      tibble::tibble(
+      dplyr::tibble(
         original_name = character(0L),
         cleaned_name = character(0L),
         aligned_name = character(0L),
@@ -124,7 +124,7 @@ align_taxa <- function(original_name,
   taxa[["tocheck"]] <-
     dplyr::bind_rows(
       taxa_raw,
-      tibble::tibble(
+      dplyr::tibble(
         original_name = 
           # only include new names
           subset(original_name, 
@@ -198,8 +198,8 @@ align_taxa <- function(original_name,
   if (!all(taxa$tocheck$checked)) {
 
   perfect_matches <- taxa$tocheck %>%
-    filter(original_name %in% resources$`APC list (accepted)`$canonical_name) %>%
-    distinct(original_name) %>%
+    dplyr::filter(original_name %in% resources$`APC list (accepted)`$canonical_name) %>%
+    dplyr::distinct(original_name) %>%
     nrow()
   
   if(!quiet)
