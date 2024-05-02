@@ -26,7 +26,8 @@ align_taxa(
 \item{full}{Parameter to determine how many columns are output}
 
 \item{resources}{the taxonomic resources used to align the taxa names. Loading this can be slow,
-so call \code{\link{load_taxonomic_resources}} separately to greatly speed this function up and pass the resources in.}
+so call \code{\link{load_taxonomic_resources}} separately to greatly speed this function up
+and pass the resources in.}
 
 \item{quiet}{Logical to indicate whether to display messages while aligning taxa.}
 
@@ -34,9 +35,14 @@ so call \code{\link{load_taxonomic_resources}} separately to greatly speed this 
 
 \item{fuzzy_rel_dist}{The proportion of characters allowed to be different for a fuzzy match.}
 
-\item{fuzzy_matches}{Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters \code{fuzzy_abs_dist} and \code{fuzzy_rel_dist}}
+\item{fuzzy_matches}{Fuzzy matches are turned on as a default. The relative and absolute distances
+allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters
+\code{fuzzy_abs_dist} and \code{fuzzy_rel_dist}}
 
-\item{imprecise_fuzzy_matches}{Imprecise fuzzy matches are turned off as a default.}
+\item{imprecise_fuzzy_matches}{Imprecise fuzzy matches uses the fuzzy matching function
+with lenient levels set (absolute distance of 5 characters; relative distance = 0.25).
+It offers a way to get a wider range of possible names, possibly corresponding to very distant spelling mistakes.
+This is FALSE as default and all outputs should be checked as it often makes erroneous matches.}
 
 \item{APNI_matches}{Name matches to the APNI (Australian Plant Names Index) are turned on as a default.}
 

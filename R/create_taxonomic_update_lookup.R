@@ -16,7 +16,10 @@
 #' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters `fuzzy_abs_dist` and `fuzzy_rel_dist`
 #' @param resources These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using \code{\link{load_taxonomic_resources}} separately and pass the data in.
 #' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default. 
-#' @param imprecise_fuzzy_matches Imprecise fuzzy matches are turned on as a default.
+#' @param imprecise_fuzzy_matches Imprecise fuzzy matches uses the fuzzy matching function
+#' with lenient levels set (absolute distance of 5 characters; relative distance = 0.25). 
+#' It offers a way to get a wider range of possible names, possibly corresponding to very distant spelling mistakes. 
+#' This is FALSE as default and all outputs should be checked as it often makes erroneous matches.
 #' @param identifier A dataset, location or other identifier, which defaults to NA.
 #' @param quiet Logical to indicate whether to display messages while aligning taxa.
 #' @param output file path to save the output. If this file already exists, this function will check if it's a subset of the species passed in and try to add to this file. This can be useful for large and growing projects. 
