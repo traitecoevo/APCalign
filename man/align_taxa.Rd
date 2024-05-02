@@ -93,6 +93,8 @@ and indicates these names only have a genus-rank match.
 \examples{
 \donttest{align_taxa(c("Poa annua", "Abies alba"))}
 
+
+
 }
 \seealso{
 \code{\link{load_taxonomic_resources}}

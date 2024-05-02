@@ -13,12 +13,11 @@
 #'
 #' @return The taxonomic resources data loaded into the global environment.
 #' @export
+#' @importFrom rlang .data
 #'
 #' @examples
 #' \donttest{load_taxonomic_resources(stable_or_current_data="stable",version="0.0.2.9000")}
 #'
-#' @importFrom dplyr filter select mutate distinct arrange
-#' @importFrom crayon red
 
 load_taxonomic_resources <-
   function(stable_or_current_data = "stable",
@@ -53,7 +52,7 @@ load_taxonomic_resources <-
     zzz <- "zzzz zzzz"
     
     taxonomic_resources$APC <- taxonomic_resources$APC %>%
-      rename(
+      dplyr::rename(
         taxon_ID = .data$taxonID,
         taxon_rank = .data$taxonRank,
         name_type = .data$nameType,
@@ -72,13 +71,13 @@ load_taxonomic_resources <-
         nomenclatural_code = .data$nomenclaturalCode,
         dataset_name = .data$datasetName
       ) %>%
-      mutate(
+      dplyr::mutate(
         genus = extract_genus(canonical_name),
         taxon_rank = standardise_taxon_rank(taxon_rank)
       )
     
     taxonomic_resources$APNI <- taxonomic_resources$APNI %>%
-      rename(
+      dplyr::rename(
         name_type = .data$nameType,
         taxonomic_status = .data$taxonomicStatus,
         taxon_rank = .data$taxonRank,
@@ -91,7 +90,7 @@ load_taxonomic_resources <-
         dataset_name = .data$datasetName,
         name_element = .data$nameElement
       )  %>%
-      mutate(
+      dplyr::mutate(
         genus = extract_genus(canonical_name),
         taxon_rank = standardise_taxon_rank(taxon_rank)
       )

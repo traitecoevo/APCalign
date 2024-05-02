@@ -9,8 +9,7 @@
 #'
 #' @return A tibble with columns representing each state and rows representing each species. The values in each cell represent the origin of the species in that state.
 #'
-#' @import dplyr
-#' @import stringr
+#' 
 #' @export
 #'
 #' @seealso \code{\link{load_taxonomic_resources}}

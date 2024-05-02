@@ -37,7 +37,7 @@ native_anywhere_in_australia <- function(species, resources = load_taxonomic_res
   fulllist <- species %in% full_lookup$species
   
   # Create output tibble
-  result <- tibble(
+  result <- dplyr::tibble(
     species = species,
     native_anywhere_in_aus = dplyr::case_when(
       natives & fulllist ~ "native",

@@ -54,7 +54,7 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
   # Compare results to a table of values that have been closely scrutinised
   benchmarks <- 
     readr::read_csv("benchmarks/test_splits_synonyms.csv", show_col_types = FALSE) %>%
-    arrange(original_name, accepted_name_usage_ID, taxonomic_status)
+    dplyr::arrange(original_name, accepted_name_usage_ID, taxonomic_status)
   
   out1 <-
     create_taxonomic_update_lookup(
@@ -64,7 +64,7 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
       full = TRUE, 
       quiet = TRUE
       ) %>%
-      arrange(original_name, taxon_ID, taxonomic_status)
+      dplyr::arrange(original_name, taxon_ID, taxonomic_status)
   
   expect_equal(benchmarks$original_name, out1$original_name)
   #expect_equal(benchmarks$accepted_name_usage_ID, out1$taxon_ID)
@@ -78,7 +78,7 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
       full = TRUE, 
       quiet = TRUE
       ) %>%
-      arrange(original_name, taxon_ID, taxonomic_status)
+      dplyr::arrange(original_name, taxon_ID, taxonomic_status)
   
   expect_gte(nrow(out2), 60)
   expect_contains(out2$original_name, benchmarks$original_name)
@@ -91,12 +91,12 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
       resources = resources,
       full = TRUE, 
       quiet = TRUE) %>%
-    arrange(original_name, taxon_ID, taxonomic_status) %>%
-    mutate(number_of_collapsed_taxa = ifelse(is.na(number_of_collapsed_taxa), 1, number_of_collapsed_taxa))
+    dplyr::arrange(original_name, taxon_ID, taxonomic_status) %>%
+    dplyr::mutate(number_of_collapsed_taxa = ifelse(is.na(number_of_collapsed_taxa), 1, number_of_collapsed_taxa))
   
-  rows_gt_1 <- out3 %>% filter(number_of_collapsed_taxa > 1)
-  rows_end_sp <- out3 %>% filter(stringr::str_detect(suggested_name, "sp."))
-  rows_alt_names <- out3 %>% filter(stringr::str_detect(suggested_name, "collapsed names:"))
+  rows_gt_1 <- out3 %>% dplyr::filter(number_of_collapsed_taxa > 1)
+  rows_end_sp <- out3 %>% dplyr::filter(stringr::str_detect(suggested_name, "sp."))
+  rows_alt_names <- out3 %>% dplyr::filter(stringr::str_detect(suggested_name, "collapsed names:"))
   
   
   expect_equal(nrow(out1), nrow(out3))
@@ -112,7 +112,7 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
       fuzzy_matches = FALSE,
       full = TRUE, 
       quiet = TRUE) %>%
-    arrange(original_name, taxon_ID, taxonomic_status)
+    dplyr::arrange(original_name, taxon_ID, taxonomic_status)
   
   expect_equal(out1, out4)
   
@@ -171,7 +171,7 @@ test_that("taxon name alignment matches and updates work as expected", {
   output_updates <- 
     output_updates %>% 
     dplyr::left_join(by = "original_name",
-      benchmarks %>% select(original_name, updated_name, updated_name_passes), 
+      benchmarks %>% dplyr::select(original_name, updated_name, updated_name_passes), 
     ) %>% 
     # Make a logical to see if the suggested name matches the updated_name in the spreadsheet
     # We don't expect all of these to match perfectly. 

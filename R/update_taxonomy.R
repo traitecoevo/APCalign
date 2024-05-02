@@ -54,7 +54,7 @@
 #' @examples
 #' # Update taxonomy for two plant names and print the result
 #' \donttest{update_taxonomy(
-#'  tibble::tibble(
+#'  dplyr::tibble(
 #'    original_name = c("Dryandra preissii", "Banksia acuminata"),
 #'    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
 #'    taxon_rank = c("species", "species"),
@@ -117,7 +117,7 @@ update_taxonomy <- function(aligned_data,
   
   ## create a blank tibble with all columns, for taxon lists where some columns aren't created in any of the individual tibbles
   taxa_blank <-
-      tibble::tibble(
+      dplyr::tibble(
         original_name = character(0L),
         aligned_name = character(0L),
         accepted_name = character(0L),
@@ -571,7 +571,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
     ## next line just in case duplication snuck in - there are rare cases where one of the left_joins duplicates a row 
     dplyr::distinct(row_number, original_name, aligned_name, accepted_name, .keep_all = TRUE) %>%
     dplyr::select(original_name, aligned_name, suggested_name, accepted_name, accepted_name_2, 
-                  taxonomic_status, taxonomic_status_aligned, taxon_rank, number_of_collapsed_taxa, everything())
+                  taxonomic_status, taxonomic_status_aligned, taxon_rank, number_of_collapsed_taxa, dplyr::everything())
 }
 
 # Function to update names of taxa whose aligned_names are

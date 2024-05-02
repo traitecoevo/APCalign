@@ -62,8 +62,6 @@
 #' @examples
 #' \donttest{align_taxa(c("Poa annua", "Abies alba"))}
 #'
-#' @importFrom readr read_csv cols col_logical col_character
-#' @importFrom tibble tibble
 #'
 #'
 #' @seealso
@@ -115,7 +113,7 @@ align_taxa <- function(original_name,
   }
   else {
     taxa_raw <-
-      tibble::tibble(
+      dplyr::tibble(
         original_name = character(0L),
         cleaned_name = character(0L),
         aligned_name = character(0L),
@@ -132,7 +130,7 @@ align_taxa <- function(original_name,
   taxa[["tocheck"]] <-
     dplyr::bind_rows(
       taxa_raw,
-      tibble::tibble(
+      dplyr::tibble(
         original_name = 
           # only include new names
           subset(original_name, 
@@ -206,8 +204,8 @@ align_taxa <- function(original_name,
   if (!all(taxa$tocheck$checked)) {
 
   perfect_matches <- taxa$tocheck %>%
-    filter(original_name %in% resources$`APC list (accepted)`$canonical_name) %>%
-    distinct(original_name) %>%
+    dplyr::filter(original_name %in% resources$`APC list (accepted)`$canonical_name) %>%
+    dplyr::distinct(original_name) %>%
     nrow()
   
   if(!quiet)
@@ -229,7 +227,7 @@ align_taxa <- function(original_name,
     taxa <-
       taxa %>%
       dplyr::select(-genus, -known, -checked) %>%
-      dplyr::select(original_name, cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code, everything())   
+      dplyr::select(original_name, cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code, dplyr::everything())   
   } else {
      taxa <-
       taxa %>%
