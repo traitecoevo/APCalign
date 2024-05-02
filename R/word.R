@@ -7,7 +7,8 @@
 #'   to extract. The default value select the first word.
 #' @param sep Separator between words. Defaults to single space.
 #' @return A character vector with the same length as `string`/`start`/`end`.
-#'
+#' 
+#' @import stringr
 #' @examples
 #' spp <- c("Banksia serrata", "Actinotus helanthii")
 #' APCalign:::word(spp, 1)
