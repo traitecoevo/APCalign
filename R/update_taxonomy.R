@@ -571,7 +571,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
     ## next line just in case duplication snuck in - there are rare cases where one of the left_joins duplicates a row 
     dplyr::distinct(row_number, original_name, aligned_name, accepted_name, .keep_all = TRUE) %>%
     dplyr::select(original_name, aligned_name, suggested_name, accepted_name, accepted_name_2, 
-                  taxonomic_status, taxonomic_status_aligned, taxon_rank, number_of_collapsed_taxa, everything())
+                  taxonomic_status, taxonomic_status_aligned, taxon_rank, number_of_collapsed_taxa, dplyr::everything())
 }
 
 # Function to update names of taxa whose aligned_names are

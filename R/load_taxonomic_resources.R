@@ -13,6 +13,7 @@
 #'
 #' @return The taxonomic resources data loaded into the global environment.
 #' @export
+#' @importFrom rlang .data
 #'
 #' @examples
 #' \donttest{load_taxonomic_resources(stable_or_current_data="stable",version="0.0.2.9000")}

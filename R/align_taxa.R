@@ -221,7 +221,7 @@ align_taxa <- function(original_name,
     taxa <-
       taxa %>%
       dplyr::select(-genus, -known, -checked) %>%
-      dplyr::select(original_name, cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code, everything())   
+      dplyr::select(original_name, cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code, dplyr::everything())   
   } else {
      taxa <-
       taxa %>%
