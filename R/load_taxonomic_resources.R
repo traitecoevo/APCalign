@@ -13,7 +13,6 @@
 #'
 #' @return The taxonomic resources data loaded into the global environment.
 #' @export
-#' @importFrom rlang .data
 #'
 #' @examples
 #' \donttest{load_taxonomic_resources(stable_or_current_data="stable",version="0.0.2.9000")}
@@ -51,45 +50,37 @@ load_taxonomic_resources <-
     ### Note: Use `zzzz zzzz` because the fuzzy matching algorithm can't handles NA's
     zzz <- "zzzz zzzz"
     
+    column_rename <- 
+      c(
+        taxon_ID = "taxonID",
+        taxon_rank = "taxonRank",
+        name_type = "nameType",
+        taxonomic_status = "taxonomicStatus",
+        pro_parte = "proParte",
+        scientific_name = "scientificName",
+        scientific_name_ID = "scientificNameID",
+        accepted_name_usage_ID = "acceptedNameUsageID",
+        accepted_name_usage = "acceptedNameUsage",
+        canonical_name = "canonicalName",
+        scientific_name_authorship = "scientificNameAuthorship",
+        taxon_rank_sort_order = "taxonRankSortOrder",
+        taxon_remarks = "taxonRemarks",
+        taxon_distribution = "taxonDistribution",
+        higher_classification = "higherClassification",
+        nomenclatural_code = "nomenclaturalCode",
+        dataset_name = "datasetName",
+        name_element = "nameElement"
+      )
+
     taxonomic_resources$APC <- taxonomic_resources$APC %>%
-      dplyr::rename(
-        taxon_ID = .data$taxonID,
-        taxon_rank = .data$taxonRank,
-        name_type = .data$nameType,
-        taxonomic_status = .data$taxonomicStatus,
-        pro_parte = .data$proParte,
-        scientific_name = .data$scientificName,
-        scientific_name_ID = .data$scientificNameID,
-        accepted_name_usage_ID = .data$acceptedNameUsageID,
-        accepted_name_usage = .data$acceptedNameUsage,
-        canonical_name = .data$canonicalName,
-        scientific_name_authorship = .data$scientificNameAuthorship,
-        taxon_rank_sort_order = .data$taxonRankSortOrder,
-        taxon_remarks = .data$taxonRemarks,
-        taxon_distribution = .data$taxonDistribution,
-        higher_classification = .data$higherClassification,
-        nomenclatural_code = .data$nomenclaturalCode,
-        dataset_name = .data$datasetName
-      ) %>%
+      dplyr::rename(dplyr::any_of(column_rename)) %>%
       dplyr::mutate(
         genus = extract_genus(canonical_name),
         taxon_rank = standardise_taxon_rank(taxon_rank)
       )
     
     taxonomic_resources$APNI <- taxonomic_resources$APNI %>%
-      dplyr::rename(
-        name_type = .data$nameType,
-        taxonomic_status = .data$taxonomicStatus,
-        taxon_rank = .data$taxonRank,
-        scientific_name = .data$scientificName,
-        scientific_name_ID = .data$scientificNameID,
-        canonical_name = .data$canonicalName,
-        scientific_name_authorship = .data$scientificNameAuthorship,
-        taxon_rank_sort_order = .data$taxonRankSortOrder,
-        nomenclatural_code = .data$nomenclaturalCode,
-        dataset_name = .data$datasetName,
-        name_element = .data$nameElement
-      )  %>%
+      dplyr::rename(dplyr::any_of(column_rename)) %>%
       dplyr::mutate(
         genus = extract_genus(canonical_name),
         taxon_rank = standardise_taxon_rank(taxon_rank)
