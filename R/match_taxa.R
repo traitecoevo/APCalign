@@ -11,8 +11,13 @@
 #' @param resources The list(s) of accepted names to check against, loaded through the function `load_taxonomic_resources()`
 #' @param fuzzy_abs_dist The number of characters allowed to be different for a fuzzy match.
 #' @param fuzzy_rel_dist The proportion of characters allowed to be different for a fuzzy match. 
-#' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters `fuzzy_abs_dist` and `fuzzy_rel_dist`
-#' @param imprecise_fuzzy_matches Imprecise fuzzy matches are turned off as a default.
+#' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative and absolute distances 
+#' allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters 
+#' `fuzzy_abs_dist` and `fuzzy_rel_dist`
+#' @param imprecise_fuzzy_matches Imprecise fuzzy matches uses the fuzzy matching function
+#' with lenient levels set (absolute distance of 5 characters; relative distance = 0.25). 
+#' It offers a way to get a wider range of possible names, possibly corresponding to very distant spelling mistakes. 
+#' This is FALSE as default and all outputs should be checked as it often makes erroneous matches.
 #' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default.
 #' @param identifier A dataset, location or other identifier, which defaults to NA.
 #'
