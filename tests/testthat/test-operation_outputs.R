@@ -109,6 +109,7 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
     create_taxonomic_update_lookup(
       benchmarks$original_name,
       resources = resources,
+      fuzzy_matches = FALSE,
       full = TRUE, 
       quiet = TRUE) %>%
     arrange(original_name, taxon_ID, taxonomic_status)
@@ -188,4 +189,110 @@ test_that("taxon name alignment matches and updates work as expected", {
   # for update_taxonomy, there are cases where the algorithm doesn't produce a desired result (suggested_name != updated_name)
   # these are known and expected failures.
   expect_equal(benchmarks$updated_name_passes, output_updates$test_column)
-  })
+}
+)
+  
+test_that("fuzzy_match works as expected when n_allowed > 1", {
+    
+  expect_length(
+    fuzzy_match(
+      txt = "Danksia",
+      accepted_list = resources$genera_all$canonical_name,
+      max_distance_abs = 4, 
+      max_distance_rel = 0.4, 
+      n_allowed = 4,
+      epithet_letters = 1
+    ),
+    1
+  )
+  
+  expect_length(
+    fuzzy_match(
+      txt = "Aucalyptus",
+      accepted_list = resources$genera_all$canonical_name,
+      max_distance_abs = 4, 
+      max_distance_rel = 0.4, 
+      n_allowed = 4,
+      epithet_letters = 1
+    ),
+    2
+  ) 
+}
+)
+
+test_that("identifier column works when mismatch between unique taxa and unique identifiers", {
+  taxa <-
+    c(
+      "Banksia integrifolia",
+      "Acacia longifolia",
+      "Commersonia rosea",
+      "Thelymitra pauciflora",
+      "Justicia procumbens",
+      "Hibbertia stricta",
+      "Rostellularia adscendens",
+      "Hibbertia sericea",
+      "Hibbertia sp.",
+      "Athrotaxis laxiflolia",
+      "Genoplesium insigne",
+      "Polypogon viridis",
+      "Acacia aneura",
+      "Acacia paraneura",
+      "Galactia striata",
+      "Acacia sp.",
+      "Acacia sp.",
+      "Acacia sp.",
+      "Acacia sp."
+    )
+  
+  identifiers <-
+    c(
+      "message_01",
+      "message_02",
+      "message_03",
+      "message_04",
+      "message_05",
+      "message_06",
+      "message_07",
+      "message_08",
+      "message_09",
+      "message_10",
+      "message_11",
+      "message_12",
+      "message_13",
+      "message_14",
+      "message_15",
+      "message_16",
+      "message_17",
+      "message_18",
+      "message_19"
+    )
+  
+  output <-
+    align_taxa(
+      original_name = taxa,
+      identifier = identifiers,
+      resources = resources,
+      full = TRUE,
+      quiet = TRUE
+    )
+  
+  expect_length(
+    output$aligned_name, 19
+  )
+}  
+  
+)
+
+test_that("No warnings if trying to match input name to empty accepted name set.", {
+  
+ expect_equal(
+    fuzzy_match(
+      txt = "Kallstroemie",
+      accepted_list = resources$family_synonym$canonical_name,
+      max_distance_abs = 2, 
+      max_distance_rel = 0.3, 
+      n_allowed = 1,
+      epithet_letters = 1
+    ), NA)
+}
+)

@@ -114,6 +114,7 @@ align_taxa <- function(original_name,
         cleaned_name = character(0L),
         aligned_name = character(0L),
         taxonomic_dataset = character(0L),
+        identifier = character(0L),
         known = logical(0L),
         checked = logical(0L)
       )
@@ -132,6 +133,7 @@ align_taxa <- function(original_name,
             !is.na(original_name) & 
             !original_name %in% taxa_raw$original_name
             ),
+        identifier = identifier,
         cleaned_name = NA_character_,
         stripped_name = NA_character_,
         stripped_name2 = NA_character_,
@@ -162,8 +164,10 @@ align_taxa <- function(original_name,
         known = FALSE
       )
     ) %>% 
-    # take unique values so each name only processed once
-    dplyr::filter(!duplicated(original_name))
+    # take unique values of original name by identifier combinations
+    # so each name only processed once (or multiple times if unique identifiers)
+    dplyr::filter(!duplicated(paste0(original_name, identifier))) %>%
+    dplyr::filter(original_name %>% standardise_names() != "")
   
   if (all(taxa$tocheck$checked)|all(is.na(taxa$tocheck$checked))) {
     if(!quiet)
@@ -197,7 +201,7 @@ align_taxa <- function(original_name,
 
   perfect_matches <- taxa$tocheck %>%
     filter(original_name %in% resources$`APC list (accepted)`$canonical_name) %>%
-    distinct() %>%
+    distinct(original_name) %>%
     nrow()
   
   if(!quiet)
@@ -223,14 +227,16 @@ align_taxa <- function(original_name,
   } else {
      taxa <-
       taxa %>%
-      dplyr::select(original_name, cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code)      
+      dplyr::select(original_name, cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code, identifier)      
   }
 
   # Assemble output in the order of the input
   # by joining results into a tibble with inputs as column
   taxa <-
-    dplyr::tibble(original_name = original_name) %>%
-    dplyr::left_join(by = "original_name", taxa)
+    dplyr::tibble(original_name = original_name, identifier = identifier) %>%
+    dplyr::left_join(by = c("original_name", "identifier"), taxa) %>%
+    # can remove column identifier now that matches are complete
+    dplyr::select(-identifier)
   
   ## save outputs to file, useful for caching results 
   if (!is.null(output)) {

@@ -23,6 +23,7 @@ Imports:
     dplyr,
     stringr,
     stringi,
+    stringdist,
     crayon,
     httr,
     jsonlite,

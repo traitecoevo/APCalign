@@ -10,7 +10,10 @@
 #' @param stable_or_current_data either "stable" for a consistent version, or "current" for the leading edge version.
 #' @param version The version number of the dataset to use.
 #' @param taxonomic_splits How to handle one_to_many taxonomic matches.  Default is "return_all".  The other options are "collapse_to_higher_taxon" and "most_likely_species". most_likely_species defaults to the original_name if that name is accepted by the APC; this will be right for certain species subsets, but make errors in other cases, use with caution.
-#' @param full logical for whether the full lookup table is returned or just key columns
+#' @param full logical for whether the full lookup table is returned or just key columns 
+#' @param fuzzy_abs_dist The number of characters allowed to be different for a fuzzy match.
+#' @param fuzzy_rel_dist The proportion of characters allowed to be different for a fuzzy match. 
+#' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative and absolute distances allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters `fuzzy_abs_dist` and `fuzzy_rel_dist`
 #' @param resources These are the taxonomic resources used for cleaning, this will default to loading them from a local place on your computer.  If this is to be called repeatedly, it's much faster to load the resources using \code{\link{load_taxonomic_resources}} separately and pass the data in.
 #' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default. 
 #' @param imprecise_fuzzy_matches Imprecise fuzzy matches are turned on as a default.
@@ -55,6 +58,9 @@ create_taxonomic_update_lookup <- function(taxa,
                                            version = default_version(),
                                            taxonomic_splits = "most_likely_species",
                                            full = FALSE,
+                                           fuzzy_abs_dist = 3, 
+                                           fuzzy_rel_dist = 0.2, 
+                                           fuzzy_matches = TRUE, 
                                            APNI_matches = TRUE, 
                                            imprecise_fuzzy_matches = FALSE, 
                                            identifier = NA_character_,
@@ -68,6 +74,9 @@ create_taxonomic_update_lookup <- function(taxa,
     align_taxa(taxa, resources = resources, 
                APNI_matches = APNI_matches, 
                identifier = identifier, 
+               fuzzy_abs_dist = fuzzy_abs_dist, 
+               fuzzy_rel_dist = fuzzy_rel_dist, 
+               fuzzy_matches = fuzzy_matches, 
                imprecise_fuzzy_matches = imprecise_fuzzy_matches,
                quiet = quiet,
                output=output)

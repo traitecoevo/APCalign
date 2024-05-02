@@ -52,38 +52,6 @@ load_taxonomic_resources <-
     ### Note: Use `zzzz zzzz` because the fuzzy matching algorithm can't handles NA's
     zzz <- "zzzz zzzz"
     
-    word <- function(string, start = 1L, end = start) {
-      if(end == start) {
-        str_split_i(string, " ", start)
-      } else if(end == start+1) {
-        w1 <- str_split_i(string, " ", start)
-        w2 <- str_split_i(string, " ", start+1)
-        
-        out <- paste(w1, w2) 
-        out[is.na(w2)] <- NA_character_
-        
-        out
-      } else if(end == start+2) {
-        
-        w1 <- str_split_i(string, " ", start)
-        w2 <- str_split_i(string, " ", start+1)
-        w3 <- str_split_i(string, " ", start+2)
-        
-        out <- paste(w1, w2, w3) 
-        out[is.na(w2) | is.na(w3)] <- NA_character_
-        
-        out
-      } else {
-        i <- seq(start, end)
-        
-        txt <- str_split(string, " ")
-        lngth <- purrr::map_int(txt, length)
-        out <- purrr::map(txt, ~paste(.x[i], collapse = " "))
-        out[lngth < end] <- NA
-        out
-      }
-    }
-    
     taxonomic_resources$APC <- taxonomic_resources$APC %>%
       rename(
         taxon_ID = .data$taxonID,
