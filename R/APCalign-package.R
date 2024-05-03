@@ -10,7 +10,8 @@
 #' @name APCalign
 #' @docType package
 #' @references If you have any questions, comments or suggestions, please
-#' submit an issue at our [GitHub repository](https://github.com/traitecoevo/APCalign/issues)
+#' submit an issue at our 
+#' [GitHub repository](https://github.com/traitecoevo/APCalign/issues)
 #' @keywords internal
 #' @section Functions:
 #' **Standarise taxon names**

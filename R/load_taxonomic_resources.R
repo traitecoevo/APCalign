@@ -1,21 +1,27 @@
 #' Load taxonomic resources from either stable or current versions of APC and APNI
 #'
-#' This function loads two taxonomic datasets for Australia's vascular plants, the APC and APNI, into the global environment. 
-#' It accesses taxonomic data from a dataset using the provided version number or the default version.  
-#' The function creates several data frames by filtering and selecting data from the loaded lists.
+#' This function loads two taxonomic datasets for Australia's vascular plants, 
+#' the APC and APNI, into the global environment. 
+#' It accesses taxonomic data from a dataset using the provided version number 
+#' or the default version.  
+#' The function creates several data frames by filtering and selecting data 
+#' from the loaded lists.
 #'
-#' @param stable_or_current_data Type of dataset to access. The default is "stable", which loads the
-#'   dataset from a github archived file. If set to "current", the dataset will be loaded from
-#'   a URL which is the cutting edge version, but this may change at any time without notice.
-#' @param version The version number of the dataset to use. Defaults to the default version.
+#' @param stable_or_current_data Type of dataset to access. 
+#' The default is "stable", which loads the dataset from a github archived file. 
+#' If set to "current", the dataset will be loaded from a URL which is the 
+#' cutting edge version, but this may change at any time without notice.
+#' @param version The version number of the dataset to use. 
+#' Defaults to the default version.
 #' 
-#' @param quiet A logical indicating whether to print status of loading to screen. Defaults to FALSE.
+#' @param quiet A logical indicating whether to print status of loading to screen.
+#'  Defaults to FALSE.
 #'
 #' @return The taxonomic resources data loaded into the global environment.
 #' @export
 #'
 #' @examples
-#' \donttest{load_taxonomic_resources(stable_or_current_data="stable",version="0.0.2.9000")}
+#' \donttest{load_taxonomic_resources(stable_or_current_data="stable", version="0.0.2.9000")}
 #'
 
 load_taxonomic_resources <-
@@ -103,10 +109,13 @@ load_taxonomic_resources <-
         genus
       ) %>%
       dplyr::mutate(
-        # strip_names removes punctuation and filler words associated with infraspecific taxa (subsp, var, f, ser)
+        ## strip_names removes punctuation and filler words associated with
+        ## infraspecific taxa (subsp, var, f, ser)
         stripped_canonical = strip_names(canonical_name),
-        ## strip_names_extra removes extra filler words associated with species name cases (x, sp)
-        ## strip_names_extra is essential for the matches involving 2 or 3 words, since you want those words to not count filler words
+        ## strip_names_extra removes extra filler words associated with 
+        ## species name cases (x, sp)
+        ## strip_names_extra is essential for the matches involving 2 or 3 words,
+        ## since you want those words to not count filler words
         stripped_canonical2 = strip_names_extra(stripped_canonical),
         stripped_scientific = strip_names(scientific_name),
         binomial = ifelse(
@@ -263,8 +272,9 @@ load_taxonomic_resources <-
 
 ##' Access Australian Plant Census Dataset
 ##'
-##' This function provides access to the Australian Plant Census dataset containing information
-##' about various species. The dataset can be loaded from a github for a stable file or from a URL for the most cutting-edge, but not stable version.
+##' This function provides access to the Australian Plant Census dataset
+##' about various species. The dataset can be loaded from a github for a stable file or
+##' from a URL for the most cutting-edge, but not stable version.
 ##'
 ##' @param version Version number. The default is NULL, which will load the most recent
 ##'   version of the dataset on your computer or the most recent version known
@@ -275,8 +285,9 @@ load_taxonomic_resources <-
 ##'   delete the persistent data at any time by running `mydata_del(NULL)` (or
 ##'   `mydata_del(NULL, path)` if you use a different path).
 ##' @param type Type of dataset to access. The default is "stable", which loads the
-##'   dataset from a github archived file. If set to "current", the dataset will be loaded from
-##'   a URL which is the cutting edge version, but this may change at any time without notice.
+##'   dataset from a github archived file. If set to "current", the dataset will be
+##' loaded from a URL which is the cutting edge version, but this may change at any time
+##'  without notice.
 ##'
 ##' @examples
 ##'
