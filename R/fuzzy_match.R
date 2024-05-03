@@ -12,7 +12,6 @@
 #'
 #' @return A text string that matches a recognised taxon name or scientific name
 #' 
-#' @importFrom stringdist stringdist
 #' 
 #' @examples
 #' fuzzy_match("Baksia serrata", c("Banksia serrata", 

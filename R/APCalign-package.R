@@ -51,6 +51,7 @@ utils::globalVariables(
     "checked",
     "cleaned_name",
     "family",
+    "family_accepted",
     "fuzzy_match_genus",
     "fuzzy_match_genus_APNI",
     "fuzzy_match_genus_synonym",

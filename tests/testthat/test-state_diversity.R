@@ -11,7 +11,7 @@ test_that("state_diversity() works", {
   
   sd <- readr::read_csv("benchmarks/state_diversity.csv", 
                         show_col_types = FALSE)
-  ss_subset <- filter(ss, ss$species %in% sd$species)
+  ss_subset <- dplyr::filter(ss, ss$species %in% sd$species)
   
   expect_equal(ss_subset[1:200,], sd[1:200,])
 })

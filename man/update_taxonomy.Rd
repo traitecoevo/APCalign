@@ -65,7 +65,7 @@ The aligned name is a plant name that has been aligned to a taxon name in the AP
 \examples{
 # Update taxonomy for two plant names and print the result
 \donttest{update_taxonomy(
- tibble::tibble(
+ dplyr::tibble(
    original_name = c("Dryandra preissii", "Banksia acuminata"),
    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
    taxon_rank = c("species", "species"),

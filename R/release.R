@@ -3,6 +3,7 @@
 #' @param version_name character string of version name, follow semantic versioning
 #' @param path to download parquets to upload
 #' @keywords internal
+#' @noRd
 
 download_taxonomic_resources_for_release<- function(version_name = NULL, path = "ignore/"){
 
