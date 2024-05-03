@@ -144,7 +144,8 @@
 #'
 #' # example 3
 #' taxon_list <- 
-#'   readr::read_csv("inst/extdata/test_taxa.csv", show_col_types = FALSE)
+#'   system.file("extdata", "test_taxa.csv", package = "APCalign") %>%
+#'   readr::read_csv(show_col_types = FALSE)
 #' 
 #' create_taxonomic_update_lookup(
 #'     taxa = taxon_list$original_name,
