@@ -1,9 +1,15 @@
+#' @title Strip taxon names
+#' 
+#' @description
 #' Strip taxonomic names of taxon rank abbreviations and qualifiers 
 #' and special characters
 #'
-#' Given a vector of taxonomic names, this function removes
-#'  subtaxa designations ("subsp.", "var.", "f.", and "ser"),
-#'  special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace.
+#' @details
+#' Given a vector of taxonomic names, this function removes:
+#' -  subtaxa designations ("subsp.", "var.", "f.", and "ser")
+#' -  special characters (e.g., "-", ".", "(", ")", "?")
+#' -  extra whitespace
+#' 
 #'  The resulting vector of names is also converted to lowercase.
 #'
 #' @param taxon_names A character vector of taxonomic names to be stripped.
@@ -42,20 +48,21 @@ strip_names <- function(taxon_names) {
     stringr::str_to_lower()
 }
 
-#' Strip taxonomic names of taxon rank abbreviations and qualifiers,
-#'  filler words and special characters
-#'
-#' Given a vector of taxonomic names, this function removes subtaxa
-#'  designations ("subsp.", "var.", "f.", and "ser"), 
-#'  additional filler words and characters (" x " for hybrid taxa, "sp."), 
-#'  special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace.
-#'  The resulting vector of names is also converted to lowercase.
+#' @title Strip taxon names, extra
+#' 
+#' @description
+#' Strip taxonomic names of `sp.` and hybrid symbols. This function assumes 
+#' that a character function has already been run through `strip_names`.
+#' 
+#' @details
+#' Given a vector of taxonomic names, this function removes additional filler
+#' words (" x " for hybrid taxa, "sp.") not removed by the function 
+#' `strip_names`
 #'
 #' @param taxon_names A character vector of taxonomic names to be stripped.
 #'
 #' @return A character vector of stripped taxonomic names, 
-#'  with subtaxa designations, special characters, additional filler words and
-#'  extra whitespace removed, and all letters converted to lowercase.
+#'  with `sp.` and hybrid symbols removed.
 #'
 #'
 #' @examples

@@ -1,15 +1,25 @@
 
-#' Standardises taxon names by performing a series of text substitutions to remove common inconsistencies in taxonomic nomenclature.
-#'
+#' @title Standardise taxon names
+#' 
+#' @description
+#' Standardises taxon names by performing a series of text substitutions to 
+#' remove common inconsistencies in taxonomic nomenclature.
+#' 
 #' The function takes a character vector of taxon names as input and 
-#' returns a character vector of taxon names using standardised taxonomic syntax as output. 
-#' In particular it standardises taxon rank abbreviations and qualifiers (subsp., var., f.), as people use many variants of these terms. 
-#' It also standardises or removes a few additional filler words used within taxon names (affinis becomes aff.; s.l. and s.s. are removed).
+#' returns a character vector of taxon names using standardised taxonomic syntax
+#' as output. 
+#'
+#' @details
+#' -  It removes stray punctuation at the start and end of a character string.
+#' -  It standardises unusual characters and symbols to ASCII equivalents.
+#' -  It standardises taxon rank abbreviations and qualifiers (subsp., var., f.),
+#'  as people use many variants of these terms. 
+#' -  It standardises or removes a few additional filler words used within
+#'  taxon names (affinis becomes aff.; s.l. and s.s. are removed).
 #'
 #' @param taxon_names A character vector of taxon names that need to be standardised.
 #'
 #' @return A character vector of standardised taxon names.
-#'
 #'
 #' @examples
 #' standardise_names(c("Quercus suber",
@@ -149,15 +159,18 @@ extract_genus <- function(taxon_name) {
 }
 
 
-#' Standardise taxon ranks from latin into english.
+#' @title Standardise taxon ranks
+#' 
+#' @description
+#' Standardise taxon ranks from Latin into English.
 #'
-#' The function takes a character vector of taxon ranks as input and 
-#' returns a character vector of taxon ranks using standardised english terms.
+#' @details
+#' The function takes a character vector of Latin taxon ranks as input and 
+#' returns a character vector of taxon ranks using standardised English terms.
 #'
-#' @param taxon_rank A character vector of taxon ranks that need to be standardised.
+#' @param taxon_rank A character vector of Latin taxon ranks.
 #'
-#' @return A character vector of standardised taxon names.
-#'
+#' @return A character vector of English taxon ranks.
 #'
 #' @examples
 #' standardise_taxon_rank(c("regnum", "kingdom", "classis", "class"))

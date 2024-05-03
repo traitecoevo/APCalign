@@ -1,11 +1,15 @@
-#' Load taxonomic resources from either stable or current versions of APC and APNI
-#'
+#' @title Load taxonomic reference lists, APC & APNI
+#' 
+#' @description
 #' This function loads two taxonomic datasets for Australia's vascular plants, 
-#' the APC and APNI, into the global environment. 
-#' It accesses taxonomic data from a dataset using the provided version number 
+#' the APC and APNI, into the global environment. It creates several data frames
+#' by filtering and selecting data from the loaded lists.
+#' 
+#' @details
+#' - It accesses taxonomic data from a dataset using the provided version number 
 #' or the default version.  
-#' The function creates several data frames by filtering and selecting data 
-#' from the loaded lists.
+#' - The output is several dataframes that include subsets of the APC/APNI based
+#' on taxon rank and taxonomic status.
 #'
 #' @param stable_or_current_data Type of dataset to access. 
 #' The default is "stable", which loads the dataset from a github archived file. 
@@ -21,7 +25,9 @@
 #' @export
 #'
 #' @examples
-#' \donttest{load_taxonomic_resources(stable_or_current_data="stable", version="0.0.2.9000")}
+#' \donttest{
+#' load_taxonomic_resources(stable_or_current_data="stable", 
+#' version="0.0.2.9000")}
 #'
 
 load_taxonomic_resources <-

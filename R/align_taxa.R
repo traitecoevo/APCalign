@@ -1,19 +1,52 @@
+#' @title Align Australian plant scientific names to the APC or APNI
+#' 
+#' @description
 #' For a list of Australian plant names, find taxonomic or scientific name
-#'  alignments to the APC or APNI through standardizing formatting
-#'  and fixing spelling errors
+#' alignments to the APC or APNI through standardizing formatting and fixing
+#' spelling errors.
+#' 
+#' Usage case: Users will run this function if they wish to see the details
+#'  of the matching algorithms, the many output columns that the matching
+#'  function compares to as it seeks the best alignment. They may also select
+#'  this function if they want to adjust the “fuzziness” level for fuzzy
+#'  matches, options not allowed in create_taxonomic_update_lookup. This
+#'  function is the first half of create_taxonomic_update_lookup.
 #'
-#' This function finds taxonomic alignments in APC or 
-#' scientific name alignments in APNI. 
-#' It uses the internal function `match_taxa` to attempt to match input strings
-#'  to taxon names in the APC/APNI.
-#' It sequentially searches for matches against more than 20 different string
+#' @details  
+#' - This function finds taxonomic alignments in APC or scientific name 
+#' alignments in APNI. 
+#' - It uses the internal function `match_taxa` to attempt to match input
+#'  strings to taxon names in the APC/APNI. 
+#' - It sequentially searches for matches against more than 20 different string
 #'  patterns, prioritising exact matches (to accepted names as well as
-#'  synonyms, orthographic variants) over fuzzy matches. 
-#' It prioritises matches to taxa in the APC over names in the APNI. 
-#' It identifies string patterns in input names that suggest a name can only be
-#'  aligned to a genus (hybrids that are not in the APC/ANI; graded species;
+#'  synonyms, orthographic variants) over fuzzy matches.
+#' - It prioritises matches to taxa in the APC over names in the APNI.
+#' - It identifies string patterns in input names that suggest a name can only
+#'  be aligned to a genus (hybrids that are not in the APC/ANI; graded species;
 #'  taxa not identified to species), and indicates these names only have a
 #'  genus-rank match.
+#' 
+#' Notes:
+#' 
+#' - If you will be running the function APCalign::create_taxonomic_update_lookup
+#'  many times, it is best to load the taxonomic resources separately using
+#'   resources <- load_taxonomic_resources(), then add the argument
+#'    resources = resources
+#' - The name Banksia cerrata does not align as the fuzzy matching algorithm
+#'  does not allow the first letter of the genus and species epithet to change.
+#' - With this function you have the option of changing the fuzzy matching
+#'  parameters. The defaults, with fuzzy matches only allowing changes of 3
+#'   (or fewer) characters AND 20% (or less) of characters has been carefully
+#'    calibrated to catch just about all typos, but very, very rarely mis-align
+#'     a name. If you wish to introduce less conservative fuzzy matching it is
+#'      recommended you manually check the aligned names.
+#' - It is recommended that you begin with imprecise_fuzzy_matches = FALSE (the
+#'  default), as quite a few of the less precise fuzzy matches are likely to be
+#'   erroneous. This argument should be turned on only if you plan to check all
+#'    alignments manually.
+#' - The argument identifier allows you to add a fix text string to all genus-
+#'  and family- level names, such as identifier = "Royal NP" would return "Acacia
+#'   sp. \[Royal NP]".
 #'
 #' @param original_name A list of names to query for taxonomic alignments.
 #' @param output (optional) The name of the file to save the results to.
@@ -121,8 +154,25 @@
 #' @export
 #'
 #' @examples
-#' \donttest{align_taxa(c("Poa annua", "Abies alba"))}
-#'
+#' \donttest{
+#' resources <- load_taxonomic_resources()
+#' 
+#' # example 1
+#' align_taxa(c("Poa annua", "Abies alba"), resources = resources)
+#' 
+#' # example 2
+#' input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", 
+#' "Banksia serrrrata", "Dryandra sp.", "Banksia big red flowers")
+#' 
+#' aligned_taxa <-
+#'   APCalign::align_taxa(
+#'     original_name = input,
+#'     identifier = "APCalign test",
+#'     full = TRUE,
+#'     resources = resources
+#'   ) 
+#'   
+#' }
 #'
 #'
 #' @seealso

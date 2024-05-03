@@ -2,7 +2,7 @@
 % Please edit documentation in R/strip_names.R
 \name{strip_names_extra}
 \alias{strip_names_extra}
-\title{Strip taxonomic names of taxon rank abbreviations and qualifiers, filler words and special characters}
+\title{Strip taxon names, extra}
 \usage{
 strip_names_extra(taxon_names)
 }
@@ -10,14 +10,17 @@ strip_names_extra(taxon_names)
 \item{taxon_names}{A character vector of taxonomic names to be stripped.}
 }
 \value{
-A character vector of stripped taxonomic names, with subtaxa designations, special
-characters, additional filler words and extra whitespace removed, and all letters converted to lowercase.
+A character vector of stripped taxonomic names,
+with \code{sp.} and hybrid symbols removed.
 }
 \description{
-Given a vector of taxonomic names, this function removes subtaxa designations ("subsp.", "var.", "f.", and "ser"),
-additional filler words and characters (" x " for hybrid taxa, "sp."),
-special characters (e.g., "-", ".", "(", ")", "?"), and extra whitespace. The resulting vector
-of names is also converted to lowercase.
+Strip taxonomic names of \code{sp.} and hybrid symbols. This function assumes
+that a character function has already been run through \code{strip_names}.
+}
+\details{
+Given a vector of taxonomic names, this function removes additional filler
+words (" x " for hybrid taxa, "sp.") not removed by the function
+\code{strip_names}
 }
 \examples{
 strip_names_extra(c("Abies lasiocarpa subsp. lasiocarpa",

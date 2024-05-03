@@ -1,12 +1,40 @@
-#' Create a lookup table with the best-possible scientific name match for a
-#'  list of Australian plant names
+#' @title Create a table with the best-possible scientific name match for 
+#' Australian plant names
 #'
-#' This function takes a list of Australian plant names that need to be
-#'  reconciled with current taxonomy and 
-#' generates a lookup table of the best-possible scientific name match for
-#'  each input name. 
-#' It uses first the function `align_taxa`, then the function `update_taxonomy`
-#'  to achieve the output.
+#' @description
+#' This function takes a list of Australian plant names that need to be 
+#' reconciled with current taxonomy and generates a lookup table of the 
+#' best-possible scientific name match for each input name.
+#' 
+#' Usage case: This is APCalign’s core function, merging together the alignment 
+#' and updating of taxonomy.
+#' 
+#' @details
+#' - It uses first the function `align_taxa`, then the function `update_taxonomy` 
+#' to achieve the output. The aligned name is plant name that has been aligned 
+#' to a taxon name in the APC or APNI by the align_taxa function.
+#' 
+#' Notes:
+#' 
+#' - If you will be running the function APCalign::create_taxonomic_update_lookup 
+#' many times, it is best to load the taxonomic resources separately using 
+#' `resources <- load_taxonomic_resources()`, then add the argument 
+#' resources = resources
+#' - The name Banksia cerrata does not align as the fuzzy matching algorithm 
+#' does not allow the first letter of the genus and species epithet to change.
+#' - The argument taxonomic_splits allows you to choose the outcome for updating 
+#' the names of taxa with ambiguous taxonomic histories; this applies to 
+#' scientific names that were once attached to a more broadly circumscribed 
+#' taxon concept, that was then split into several more narrowly circumscribed 
+#' taxon concepts, one of which retains the original name. There are three 
+#' options: most_likely_species returns the name that is retained, with 
+#' alternative names documented in square brackets; return_all adds additional 
+#' rows to the output, one for each possible taxon concept; 
+#' collapse_to_higher_taxon returns the genus with possible names in square 
+#' brackets.
+#' - The argument identifier allows you to add a fix text string to all genus- 
+#' and family- level names, such as identifier = "Royal NP" would return 
+#' `Acacia sp. \[Royal NP]`.
 #'
 #' @family taxonomic alignment functions
 #'
@@ -93,13 +121,41 @@
 #'
 #' @seealso \code{\link{load_taxonomic_resources}}
 #' @examples
-#' \donttest{resources <- load_taxonomic_resources()
+#' \donttest{
+#' resources <- load_taxonomic_resources()
+#' 
+#' # example 1
 #' create_taxonomic_update_lookup(c("Eucalyptus regnans",
 #'                                  "Acacia melanoxylon",
 #'                                  "Banksia integrifolia",
 #'                                  "Not a species"),
-#'                                  resources=resources)
-#'}
+#'                                  resources = resources)
+#'                                  
+#' # example 2
+#' input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", 
+#' "Banksea serrata", "Banksia serrrrata", "Dryandra")
+#' 
+#' create_taxonomic_update_lookup(
+#'     taxa = input,
+#'     identifier = "APCalign test",
+#'     full = TRUE,
+#'     resources = resources
+#'   )
+#'
+#' # example 3
+#' taxon_list <- 
+#'   readr::read_csv(here("inst/", "extdata", "test_taxa.csv"),
+#'     show_col_types = FALSE
+#'   )
+#' 
+#' create_taxonomic_update_lookup(
+#'     taxa = taxon_list$original_name,
+#'     identifier = taxon_list$notes,
+#'     full = TRUE,
+#'     resources = resources
+#'   )
+#' }
+#' 
 create_taxonomic_update_lookup <- function(taxa,
                                            stable_or_current_data = "stable",
                                            version = default_version(),

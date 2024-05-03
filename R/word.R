@@ -12,6 +12,7 @@
 #' spp <- c("Banksia serrata", "Actinotus helanthii")
 #' APCalign:::word(spp, 1)
 #' APCalign:::word(spp, 2)
+#' @noRd 
 word <- function(string, start = 1L, end = start, sep = " ") {
   if(end == start) {
     stringr::str_split_i(string, " ", start)
