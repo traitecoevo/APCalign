@@ -104,7 +104,7 @@
 #'    aligned_name = c("Dryandra preissii", "Banksia acuminata"),
 #'    taxon_rank = c("species", "species"),
 #'    taxonomic_dataset = c("APC", "APC"),
-#'    aligned_reason = NA_character_,
+#'    aligned_reason = c(NA_character_,NA_character_),
 #'    resources = resources
 #'  )
 #' )
