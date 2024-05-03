@@ -1,25 +1,38 @@
 #' Match taxonomic names to accepted names in list
 #' 
-#' This function attempts to match input strings to a list of allowable taxonomic names.
-#' It cycles through more than 20 different string patterns, sequentially searching for additional match patterns.
-#' It identifies string patterns in input names that suggest a name can only be aligned to a genus (hybrids that are not accepted names; graded species; taxa not identified to species).
-#' It prioritises matches that do not require fuzzy matching (i.e. synonyms, orthographic variants) over those that do.
+#' This function attempts to match input strings to a list of allowable
+#'  taxonomic names.
+#' It cycles through more than 20 different string patterns, sequentially
+#'  searching for additional match patterns.
+#' It identifies string patterns in input names that suggest a name can only be
+#'  aligned to a genus (hybrids that are not accepted names; graded species;
+#'  taxa not identified to species).
+#' It prioritises matches that do not require fuzzy matching (i.e. synonyms,
+#'  orthographic variants) over those that do.
 #' If prioritises matches to taxa in the APC over names in the APNI.
 #' 
 #' @param taxa The list of taxa requiring checking
 #
-#' @param resources The list(s) of accepted names to check against, loaded through the function `load_taxonomic_resources()`
-#' @param fuzzy_abs_dist The number of characters allowed to be different for a fuzzy match.
-#' @param fuzzy_rel_dist The proportion of characters allowed to be different for a fuzzy match. 
-#' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative and absolute distances 
-#' allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters 
+#' @param resources The list(s) of accepted names to check against,
+#'  loaded through the function `load_taxonomic_resources()`
+#' @param fuzzy_abs_dist The number of characters allowed to be different
+#'  for a fuzzy match.
+#' @param fuzzy_rel_dist The proportion of characters allowed to be different
+#'  for a fuzzy match. 
+#' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative
+#'  and absolute distances allowed for fuzzy matches to species and
+#'  infraspecific taxon names are defined by the parameters 
 #' `fuzzy_abs_dist` and `fuzzy_rel_dist`
-#' @param imprecise_fuzzy_matches Imprecise fuzzy matches uses the fuzzy matching function
-#' with lenient levels set (absolute distance of 5 characters; relative distance = 0.25). 
-#' It offers a way to get a wider range of possible names, possibly corresponding to very distant spelling mistakes. 
-#' This is FALSE as default and all outputs should be checked as it often makes erroneous matches.
-#' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned off as a default.
-#' @param identifier A dataset, location or other identifier, which defaults to NA.
+#' @param imprecise_fuzzy_matches Imprecise fuzzy matches uses the fuzzy
+#'  matching function with lenient levels set (absolute distance of
+#'  5 characters; relative distance = 0.25). 
+#'  It offers a way to get a wider range of possible names, possibly
+#'  corresponding to very distant spelling mistakes. This is FALSE as default
+#'  and all outputs should be checked as it often makes erroneous matches.
+#' @param APNI_matches Name matches to the APNI (Australian Plant Names Index)
+#'  are turned off as a default.
+#' @param identifier A dataset, location or other identifier,
+#'  which defaults to NA.
 #'
 #' @noRd
 match_taxa <- function(
@@ -38,7 +51,8 @@ match_taxa <- function(
   }
   
   
-  ## A function that specifies particular fuzzy matching conditions (for the function fuzzy_match) when matching is being done at the genus level.
+  ## A function that specifies particular fuzzy matching conditions (for the
+  ## function fuzzy_match) when matching is being done at the genus level.
   if (fuzzy_matches == TRUE) {
     fuzzy_match_genera <- function(x, y) {
       purrr::map_chr(x, ~ fuzzy_match(.x, y, 2, 0.35, n_allowed = 1))
@@ -53,7 +67,8 @@ match_taxa <- function(
   imprecise_fuzzy_abs_dist <- 5
   imprecise_fuzzy_rel_dist <- 0.25
   
-  ## override all fuzzy matching parameters with absolute and relative distances of 0 if fuzzy matching is turned off
+  ## override all fuzzy matching parameters with absolute and 
+  ## relative distances of 0 if fuzzy matching is turned off
   if (fuzzy_matches == FALSE) {
     fuzzy_abs_dist <- 0
     fuzzy_rel_dist <- 0
@@ -61,7 +76,8 @@ match_taxa <- function(
     imprecise_fuzzy_rel_dist <- 0
   }
   
-  ## remove APNI-listed genera from resources if APNI matches are turned off (the default)
+  ## remove APNI-listed genera from resources if APNI matches are turned off
+  ##(the default)
   if (APNI_matches == TRUE) {
     resources$genera_all2 <- resources$genera_all
   } else {
@@ -69,7 +85,8 @@ match_taxa <- function(
   }
   
   ## Repeatedly used identifier strings are created. 
-  ## These identifier strings are added to the aligned names of taxa that do not match to an APC or APNI species or infra-specific level name.
+  ## These identifier strings are added to the aligned names of taxa that do
+  ## not match to an APC or APNI species or infra-specific level name.
   taxa$tocheck <- taxa$tocheck %>%
     dplyr::mutate(
       identifier_string = ifelse(is.na(identifier), NA_character_, paste0(" [", identifier, "]")),
@@ -93,7 +110,8 @@ match_taxa <- function(
     )
   
   ## Taxa that have been checked are moved from `taxa$tocheck` to `taxa$checked`
-  ## These lines of code are repeated after each matching cycle to progressively move taxa from `tocheck` to `checked`
+  ## These lines of code are repeated after each matching cycle to
+  ## progressively move taxa from `tocheck` to `checked`
   
   taxa <- redistribute(taxa)
   if (nrow(taxa$tocheck) == 0)

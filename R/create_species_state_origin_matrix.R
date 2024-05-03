@@ -1,13 +1,17 @@
-#' Use the taxon distribution data from the APC to determine state level native and introduced origin status
+#' Use the taxon distribution data from the APC to determine state level
+#'  native and introduced origin status
 #'
 #' This function processes the geographic data available in the APC and 
 #' returns state level native, introduced and more complicated origins status for all taxa.
 #'
 #'
 #' @family diversity methods
-#' @param resources the taxonomic resources required to make the summary statistics.  Loading this can be slow, so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.
+#' @param resources the taxonomic resources required to make the summary statistics.
+#'   Loading this can be slow, so call load_taxonomic_resources separately to greatly
+#'   speed this function up and pass the resources in.
 #'
-#' @return A tibble with columns representing each state and rows representing each species. The values in each cell represent the origin of the species in that state.
+#' @return A tibble with columns representing each state and rows representing each
+#'   species. The values in each cell represent the origin of the species in that state.
 #'
 #' 
 #' @export

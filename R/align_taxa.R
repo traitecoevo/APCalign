@@ -1,61 +1,122 @@
-#' For a list of Australian plant names, find taxonomic or scientific name alignments to the APC or APNI through standardizing formatting and fixing spelling errors
+#' For a list of Australian plant names, find taxonomic or scientific name
+#'  alignments to the APC or APNI through standardizing formatting
+#'  and fixing spelling errors
 #'
-#' This function finds taxonomic alignments in APC or scientific name alignments in APNI. 
-#' It uses the internal function `match_taxa` to attempt to match input strings to taxon names in the APC/APNI.
-#' It sequentially searches for matches against more than 20 different string patterns, 
-#' prioritising exact matches (to accepted names as well as synonyms, orthographic variants) over fuzzy matches. 
+#' This function finds taxonomic alignments in APC or 
+#' scientific name alignments in APNI. 
+#' It uses the internal function `match_taxa` to attempt to match input strings
+#'  to taxon names in the APC/APNI.
+#' It sequentially searches for matches against more than 20 different string
+#'  patterns, prioritising exact matches (to accepted names as well as
+#'  synonyms, orthographic variants) over fuzzy matches. 
 #' It prioritises matches to taxa in the APC over names in the APNI. 
-#' It identifies string patterns in input names that suggest a name can only be aligned to a genus 
-#' (hybrids that are not in the APC/ANI; graded species; taxa not identified to species), 
-#' and indicates these names only have a genus-rank match.
+#' It identifies string patterns in input names that suggest a name can only be
+#'  aligned to a genus (hybrids that are not in the APC/ANI; graded species;
+#'  taxa not identified to species), and indicates these names only have a
+#'  genus-rank match.
 #'
 #' @param original_name A list of names to query for taxonomic alignments.
 #' @param output (optional) The name of the file to save the results to.
 #' @param full Parameter to determine how many columns are output
-#' @param resources the taxonomic resources used to align the taxa names. Loading this can be slow,
-#' so call \code{\link{load_taxonomic_resources}} separately to greatly speed this function up 
-#' and pass the resources in.
-#' @param quiet Logical to indicate whether to display messages while aligning taxa.
-#' @param fuzzy_abs_dist The number of characters allowed to be different for a fuzzy match.
-#' @param fuzzy_rel_dist The proportion of characters allowed to be different for a fuzzy match. 
-#' @param fuzzy_matches Fuzzy matches are turned on as a default. The relative and absolute distances 
-#' allowed for fuzzy matches to species and infraspecific taxon names are defined by the parameters 
-#' `fuzzy_abs_dist` and `fuzzy_rel_dist`
-#' @param imprecise_fuzzy_matches Imprecise fuzzy matches uses the fuzzy matching function
-#' with lenient levels set (absolute distance of 5 characters; relative distance = 0.25). 
-#' It offers a way to get a wider range of possible names, possibly corresponding to very distant spelling mistakes. 
-#' This is FALSE as default and all outputs should be checked as it often makes erroneous matches.
-#' @param APNI_matches Name matches to the APNI (Australian Plant Names Index) are turned on as a default.
-#' @param identifier A dataset, location or other identifier, which defaults to NA.
+#' @param resources the taxonomic resources used to align the taxa names.
+#'  Loading this can be slow, so call \code{\link{load_taxonomic_resources}}
+#'  separately to greatly speed this function up and pass the resources in.
+#' @param quiet Logical to indicate whether to display messages while
+#'  aligning taxa.
+#' @param fuzzy_abs_dist The number of characters allowed to be different for a
+#'  fuzzy match.
+#' @param fuzzy_rel_dist The proportion of characters allowed to be different
+#'  for a fuzzy match. 
+#' @param fuzzy_matches Fuzzy matches are turned on as a default. 
+#' The relative and absolute distances allowed for fuzzy matches to species and
+#'  infraspecific taxon names are defined by the parameters `fuzzy_abs_dist`
+#'  and `fuzzy_rel_dist`
+#' @param imprecise_fuzzy_matches Imprecise fuzzy matches uses the
+#'  fuzzy matching function with lenient levels set (absolute distance of
+#'  5 characters; relative distance = 0.25). 
+#'  It offers a way to get a wider range of possible names, possibly
+#'  corresponding to very distant spelling mistakes. 
+#' This is FALSE as default and all outputs should be checked as it often
+#'  makes erroneous matches.
+#' @param APNI_matches Name matches to the APNI (Australian Plant Names Index)
+#'  are turned on as a default.
+#' @param identifier A dataset, location or other identifier,
+#'  which defaults to NA.
 #'
-#' @return A tibble with columns that include original_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code. 
+#' @return A tibble with columns that include original_name, aligned_name,
+#'   taxonomic_dataset, taxon_rank, aligned_reason, alignment_code. 
 #' - original_name: the original plant name input.
-#' - aligned_name: the original plant name after the function standardise_names has standardised the syntax of infraspecific taxon designations.
+#' - aligned_name: the original plant name after the function standardise_names
+#'   has standardised the syntax of infraspecific taxon designations.
 #' - taxonomic_dataset: the source of the aligned names (APC or APNI).
 #' - taxon_rank: the taxonomic rank of the aligned name.
-#' - aligned_reason: the explanation of a specific taxon name alignment (from an original name to an aligned name).
-#' - alignment_code: a code that accompanies the aligned_reason, indicating the relative sequence of the match during the alignment process.
-#' - cleaned_name: original name with punctuation and infraspecific taxon designation terms standardised by the function standardise_names; streamlines exact matches.
-#' - stripped_name: cleaned name with punctuation and infraspecific taxon designation terms removed by the function strip_names; improves fuzzy matches. 
-#' - stripped_name2: cleaned name with punctuation, infraspecific taxon designation terms, and other filler words removed by the function strip_names_2; required for matches to `first two word` and `first three words`.
-#' - trinomial: the first three words in `stripped_name2`, required for matches that ignore all other text in the original_name; improves phrase name matches.
-#' - binomial: the first two words in `stripped_name2`, required for matches that ignore all other text in the original_name; improves phrase name matches.
-#' - genus: the first two words in `cleaned_name`; required for genus-rank matches and reprocessing of genus-rank names.
-#' - fuzzy_match_genus: fuzzy match of genus column to best match among APC-accepted names; required for fuzzy matches of genus-rank names.
-#' - fuzzy_match_genus_synonym: fuzzy match of genus column to best match among APC-synonymous names, only considering different matches to those documented under APC-accepted genera; required for fuzzy matches of genus-rank names.
-#' - fuzzy_match_genus_APNI: fuzzy match of genus column to best match among APNI names, only considering different matches to those documented under APC-accepted and APC-known genera; required for fuzzy matches of genus-rank names.
-#' - fuzzy_match_family: fuzzy match of genus column to best match among APC-accepted family names; required for fuzzy matches of family-rank names.
-#' - fuzzy_match_family_synonym: fuzzy match of genus column to best match among APC-synonymous family names; required for fuzzy matches of family-rank names.
-#' - fuzzy_match_cleaned_APC: fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 07a in the function `match_taxa`.
-#' - fuzzy_match_cleaned_APC_synonym: fuzzy match of stripped_name to APC-synonymous names; created for yet-to-be-aligned names at the match step 07b in the function `match_taxa`.
-#' - fuzzy_match_cleaned_APC_imprecise: imprecise fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 10a in the function `match_taxa`.
-#' - fuzzy_match_cleaned_APC_synonym_imprecise: imprecise fuzzy match of stripped_name to APC-accepted names; created for yet-to-be-aligned names at the match step 10b in the function `match_taxa`.
-#' - fuzzy_match_binomial: fuzzy match of binomial column to best match among APC-accepted names; created for yet-to-be-aligned names at match step 15a in the function `match_taxa`.
-#' - fuzzy_match_binomial_APC_synonym: fuzzy match of binomial column to best match among APC-synonymous names; created for yet-to-be-aligned names at match step 15a in the function `match_taxa`.
-#' - fuzzy_match_trinomial: fuzzy match of trinomial column to best match among APC-accepted names; created for yet-to-be-aligned names at match step 16a in the function `match_taxa`.
-#' - fuzzy_match_trinomial_synonym: fuzzy match of trinomial column to best match among APC-synonymous names; created for yet-to-be-aligned names at match step 16b in the function `match_taxa`.
-#' - fuzzy_match_cleaned_APNI: fuzzy match of stripped_name to APNI names; created for yet-to-be-aligned names at the match step 16a in the function `match_taxa`.
-#' - fuzzy_match_cleaned_APNI_imprecise: imprecise fuzzy match of stripped_name to APNI names; created for yet-to-be-aligned names at the match step 17a in the function `match_taxa`.
+#' - aligned_reason: the explanation of a specific taxon name alignment
+#'   (from an original name to an aligned name).
+#' - alignment_code: a code that accompanies the aligned_reason, indicating the
+#'   relative sequence of the match during the alignment process.
+#' - cleaned_name: original name with punctuation and infraspecific taxon
+#'   designation terms standardised by the function standardise_names;
+#'   streamlines exact matches.
+#' - stripped_name: cleaned name with punctuation and infraspecific taxon
+#'   designation terms removed by the function strip_names;
+#'   improves fuzzy matches. 
+#' - stripped_name2: cleaned name with punctuation, infraspecific taxon
+#'   designation terms, and other filler words removed by
+#'   the function `strip_names_extra`;
+#'   required for matches to `first two word` and `first three words`.
+#' - trinomial: the first three words in `stripped_name2`, required for matches
+#'   that ignore all other text in the original_name;
+#'   improves phrase name matches.
+#' - binomial: the first two words in `stripped_name2`, required for matches
+#'   that ignore all other text in the original_name;
+#'   improves phrase name matches.
+#' - genus: the first two words in `cleaned_name`;
+#'   required for genus-rank matches and reprocessing of genus-rank names.
+#' - fuzzy_match_genus: fuzzy match of genus column to best match among
+#'   APC-accepted names;
+#'   required for fuzzy matches of genus-rank names.
+#' - fuzzy_match_genus_synonym: fuzzy match of genus column to best match among
+#'   APC-synonymous names, only considering different matches to those documented
+#'   under APC-accepted genera; required for fuzzy matches of genus-rank names.
+#' - fuzzy_match_genus_APNI: fuzzy match of genus column to best match among
+#'   APNI names, only considering different matches to those documented under
+#'   APC-accepted and APC-known genera; required for fuzzy matches of
+#'   genus-rank names.
+#' - fuzzy_match_family: fuzzy match of genus column to best match among
+#'   APC-accepted family names; required for fuzzy matches of family-rank names.
+#' - fuzzy_match_family_synonym: fuzzy match of genus column to best match
+#'   among APC-synonymous family names; required for fuzzy matches of
+#'   family-rank names.
+#' - fuzzy_match_cleaned_APC: fuzzy match of stripped_name to APC-accepted
+#'   names; created for yet-to-be-aligned names at the match step 05a
+#'   in the function `match_taxa`.
+#' - fuzzy_match_cleaned_APC_synonym: fuzzy match of stripped_name to
+#'   APC-synonymous names; created for yet-to-be-aligned names at the
+#'   match step 05b in the function `match_taxa`.
+#' - fuzzy_match_cleaned_APC_imprecise: imprecise fuzzy match of stripped_name
+#'   to APC-accepted names; created for yet-to-be-aligned names at the
+#'   match step 07a in the function `match_taxa`.
+#' - fuzzy_match_cleaned_APC_synonym_imprecise: imprecise fuzzy match of
+#'   stripped_name to APC-accepted names; created for yet-to-be-aligned names
+#'   at the match step 07b in the function `match_taxa`.
+#' - fuzzy_match_binomial: fuzzy match of binomial column to best match among
+#'   APC-accepted names; created for yet-to-be-aligned names at
+#'   match step 10c in the function `match_taxa`.
+#' - fuzzy_match_binomial_APC_synonym: fuzzy match of binomial column to best
+#'   match among APC-synonymous names; created for yet-to-be-aligned names at
+#'   match step 10d in the function `match_taxa`.
+#' - fuzzy_match_trinomial: fuzzy match of trinomial column to best match
+#'   among APC-accepted names; created for yet-to-be-aligned names at
+#'   match step 09c in the function `match_taxa`.
+#' - fuzzy_match_trinomial_synonym: fuzzy match of trinomial column to best
+#'   match among APC-synonymous names; created for yet-to-be-aligned names at
+#'   match step 09d in the function `match_taxa`.
+#' - fuzzy_match_cleaned_APNI: fuzzy match of stripped_name to APNI names;
+#'   created for yet-to-be-aligned names at the match step 11a in the
+#'   function `match_taxa`.
+#' - fuzzy_match_cleaned_APNI_imprecise: imprecise fuzzy match of
+#'   stripped_name to APNI names; created for yet-to-be-aligned names
+#'   at the match step 11b in the function `match_taxa`.
 #' 
 #' @export
 #'
@@ -85,7 +146,9 @@ align_taxa <- function(original_name,
                        identifier = NA_character_) {
   
   if(!quiet)
-    message("Checking alignments of ", dplyr::n_distinct(original_name, na.rm = TRUE), " taxa\n")
+    message("Checking alignments of ", 
+            dplyr::n_distinct(original_name, na.rm = TRUE),
+            " taxa\n")
 
   if (!is.null(output) && file.exists(output)) {
     if(!quiet)
@@ -100,11 +163,13 @@ align_taxa <- function(original_name,
           .default = readr::col_character()
         )
       )
-    correct_names <- c("original_name", "aligned_name", "accepted_name", "suggested_name", 
-                           "genus", "family", "taxon_rank", "taxonomic_dataset", "taxonomic_status", 
-                           "taxonomic_status_aligned", "aligned_reason", "update_reason", 
-                           "subclass", "taxon_distribution", "scientific_name", "taxon_ID", 
-                           "taxon_ID_genus", "scientific_name_ID", "canonical_name", "row_number", 
+    correct_names <- c("original_name", "aligned_name", "accepted_name",
+                           "suggested_name", "genus", "family", "taxon_rank",
+                           "taxonomic_dataset", "taxonomic_status", 
+                           "taxonomic_status_aligned", "aligned_reason",
+                           "update_reason", "subclass", "taxon_distribution",
+                           "scientific_name", "taxon_ID", "taxon_ID_genus",
+                           "scientific_name_ID", "canonical_name", "row_number",
                            "number_of_collapsed_taxa", "checked", "known")
     if(!identical(names(taxa_raw), correct_names)) {
       stop("Your output file already exists and it's not in the right format. 
@@ -183,7 +248,12 @@ align_taxa <- function(original_name,
   taxa <- redistribute(taxa)
   
   # messages if there is an saved list being added to
-  if (!is.null(output) && file.exists(output) && !all(taxa$tocheck$checked) && !quiet) {
+  if (
+    !is.null(output) && 
+    file.exists(output) && 
+    !all(taxa$tocheck$checked) && 
+    !quiet
+    ) {
     # check unknown taxa
     message(
     "  -> ",
@@ -212,13 +282,15 @@ align_taxa <- function(original_name,
     message(
       "  -> of these ",
       crayon::blue(perfect_matches),
-      " names have a perfect match to a scientific name in the APC. Alignments being sought for remaining names."
+      " names have a perfect match to a scientific name in the APC. 
+      Alignments being sought for remaining names."
     )
   }
 
   # do the actual matching
   taxa <- 
-    match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches, imprecise_fuzzy_matches, APNI_matches, identifier) %>%
+    match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches,
+     imprecise_fuzzy_matches, APNI_matches, identifier) %>%
     # reassemble
     dplyr::bind_rows() %>%
     dplyr::mutate(known = !is.na(aligned_name))
@@ -227,11 +299,15 @@ align_taxa <- function(original_name,
     taxa <-
       taxa %>%
       dplyr::select(-genus, -known, -checked) %>%
-      dplyr::select(original_name, cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code, dplyr::everything())   
+      dplyr::select(original_name, cleaned_name, aligned_name,
+                    taxonomic_dataset, taxon_rank, aligned_reason,
+                    alignment_code, dplyr::everything())
   } else {
      taxa <-
       taxa %>%
-      dplyr::select(original_name, cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason, alignment_code, identifier)      
+      dplyr::select(original_name, cleaned_name, aligned_name,
+                    taxonomic_dataset, taxon_rank, aligned_reason,
+                    alignment_code, identifier)      
   }
 
   # Assemble output in the order of the input
@@ -258,7 +334,8 @@ align_taxa <- function(original_name,
 # function moves taxa from tocheck to checked
 redistribute <- function(data) {
   data[["checked"]] <- dplyr::bind_rows(data[["checked"]],
-                                        data[["tocheck"]] %>% dplyr::filter(checked))
+                                        data[["tocheck"]] %>% 
+                                           dplyr::filter(checked))
   
   data[["tocheck"]] <-
     data[["tocheck"]] %>% dplyr::filter(!checked)

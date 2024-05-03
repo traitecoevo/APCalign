@@ -1,14 +1,25 @@
-#' For Australian states and territories, use data from the APC to calculate state-level diversity for native, introduced, and more complicated species origins
+#' For Australian states and territories, use data from the APC to calculate
+#'  state-level diversity for native, introduced, 
+#'  and more complicated species origins
 #'
-#' This function calculates state-level diversity for native, introduced, and more complicated species origins 
-#' based on the geographic data available in the APC.
+#' This function calculates state-level diversity for native, introduced,
+#'  and more complicated species origins 
+#'  based on the geographic data available in the APC.
 #'
 #' @family diversity methods
-#' @param state A character string indicating the Australian state or territory to calculate the diversity for. Possible values are "NSW", "NT", "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI", "MDI", "CoI", "CSI", and "AR".
-#' @param resources the taxonomic resources required to make the summary statistics.  loading this can be slow, so call load_taxonomic_resources separately to greatly speed this function up and pass the resources in.
+#' @param state A character string indicating the Australian state or
+#'  territory to calculate the diversity for. Possible values are "NSW", "NT",
+#'  "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI",
+#'  "MDI", "CoI", "CSI", and "AR".
+#' @param resources the taxonomic resources required to make the summary
+#'  statistics.  loading this can be slow, so call load_taxonomic_resources
+#'  separately to greatly speed this function up and pass the resources in.
 #'
-#' @return A tibble of diversity counts for the specified state or territory, including native, introduced, and more complicated species origins.
-#' The tibble has three columns: "origin" indicating the origin of the species, "state" indicating the Australian state or territory, and "num_species" indicating the number of species for that origin and state.
+#' @return A tibble of diversity counts for the specified state or territory,
+#'  including native, introduced, and more complicated species origins.
+#' The tibble has three columns: "origin" indicating the origin of the
+#'  species, "state" indicating the Australian state or territory, and
+#'  "num_species" indicating the number of species for that origin and state.
 #'
 #' @seealso \code{\link{load_taxonomic_resources}}
 #'
