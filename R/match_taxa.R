@@ -1,15 +1,22 @@
-#' Match taxonomic names to accepted names in list
+#' @title Match taxonomic names to names in the APC/APNI
 #' 
-#' This function attempts to match input strings to a list of allowable
-#'  taxonomic names.
-#' It cycles through more than 20 different string patterns, sequentially
+#' @description
+#' This function attempts to match input strings to Australia's reference lists
+#' for vascular plants, the APC and APNI. It attempts:
+#' 1. perfect matches and fuzzy matches
+#' 2. matches to infraspecies, species, genus, and family names
+#' 3. matches to the entire input string and subsets there-of
+#' 4. searches for string patterns that suggest a specific taxon rank
+#' 
+#' @details
+#' - It cycles through more than 20 different string patterns, sequentially
 #'  searching for additional match patterns.
-#' It identifies string patterns in input names that suggest a name can only be
+#' - It identifies string patterns in input names that suggest a name can only be
 #'  aligned to a genus (hybrids that are not accepted names; graded species;
 #'  taxa not identified to species).
-#' It prioritises matches that do not require fuzzy matching (i.e. synonyms,
+#' - It prioritises matches that do not require fuzzy matching (i.e. synonyms,
 #'  orthographic variants) over those that do.
-#' If prioritises matches to taxa in the APC over names in the APNI.
+#' - If prioritises matches to taxa in the APC over names in the APNI.
 #' 
 #' @param taxa The list of taxa requiring checking
 #

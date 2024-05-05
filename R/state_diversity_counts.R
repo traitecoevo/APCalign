@@ -1,10 +1,9 @@
-#' For Australian states and territories, use data from the APC to calculate
-#'  state-level diversity for native, introduced, 
-#'  and more complicated species origins
-#'
-#' This function calculates state-level diversity for native, introduced,
-#'  and more complicated species origins 
-#'  based on the geographic data available in the APC.
+#' @title State- and territory-level diversity
+#' 
+#' @description
+#' For Australian states and territories, use geographic distribution data from 
+#' the APC to calculate state-level diversity for native, introduced, 
+#' and more complicated species origins
 #'
 #' @family diversity methods
 #' @param state A character string indicating the Australian state or

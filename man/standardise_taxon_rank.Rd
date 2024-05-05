@@ -2,19 +2,22 @@
 % Please edit documentation in R/standardise_names.R
 \name{standardise_taxon_rank}
 \alias{standardise_taxon_rank}
-\title{Standardise taxon ranks from latin into english.}
+\title{Standardise taxon ranks}
 \usage{
 standardise_taxon_rank(taxon_rank)
 }
 \arguments{
-\item{taxon_rank}{A character vector of taxon ranks that need to be standardised.}
+\item{taxon_rank}{A character vector of Latin taxon ranks.}
 }
 \value{
-A character vector of standardised taxon names.
+A character vector of English taxon ranks.
 }
 \description{
-The function takes a character vector of taxon ranks as input and
-returns a character vector of taxon ranks using standardised english terms.
+Standardise taxon ranks from Latin into English.
+}
+\details{
+The function takes a character vector of Latin taxon ranks as input and
+returns a character vector of taxon ranks using standardised English terms.
 }
 \examples{
 standardise_taxon_rank(c("regnum", "kingdom", "classis", "class"))

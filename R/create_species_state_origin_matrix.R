@@ -1,5 +1,8 @@
-#' Use the taxon distribution data from the APC to determine state level
-#'  native and introduced origin status
+#' @title State level native and introduced origin status
+#' 
+#' @description
+#' This function uses the taxon distribution data from the APC to determine
+#' state level native and introduced origin status.
 #'
 #' This function processes the geographic data available in the APC and 
 #' returns state level native, introduced and more complicated origins status for all taxa.

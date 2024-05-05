@@ -16,27 +16,22 @@ navbar:
     articles:
       text: Articles
       menu:
-      - text: "Data providers"
-      - text: APC and APNI
+      - text: Data sources (APC & APNI)
         href: articles/articles/data-providers.html
-      - text: "Functions"
-      - text: Details on the 10 exported functions, including examples of usage
-        href: articles/function_notes.html
-      - text: "Taxon matching"
-      - text: Our fuzzy matching  algorithm
+      - text: Taxon matching
         href: articles/updating-taxon-names.html
-      - text: "Reproducibility with APCalign"
+      - text: Using APC versions for reproducibility
         href:  articles/reproducibility.html
         
 
 reference:
-- subtitle: Standardise plant taxon names
+- subtitle: Align and update taxon names
 - contents:
-  - load_taxonomic_resources
-  - default_version
   - create_taxonomic_update_lookup
   - align_taxa
   - update_taxonomy
+- subtitle: Standardise and simplify plant taxon names
+- contents:
   - standardise_names
   - standardise_taxon_rank
   - strip_names
@@ -46,6 +41,8 @@ reference:
   - create_species_state_origin_matrix
   - state_diversity_counts
   - native_anywhere_in_australia
-- title: Data
+- subtitle: Data
 - contents:
+  - load_taxonomic_resources
+  - default_version
   - gbif_lite
