@@ -63,9 +63,9 @@
 <li>Speed up <code>extract_genus</code>
 </li>
 <li>Write a replacement function for <code><a href="https://stringr.tidyverse.org/reference/word.html" class="external-link">stringr::word</a></code> that is much faster.</li>
-<li>Addional speed up <code>fuzzy_match</code> function by
-<ul><li>restricting reference list to names with the same first letter as input string.</li>
-<li>Switch from using <code>util:dist</code> to <code>stringdist:stringdist(method = "dl")</code>
+<li>Additional speed up and accuracy of fuzzy_match function by
+<ul><li>Restricting reference list to names with the same first letter as input string.</li>
+<li>Switch from using <code><a href="https://rdrr.io/r/utils/adist.html" class="external-link">utils::adist</a></code> to <code>stringdist:stringdist(method = "dl")</code>
 </li>
 </ul></li>
 <li>Rework <code>standardise_names</code> to remove punctuation from the start of the string</li>
