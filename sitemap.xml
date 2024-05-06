@@ -10,16 +10,13 @@
     <loc>https://traitecoevo.github.io/APCalign/articles/APCalign.html</loc>
   </url>
   <url>
-    <loc>https://traitecoevo.github.io/APCalign/articles/caching.html</loc>
-  </url>
-  <url>
     <loc>https://traitecoevo.github.io/APCalign/articles/data-providers.html</loc>
   </url>
   <url>
-    <loc>https://traitecoevo.github.io/APCalign/articles/function_notes.html</loc>
+    <loc>https://traitecoevo.github.io/APCalign/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://traitecoevo.github.io/APCalign/articles/index.html</loc>
+    <loc>https://traitecoevo.github.io/APCalign/articles/reproducibility.html</loc>
   </url>
   <url>
     <loc>https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html</loc>
@@ -46,6 +43,9 @@
     <loc>https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.html</loc>
   </url>
   <url>
+    <loc>https://traitecoevo.github.io/APCalign/reference/default_version.html</loc>
+  </url>
+  <url>
     <loc>https://traitecoevo.github.io/APCalign/reference/gbif_lite.html</loc>
   </url>
   <url>
@@ -58,7 +58,13 @@
     <loc>https://traitecoevo.github.io/APCalign/reference/native_anywhere_in_australia.html</loc>
   </url>
   <url>
+    <loc>https://traitecoevo.github.io/APCalign/reference/reexports.html</loc>
+  </url>
+  <url>
     <loc>https://traitecoevo.github.io/APCalign/reference/standardise_names.html</loc>
+  </url>
+  <url>
+    <loc>https://traitecoevo.github.io/APCalign/reference/standardise_taxon_rank.html</loc>
   </url>
   <url>
     <loc>https://traitecoevo.github.io/APCalign/reference/state_diversity_counts.html</loc>
@@ -67,7 +73,7 @@
     <loc>https://traitecoevo.github.io/APCalign/reference/strip_names.html</loc>
   </url>
   <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/strip_names_2.html</loc>
+    <loc>https://traitecoevo.github.io/APCalign/reference/strip_names_extra.html</loc>
   </url>
   <url>
     <loc>https://traitecoevo.github.io/APCalign/reference/update_taxonomy.html</loc>

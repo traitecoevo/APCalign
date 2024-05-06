@@ -1,13 +1,12 @@
 pandoc: 3.1.11
-pkgdown: 2.0.8
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   APCalign: APCalign.html
-  caching: caching.html
   data-providers: data-providers.html
-  function_notes: function_notes.html
+  reproducibility: reproducibility.html
   updating-taxon-names: updating-taxon-names.html
-last_built: 2024-04-15T00:43Z
+last_built: 2024-05-06T05:31Z
 urls:
   reference: https://traitecoevo.github.io/APCalign/reference
   article: https://traitecoevo.github.io/APCalign/articles
