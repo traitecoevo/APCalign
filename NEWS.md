@@ -10,9 +10,9 @@ streamlined the package.
 * Update function documentation
 * Speed up `extract_genus`
 * Write a replacement function for `stringr::word` that is much faster.
-* Addional speed up `fuzzy_match` function by 
-  - restricting reference list to names with the same first letter as input string.
-  - Switch from using `util:dist` to `stringdist:stringdist(method = "dl")`
+* Additional speed up and accuracy of fuzzy_match function by
+  - Restricting reference list to names with the same first letter as input string.
+  - Switch from using `utils::adist` to `stringdist:stringdist(method = "dl")`
 * Rework `standardise_names` to remove punctuation from the start of the string
 * Rework `strip_names_extra` (previously `strip_names_2`) to just perform 
 additional functions to `strip_names`, rather than repeating those performed by `strip_names`.
