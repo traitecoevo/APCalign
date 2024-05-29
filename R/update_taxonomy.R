@@ -18,7 +18,7 @@
 #' Notes:
 #' - As the input for this function is a table with 5 columns (output by 
 #' align_taxa), this function will only be used when you explicitly want to 
-#' separate the aligment and updating components of APCalign. This function is 
+#' separate the alignment and updating components of APCalign. This function is 
 #' the second half of create_taxonomic_update_lookup.
 #'
 #' @family taxonomic alignment functions

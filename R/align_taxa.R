@@ -22,7 +22,7 @@
 #'  synonyms, orthographic variants) over fuzzy matches.
 #' - It prioritises matches to taxa in the APC over names in the APNI.
 #' - It identifies string patterns in input names that suggest a name can only
-#'  be aligned to a genus (hybrids that are not in the APC/ANI; graded species;
+#'  be aligned to a genus (hybrids that are not in the APC/APNI; graded species;
 #'  taxa not identified to species), and indicates these names only have a
 #'  genus-rank match.
 #' 

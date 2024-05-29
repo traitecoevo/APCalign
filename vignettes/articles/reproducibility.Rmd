@@ -61,7 +61,7 @@ default_version()
 
 Then copying and pasting the output into `load_taxonomic_resources()` directly. This way makes the version of taxonomic resources more explicit in your code. 
 
-To ensure the specific version of taxonomic resources is availabe for subsequent functions make sure to assign them to an object: 
+To ensure the specific version of taxonomic resources is available for subsequent functions make sure to assign them to an object: 
 
 ```{r}
 resources_0.0.4.9000 <- load_taxonomic_resources(
