@@ -372,7 +372,7 @@ dataset_access_function <-
 #' version is specified.
 #'
 #' @return A character string representing the default version for stable data.
-#'
+#' @example default_version()
 #'
 #' @export
 
