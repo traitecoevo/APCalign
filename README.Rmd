@@ -25,35 +25,23 @@ library(APCalign)
 
 # APCalign <img src="man/figures/APCalign_hex_2.svg" align="right" width="120"/>
 
-'APCalign' uses the [Australian Plant Census (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and [Australian Plant Name Index](https://biodiversity.org.au/nsl/services/search/names) to align and update Australian plant taxon name strings. 'APCalign' also supplies information about
-the established status (native/introduced) of plant taxa across different states/territories.
+`APCalign` uses the [Australian Plant Census (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and [Australian Plant Name Index](https://biodiversity.org.au/nsl/services/search/names) to align and update Australian plant taxon name strings. 'APCalign' also supplies information about
+the established status (native/introduced) of plant taxa across different states/territories. It's useful for updating species list and intersecting them with the APC consensus understanding of established status (native/introduced).
 
 ## Installation
 
-For Windows and Linux:
-
 ```{r install, eval= FALSE}
 
-# install.packages("remotes")
-# remotes::install_github("traitecoevo/APCalign", dependencies = TRUE, upgrade = "ask")
-
+ install.packages("remotes")
+ remotes::install_github("traitecoevo/APCalign")
+ 
 ```
-
-for MacOS there is currently an extra line needed to install a working binary of the `arrow` dependency from r-universe instead of CRAN:
-
-```{r install_mac, eval= FALSE}
-
-# install.packages("arrow", repos = c('https://apache.r-universe.dev', 'https://cloud.r-project.org'))
-# remotes::install_github("traitecoevo/APCalign", dependencies = TRUE, upgrade = "ask")
-
-```
-
 
 ## A quick demo
 
 Generating a look-up table can be done with just one function:
 
-```{r}
+```{r,message=FALSE}
 
 library(APCalign)
 
@@ -68,7 +56,7 @@ create_taxonomic_update_lookup(
 
 if you're going to use APCalign more than once, it will save you time to load the taxonomic resources into memory first:
 
-```{r}
+```{r,message=FALSE}
 
 tax_resources <- load_taxonomic_resources()
 
@@ -83,7 +71,7 @@ create_taxonomic_update_lookup(
 )
 ```
 
-Checking for Australian natives:
+Checking for a list of species to see if they are classified as Australian natives:
 
 ```{r, message=FALSE}
 
@@ -96,12 +84,12 @@ We also developed a shiny application for non-R users to update and align their 
 
 ## Learn more
 
-Highly recommend looking at our [Getting Started](https://traitecoevo.github.io/APCalign/articles/APCalign.html) vignette to learn about how to use 'APCalign'. You can also learn more about our [taxa matching  algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html).
+Highly recommend looking at our [Getting Started](https://traitecoevo.github.io/APCalign/articles/APCalign.html) vignette to learn about how to use `APCalign`. You can also learn more about our [taxa matching  algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html).
 
 
 ## Found a bug? 
 
-Did you come across an unexpected taxon name change? Elusive error you can't debug - [submit an issue](https://github.com/traitecoevo/APCalign/issues) and we will try our best to help
+Did you come across an unexpected taxon name change? Elusive error you can't debug - [submit an issue](https://github.com/traitecoevo/APCalign/issues) and we will try our best to help.
 
 ## Comments and contributions
 
