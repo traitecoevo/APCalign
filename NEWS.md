@@ -1,4 +1,4 @@
-# APCalign 1.0.0
+# APCalign 1.0.1
 
 First major release of APCalign.  A preprint is available at 
 https://www.biorxiv.org/content/10.1101/2024.02.02.578715v1. 
@@ -12,7 +12,7 @@ streamlined the package.
 * Write a replacement function for `stringr::word` that is much faster.
 * Additional speed up and accuracy of fuzzy_match function by
   - Restricting reference list to names with the same first letter as input string.
-  - Switch from using `utils::adist` to `stringdist:stringdist(method = "dl")`
+  - Switch from using `utils::adist` to `stringdist::stringdist(method = "dl")`
 * Rework `standardise_names` to remove punctuation from the start of the string
 * Rework `strip_names_extra` (previously `strip_names_2`) to just perform 
 additional functions to `strip_names`, rather than repeating those performed by `strip_names`.
@@ -23,10 +23,6 @@ and removing functions from @import
 * Refine tests
 * Make messages to console optional
 * Fix issue with fails when github is down (https://github.com/traitecoevo/APCalign/issues/205)
-
-# APCalign 0.1.5
-
-
 * Update installation instructions 
 * Added how to cite and version APCalign as an article
 * Exported `default_version`

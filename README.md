@@ -10,31 +10,23 @@ coverage](https://codecov.io/gh/traitecoevo/APCalign/branch/master/graph/badge.s
 
 # APCalign <img src="man/figures/APCalign_hex_2.svg" align="right" width="120"/>
 
-‘APCalign’ uses the [Australian Plant Census
+`APCalign` uses the [Australian Plant Census
 (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and
 [Australian Plant Name
 Index](https://biodiversity.org.au/nsl/services/search/names) to align
 and update Australian plant taxon name strings. ‘APCalign’ also supplies
 information about the established status (native/introduced) of plant
-taxa across different states/territories.
+taxa across different states/territories. It’s useful for updating
+species list and intersecting them with the APC consensus understanding
+of established status (native/introduced).
 
 ## Installation
 
-For Windows and Linux:
-
 ``` r
 
-# install.packages("remotes")
-# remotes::install_github("traitecoevo/APCalign", dependencies = TRUE, upgrade = "ask")
-```
-
-for MacOS there is currently an extra line needed to install a working
-binary of the `arrow` dependency from r-universe instead of CRAN:
-
-``` r
-
-# install.packages("arrow", repos = c('https://apache.r-universe.dev', 'https://cloud.r-project.org'))
-# remotes::install_github("traitecoevo/APCalign", dependencies = TRUE, upgrade = "ask")
+ install.packages("remotes")
+ remotes::install_github("traitecoevo/APCalign")
+ 
 ```
 
 ## A quick demo
@@ -52,22 +44,17 @@ create_taxonomic_update_lookup(
     "Commersonia rosea"
     )
 )
-#> Checking alignments of 3 taxa
+#> ================================================================================================================================================================
+#> # A tibble: 3 × 12
+#>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
+#>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
+#> 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
+#> 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   
+#> 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   
+#> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
+#> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
+#> #   number_of_collapsed_taxa <dbl>
 ```
-
-    #> Loading resources into memory...
-    #> ================================================================================================================================================================
-    #> ...done
-    #>   -> of these 2 names have a perfect match to a scientific name in the APC. Alignments being sought for remaining names.
-    #> # A tibble: 3 × 12
-    #>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
-    #>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
-    #> 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
-    #> 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   
-    #> 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   
-    #> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
-    #> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
-    #> #   number_of_collapsed_taxa <dbl>
 
 if you’re going to use APCalign more than once, it will save you time to
 load the taxonomic resources into memory first:
@@ -75,35 +62,31 @@ load the taxonomic resources into memory first:
 ``` r
 
 tax_resources <- load_taxonomic_resources()
+#> ================================================================================================================================================================
+
+create_taxonomic_update_lookup( 
+  taxa = c(
+    "Banksia integrifolia",
+    "Acacia longifolia",
+    "Commersonia rosea",
+    "not a species"
+    ),
+  resources = tax_resources
+)
+#> # A tibble: 4 × 12
+#>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
+#>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
+#> 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
+#> 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   
+#> 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   
+#> 4 not a species       <NA>         <NA>          <NA>           <NA>  <NA>      
+#> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
+#> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
+#> #   number_of_collapsed_taxa <dbl>
 ```
 
-    #> Loading resources into memory...
-    #> ================================================================================================================================================================
-    #> ...done
-
-    create_taxonomic_update_lookup( 
-      taxa = c(
-        "Banksia integrifolia",
-        "Acacia longifolia",
-        "Commersonia rosea",
-        "not a species"
-        ),
-      resources = tax_resources
-    )
-    #> Checking alignments of 4 taxa
-    #>   -> of these 2 names have a perfect match to a scientific name in the APC. Alignments being sought for remaining names.
-    #> # A tibble: 4 × 12
-    #>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
-    #>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
-    #> 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
-    #> 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   
-    #> 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   
-    #> 4 not a species       <NA>         <NA>          <NA>           <NA>  <NA>      
-    #> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
-    #> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
-    #> #   number_of_collapsed_taxa <dbl>
-
-Checking for Australian natives:
+Checking for a list of species to see if they are classified as
+Australian natives:
 
 ``` r
 
@@ -125,7 +108,7 @@ align their taxonomic names. You can find the application here:
 
 Highly recommend looking at our [Getting
 Started](https://traitecoevo.github.io/APCalign/articles/APCalign.html)
-vignette to learn about how to use ‘APCalign’. You can also learn more
+vignette to learn about how to use `APCalign`. You can also learn more
 about our [taxa matching
 algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html).
 
@@ -134,7 +117,7 @@ algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.
 Did you come across an unexpected taxon name change? Elusive error you
 can’t debug - [submit an
 issue](https://github.com/traitecoevo/APCalign/issues) and we will try
-our best to help
+our best to help.
 
 ## Comments and contributions
 
