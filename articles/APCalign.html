@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">APCalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,7 +87,7 @@
     
 <p>When working with biodiversity data, it is important to verify
 taxonomic names with an authoritative list and correct any out-of-date
-names. The ‘APCalign’ package simplifies this process by:</p>
+names. The <code>APCalign</code> package simplifies this process by:</p>
 <ul>
 <li>Accessing up-to-date taxonomic information from the <a href="https://biodiversity.org.au/nsl/services/search/taxonomy" class="external-link">Australian
 Plant Census</a> and the <a href="https://biodiversity.org.au/nsl/services/search/names" class="external-link">Australia
@@ -101,15 +101,12 @@ manner</li>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>‘APCalign’ is currently not on CRAN. You can install its current
-developmental version using</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"traitecoevo/APCalign"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://traitecoevo.github.io/APCalign/">APCalign</a></span><span class="op">)</span></span></code></pre></div>
-<p>To demonstrate how to use ‘APCalign’, we will use an example dataset
-<code>gbif_lite</code> which is documented in
+<p>To demonstrate how to use <code>APCalign</code>, we will use an
+example dataset <code>gbif_lite</code> which is documented in
 <code><a href="../reference/gbif_lite.html">?gbif_lite</a></code></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">gbif_lite</span><span class="op">)</span></span>
@@ -133,7 +130,8 @@ developmental version using</p>
 </h2>
 <p>The first step is to retrieve the entire APC and APNI name databases
 and store them locally as taxonomic resources. We achieve this using
-<code><a href="../reference/load_taxonomic_resources.html">load_taxonomic_resources()</a></code>.</p>
+<code><a href="../reference/load_taxonomic_resources.html">load_taxonomic_resources()</a></code>. The resources are compressed as
+parquet files to speed download and local loading.</p>
 <p>There are two versions of the databases that you can retrieve with
 the <code>stable_or_current_data</code> argument. Calling:</p>
 <ul>
@@ -145,14 +143,12 @@ releases</a>. This is set as the default option.</li>
 <code>current</code> will retrieve the up-to-date databases directly
 from the APC and APNI website.</li>
 </ul>
-<p>Note that the databases are quite large so the initial retrieval of
-<code>stable</code> versions will take a few minutes. Once the taxonomic
-resources have been stored locally, subsequent retrievals will take less
-time. Retrieving <code>current</code> resources will always take longer
-since it is accessing the latest information from the website. Check out
-our <a href="https://traitecoevo.github.io/APCalign/articles/caching.html">Resource
-Caching</a> article to learn more about how the APC and APNIC databases
-are accessed, stored and retrieved.</p>
+<p>Note that the databases are reasonably large so the initial retrieval
+of the core data will take a few minutes. Once the taxonomic resources
+have been stored locally, subsequent retrievals will take less time.
+Retrieving <code>current</code> resources will always take longer since
+it is accessing the latest information from the website in an
+uncompressed format.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Benchmarking the retrieval of `stable` or `current` resources</span></span>
 <span><span class="va">stable_start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>

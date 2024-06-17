@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">APCalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.0.0" id="apcalign-100">APCalign 1.0.0<a class="anchor" aria-label="anchor" href="#apcalign-100"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.0.1" id="apcalign-101">APCalign 1.0.1<a class="anchor" aria-label="anchor" href="#apcalign-101"></a></h2><p class="text-muted">CRAN release: 2024-05-30</p>
 <p>First major release of APCalign. A preprint is available at <a href="https://www.biorxiv.org/content/10.1101/2024.02.02.578715v1" class="external-link uri">https://www.biorxiv.org/content/10.1101/2024.02.02.578715v1</a>. Article has been accepted for publication at Australian journal of Botany.</p>
 <p>Following review, a number of changes have been implemented. These have sped &amp; streamlined the package.</p>
 <ul><li>Update function documentation</li>
@@ -65,7 +65,7 @@
 <li>Write a replacement function for <code><a href="https://stringr.tidyverse.org/reference/word.html" class="external-link">stringr::word</a></code> that is much faster.</li>
 <li>Additional speed up and accuracy of fuzzy_match function by
 <ul><li>Restricting reference list to names with the same first letter as input string.</li>
-<li>Switch from using <code><a href="https://rdrr.io/r/utils/adist.html" class="external-link">utils::adist</a></code> to <code>stringdist:stringdist(method = "dl")</code>
+<li>Switch from using <code><a href="https://rdrr.io/r/utils/adist.html" class="external-link">utils::adist</a></code> to <code>stringdist::stringdist(method = "dl")</code>
 </li>
 </ul></li>
 <li>Rework <code>standardise_names</code> to remove punctuation from the start of the string</li>
@@ -77,10 +77,7 @@
 <li>Refine tests</li>
 <li>Make messages to console optional</li>
 <li>Fix issue with fails when github is down (<a href="https://github.com/traitecoevo/APCalign/issues/205" class="external-link uri">https://github.com/traitecoevo/APCalign/issues/205</a>)</li>
-</ul></div>
-    <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.5" id="apcalign-015">APCalign 0.1.5<a class="anchor" aria-label="anchor" href="#apcalign-015"></a></h2>
-<ul><li>Update installation instructions</li>
+<li>Update installation instructions</li>
 <li>Added how to cite and version APCalign as an article</li>
 <li>Exported <code>default_version</code>
 </li>
@@ -91,8 +88,7 @@
 </li>
 <li>Improved messaging during alignment</li>
 </ul></div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
-    </nav></aside></div>
+  </main></div>
 
 
     <footer><div class="pkgdown-footer-left">
