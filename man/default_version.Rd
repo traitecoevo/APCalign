@@ -13,3 +13,7 @@ A character string representing the default version for stable data.
 This function returns the default version for stable data, which is used when no
 version is specified.
 }
+\examples{
+default_version()
+
+}
