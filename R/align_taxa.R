@@ -155,10 +155,9 @@
 #'
 #' @examples
 #' \donttest{
-#' resources <- load_taxonomic_resources()
 #' 
 #' # example 1
-#' align_taxa(c("Poa annua", "Abies alba"), resources = resources)
+#' align_taxa(c("Poa annua", "Abies alba"))
 #' 
 #' # example 2
 #' input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", 
@@ -168,8 +167,7 @@
 #'   APCalign::align_taxa(
 #'     original_name = input,
 #'     identifier = "APCalign test",
-#'     full = TRUE,
-#'     resources = resources
+#'     full = TRUE
 #'   ) 
 #'   
 #' }
