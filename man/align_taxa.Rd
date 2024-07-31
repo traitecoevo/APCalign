@@ -189,8 +189,10 @@ sp. [Royal NP]".
 \examples{
 \donttest{
 
+resources <- load_taxonomic_resources()
+
 # example 1
-align_taxa(c("Poa annua", "Abies alba"))
+align_taxa(c("Poa annua", "Abies alba"), resources=resources)
 
 # example 2
 input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", 
@@ -200,7 +202,8 @@ aligned_taxa <-
   APCalign::align_taxa(
     original_name = input,
     identifier = "APCalign test",
-    full = TRUE
+    full = TRUE,
+    resources=resources
   ) 
   
 }
