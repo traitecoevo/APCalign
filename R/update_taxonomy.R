@@ -117,6 +117,11 @@ update_taxonomy <- function(aligned_data,
                             output = NULL,
                             resources = load_taxonomic_resources()) {
     
+  if(is.null(resources)){
+    message("Not finding taxonomic resources; check internet connection?")
+    return(NULL)
+  }
+  
   aligned_data <- 
     aligned_data %>%
     dplyr::select(original_name, aligned_name, taxon_rank, taxonomic_dataset, aligned_reason) %>%

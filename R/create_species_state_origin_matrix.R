@@ -27,6 +27,7 @@
 #'
 #'
 create_species_state_origin_matrix <- function(resources = load_taxonomic_resources()) {
+  
   if(is.null(resources)){
     message("Not finding taxonomic resources; check internet connection?")
     return(NULL)
