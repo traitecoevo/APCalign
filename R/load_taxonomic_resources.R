@@ -35,7 +35,10 @@ load_taxonomic_resources <-
            version = default_version(),
            quiet = FALSE) {
     
-    
+    if(is.null(version)){
+      message("No internet connection, please retry with stable connection or specify a local version of the data")
+      return(invisible(NULL))
+    }
     
     taxonomic_resources <- dataset_access_function(
       version = version,
@@ -312,7 +315,7 @@ dataset_access_function <-
     network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE)) 
     
     
-    if (!curl::has_internet() | !network) { # Simulate if network is down
+    if (!curl::has_internet() | !network| is.null(version)) { # Simulate if network is down
       message("No internet connection, please retry with stable connection (dataset_access_function)")
       return(invisible(NULL))
     } 
@@ -372,7 +375,8 @@ dataset_access_function <-
 #' version is specified.
 #'
 #' @return A character string representing the default version for stable data.
-#' @example default_version()
+#' @examples
+#' default_version()
 #'
 #' @export
 
@@ -420,7 +424,7 @@ dataset_get <- function(version = default_version(),
   ## Dummy variable to allow testing of network
   network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE)) 
   
-  if (!curl::has_internet() | !network) { # Simulate if network is down
+  if (!curl::has_internet() | !network | is.null(version)) { # Simulate if network is down
     message("No internet connection, please retry with stable connection (dataset_get)")
     return(invisible(NULL))
   } else{

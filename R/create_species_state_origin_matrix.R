@@ -27,6 +27,12 @@
 #'
 #'
 create_species_state_origin_matrix <- function(resources = load_taxonomic_resources()) {
+  
+  if(is.null(resources)){
+    message("Not finding taxonomic resources; check internet connection?")
+    return(NULL)
+  }
+  
   apc_species <- filter_data_to_accepted_species(resources)
   sep_state_data <- separate_states(apc_species)
   apc_places <- identify_places(sep_state_data)

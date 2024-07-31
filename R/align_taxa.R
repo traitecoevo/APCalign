@@ -155,10 +155,11 @@
 #'
 #' @examples
 #' \donttest{
+#' 
 #' resources <- load_taxonomic_resources()
 #' 
 #' # example 1
-#' align_taxa(c("Poa annua", "Abies alba"), resources = resources)
+#' align_taxa(c("Poa annua", "Abies alba"), resources=resources)
 #' 
 #' # example 2
 #' input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", 
@@ -169,7 +170,7 @@
 #'     original_name = input,
 #'     identifier = "APCalign test",
 #'     full = TRUE,
-#'     resources = resources
+#'     resources=resources
 #'   ) 
 #'   
 #' }
@@ -194,6 +195,11 @@ align_taxa <- function(original_name,
                        imprecise_fuzzy_matches = FALSE, 
                        APNI_matches = TRUE,
                        identifier = NA_character_) {
+  
+  if(is.null(resources)){
+    message("Not finding taxonomic resources; check internet connection?")
+    return(NULL)
+  }
   
   if(!quiet)
     message("Checking alignments of ", 

@@ -170,6 +170,11 @@ create_taxonomic_update_lookup <- function(taxa,
                                            resources = load_taxonomic_resources(),
                                            quiet = FALSE,
                                            output = NULL) {
+  
+  if(is.null(resources)){
+    message("Not finding taxonomic resources; check internet connection?")
+    return(NULL)
+  }
 
   validate_taxonomic_splits_input(taxonomic_splits)
 

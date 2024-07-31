@@ -32,6 +32,11 @@ native_anywhere_in_australia <- function(species, resources = load_taxonomic_res
   # Create lookup tables  
   full_lookup <- create_species_state_origin_matrix(resources = resources)
   
+  if(is.null(resources)){
+    message("Not finding taxonomic resources; check internet connection?")
+    return(NULL)
+  }
+  
   if (any(!species %in% full_lookup$species)) {
     warning("At least one input not found in APC; make sure inputs are at the species level and consider using `create_taxonomic_update_lookup` first.")
   }
