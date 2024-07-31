@@ -53,6 +53,11 @@ match_taxa <- function(
     identifier = NA_character_
 ) {
   
+  if(is.null(resources)){
+    message("Not finding taxonomic resources; check internet connection?")
+    return(NULL)
+  }
+  
   update_na_with <- function(current, new) {
     ifelse(is.na(current), new, current)
   }
