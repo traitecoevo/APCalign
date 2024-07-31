@@ -193,6 +193,11 @@ align_taxa <- function(original_name,
                        APNI_matches = TRUE,
                        identifier = NA_character_) {
   
+  if(is.null(resources)){
+    message("Not finding taxonomic resources; check internet connection?")
+    return(NULL)
+  }
+  
   if(!quiet)
     message("Checking alignments of ", 
             dplyr::n_distinct(original_name, na.rm = TRUE),
