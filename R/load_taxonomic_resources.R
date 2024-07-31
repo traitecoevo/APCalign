@@ -421,7 +421,7 @@ dataset_get <- function(version = default_version(),
   ## Dummy variable to allow testing of network
   network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE)) 
   
-  if (!curl::has_internet() | !network) { # Simulate if network is down
+  if (!curl::has_internet() | !network | is.null(version)) { # Simulate if network is down
     message("No internet connection, please retry with stable connection (dataset_get)")
     return(invisible(NULL))
   } else{
