@@ -1,81 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/404.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/articles/APCalign.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/articles/data-providers.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/articles/reproducibility.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/index.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/APCalign.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/align_taxa.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/create_species_state_origin_matrix.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/default_version.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/gbif_lite.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/native_anywhere_in_australia.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/reexports.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/standardise_names.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/standardise_taxon_rank.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/state_diversity_counts.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/strip_names.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/strip_names_extra.html</loc>
-  </url>
-  <url>
-    <loc>https://traitecoevo.github.io/APCalign/reference/update_taxonomy.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://traitecoevo.github.io/APCalign/404.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/LICENSE-text.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/articles/APCalign.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/articles/data-providers.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/articles/index.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/articles/reproducibility.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/authors.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/index.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/news/index.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/APCalign.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/align_taxa.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/create_species_state_origin_matrix.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/default_version.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/gbif_lite.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/index.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/native_anywhere_in_australia.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/reexports.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/standardise_names.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/standardise_taxon_rank.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/state_diversity_counts.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/strip_names.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/strip_names_extra.html</loc></url>
+<url><loc>https://traitecoevo.github.io/APCalign/reference/update_taxonomy.html</loc></url>
 </urlset>
+
