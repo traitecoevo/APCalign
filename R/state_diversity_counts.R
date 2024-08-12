@@ -77,14 +77,27 @@ state_diversity_counts <- function(state,
 
 
 #' @noRd
-get_apc_genus_family_lookup <-
-  function(resources = load_taxonomic_resources()) {
+create_apc_genus_family_lookup <-
+  function(resources) {
     apc_s <- dplyr::filter(resources$APC,
                     taxon_rank == "species")
-    dplyr::tibble(genus = word(apc_s$scientific_name, 1, 1),
-           family = apc_s$family) %>%
+    dplyr::tibble(genus = word(apc_s$accepted_name_usage, 1, 1),
+           family = apc_s$family) |>
       dplyr::distinct() -> lu
     return(lu)
   }
 
+#' @noRd
+get_apc_genus_family_lookup <-
+  function(genera,resources = load_taxonomic_resources()) {
+    
+    if(is.null(resources)){
+      message("Not finding taxonomic resources; check internet connection?")
+      return(NULL)
+    }
+    fam_lu <- create_apc_genus_family_lookup(resources=resources)
+    data.frame(genus=genera)%>%
+      left_join(fam_lu)
+    return(lu)
+  }
 
