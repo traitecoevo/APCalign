@@ -1,8 +1,8 @@
 #' @title State- and territory-level diversity
-#' 
+#'
 #' @description
-#' For Australian states and territories, use geographic distribution data from 
-#' the APC to calculate state-level diversity for native, introduced, 
+#' For Australian states and territories, use geographic distribution data from
+#' the APC to calculate state-level diversity for native, introduced,
 #' and more complicated species origins
 #'
 #' @family diversity methods
@@ -26,10 +26,8 @@
 #'
 #' @examples
 #'  \donttest{state_diversity_counts(state = "NSW")}
-state_diversity_counts <- function(state,
-                                   resources = load_taxonomic_resources()) {
-  
-  if(is.null(resources)){
+state_diversity_counts <- function(state, resources = load_taxonomic_resources()) {
+  if (is.null(resources)) {
     message("Not finding taxonomic resources; check internet connection?")
     return(NULL)
   }
@@ -79,25 +77,42 @@ state_diversity_counts <- function(state,
 #' @noRd
 create_apc_genus_family_lookup <-
   function(resources) {
-    apc_s <- dplyr::filter(resources$APC,
-                    taxon_rank == "species")
+    apc_s <- dplyr::filter(resources$APC, taxon_rank == "species")
     dplyr::tibble(genus = word(apc_s$accepted_name_usage, 1, 1),
-           family = apc_s$family) |>
+                  family = apc_s$family) |>
       dplyr::distinct() -> lu
     return(lu)
   }
 
-#' @noRd
+#' @title Lookup Family by Genus from APC
+#'
+#' @description
+#' Retrieve the family name for a given genus using taxonomic data from the
+#' Australian Plant Census (APC).
+#'
+#' @param genus A character vector of genus names for which to retrieve the
+#'  corresponding family names.
+#' @param resources The taxonomic resources required to make the lookup. 
+#'  Loading this can be slow, so call \code{\link{load_taxonomic_resources}} 
+#'  separately to speed up this function and pass the resources in.
+#'
+#' @return A data frame with two columns: "genus", indicating the genus name, 
+#'  and "family", indicating the corresponding family name from the APC.
+#'
+#' @seealso \code{\link{load_taxonomic_resources}}, \code{\link{create_apc_genus_family_lookup}}
+#'
+#' @export
+#'
+#' @examples
+#'  \donttest{get_apc_genus_family_lookup(genus = c("Acacia", "Eucalyptus"))}
 get_apc_genus_family_lookup <-
-  function(genera,resources = load_taxonomic_resources()) {
-    
-    if(is.null(resources)){
+  function(genus, resources = load_taxonomic_resources()) {
+    if (is.null(resources)) {
       message("Not finding taxonomic resources; check internet connection?")
       return(NULL)
     }
-    fam_lu <- create_apc_genus_family_lookup(resources=resources)
-    data.frame(genus=genera)%>%
-      left_join(fam_lu)
+    fam_lu <- create_apc_genus_family_lookup(resources = resources)
+    lu <- data.frame(genus = genus) %>%
+      left_join(fam_lu, by = "genus")
     return(lu)
   }
-
