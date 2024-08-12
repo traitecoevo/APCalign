@@ -114,5 +114,6 @@ get_apc_genus_family_lookup <-
     fam_lu <- create_apc_genus_family_lookup(resources = resources)
     lu <- data.frame(genus = genus) %>%
       left_join(fam_lu, by = "genus")
+    if (any(is.na(lu$family))) warning("some non-matches with the APC accepted genus list, check the formatting of your genus vector.")
     return(lu)
   }
