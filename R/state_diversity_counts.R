@@ -102,7 +102,7 @@ create_apc_genus_family_lookup <-
 #' @return A data frame with two columns: "genus", indicating the genus name, 
 #'  and "family", indicating the corresponding family name from the APC.
 #'
-#' @seealso \code{\link{load_taxonomic_resources}}, \code{\link{create_apc_genus_family_lookup}}
+#' @seealso \code{\link{load_taxonomic_resources}}
 #'
 #' @export
 #'

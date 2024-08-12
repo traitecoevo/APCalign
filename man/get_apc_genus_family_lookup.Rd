@@ -26,5 +26,5 @@ Australian Plant Census (APC).
  \donttest{get_apc_genus_family_lookup(genus = c("Acacia", "Eucalyptus"))}
 }
 \seealso{
-\code{\link{load_taxonomic_resources}}, \code{\link{create_apc_genus_family_lookup}}
+\code{\link{load_taxonomic_resources}}
 }
