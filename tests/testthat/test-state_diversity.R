@@ -47,8 +47,8 @@ test_that("get_apc_genus_family_lookup() works", {
                      resources = resources
                    ))
   # readr::write_csv(family_check,"tests/testthat/benchmarks/family_check.csv")
-  previous_check <- readr::read_csv("benchmarks/native_check.csv", show_col_types = FALSE)
-  expect_equal(native_check, previous_check)
+  previous_check <- readr::read_csv("benchmarks/family_check.csv", show_col_types = FALSE)
+  expect_equal(family_check, previous_check)
 })
 
 
