@@ -26,8 +26,11 @@
 #'
 #' @examples
 #'  \donttest{state_diversity_counts(state = "NSW")}
-state_diversity_counts <- function(state, resources = load_taxonomic_resources()) {
-  if (is.null(resources)) {
+
+state_diversity_counts <- function(state,
+                                   resources = load_taxonomic_resources()) {
+  
+  if(is.null(resources)){
     message("Not finding taxonomic resources; check internet connection?")
     return(NULL)
   }
