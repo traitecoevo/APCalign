@@ -111,7 +111,7 @@ get_apc_genus_family_lookup <-
       message("Not finding taxonomic resources; check internet connection?")
       return(NULL)
     }
-    fam_lu <- APCalign:::create_apc_genus_family_lookup(resources = resources)
+    fam_lu <- create_apc_genus_family_lookup(resources = resources)
     lu <- dplyr::tibble(genus = genus) %>%
       dplyr::left_join(fam_lu, by = "genus")
     if (any(is.na(lu$family))) warning("some non-matches with the APC accepted genus list, check the formatting of your genus vector.")
