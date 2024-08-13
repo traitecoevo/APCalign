@@ -8,3 +8,4 @@
 * Better handling an error in the vignette specific to certain MacOS versions
 * Adding one user function for genus->family lookup
 
+

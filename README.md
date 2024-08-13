@@ -31,6 +31,7 @@ From CRAN:
 
 OR for the github version:
 
+
 ``` r
  install.packages("remotes")
  remotes::install_github("traitecoevo/APCalign")
@@ -70,6 +71,9 @@ load the taxonomic resources into memory first:
 
 tax_resources <- load_taxonomic_resources()
 #> ================================================================================================================================================================
+```
+
+``` r
 
 create_taxonomic_update_lookup( 
   taxa = c(
