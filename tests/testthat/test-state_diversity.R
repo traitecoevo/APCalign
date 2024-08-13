@@ -33,3 +33,22 @@ test_that("native_anywhere_in_australia() works", {
   expect_equal(native_check, previous_check)
   expect_warning(native_anywhere_in_australia(species = "NOTASPECIES", resources = resources))
 })
+
+
+test_that("get_apc_genus_family_lookup() works", {
+  expect_warning(family_check <-
+                   get_apc_genus_family_lookup(
+                     c(
+                       "Eucalyptus",
+                       "Pinus",
+                       "Brassica",
+                       "not a species"
+                     ),
+                     resources = resources
+                   ))
+  # readr::write_csv(family_check,"tests/testthat/benchmarks/family_check.csv")
+  previous_check <- readr::read_csv("benchmarks/family_check.csv", show_col_types = FALSE)
+  expect_equal(family_check, previous_check)
+})
+
+
