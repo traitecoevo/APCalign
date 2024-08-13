@@ -31,15 +31,17 @@ the established status (native/introduced) of plant taxa across different states
 
 ## Installation 
 
+From CRAN:
+
 ```{r install, eval= FALSE}
-
  install.packages("APCalign")
-
- # OR for the github version
-
+```
+ 
+ OR for the github version:
+ 
+```{r install2, eval= FALSE}
  install.packages("remotes")
  remotes::install_github("traitecoevo/APCalign")
- 
 ```
 
 ## A quick demo
@@ -83,6 +85,22 @@ Checking for a list of species to see if they are classified as Australian nativ
 native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources = tax_resources)
 
 ```
+
+Getting a family lookup table for genera from the specified taxonomy:
+
+```{r, message=FALSE}
+
+get_apc_genus_family_lookup(c("Eucalyptus",
+                              "Pinus",
+                              "Actinotus",
+                              "Banksia",
+                              "Acacia",
+                              "Triodia"), 
+                            resources = tax_resources)
+
+```
+
+
 ## Shiny application
 
 We also developed a shiny application for non-R users to update and align their taxonomic names. You can find the application here: https://unsw.shinyapps.io/APCalign-app
