@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">APCalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,21 +63,19 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
+<p>From CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"APCalign"</span><span class="op">)</span></span>
-<span></span>
-<span> <span class="co"># OR for the github version</span></span>
-<span></span>
-<span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span> <span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"traitecoevo/APCalign"</span><span class="op">)</span></span>
-<span> </span></code></pre></div>
+<code class="sourceCode R"><span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"APCalign"</span><span class="op">)</span></span></code></pre></div>
+<p>OR for the github version:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span> <span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"traitecoevo/APCalign"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="a-quick-demo">A quick demo<a class="anchor" aria-label="anchor" href="#a-quick-demo"></a>
 </h2>
 <p>Generating a look-up table can be done with just one function:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://traitecoevo.github.io/APCalign/">APCalign</a></span><span class="op">)</span></span>
 <span></span>
@@ -99,11 +97,11 @@
 <span><span class="co">#&gt; #   scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
 <p>if you’re going to use APCalign more than once, it will save you time to load the taxonomic resources into memory first:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">tax_resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ================================================================================================================================================================</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span> </span>
 <span>  taxa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -125,7 +123,7 @@
 <span><span class="co">#&gt; #   scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
 <p>Checking for a list of species to see if they are classified as Australian natives:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="reference/native_anywhere_in_australia.html">native_anywhere_in_australia</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus globulus"</span>,<span class="st">"Pinus radiata"</span><span class="op">)</span>, resources <span class="op">=</span> <span class="va">tax_resources</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
@@ -133,6 +131,25 @@
 <span><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;                 </span></span>
 <span><span class="co">#&gt; 1 Eucalyptus globulus native                </span></span>
 <span><span class="co">#&gt; 2 Pinus radiata       introduced</span></span></code></pre></div>
+<p>Getting a family lookup table for genera from the specified taxonomy:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="reference/get_apc_genus_family_lookup.html">get_apc_genus_family_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus"</span>,</span>
+<span>                              <span class="st">"Pinus"</span>,</span>
+<span>                              <span class="st">"Actinotus"</span>,</span>
+<span>                              <span class="st">"Banksia"</span>,</span>
+<span>                              <span class="st">"Acacia"</span>,</span>
+<span>                              <span class="st">"Triodia"</span><span class="op">)</span>, </span>
+<span>                            resources <span class="op">=</span> <span class="va">tax_resources</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 6 × 2</span></span>
+<span><span class="co">#&gt;   genus      family    </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;     </span></span>
+<span><span class="co">#&gt; 1 Eucalyptus Myrtaceae </span></span>
+<span><span class="co">#&gt; 2 Pinus      Pinaceae  </span></span>
+<span><span class="co">#&gt; 3 Actinotus  Apiaceae  </span></span>
+<span><span class="co">#&gt; 4 Banksia    Proteaceae</span></span>
+<span><span class="co">#&gt; 5 Acacia     Fabaceae  </span></span>
+<span><span class="co">#&gt; 6 Triodia    Poaceae</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="shiny-application">Shiny application<a class="anchor" aria-label="anchor" href="#shiny-application"></a>
