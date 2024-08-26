@@ -1,3 +1,16 @@
+
+# APCalign 1.1.0
+
+- Create a genus->family lookup from the specified APC release 
+
+# APCalign 1.0.2
+
+Minor update to fix 
+
+- Deal with the vignette issues that emerged on CRAN 
+- Improve "graceful failing", based on issues that have come up on github CI
+- minor formatting
+
 # APCalign 1.0.1
 
 First major release of APCalign.  A preprint is available at 

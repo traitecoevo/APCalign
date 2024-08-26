@@ -29,13 +29,21 @@ library(APCalign)
 `APCalign` uses the [Australian Plant Census (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and [Australian Plant Name Index](https://biodiversity.org.au/nsl/services/search/names) to align and update Australian plant taxon name strings. 'APCalign' also supplies information about
 the established status (native/introduced) of plant taxa across different states/territories. It's useful for updating species list and intersecting them with the APC consensus understanding of established status (native/introduced).
 
-## Installation
+## Installation 
+
+From CRAN:
+
 
 ```{r install, eval= FALSE}
+ install.packages("APCalign")
+```
+ 
+ OR for the github version:
+ 
+```{r install2, eval= FALSE}
 
  install.packages("remotes")
  remotes::install_github("traitecoevo/APCalign")
- 
 ```
 
 ## A quick demo
@@ -79,6 +87,22 @@ Checking for a list of species to see if they are classified as Australian nativ
 native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources = tax_resources)
 
 ```
+
+Getting a family lookup table for genera from the specified taxonomy:
+
+```{r, message=FALSE}
+
+get_apc_genus_family_lookup(c("Eucalyptus",
+                              "Pinus",
+                              "Actinotus",
+                              "Banksia",
+                              "Acacia",
+                              "Triodia"), 
+                            resources = tax_resources)
+
+```
+
+
 ## Shiny application
 
 We also developed a shiny application for non-R users to update and align their taxonomic names. You can find the application here: https://unsw.shinyapps.io/APCalign-app

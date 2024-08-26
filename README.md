@@ -23,11 +23,18 @@ of established status (native/introduced).
 
 ## Installation
 
-``` r
+From CRAN:
 
+``` r
+ install.packages("APCalign")
+```
+
+OR for the github version:
+
+
+``` r
  install.packages("remotes")
  remotes::install_github("traitecoevo/APCalign")
- 
 ```
 
 ## A quick demo
@@ -64,6 +71,9 @@ load the taxonomic resources into memory first:
 
 tax_resources <- load_taxonomic_resources()
 #> ================================================================================================================================================================
+```
+
+``` r
 
 create_taxonomic_update_lookup( 
   taxa = c(
@@ -97,6 +107,28 @@ native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources
 #>   <chr>               <chr>                 
 #> 1 Eucalyptus globulus native                
 #> 2 Pinus radiata       introduced
+```
+
+Getting a family lookup table for genera from the specified taxonomy:
+
+``` r
+
+get_apc_genus_family_lookup(c("Eucalyptus",
+                              "Pinus",
+                              "Actinotus",
+                              "Banksia",
+                              "Acacia",
+                              "Triodia"), 
+                            resources = tax_resources)
+#> # A tibble: 6 × 2
+#>   genus      family    
+#>   <chr>      <chr>     
+#> 1 Eucalyptus Myrtaceae 
+#> 2 Pinus      Pinaceae  
+#> 3 Actinotus  Apiaceae  
+#> 4 Banksia    Proteaceae
+#> 5 Acacia     Fabaceae  
+#> 6 Triodia    Poaceae
 ```
 
 ## Shiny application

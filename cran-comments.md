@@ -4,6 +4,8 @@
 
 
 * This is a resubmission
-* Removed `packageVersion()` from CITATION file
-* 2 notes with HTML validation problems on MacOS 14.5
+* More gracefully handling edge cases involving parts of the internet being down
+* Better handling an error in the vignette specific to certain MacOS versions
+* Adding one user function for genus->family lookup
+
 

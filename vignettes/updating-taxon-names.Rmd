@@ -44,18 +44,27 @@ util_kable_styling_html <- function(...) {
 my_kable_styling <- util_kable_styling_html
 
 match_taxa_documentation <-
-  readr::read_csv(here("inst", "extdata", "match_taxa_documentation.csv"),
+  readr::read_csv(
+    system.file(
+      file.path("extdata", "match_taxa_documentation.csv"),
+      package = "APCalign"),
     show_col_types = FALSE
   )
 
 update_taxonomy_documentation <-
-  readr::read_csv(here("inst/", "extdata", "update_taxonomy_documentation.csv"),
+  readr::read_csv(
+    system.file(
+      file.path("extdata", "update_taxonomy_documentation.csv"),
+      package = "APCalign"),
     show_col_types = FALSE, skip = 1
   )
 
 
 APCalign_outputs_documentation <-
-  readr::read_csv(here("inst/", "extdata", "APCalign_outputs_documentation.csv"),
+  readr::read_csv(
+    system.file(
+      file.path("extdata", "APCalign_outputs_documentation.csv"),
+      package = "APCalign"),
     show_col_types = FALSE
   )
 ```
