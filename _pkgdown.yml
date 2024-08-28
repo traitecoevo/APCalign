@@ -30,6 +30,7 @@ reference:
   - create_taxonomic_update_lookup
   - align_taxa
   - update_taxonomy
+  - get_apc_genus_family_lookup
 - subtitle: Standardise and simplify plant taxon names
 - contents:
   - standardise_names
