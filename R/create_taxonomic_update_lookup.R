@@ -167,7 +167,7 @@ create_taxonomic_update_lookup <- function(taxa,
                                            APNI_matches = TRUE, 
                                            imprecise_fuzzy_matches = FALSE, 
                                            identifier = NA_character_,
-                                           resources = load_taxonomic_resources(),
+                                           resources = load_taxonomic_resources(quiet = quiet),
                                            quiet = FALSE,
                                            output = NULL) {
   
