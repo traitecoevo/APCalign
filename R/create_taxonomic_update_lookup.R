@@ -73,7 +73,7 @@
 #'  makes erroneous matches.
 #' @param identifier A dataset, location or other identifier,
 #'  which defaults to NA.
-#' @param quiet Logical to indicate whether to display messages while
+#' @param quiet Logical to indicate whether to display messages while loading data and 
 #'  aligning taxa.
 #' @param output file path to save the output. If this file already exists,
 #'  this function will check if it's a subset of the species passed in and try
