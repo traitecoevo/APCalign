@@ -487,3 +487,38 @@ dataset_get <- function(version = default_version(),
   
   }
 }
+
+
+get_versions <- function() {
+  # Check if there is internet connection
+  ## Dummy variable to allow testing of network
+  network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE)) 
+  
+  if (!curl::has_internet() | !network) { # Simulate if network is down
+    message("No internet connection, please retry with stable connection (default_version)")
+    return(invisible(NULL))
+  } else {
+    
+    # Get all the releases
+    url <-
+      paste0(
+        "https://api.github.com/repos/",
+        "traitecoevo",
+        "/",
+        "APCalign",
+        "/releases"
+      )
+    
+    response <- httr::GET(url)
+    
+    if(httr::http_error(response) | !network){
+      message("API currently down, try again later")
+      return(invisible(NULL))
+    } else
+      release_data <- httr::content(response, "text") |> jsonlite::fromJSON()
+    
+    # Create table
+    dplyr::tibble(versions = unique(release_data$tag_name) |> sort(decreasing = TRUE)) |> 
+      dplyr::filter(!versions == "2020-05-14")
+  }
+}
