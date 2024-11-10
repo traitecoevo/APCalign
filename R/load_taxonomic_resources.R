@@ -489,6 +489,13 @@ dataset_get <- function(version = default_version(),
 }
 
 
+#' Which versions of taxonomic resources are available?
+#'
+#' @return tibble of dates when APC/APNI resources were downloaded as a Github Release
+#' @export
+#'
+#' @examples
+#' get_versions()
 get_versions <- function() {
   # Check if there is internet connection
   ## Dummy variable to allow testing of network
