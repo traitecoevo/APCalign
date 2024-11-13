@@ -1,5 +1,5 @@
 test_that("Retrieval is possible", {
-  skip_if_offline(host = "api.github.com")
+  skip_on_ci()
   
   Sys.setenv("NETWORK_UP" = TRUE)
   versions <- get_versions()
