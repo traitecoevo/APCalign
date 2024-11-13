@@ -27,7 +27,7 @@
 #' @examples
 #' \donttest{
 #' load_taxonomic_resources(stable_or_current_data="stable", 
-#' version="0.0.2.9000")}
+#' version="2024-10-11")}
 #'
 
 load_taxonomic_resources <-
@@ -302,7 +302,7 @@ load_taxonomic_resources <-
 ##'
 ##'
 ##' # Load the a stable version of the dataset
-##' dataset_access_function(version="0.0.2.9000",type = "stable")
+##' dataset_access_function(version="2024-10-11",type = "stable")
 ##'
 ##' @noRd
 dataset_access_function <-
