@@ -18,6 +18,5 @@
 ^CRAN-SUBMISSION$
 ^revdep
 ^.DS_Store
-^inst/cheatsheet$
 ^help
 

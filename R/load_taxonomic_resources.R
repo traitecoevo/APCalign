@@ -526,6 +526,6 @@ get_versions <- function() {
     
     # Create table
     dplyr::tibble(versions = unique(release_data$tag_name) |> sort(decreasing = TRUE)) |> 
-      dplyr::filter(!versions == "2020-05-14")
+      dplyr::filter(!versions == "2020-05-14") #Excluding first ever release because it is not in parquet format
   }
 }

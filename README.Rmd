@@ -38,7 +38,7 @@ From CRAN:
  install.packages("APCalign")
 ```
  
- OR for the github version:
+ OR for the GitHub version:
  
 ```{r install2, eval= FALSE}
 
@@ -102,10 +102,13 @@ get_apc_genus_family_lookup(c("Eucalyptus",
 
 ```
 
-
 ## Shiny application
 
 We also developed a shiny application for non-R users to update and align their taxonomic names. You can find the application here: https://unsw.shinyapps.io/APCalign-app
+
+## Cheatsheet
+
+
 
 ## Learn more
 
