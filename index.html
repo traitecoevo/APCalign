@@ -8,8 +8,8 @@
 <title>Resolving Plant Taxon Names Using the Australian Plant Census • APCalign</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Resolving Plant Taxon Names Using the Australian Plant Census">
 <meta name="description" content="The process of resolving taxon names is necessary when working with biodiversity data. APCalign uses the Australian Plant Census (APC) and the Australian Plant Name Index (APNI) to align and update plant taxon names to current, accepted standards. APCalign also supplies information about the established status of plant taxa across different states/territories.">
 <meta property="og:description" content="The process of resolving taxon names is necessary when working with biodiversity data. APCalign uses the Australian Plant Census (APC) and the Australian Plant Name Index (APNI) to align and update plant taxon names to current, accepted standards. APCalign also supplies information about the established status of plant taxa across different states/territories.">
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">APCalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,80 +61,75 @@
 </h1></div>
 <p><code>APCalign</code> uses the <a href="https://biodiversity.org.au/nsl/services/search/taxonomy" class="external-link">Australian Plant Census (APC)</a> and <a href="https://biodiversity.org.au/nsl/services/search/names" class="external-link">Australian Plant Name Index</a> to align and update Australian plant taxon name strings. ‘APCalign’ also supplies information about the established status (native/introduced) of plant taxa across different states/territories. It’s useful for updating species list and intersecting them with the APC consensus understanding of established status (native/introduced).</p>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="installation-️">Installation 🛠️<a class="anchor" aria-label="anchor" href="#installation-%EF%B8%8F"></a>
 </h2>
 <p>From CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"APCalign"</span><span class="op">)</span></span></code></pre></div>
-<p>OR for the github version:</p>
+<code class="sourceCode R"><span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"APCalign"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://traitecoevo.github.io/APCalign/">APCalign</a></span><span class="op">)</span></span></code></pre></div>
+<p>OR for the GitHub version:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span> <span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"traitecoevo/APCalign"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"traitecoevo/APCalign"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="a-quick-demo">A quick demo<a class="anchor" aria-label="anchor" href="#a-quick-demo"></a>
 </h2>
 <p>Generating a look-up table can be done with just one function:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://traitecoevo.github.io/APCalign/">APCalign</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span> </span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span> </span>
 <span>  taxa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="st">"Banksia integrifolia"</span>,</span>
 <span>    <span class="st">"Acacia longifolia"</span>,</span>
 <span>    <span class="st">"Commersonia rosea"</span></span>
 <span>    <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; ================================================================================================================================================================</span></span>
-<span><span class="co">#&gt; # A tibble: 3 × 12</span></span>
-<span><span class="co">#&gt;   original_name       aligned_name accepted_name suggested_name genus taxon_rank</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;     </span></span>
-<span><span class="co">#&gt; 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   </span></span>
-<span><span class="co">#&gt; 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   </span></span>
-<span><span class="co">#&gt; 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   </span></span>
-<span><span class="co">#&gt; # ℹ 6 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
-<p>if you’re going to use APCalign more than once, it will save you time to load the taxonomic resources into memory first:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">tax_resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ================================================================================================================================================================</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co">#&gt; ================================================================================================================================================================</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 12</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt;   original_name       aligned_name accepted_name suggested_name genus taxon_rank</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;     </span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   </span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   </span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   </span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; # ℹ 6 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; #   scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; #   number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
+<p>If you’re going to use <code>APCalign</code> more than once, it will save you time to load the taxonomic resources into memory first:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span> </span>
-<span>  taxa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="st">"Banksia integrifolia"</span>,</span>
-<span>    <span class="st">"Acacia longifolia"</span>,</span>
-<span>    <span class="st">"Commersonia rosea"</span>,</span>
-<span>    <span class="st">"not a species"</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>  resources <span class="op">=</span> <span class="va">tax_resources</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 4 × 12</span></span>
-<span><span class="co">#&gt;   original_name       aligned_name accepted_name suggested_name genus taxon_rank</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;     </span></span>
-<span><span class="co">#&gt; 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   </span></span>
-<span><span class="co">#&gt; 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   </span></span>
-<span><span class="co">#&gt; 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   </span></span>
-<span><span class="co">#&gt; 4 not a species       &lt;NA&gt;         &lt;NA&gt;          &lt;NA&gt;           &lt;NA&gt;  &lt;NA&gt;      </span></span>
-<span><span class="co">#&gt; # ℹ 6 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">tax_resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co">#&gt; ================================================================================================================================================================</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">create_taxonomic_update_lookup</span>( </span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">taxa =</span> <span class="fu">c</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    <span class="st">"Banksia integrifolia"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>    <span class="st">"Acacia longifolia"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>    <span class="st">"Commersonia rosea"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>    <span class="st">"not a species"</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>    ),</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  <span class="at">resources =</span> tax_resources</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>)</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 12</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt;   original_name       aligned_name accepted_name suggested_name genus taxon_rank</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;     </span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   </span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   </span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   </span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; 4 not a species       &lt;NA&gt;         &lt;NA&gt;          &lt;NA&gt;           &lt;NA&gt;  &lt;NA&gt;      </span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; # ℹ 6 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; #   scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; #   number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
 <p>Checking for a list of species to see if they are classified as Australian natives:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="reference/native_anywhere_in_australia.html">native_anywhere_in_australia</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus globulus"</span>,<span class="st">"Pinus radiata"</span><span class="op">)</span>, resources <span class="op">=</span> <span class="va">tax_resources</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/native_anywhere_in_australia.html">native_anywhere_in_australia</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus globulus"</span>,<span class="st">"Pinus radiata"</span><span class="op">)</span>, resources <span class="op">=</span> <span class="va">tax_resources</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
 <span><span class="co">#&gt;   species             native_anywhere_in_aus</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;                 </span></span>
 <span><span class="co">#&gt; 1 Eucalyptus globulus native                </span></span>
 <span><span class="co">#&gt; 2 Pinus radiata       introduced</span></span></code></pre></div>
 <p>Getting a family lookup table for genera from the specified taxonomy:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="reference/get_apc_genus_family_lookup.html">get_apc_genus_family_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus"</span>,</span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/get_apc_genus_family_lookup.html">get_apc_genus_family_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus"</span>,</span>
 <span>                              <span class="st">"Pinus"</span>,</span>
 <span>                              <span class="st">"Actinotus"</span>,</span>
 <span>                              <span class="st">"Banksia"</span>,</span>
@@ -152,17 +147,47 @@
 <span><span class="co">#&gt; 6 Triodia    Poaceae</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="shiny-application">Shiny application<a class="anchor" aria-label="anchor" href="#shiny-application"></a>
+<h2 id="shiny-application-">Shiny application ✨<a class="anchor" aria-label="anchor" href="#shiny-application-"></a>
 </h2>
 <p>We also developed a shiny application for non-R users to update and align their taxonomic names. You can find the application here: <a href="https://unsw.shinyapps.io/APCalign-app" class="external-link uri">https://unsw.shinyapps.io/APCalign-app</a></p>
 </div>
 <div class="section level2">
-<h2 id="learn-more">Learn more<a class="anchor" aria-label="anchor" href="#learn-more"></a>
+<h2 id="cheatsheet">Cheatsheet<a class="anchor" aria-label="anchor" href="#cheatsheet"></a>
+</h2>
+<p><a href="https://github.com/traitecoevo/APCalign/tree/master/inst/cheatsheet/APCalign-cheatsheet.pdf" class="external-link"><img src="reference/figures/APCalign-cheatsheet.png" width="60%"></a></p>
+</div>
+<div class="section level2">
+<h2 id="learn-more-">Learn more 📚<a class="anchor" aria-label="anchor" href="#learn-more-"></a>
 </h2>
 <p>Highly recommend looking at our <a href="https://traitecoevo.github.io/APCalign/articles/APCalign.html">Getting Started</a> vignette to learn about how to use <code>APCalign</code>. You can also learn more about our <a href="https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html">taxa matching algorithm</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="found-a-bug">Found a bug?<a class="anchor" aria-label="anchor" href="#found-a-bug"></a>
+<h2 id="show-us-support-">Show us support 💚<a class="anchor" aria-label="anchor" href="#show-us-support-"></a>
+</h2>
+<p>Please consider citing our work, we are really proud of it!</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"APCalign"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; To cite package 'APCalign' in publications use:</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Wenk E, Cornwell W, Fuchs A, Kar F, Monro A, Sauquet H, Stephens R,</span></span>
+<span><span class="co">#&gt;   Falster D (2024). "APCalign: an R package workflow and app for</span></span>
+<span><span class="co">#&gt;   aligning and updating flora names to the Australian Plant Census."</span></span>
+<span><span class="co">#&gt;   _Australian Journal of Botany_. R package version: 1.0.1,</span></span>
+<span><span class="co">#&gt;   &lt;https://www.biorxiv.org/content/10.1101/2024.02.02.578715v1&gt;.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; A BibTeX entry for LaTeX users is</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   @Article{,</span></span>
+<span><span class="co">#&gt;     title = {APCalign: an R package workflow and app for aligning and updating flora names to the Australian Plant Census},</span></span>
+<span><span class="co">#&gt;     journal = {Australian Journal of Botany},</span></span>
+<span><span class="co">#&gt;     author = {Elizabeth Wenk and Will Cornwell and Ann Fuchs and Fonti Kar and Anna Monro and Herve Sauquet and Ruby Stephens and Daniel Falster},</span></span>
+<span><span class="co">#&gt;     year = {2024},</span></span>
+<span><span class="co">#&gt;     note = {R package version: 1.0.1},</span></span>
+<span><span class="co">#&gt;     url = {https://www.biorxiv.org/content/10.1101/2024.02.02.578715v1},</span></span>
+<span><span class="co">#&gt;   }</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="found-a-bug-">Found a bug? 🐛<a class="anchor" aria-label="anchor" href="#found-a-bug-"></a>
 </h2>
 <p>Did you come across an unexpected taxon name change? Elusive error you can’t debug - <a href="https://github.com/traitecoevo/APCalign/issues" class="external-link">submit an issue</a> and we will try our best to help.</p>
 </div>
