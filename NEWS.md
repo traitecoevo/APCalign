@@ -1,3 +1,6 @@
+# APCalign 1.1.2
+
+- Added `get_versions()`
 
 # APCalign 1.1.0
 
