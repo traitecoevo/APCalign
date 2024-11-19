@@ -29,21 +29,21 @@ library(APCalign)
 `APCalign` uses the [Australian Plant Census (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and [Australian Plant Name Index](https://biodiversity.org.au/nsl/services/search/names) to align and update Australian plant taxon name strings. 'APCalign' also supplies information about
 the established status (native/introduced) of plant taxa across different states/territories. It's useful for updating species list and intersecting them with the APC consensus understanding of established status (native/introduced).
 
-## Installation 
+## Installation 🛠️
 
 From CRAN:
 
-
 ```{r install, eval= FALSE}
  install.packages("APCalign")
+
+library(APCalign)
 ```
  
- OR for the GitHub version:
+OR for the GitHub version:
  
 ```{r install2, eval= FALSE}
-
- install.packages("remotes")
- remotes::install_github("traitecoevo/APCalign")
+install.packages("remotes")
+remotes::install_github("traitecoevo/APCalign")
 ```
 
 ## A quick demo
@@ -51,9 +51,6 @@ From CRAN:
 Generating a look-up table can be done with just one function:
 
 ```{r,message=FALSE}
-
-library(APCalign)
-
 create_taxonomic_update_lookup( 
   taxa = c(
     "Banksia integrifolia",
@@ -63,10 +60,9 @@ create_taxonomic_update_lookup(
 )
 ```
 
-if you're going to use APCalign more than once, it will save you time to load the taxonomic resources into memory first:
+If you're going to use `APCalign` more than once, it will save you time to load the taxonomic resources into memory first:
 
 ```{r,message=FALSE}
-
 tax_resources <- load_taxonomic_resources()
 
 create_taxonomic_update_lookup( 
@@ -83,7 +79,6 @@ create_taxonomic_update_lookup(
 Checking for a list of species to see if they are classified as Australian natives:
 
 ```{r, message=FALSE}
-
 native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources = tax_resources)
 
 ```
@@ -91,7 +86,6 @@ native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources
 Getting a family lookup table for genera from the specified taxonomy:
 
 ```{r, message=FALSE}
-
 get_apc_genus_family_lookup(c("Eucalyptus",
                               "Pinus",
                               "Actinotus",
@@ -99,23 +93,29 @@ get_apc_genus_family_lookup(c("Eucalyptus",
                               "Acacia",
                               "Triodia"), 
                             resources = tax_resources)
-
 ```
 
-## Shiny application
+## Shiny application ✨
 
 We also developed a shiny application for non-R users to update and align their taxonomic names. You can find the application here: https://unsw.shinyapps.io/APCalign-app
 
 ## Cheatsheet
 
+<a href="https://github.com/traitecoevo/APCalign/tree/master/inst/cheatsheet/APCalign-cheatsheet.pdf"><img src="man/figures/APCalign-cheatsheet.png" width="60%"/></a>
 
-
-## Learn more
+## Learn more 📚
 
 Highly recommend looking at our [Getting Started](https://traitecoevo.github.io/APCalign/articles/APCalign.html) vignette to learn about how to use `APCalign`. You can also learn more about our [taxa matching  algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html).
 
+## Show us support 💛
 
-## Found a bug? 
+Please consider citing our work, we are really proud of it!
+
+```{r}
+citation("APCalign")
+```
+
+## Found a bug? 🐛
 
 Did you come across an unexpected taxon name change? Elusive error you can't debug - [submit an issue](https://github.com/traitecoevo/APCalign/issues) and we will try our best to help.
 
