@@ -17,7 +17,7 @@ create_taxonomic_update_lookup(
   APNI_matches = TRUE,
   imprecise_fuzzy_matches = FALSE,
   identifier = NA_character_,
-  resources = load_taxonomic_resources(),
+  resources = load_taxonomic_resources(quiet = quiet),
   quiet = FALSE,
   output = NULL
 )
@@ -70,7 +70,7 @@ will default to loading them from a local place on your computer. If this is
 to be called repeatedly, it's much faster to load the resources using
 \code{\link{load_taxonomic_resources}} separately and pass the data in.}
 
-\item{quiet}{Logical to indicate whether to display messages while
+\item{quiet}{Logical to indicate whether to display messages while loading data and
 aligning taxa.}
 
 \item{output}{file path to save the output. If this file already exists,

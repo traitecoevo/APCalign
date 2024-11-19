@@ -45,5 +45,6 @@ reference:
 - subtitle: Data
 - contents:
   - load_taxonomic_resources
+  - get_versions
   - default_version
   - gbif_lite

@@ -27,7 +27,7 @@
 #' @examples
 #' \donttest{
 #' load_taxonomic_resources(stable_or_current_data="stable", 
-#' version="0.0.2.9000")}
+#' version="2024-10-11")}
 #'
 
 load_taxonomic_resources <-
@@ -302,7 +302,7 @@ load_taxonomic_resources <-
 ##'
 ##'
 ##' # Load the a stable version of the dataset
-##' dataset_access_function(version="0.0.2.9000",type = "stable")
+##' dataset_access_function(version="2024-10-11",type = "stable")
 ##'
 ##' @noRd
 dataset_access_function <-
@@ -485,5 +485,47 @@ dataset_get <- function(version = default_version(),
   names(current_list) <- c("APC", "APNI")
   return(current_list)
   
+  }
+}
+
+
+#' Which versions of taxonomic resources are available?
+#'
+#' @return tibble of dates when APC/APNI resources were downloaded as a Github Release
+#' @export
+#'
+#' @examples
+#' get_versions()
+get_versions <- function() {
+  # Check if there is internet connection
+  ## Dummy variable to allow testing of network
+  network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE)) 
+  
+  if (!curl::has_internet() | !network) { # Simulate if network is down
+    message("No internet connection, please retry with stable connection (default_version)")
+    return(invisible(NULL))
+  } else {
+    
+    # Get all the releases
+    url <-
+      paste0(
+        "https://api.github.com/repos/",
+        "traitecoevo",
+        "/",
+        "APCalign",
+        "/releases"
+      )
+    
+    response <- httr::GET(url)
+    
+    if(httr::http_error(response) | !network){
+      message("API currently down, try again later")
+      return(invisible(NULL))
+    } else
+      release_data <- httr::content(response, "text") |> jsonlite::fromJSON()
+    
+    # Create table
+    dplyr::tibble(versions = unique(release_data$tag_name) |> sort(decreasing = TRUE)) |> 
+      dplyr::filter(!versions == "2020-05-14") #Excluding first ever release because it is not in parquet format
   }
 }

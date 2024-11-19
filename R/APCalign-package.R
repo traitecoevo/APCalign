@@ -99,7 +99,8 @@ utils::globalVariables(
     "accepted_name_2",
     "alternative_accepted_name_tmp",
     "pro_parte",
-    "suggested_collapsed_name"
+    "suggested_collapsed_name",
+    "versions"
   )
 )
 

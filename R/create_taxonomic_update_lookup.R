@@ -73,7 +73,7 @@
 #'  makes erroneous matches.
 #' @param identifier A dataset, location or other identifier,
 #'  which defaults to NA.
-#' @param quiet Logical to indicate whether to display messages while
+#' @param quiet Logical to indicate whether to display messages while loading data and 
 #'  aligning taxa.
 #' @param output file path to save the output. If this file already exists,
 #'  this function will check if it's a subset of the species passed in and try
@@ -167,7 +167,7 @@ create_taxonomic_update_lookup <- function(taxa,
                                            APNI_matches = TRUE, 
                                            imprecise_fuzzy_matches = FALSE, 
                                            identifier = NA_character_,
-                                           resources = load_taxonomic_resources(),
+                                           resources = load_taxonomic_resources(quiet = quiet),
                                            quiet = FALSE,
                                            output = NULL) {
   
