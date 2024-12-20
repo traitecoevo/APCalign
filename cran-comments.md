@@ -4,8 +4,10 @@
 
 
 * This is a resubmission
-* More gracefully handling edge cases involving parts of the internet being down
-* Better handling an error in the vignette specific to certain MacOS versions
+* Improved handling for release tag versions from Github API
 * Adding one user function for genus->family lookup
 
+NOTES: 
 
+Found the following (possibly) invalid URLs:
+The cheatsheet link will
