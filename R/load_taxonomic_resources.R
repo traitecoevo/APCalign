@@ -415,7 +415,10 @@ default_version <- function() {
   cleaned_versions <- versions[!grepl("^\\d+\\.\\d+\\.\\d+(\\.\\d+)?$", versions)]
   
   # Verify only dates left
-  if(all(grepl("^\\d{4}-\\d{2}-\\d{2}$", cleaned_versions))) 
+  if(! all(grepl("^\\d{4}-\\d{2}-\\d{2}$", cleaned_versions))) 
+    rlang::abort("Inconsistent date formats detected in versions!")
+    
+  # Return latest version
     sort(cleaned_versions, decreasing = TRUE) |> #Sort from most recent to oldest
     dplyr::first() #  and take the first value after sorting
   }
