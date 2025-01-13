@@ -95,13 +95,9 @@ get_apc_genus_family_lookup(c("Eucalyptus",
                             resources = tax_resources)
 ```
 
-## Shiny application ✨
-
-We also developed a shiny application for non-R users to update and align their taxonomic names. You can find the application here: https://unsw.shinyapps.io/APCalign-app
-
 ## Cheatsheet
 
-<a href="https://github.com/traitecoevo/APCalign/tree/master/inst/cheatsheet/APCalign-cheatsheet.pdf"><img src="man/figures/APCalign-cheatsheet.png" width="60%"/></a>
+<a href="https://github.com/traitecoevo/APCalign/blob/master/inst/cheatsheet/APCalign-cheatsheet.pdf"><img src="man/figures/APCalign-cheatsheet.png" width="60%"/></a>
 
 ## Learn more 📚
 
