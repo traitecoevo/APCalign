@@ -1,5 +1,6 @@
 test_that("Complains when network is down", {
   skip_on_ci()
+  skip_on_cran()
 
   Sys.setenv("NETWORK_UP" = FALSE)
   expect_message(default_version())

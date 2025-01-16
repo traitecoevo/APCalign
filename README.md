@@ -125,15 +125,9 @@ get_apc_genus_family_lookup(c("Eucalyptus",
 #> 6 Triodia    Poaceae
 ```
 
-## Shiny application ✨
-
-We also developed a shiny application for non-R users to update and
-align their taxonomic names. You can find the application here:
-<https://unsw.shinyapps.io/APCalign-app>
-
 ## Cheatsheet
 
-<a href="https://github.com/traitecoevo/APCalign/tree/master/inst/cheatsheet/APCalign-cheatsheet.pdf"><img src="man/figures/APCalign-cheatsheet.png" width="60%"/></a>
+<a href="https://github.com/traitecoevo/APCalign/blob/master/inst/cheatsheet/APCalign-cheatsheet.pdf"><img src="man/figures/APCalign-cheatsheet.png" width="60%"/></a>
 
 ## Learn more 📚
 
@@ -143,7 +137,7 @@ vignette to learn about how to use `APCalign`. You can also learn more
 about our [taxa matching
 algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html).
 
-## Show us support 💚
+## Show us support 💛
 
 Please consider citing our work, we are really proud of it!
 
