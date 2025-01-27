@@ -6,6 +6,7 @@
 # * https://r-pkgs.org/tests.html
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
+# Setting the CPU Thread limit to max 2 to meet CRAN guidelines. 
 Sys.setenv("OMP_THREAD_LIMIT" = 2)
 
 library(testthat)
