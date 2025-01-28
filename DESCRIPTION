@@ -14,7 +14,7 @@ Encoding: UTF-8
 Language: en
 LazyData: true
 Depends:
-    R (>= 4.0.0),
+    R (>= 4.1.0),
 Imports:
     readr,
     purrr,

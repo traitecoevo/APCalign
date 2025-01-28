@@ -5,5 +5,6 @@
 
 * This is a resubmission
 * Improved handling for release tag versions from Github API
-* Adding one user function for genus->family lookup
-
+* Getting CPU elapsed limit for Debian but no parallelisation used in package
+* Have set CPU thread limit manually for tests
+* Updated R dependency
