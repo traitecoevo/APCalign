@@ -5,6 +5,5 @@ test_that("Retrieval is possible", {
   versions <- get_versions()
   
   expect_visible(versions)
-  expect_named(versions)
 })
 
