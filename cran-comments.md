@@ -4,7 +4,5 @@
 
 
 * This is a resubmission
-* Improved handling for release tag versions from Github API
-* Getting CPU elapsed limit for Debian but no parallelisation used in package
-* Have set CPU thread limit manually for tests
-* Updated R dependency
+* Fixing bug in tests found by cran checks
+(by removing test that conflicts with the edge case handling approach previously implemented)
