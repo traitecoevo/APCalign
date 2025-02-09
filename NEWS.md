@@ -1,3 +1,7 @@
+# APCalign 1.1.3
+
+- Failing gracefully for the edge case when the internet is up generally but github is down for a few seconds
+
 # APCalign 1.1.2
 
 - Added `get_versions()`
