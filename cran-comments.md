@@ -6,3 +6,4 @@
 * This is a resubmission
 * Fixing bug in tests found by cran checks
 (by removing test that conflicts with the edge case handling approach previously implemented)
+* Bumping version number
