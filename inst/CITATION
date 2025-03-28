@@ -12,7 +12,10 @@ bibentry(
     person(given = "Ruby", family=  "Stephens", role = c("aut"), email = "stephenseruby@gmail.com", comment = c(ORCID = "0000-0002-3767-2690")),
     person(given = "Daniel", family = "Falster", role = c("aut", "cre", "cph"), email = "daniel.falster@unsw.edu.au", comment = c(ORCID = "0000-0002-9814-092X"))
     ),
-  year   = 2024,
-  note   = "R package version: 1.0.1",
-  url    = "https://www.biorxiv.org/content/10.1101/2024.02.02.578715v1"
+  volume   = 72,
+  number   = 4,
+  year     = 2024,
+  publisher="CSIRO Publishing",
+  note     = "R package version: 1.1.4",
+  url      = "https://doi.org/10.1071/BT24014"
 )

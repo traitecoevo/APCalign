@@ -1,6 +1,6 @@
 Package: APCalign
 Title: Resolving Plant Taxon Names Using the Australian Plant Census
-Version: 1.1.3
+Version: 1.1.4
 Authors@R: c(
   person(given = "Daniel", family = "Falster", role = c("aut", "cre", "cph"), email = "daniel.falster@unsw.edu.au", comment = c(ORCID = "0000-0002-9814-092X")),
   person(given = "Elizabeth", family = "Wenk", role = c("aut", "ctb"), email = "e.wenk@unsw.edu.au", comment = c(ORCID = "0000-0001-5640-5910")),
@@ -8,7 +8,7 @@ Authors@R: c(
   person(given = "Fonti", family = "Kar", role = c("aut", "ctb"), email = "f.kar@unsw.edu.au", comment = c(ORCID = "0000-0002-2760-3974")),
   person(given = "Carl", family=  "Boettiger", role = c("ctb"), email = "cboettig@gmail.com", comment = c(ORCID = "0000-0002-1642-628X"))
     )
-Description: The process of resolving taxon names is necessary when working with biodiversity data. 'APCalign' uses the Australian Plant Census (APC) and the Australian Plant Name Index (APNI) to align and update plant taxon names to current, accepted standards. 'APCalign' also supplies information about the established status of plant taxa across different states/territories.
+Description: The process of resolving and updating taxon names is necessary when working with biodiversity data. 'APCalign' uses the Australian Plant Census (APC) and the Australian Plant Name Index (APNI) to align and update plant taxon names to current, accepted standards. 'APCalign' also supplies information about the establishment status (i.e. native or introduced) of plant taxa across different states/territories. https://www.publish.csiro.au/bt/pdf/BT24014 https://doi.org/10.1071/BT24014
 License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en
@@ -41,5 +41,5 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-URL: https://traitecoevo.github.io/APCalign/, https://github.com/traitecoevo/APCalign
+URL: https://traitecoevo.github.io/APCalign/, https://github.com/traitecoevo/APCalign, https://www.publish.csiro.au/bt/pdf/BT24014, https://doi.org/10.1071/BT24014
 BugReports: https://github.com/traitecoevo/APCalign/issues

@@ -15,11 +15,13 @@ coverage](https://codecov.io/gh/traitecoevo/APCalign/branch/master/graph/badge.s
 (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and
 [Australian Plant Name
 Index](https://biodiversity.org.au/nsl/services/search/names) to align
-and update Australian plant taxon name strings. ‘APCalign’ also supplies
-information about the established status (native/introduced) of plant
-taxa across different states/territories. It’s useful for updating
-species list and intersecting them with the APC consensus understanding
-of established status (native/introduced).
+and update Australian plant taxon names. ‘APCalign’ also supplies
+information about the established status (i.e., native/introduced) of
+plant taxa within different states/territories as compiled by the APC.
+It’s useful for updating species list and intersecting them with the APC
+consensus for both taxonomy and establishment status.
+
+DOI: <https://doi.org/10.1071/BT24014>
 
 ## Installation 🛠️
 
