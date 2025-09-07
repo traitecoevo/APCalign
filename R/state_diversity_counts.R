@@ -80,7 +80,9 @@ state_diversity_counts <- function(state,
 #' @noRd
 create_apc_genus_family_lookup <-
   function(resources) {
-    apc_s <- dplyr::filter(resources$APC, taxon_rank == "species" & taxonomic_status=="accepted")
+    apc_s <- dplyr::filter(resources$APC, taxon_rank == "species" & 
+                             taxonomic_status == "accepted" &
+                             word(accepted_name_usage, 1, 1) != "x")
     dplyr::tibble(genus = word(apc_s$accepted_name_usage, 1, 1),
                   family = apc_s$family) |>
       dplyr::distinct() -> lu
