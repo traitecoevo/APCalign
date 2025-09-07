@@ -40,6 +40,8 @@ Useful links:
 \itemize{
   \item \url{https://traitecoevo.github.io/APCalign/}
   \item \url{https://github.com/traitecoevo/APCalign}
+  \item \url{https://www.publish.csiro.au/bt/pdf/BT24014}
+  \item \doi{10.1071/BT24014}
   \item Report bugs at \url{https://github.com/traitecoevo/APCalign/issues}
 }
 
