@@ -12,6 +12,8 @@
 #' @param resources the taxonomic resources required to make the summary statistics.
 #'   Loading this can be slow, so call load_taxonomic_resources separately to greatly
 #'   speed this function up and pass the resources in.
+#' @param include_infrataxa option to include subspecies, varieties and forms in the output. 
+#'   Set to false as the default, outing results just for species-rank taxa.
 #'
 #' @return A tibble with columns representing each state and rows representing each
 #'   species. The values in each cell represent the origin of the species in that state.
@@ -22,18 +24,19 @@
 #' @seealso \code{\link{load_taxonomic_resources}}
 #'
 #' @examples
-#' \donttest{create_species_state_origin_matrix()}
+#' \donttest{create_species_state_origin_matrix()}#' 
+#' \donttest{create_species_state_origin_matrix(resources = resources, include_infrataxa = TRUE)}
 #'
 #'
 #'
-create_species_state_origin_matrix <- function(resources = load_taxonomic_resources()) {
+create_species_state_origin_matrix <- function(resources = load_taxonomic_resources(), include_infrataxa = FALSE) {
   
   if(is.null(resources)){
     message("Not finding taxonomic resources; check internet connection?")
     return(NULL)
   }
   
-  apc_species <- filter_data_to_accepted_species(resources)
+  apc_species <- filter_data_to_accepted_species(resources, include_infrataxa = include_infrataxa)
   sep_state_data <- separate_states(apc_species)
   apc_places <- identify_places(sep_state_data)
   species_df <- create_species_df(apc_places, apc_species)
@@ -42,10 +45,16 @@ create_species_state_origin_matrix <- function(resources = load_taxonomic_resour
 }
 
 #' @noRd
-filter_data_to_accepted_species <- function(resources) {
-  dplyr::filter(resources$APC,
-                taxon_rank == "species" &
+filter_data_to_accepted_species <- function(resources, include_infrataxa = FALSE) {
+  if(include_infrataxa == FALSE) {
+    dplyr::filter(resources$APC,
+                  taxon_rank == "species" &
                   taxonomic_status == "accepted")
+  } else {
+    dplyr::filter(resources$APC,
+                  taxon_rank %in% c("species", "subspecies", "variety", "form") &
+                  taxonomic_status == "accepted")
+  }
 }
 
 #' @noRd
