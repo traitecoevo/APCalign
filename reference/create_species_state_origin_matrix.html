@@ -42,7 +42,7 @@ returns state level native, introduced and more complicated origins status for a
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>State level native and introduced origin status</h1>
-      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/master/R/create_species_state_origin_matrix.R" class="external-link"><code>R/create_species_state_origin_matrix.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/2026-01-14/R/create_species_state_origin_matrix.R" class="external-link"><code>R/create_species_state_origin_matrix.R</code></a></small>
       <div class="d-none name"><code>create_species_state_origin_matrix.Rd</code></div>
     </div>
 
@@ -77,8 +77,8 @@ species. The values in each cell represent the origin of the species in that sta
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></code></p>
 <p>Other diversity methods:
-<code><a href="native_anywhere_in_australia.html">native_anywhere_in_australia</a>()</code>,
-<code><a href="state_diversity_counts.html">state_diversity_counts</a>()</code></p></div>
+<code><a href="native_anywhere_in_australia.html">native_anywhere_in_australia()</a></code>,
+<code><a href="state_diversity_counts.html">state_diversity_counts()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -88,22 +88,22 @@ species. The values in each cell represent the origin of the species in that sta
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading resources into memory...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ================================================================================================================================================================</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ...done</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 26,579 × 19</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    species     SA    Vic   Qld   WA    NSW   ACT   Tas   NT    LHI   NI    ChI  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 26,606 × 19</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    species     WA    SA    Vic   NSW   Qld   LHI   NT    Tas   NI    ACT   MI   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Thryptomen… pres… nati… not … not … not … not … not … not … not … not … not …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Thryptomen… not … not … nati… not … not … not … not … not … not … not … not …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Thryptomen… nati… not … not … not … not … not … not … not … not … not … not …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Hakea fran… nati… not … not … nati… not … not … not … not … not … not … not …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Levenhooki… nati… nati… not … not … not … not … not … not … not … not … not …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Austrocall… not … not … nati… not … nati… not … not … not … not … not … not …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Pultenaea … nati… nati… not … not … nati… nati… not … not … not … not … not …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Plantago b… not … not … not … not … not … not … nati… not … not … not … not …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Acacia mic… nati… nati… not … not … nati… not … not … not … not … not … not …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Choretrum … nati… nati… not … not … not … not … not … not … not … not … not …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 26,569 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: MI &lt;chr&gt;, CoI &lt;chr&gt;, AR &lt;chr&gt;, CaI &lt;chr&gt;, CSI &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   HI &lt;chr&gt;, MDI &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Tribolium … natu… natu… natu… not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Acacia lox… nati… not … not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Schoenus s… nati… not … not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Olearia qu… not … not … not … nati… not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Thelymitra… not … nati… not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Pimelea br… nati… not … not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Boronia bi… not … not … not … not … nati… not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Asplenium … not … not … not … not … not … nati… not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Alectryon … nati… nati… nati… nati… nati… not … nati… not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Petrophile… nati… not … not … not … not … not … not … not … not … not … not …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 26,596 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: CoI &lt;chr&gt;, ChI &lt;chr&gt;, CSI &lt;chr&gt;, AR &lt;chr&gt;, HI &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   MDI &lt;chr&gt;, CaI &lt;chr&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
@@ -118,7 +118,7 @@ species. The values in each cell represent the origin of the species in that sta
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

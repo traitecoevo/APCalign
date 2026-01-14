@@ -1,0 +1,229 @@
+# APCalign ![](reference/figures/APCalign_hex_2.svg)
+
+`APCalign` uses the [Australian Plant Census
+(APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and
+[Australian Plant Name
+Index](https://biodiversity.org.au/nsl/services/search/names) to align
+and update Australian plant taxon names. ‘APCalign’ also supplies
+information about the established status (i.e., native/introduced) of
+plant taxa within different states/territories as compiled by the APC.
+It’s useful for updating species list and intersecting them with the APC
+consensus for both taxonomy and establishment status.
+
+DOI: <https://doi.org/10.1071/BT24014>
+
+## Installation 🛠️
+
+From CRAN:
+
+``` r
+ install.packages("APCalign")
+
+library(APCalign)
+```
+
+OR for the GitHub version:
+
+``` r
+install.packages("remotes")
+remotes::install_github("traitecoevo/APCalign")
+```
+
+## A quick demo
+
+Generating a look-up table can be done with just one function:
+
+``` r
+create_taxonomic_update_lookup( 
+  taxa = c(
+    "Banksia integrifolia",
+    "Acacia longifolia",
+    "Commersonia rosea"
+    )
+)
+```
+
+``` R
+#> ================================================================================================================================================================
+#> # A tibble: 3 × 12
+#>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
+#>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
+#> 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
+#> 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   
+#> 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   
+#> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
+#> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
+#> #   number_of_collapsed_taxa <dbl>
+```
+
+If you’re going to use `APCalign` more than once, it will save you time
+to load the taxonomic resources into memory first:
+
+``` r
+tax_resources <- load_taxonomic_resources()
+```
+
+``` R
+#> ================================================================================================================================================================
+
+create_taxonomic_update_lookup( 
+  taxa = c(
+    "Banksia integrifolia",
+    "Acacia longifolia",
+    "Commersonia rosea",
+    "not a species"
+    ),
+  resources = tax_resources
+)
+#> # A tibble: 4 × 12
+#>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
+#>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
+#> 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
+#> 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   
+#> 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   
+#> 4 not a species       <NA>         <NA>          <NA>           <NA>  <NA>      
+#> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
+#> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
+#> #   number_of_collapsed_taxa <dbl>
+```
+
+Checking for a list of species to see if they are classified as
+Australian natives:
+
+``` r
+native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources = tax_resources)
+#> # A tibble: 2 × 2
+#>   species             native_anywhere_in_aus
+#>   <chr>               <chr>                 
+#> 1 Eucalyptus globulus native                
+#> 2 Pinus radiata       introduced
+```
+
+Getting a family lookup table for genera from the specified taxonomy:
+
+``` r
+get_apc_genus_family_lookup(c("Eucalyptus",
+                              "Pinus",
+                              "Actinotus",
+                              "Banksia",
+                              "Acacia",
+                              "Triodia"), 
+                            resources = tax_resources)
+#> # A tibble: 6 × 2
+#>   genus      family    
+#>   <chr>      <chr>     
+#> 1 Eucalyptus Myrtaceae 
+#> 2 Pinus      Pinaceae  
+#> 3 Actinotus  Apiaceae  
+#> 4 Banksia    Proteaceae
+#> 5 Acacia     Fabaceae  
+#> 6 Triodia    Poaceae
+```
+
+## Cheatsheet
+
+[![](reference/figures/APCalign-cheatsheet.png)](https://github.com/traitecoevo/APCalign/blob/master/inst/cheatsheet/APCalign-cheatsheet.pdf)
+
+## Learn more 📚
+
+Highly recommend looking at our [Getting
+Started](https://traitecoevo.github.io/APCalign/articles/APCalign.html)
+vignette to learn about how to use `APCalign`. You can also learn more
+about our [taxa matching
+algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html).
+
+## Show us support 💛
+
+Please consider citing our work, we are really proud of it!
+
+``` r
+citation("APCalign")
+#> To cite package 'APCalign' in publications use:
+#> 
+#>   Wenk E, Cornwell W, Fuchs A, Kar F, Monro A, Sauquet H, Stephens R,
+#>   Falster D (2024). "APCalign: an R package workflow and app for
+#>   aligning and updating flora names to the Australian Plant Census."
+#>   _Australian Journal of Botany_. R package version: 1.0.1,
+#>   <https://www.biorxiv.org/content/10.1101/2024.02.02.578715v1>.
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     title = {APCalign: an R package workflow and app for aligning and updating flora names to the Australian Plant Census},
+#>     journal = {Australian Journal of Botany},
+#>     author = {Elizabeth Wenk and Will Cornwell and Ann Fuchs and Fonti Kar and Anna Monro and Herve Sauquet and Ruby Stephens and Daniel Falster},
+#>     year = {2024},
+#>     note = {R package version: 1.0.1},
+#>     url = {https://www.biorxiv.org/content/10.1101/2024.02.02.578715v1},
+#>   }
+```
+
+## Found a bug? 🐛
+
+Did you come across an unexpected taxon name change? Elusive error you
+can’t debug - [submit an
+issue](https://github.com/traitecoevo/APCalign/issues) and we will try
+our best to help.
+
+## Comments and contributions
+
+We welcome any comments and contributions to the package, start by
+[submit an issue](https://github.com/traitecoevo/APCalign/issues) and we
+can take it from there!
+
+# Package index
+
+### Align and update taxon names
+
+- [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
+  : Create a table with the best-possible scientific name match for
+  Australian plant names
+- [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md)
+  : Align Australian plant scientific names to the APC or APNI
+- [`update_taxonomy()`](https://traitecoevo.github.io/APCalign/reference/update_taxonomy.md)
+  : Update to currently accepted APC name and add APC/APNI name metadata
+- [`get_apc_genus_family_lookup()`](https://traitecoevo.github.io/APCalign/reference/get_apc_genus_family_lookup.md)
+  : Lookup Family by Genus from APC
+
+### Standardise and simplify plant taxon names
+
+- [`standardise_names()`](https://traitecoevo.github.io/APCalign/reference/standardise_names.md)
+  : Standardise taxon names
+- [`standardise_taxon_rank()`](https://traitecoevo.github.io/APCalign/reference/standardise_taxon_rank.md)
+  : Standardise taxon ranks
+- [`strip_names()`](https://traitecoevo.github.io/APCalign/reference/strip_names.md)
+  : Strip taxon names
+- [`strip_names_extra()`](https://traitecoevo.github.io/APCalign/reference/strip_names_extra.md)
+  : Strip taxon names, extra
+
+### Established status across states/territories
+
+- [`create_species_state_origin_matrix()`](https://traitecoevo.github.io/APCalign/reference/create_species_state_origin_matrix.md)
+  : State level native and introduced origin status
+- [`state_diversity_counts()`](https://traitecoevo.github.io/APCalign/reference/state_diversity_counts.md)
+  : State- and territory-level diversity
+- [`native_anywhere_in_australia()`](https://traitecoevo.github.io/APCalign/reference/native_anywhere_in_australia.md)
+  : Native anywhere in Australia
+
+### Data
+
+- [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
+  : Load taxonomic reference lists, APC & APNI
+- [`get_versions()`](https://traitecoevo.github.io/APCalign/reference/get_versions.md)
+  : Which versions of taxonomic resources are available?
+- [`default_version()`](https://traitecoevo.github.io/APCalign/reference/default_version.md)
+  : Get the default version for stable data
+- [`gbif_lite`](https://traitecoevo.github.io/APCalign/reference/gbif_lite.md)
+  : GBIF Australian Plant Data
+
+# Articles
+
+### All vignettes
+
+- [APCalign](https://traitecoevo.github.io/APCalign/articles/APCalign.md):
+- [Data
+  Providers](https://traitecoevo.github.io/APCalign/articles/data-providers.md):
+- [How to be more reproducible with
+  APCalign](https://traitecoevo.github.io/APCalign/articles/reproducibility.md):
+- [Methods for updating taxon names in
+  APCalign](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.md):
