@@ -1,27 +1,38 @@
+# Package-internal cache environment.
+# This is NOT a global variable — it lives in the package namespace only.
+# CRAN policy prohibits modifying .GlobalEnv; using a package-private
+# environment is the standard CRAN-compliant pattern for session-level caching.
+.pkg_cache <- new.env(parent = emptyenv())
+
 #' @title Load taxonomic reference lists, APC & APNI
 #' 
 #' @description
-#' This function loads two taxonomic datasets for Australia's vascular plants, 
-#' the APC and APNI, into the global environment. It creates several data frames
-#' by filtering and selecting data from the loaded lists.
+#' This function loads two taxonomic datasets for Australia's vascular plants,
+#' the APC and APNI. It creates several data frames by filtering and selecting
+#' data from the loaded lists.
 #' 
 #' @details
-#' - It accesses taxonomic data from a dataset using the provided version number 
-#' or the default version.  
+#' - It accesses taxonomic data from a dataset using the provided version number
+#' or the default version.
 #' - The output is several dataframes that include subsets of the APC/APNI based
 #' on taxon rank and taxonomic status.
+#' - Results are cached in memory for the R session so that repeated calls with
+#'   the same `version` and `stable_or_current_data` arguments return immediately
+#'   without re-downloading or re-processing the data. Use
+#'   [clear_cached_resources()] to force a reload.
+#' - `"current"` data is not cached because it may change between calls.
 #'
-#' @param stable_or_current_data Type of dataset to access. 
-#' The default is "stable", which loads the dataset from a github archived file. 
-#' If set to "current", the dataset will be loaded from a URL which is the 
+#' @param stable_or_current_data Type of dataset to access.
+#' The default is "stable", which loads the dataset from a github archived file.
+#' If set to "current", the dataset will be loaded from a URL which is the
 #' cutting edge version, but this may change at any time without notice.
-#' @param version The version number of the dataset to use. 
+#' @param version The version number of the dataset to use.
 #' Defaults to the default version.
-#' 
+#'
 #' @param quiet A logical indicating whether to print status of loading to screen.
 #'  Defaults to FALSE.
 #'
-#' @return The taxonomic resources data loaded into the global environment.
+#' @return A list of taxonomic resource data frames.
 #' @export
 #'
 #' @examples
@@ -34,7 +45,19 @@ load_taxonomic_resources <-
   function(stable_or_current_data = "stable",
            version = default_version(),
            quiet = FALSE) {
-    
+
+    # Session-level cache for stable data only.
+    # "current" data is explicitly cutting-edge and may change between calls.
+    # .pkg_cache is a package-private environment — NOT .GlobalEnv — so this
+    # is CRAN-compliant.
+    use_cache <- stable_or_current_data == "stable" && !is.null(version)
+    cache_key <- if (use_cache) paste0("stable_", version) else NULL
+
+    if (use_cache && !is.null(.pkg_cache[[cache_key]])) {
+      if (!quiet) message("Using cached taxonomic resources.")
+      return(.pkg_cache[[cache_key]])
+    }
+
     if(is.null(version)){
       message("No internet connection, please retry with stable connection or specify a local version of the data")
       return(invisible(NULL))
@@ -276,8 +299,33 @@ load_taxonomic_resources <-
     
     close(pb)
     if(!quiet) message("...done")
+
+    # Store in session cache for future calls
+    if (use_cache) {
+      .pkg_cache[[cache_key]] <- taxonomic_resources
+    }
+
     return(taxonomic_resources)
   }
+
+#' Clear cached taxonomic resources
+#'
+#' Removes any taxonomic resources that have been cached in memory during the
+#' current R session. After calling this function, the next call to
+#' [load_taxonomic_resources()] will re-download and re-process the data.
+#'
+#' This is useful if you want to force a reload of the resources, for example
+#' after updating the package or switching to a different version.
+#'
+#' @return Invisibly returns `NULL`.
+#' @export
+#'
+#' @examples
+#' clear_cached_resources()
+clear_cached_resources <- function() {
+  rm(list = ls(.pkg_cache), envir = .pkg_cache)
+  invisible(NULL)
+}
 
 ##' Access Australian Plant Census Dataset
 ##'
