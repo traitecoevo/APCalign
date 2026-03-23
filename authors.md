@@ -20,7 +20,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/traitecoevo/APCalign/blob/2026-01-14/inst/CITATION)
+[`inst/CITATION`](https://github.com/traitecoevo/APCalign/blob/master/inst/CITATION)
 
 Wenk E, Cornwell W, Fuchs A, Kar F, Monro A, Sauquet H, Stephens R,
 Falster D (2024). “APCalign: an R package workflow and app for aligning
