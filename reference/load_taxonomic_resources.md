@@ -110,8 +110,8 @@ version="2024-10-11")# }
 #> #   nomIlleg <lgl>, namePublishedIn <chr>, namePublishedInID <chr>,
 #> #   namePublishedInYear <dbl>, nameInstanceType <chr>, …
 #> 
-#> $`APC list (accepted)`
-#> # A tibble: 30,565 × 15
+#> $APC_accepted
+#> # A tibble: 30,565 × 16
 #>    canonical_name   scientific_name taxonomic_status taxon_ID scientific_name_ID
 #>    <chr>            <chr>           <chr>            <chr>    <chr>             
 #>  1 Cycas angulata   Cycas angulata… accepted         https:/… https://id.biodiv…
@@ -125,13 +125,13 @@ version="2024-10-11")# }
 #>  9 Cycas calcicola  Cycas calcicol… accepted         https:/… https://id.biodiv…
 #> 10 Cycas canalis    Cycas canalis … accepted         https:/… https://id.biodiv…
 #> # ℹ 30,555 more rows
-#> # ℹ 10 more variables: accepted_name_usage_ID <chr>, name_type <chr>,
-#> #   taxon_rank <chr>, genus <chr>, stripped_canonical <chr>,
+#> # ℹ 11 more variables: accepted_name_usage_ID <chr>, name_type <chr>,
+#> #   taxon_rank <chr>, family <chr>, genus <chr>, stripped_canonical <chr>,
 #> #   stripped_canonical2 <chr>, stripped_scientific <chr>, binomial <chr>,
 #> #   trinomial <chr>, taxonomic_dataset <chr>
 #> 
-#> $`APC list (known names)`
-#> # A tibble: 69,850 × 15
+#> $APC_synonyms
+#> # A tibble: 69,850 × 16
 #>    canonical_name   scientific_name taxonomic_status taxon_ID scientific_name_ID
 #>    <chr>            <chr>           <chr>            <chr>    <chr>             
 #>  1 Pterostylis cli… Pterostylis cl… alternative name https:/… https://id.biodiv…
@@ -145,12 +145,12 @@ version="2024-10-11")# }
 #>  9 Trachymene koch… Trachymene koc… basionym         https:/… https://id.biodiv…
 #> 10 Schefflera brac… Schefflera bra… basionym         https:/… https://id.biodiv…
 #> # ℹ 69,840 more rows
-#> # ℹ 10 more variables: accepted_name_usage_ID <chr>, name_type <chr>,
-#> #   taxon_rank <chr>, genus <chr>, stripped_canonical <chr>,
+#> # ℹ 11 more variables: accepted_name_usage_ID <chr>, name_type <chr>,
+#> #   taxon_rank <chr>, family <chr>, genus <chr>, stripped_canonical <chr>,
 #> #   stripped_canonical2 <chr>, stripped_scientific <chr>, binomial <chr>,
 #> #   trinomial <chr>, taxonomic_dataset <chr>
 #> 
-#> $`APNI names`
+#> $APNI_names
 #> # A tibble: 12,204 × 13
 #>    canonical_name        scientific_name scientific_name_ID name_type taxon_rank
 #>    <chr>                 <chr>           <chr>              <chr>     <chr>     
