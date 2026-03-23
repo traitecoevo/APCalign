@@ -482,7 +482,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
       dplyr::mutate(
         alternative_possible_names = ifelse(taxonomic_status_aligned != "accepted" & canonical_name %in% resources$APC_accepted$canonical_name, NA, alternative_possible_names),
         alternative_possible_names = stringr::str_replace_all(alternative_possible_names, "\\ \\|\\ NA", ""),    
-        suggested_collapsed_name = paste0(accepted_name_2, " [alternative possible names: ", alternative_possible_names, "]"),
+        suggested_collapsed_name = paste0(accepted_name_2, " [alternative possible names: ", alternative_possible_names, "]")
       ) %>%
       dplyr::select(-alternative_accepted_name_tmp)
   } else {
