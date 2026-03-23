@@ -330,7 +330,7 @@ align_taxa <- function(original_name,
   if (!all(taxa$tocheck$checked)) {
 
   perfect_matches <- taxa$tocheck %>%
-    dplyr::filter(original_name %in% resources$`APC list (accepted)`$canonical_name) %>%
+    dplyr::filter(original_name %in% resources$APC_accepted$canonical_name) %>%
     dplyr::distinct(original_name) %>%
     nrow()
   

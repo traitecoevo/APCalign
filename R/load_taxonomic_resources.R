@@ -138,6 +138,7 @@ load_taxonomic_resources <-
         accepted_name_usage_ID,
         name_type,
         taxon_rank,
+        family,
         genus
       ) %>%
       dplyr::mutate(
@@ -164,12 +165,12 @@ load_taxonomic_resources <-
       ) %>%
       dplyr::distinct()
     
-    taxonomic_resources[["APC list (accepted)"]] <-
+    taxonomic_resources[["APC_accepted"]] <-
       APC_tmp %>%
       dplyr::filter(taxonomic_status == "accepted") %>%
       dplyr::mutate(taxonomic_dataset = "APC")
     
-    taxonomic_resources[["APC list (known names)"]] <-
+    taxonomic_resources[["APC_synonyms"]] <-
       APC_tmp %>%
       dplyr::filter(taxonomic_status != "accepted") %>%
       dplyr::mutate(taxonomic_dataset = "APC")
@@ -177,7 +178,7 @@ load_taxonomic_resources <-
     
     if(!quiet) utils::setTxtProgressBar(pb, 2) 
     # Repeated from above - bionomial, tronomials etc
-    taxonomic_resources[["APNI names"]] <-
+    taxonomic_resources[["APNI_names"]] <-
       taxonomic_resources$APNI %>%
       dplyr::filter(name_element != "sp.") %>%
       dplyr::filter(!canonical_name %in% APC_tmp$canonical_name) %>%
