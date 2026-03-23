@@ -63,13 +63,16 @@ load_taxonomic_resources <-
       return(invisible(NULL))
     }
     
+    library(tictoc)
+    tic()
     taxonomic_resources <- dataset_access_function(
       version = version,
       path = tools::R_user_dir("APCalign"),
       type = stable_or_current_data
     )
+    toc()
     
-    
+    tic()
     total_steps <- 3  # Define how many steps you expect in the function
     pb <- utils::txtProgressBar(min = 0, max = total_steps, style = 2)
     if(!quiet){
@@ -79,7 +82,6 @@ load_taxonomic_resources <-
     if(is.null(taxonomic_resources)) {
       return(NULL)
     }
-    
     
     # Give list names
     names(taxonomic_resources) <- c("APC", "APNI")
@@ -109,21 +111,27 @@ load_taxonomic_resources <-
         dataset_name = "datasetName",
         name_element = "nameElement"
       )
+      toc()
 
+      tic()
+      cat("here")
     taxonomic_resources$APC <- taxonomic_resources$APC %>%
       dplyr::rename(dplyr::any_of(column_rename)) %>%
       dplyr::mutate(
-        genus = extract_genus(canonical_name),
+        genus = extract_genus_clean(canonical_name),
         taxon_rank = standardise_taxon_rank(taxon_rank)
       )
-    
+
     taxonomic_resources$APNI <- taxonomic_resources$APNI %>%
       dplyr::rename(dplyr::any_of(column_rename)) %>%
       dplyr::mutate(
-        genus = extract_genus(canonical_name),
+        genus = extract_genus_clean(canonical_name),
         taxon_rank = standardise_taxon_rank(taxon_rank)
       )
-    
+        toc()
+
+        tic()
+
     APC_tmp <-
       taxonomic_resources$APC %>%
       dplyr::arrange(taxonomic_status) %>%
@@ -163,7 +171,10 @@ load_taxonomic_resources <-
         trinomial = base::replace(trinomial, duplicated(trinomial), zzz),
       ) %>%
       dplyr::distinct()
-    
+        toc()
+
+        tic()
+
     taxonomic_resources[["APC list (accepted)"]] <-
       APC_tmp %>%
       dplyr::filter(taxonomic_status == "accepted") %>%
@@ -206,7 +217,10 @@ load_taxonomic_resources <-
       ) %>%
       dplyr::distinct() %>%
       dplyr::arrange(canonical_name)
-    
+        toc()
+
+        tic()
+
     taxonomic_resources[["genera_accepted"]] <-
       taxonomic_resources$APC %>%
       dplyr::select(
@@ -244,7 +258,10 @@ load_taxonomic_resources <-
       dplyr::filter(!stringr::str_detect(genus, "aceae$")) %>%
       dplyr::mutate(taxonomic_dataset = "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
-    
+        toc()
+
+        tic()
+
     if(!quiet) utils::setTxtProgressBar(pb, 3) 
     taxonomic_resources[["genera_APNI"]] <-
       taxonomic_resources$APNI %>%
@@ -296,7 +313,7 @@ load_taxonomic_resources <-
       dplyr::filter(taxon_rank %in% c("family"), taxonomic_status != "accepted") %>%
       dplyr::mutate(taxonomic_dataset = "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
-    
+    toc()
     close(pb)
     if(!quiet) message("...done")
 
