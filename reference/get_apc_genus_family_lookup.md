@@ -36,10 +36,7 @@ A data frame with two columns: "genus", indicating the genus name, and
 
 ``` r
  get_apc_genus_family_lookup(genus = c("Acacia", "Eucalyptus"))
-#> 
-#> Loading resources into memory...
-#> ================================================================================================================================================================
-#> ...done
+#> Using cached taxonomic resources.
 #> # A tibble: 2 × 2
 #>   genus      family   
 #>   <chr>      <chr>    

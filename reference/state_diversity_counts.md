@@ -45,10 +45,7 @@ Other diversity methods:
 
 ``` r
  state_diversity_counts(state = "NSW")
-#> 
-#> Loading resources into memory...
-#> ================================================================================================================================================================
-#> ...done
+#> Using cached taxonomic resources.
 #> # A tibble: 7 × 3
 #>   origin                            state num_species
 #>   <chr>                             <chr> <table[1d]>

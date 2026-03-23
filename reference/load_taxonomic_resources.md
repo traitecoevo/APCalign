@@ -1,9 +1,8 @@
 # Load taxonomic reference lists, APC & APNI
 
 This function loads two taxonomic datasets for Australia's vascular
-plants, the APC and APNI, into the global environment. It creates
-several data frames by filtering and selecting data from the loaded
-lists.
+plants, the APC and APNI. It creates several data frames by filtering
+and selecting data from the loaded lists.
 
 ## Usage
 
@@ -36,7 +35,7 @@ load_taxonomic_resources(
 
 ## Value
 
-The taxonomic resources data loaded into the global environment.
+A list of taxonomic resource data frames.
 
 ## Details
 
@@ -45,6 +44,14 @@ The taxonomic resources data loaded into the global environment.
 
 - The output is several dataframes that include subsets of the APC/APNI
   based on taxon rank and taxonomic status.
+
+- Results are cached in memory for the R session so that repeated calls
+  with the same `version` and `stable_or_current_data` arguments return
+  immediately without re-downloading or re-processing the data. Use
+  [`clear_cached_resources()`](https://traitecoevo.github.io/APCalign/reference/clear_cached_resources.md)
+  to force a reload.
+
+- `"current"` data is not cached because it may change between calls.
 
 ## Examples
 

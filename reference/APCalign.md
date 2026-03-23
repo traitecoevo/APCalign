@@ -41,8 +41,6 @@ Useful links:
 
 - <https://github.com/traitecoevo/APCalign>
 
-- <https://www.publish.csiro.au/bt/pdf/BT24014>
-
 - [doi:10.1071/BT24014](https://doi.org/10.1071/BT24014)
 
 - Report bugs at <https://github.com/traitecoevo/APCalign/issues>

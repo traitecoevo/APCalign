@@ -1,10 +1,27 @@
 # Changelog
 
-## APCalign 1.1.6
+## APCalign 1.2.0
+
+- [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
+  now caches results in memory for the duration of the R session, so
+  repeated calls with the same version return immediately without
+  re-downloading or re-processing data.
+
+- New function
+  [`clear_cached_resources()`](https://traitecoevo.github.io/APCalign/reference/clear_cached_resources.md)
+  to remove the session cache and force a reload.
+
+- [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
+  now works offline when parquet files have been previously downloaded;
+  [`default_version()`](https://traitecoevo.github.io/APCalign/reference/default_version.md)
+  falls back to the most recently cached local version when no internet
+  connection is available. \# APCalign 1.1.6
 
 - Fix issue [\#262](https://github.com/traitecoevo/APCalign/issues/262):
   filter to accepted species only in genus-family lookup
+
 - Skip problematic tests on CRAN
+
 - Update maintainer to Elizabeth Wenk, reflecting her leading role in
   writing the core of the package algorithms and maintaining it going
   forward.

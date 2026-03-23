@@ -36,6 +36,8 @@
 
 - [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
   : Load taxonomic reference lists, APC & APNI
+- [`clear_cached_resources()`](https://traitecoevo.github.io/APCalign/reference/clear_cached_resources.md)
+  : Clear cached taxonomic resources
 - [`get_versions()`](https://traitecoevo.github.io/APCalign/reference/get_versions.md)
   : Which versions of taxonomic resources are available?
 - [`default_version()`](https://traitecoevo.github.io/APCalign/reference/default_version.md)

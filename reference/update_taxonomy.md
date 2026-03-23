@@ -156,10 +156,7 @@ Other taxonomic alignment functions:
 # Update taxonomy for two plant names and print the result
 # \donttest{
 resources <- load_taxonomic_resources()
-#> 
-#> Loading resources into memory...
-#> ================================================================================================================================================================
-#> ...done
+#> Using cached taxonomic resources.
 
 update_taxonomy(
  dplyr::tibble(

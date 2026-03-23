@@ -223,10 +223,7 @@ Other taxonomic alignment functions:
 ``` r
 # \donttest{
 resources <- load_taxonomic_resources()
-#> 
-#> Loading resources into memory...
-#> ================================================================================================================================================================
-#> ...done
+#> Using cached taxonomic resources.
 
 # example 1
 create_taxonomic_update_lookup(c("Eucalyptus regnans",
