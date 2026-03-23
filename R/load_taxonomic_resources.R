@@ -62,17 +62,13 @@ load_taxonomic_resources <-
       message("No internet connection, please retry with stable connection or specify a local version of the data")
       return(invisible(NULL))
     }
-    
-    library(tictoc)
-    tic()
+  
     taxonomic_resources <- dataset_access_function(
       version = version,
       path = tools::R_user_dir("APCalign"),
       type = stable_or_current_data
     )
-    toc()
-    
-    tic()
+
     total_steps <- 3  # Define how many steps you expect in the function
     pb <- utils::txtProgressBar(min = 0, max = total_steps, style = 2)
     if(!quiet){
@@ -111,10 +107,7 @@ load_taxonomic_resources <-
         dataset_name = "datasetName",
         name_element = "nameElement"
       )
-      toc()
 
-      tic()
-      cat("here")
     taxonomic_resources$APC <- taxonomic_resources$APC %>%
       dplyr::rename(dplyr::any_of(column_rename)) %>%
       dplyr::mutate(
@@ -128,13 +121,10 @@ load_taxonomic_resources <-
         genus = extract_genus_clean(canonical_name),
         taxon_rank = standardise_taxon_rank(taxon_rank)
       )
-        toc()
 
-        tic()
 
     APC_tmp <-
       taxonomic_resources$APC %>%
-      dplyr::arrange(taxonomic_status) %>%
       dplyr::filter(taxon_rank %in% c("subspecies", "species", "form", "variety")) %>%
       dplyr::filter(!stringr::str_detect(canonical_name, "[:space:]sp\\.$")) %>%
       dplyr::select(
@@ -148,11 +138,12 @@ load_taxonomic_resources <-
         taxon_rank,
         genus
       ) %>%
+      dplyr::arrange(taxonomic_status) %>%
       dplyr::mutate(
         ## strip_names removes punctuation and filler words associated with
         ## infraspecific taxa (subsp, var, f, ser)
         stripped_canonical = strip_names(canonical_name),
-        ## strip_names_extra removes extra filler words associated with 
+        ## strip_names_extra removes extra filler words associated with
         ## species name cases (x, sp)
         ## strip_names_extra is essential for the matches involving 2 or 3 words,
         ## since you want those words to not count filler words
@@ -165,15 +156,12 @@ load_taxonomic_resources <-
         ),
         binomial = ifelse(is.na(binomial), zzz, binomial),
         binomial = base::replace(binomial, duplicated(binomial), zzz),
-        genus = extract_genus(stripped_canonical),
+        genus = extract_genus_clean(stripped_canonical),
         trinomial = word(stripped_canonical2, start = 1, end = 3),
         trinomial = ifelse(is.na(trinomial), zzz, trinomial),
         trinomial = base::replace(trinomial, duplicated(trinomial), zzz),
       ) %>%
       dplyr::distinct()
-        toc()
-
-        tic()
 
     taxonomic_resources[["APC list (accepted)"]] <-
       APC_tmp %>%
@@ -191,13 +179,13 @@ load_taxonomic_resources <-
     taxonomic_resources[["APNI names"]] <-
       taxonomic_resources$APNI %>%
       dplyr::filter(name_element != "sp.") %>%
+      dplyr::filter(taxon_rank %in% c("series", "subspecies", "species", "form", "variety")) %>%
       dplyr::filter(!canonical_name %in% APC_tmp$canonical_name) %>%
       dplyr::select(canonical_name,
                     scientific_name,
                     scientific_name_ID,
                     name_type,
                     taxon_rank) %>%
-      dplyr::filter(taxon_rank %in% c("series", "subspecies", "species", "form", "variety")) %>%
       dplyr::mutate(
         taxonomic_status = "unplaced for APC",
         stripped_canonical = strip_names(canonical_name),
@@ -212,55 +200,41 @@ load_taxonomic_resources <-
         trinomial = word(stripped_canonical2, start = 1, end = 3),
         trinomial = ifelse(is.na(trinomial), "zzzz zzzz", trinomial),
         trinomial = base::replace(trinomial, duplicated(trinomial), "zzzz zzzz"),
-        genus = extract_genus(stripped_canonical),
+        genus = extract_genus_clean(stripped_canonical),
         taxonomic_dataset = "APNI"
       ) %>%
       dplyr::distinct() %>%
       dplyr::arrange(canonical_name)
-        toc()
 
-        tic()
+
+    apc_genera <-
+      taxonomic_resources$APC %>%
+      dplyr::filter(taxon_rank == "genus") %>%
+      dplyr::filter(!stringr::str_detect(genus, "aceae$")) %>%
+      dplyr::select(
+        canonical_name,
+        accepted_name_usage,
+        accepted_name_usage_ID,
+        scientific_name,
+        taxonomic_status,
+        taxon_ID,
+        scientific_name_ID,
+        name_type,
+        taxon_rank,
+        genus
+      )
 
     taxonomic_resources[["genera_accepted"]] <-
-      taxonomic_resources$APC %>%
-      dplyr::select(
-        canonical_name,
-        accepted_name_usage,
-        accepted_name_usage_ID,
-        scientific_name,
-        taxonomic_status,
-        taxon_ID,
-        scientific_name_ID,
-        name_type,
-        taxon_rank,
-        genus
-      ) %>%
-      dplyr::filter(taxon_rank %in% c("genus"), taxonomic_status == "accepted") %>%
-      dplyr::filter(!stringr::str_detect(genus, "aceae$")) %>%
+      apc_genera %>%
+      dplyr::filter(taxonomic_status == "accepted") %>%
       dplyr::mutate(taxonomic_dataset = "APC")
-    
+
     taxonomic_resources[["genera_synonym"]] <-
-      taxonomic_resources$APC %>%
-      dplyr::select(
-        canonical_name,
-        accepted_name_usage,
-        accepted_name_usage_ID,
-        scientific_name,
-        taxonomic_status,
-        taxon_ID,
-        scientific_name_ID,
-        name_type,
-        taxon_rank,
-        genus
-      ) %>%
-      dplyr::filter(taxon_rank %in% c("genus")) %>%
+      apc_genera %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$genera_accepted$canonical_name) %>%
-      dplyr::filter(!stringr::str_detect(genus, "aceae$")) %>%
       dplyr::mutate(taxonomic_dataset = "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
-        toc()
 
-        tic()
 
     if(!quiet) utils::setTxtProgressBar(pb, 3) 
     taxonomic_resources[["genera_APNI"]] <-
@@ -313,7 +287,7 @@ load_taxonomic_resources <-
       dplyr::filter(taxon_rank %in% c("family"), taxonomic_status != "accepted") %>%
       dplyr::mutate(taxonomic_dataset = "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
-    toc()
+
     close(pb)
     if(!quiet) message("...done")
 
