@@ -45,7 +45,8 @@ create_species_state_origin_matrix <- function(resources = load_taxonomic_resour
   # merge in family name and taxon_ID for all species
   result_df <- apc_species |> dplyr::select(family, species = canonical_name, taxon_ID) |>
     dplyr::left_join(result_df_tmp, by = "species") |>
-    dplyr::arrange(family, species)
+    dplyr::arrange(family, species) |>
+    dplyr::select(family,species, taxon_ID, ACT, NSW, NT, Qld, SA, Tas, Vic, WA, LHI, NI, AR, CaI, ChI, CoI, CSI, HI, MDI, MI)
   
   return(result_df)
 }
