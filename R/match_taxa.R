@@ -134,19 +134,19 @@ match_taxa <- function(
   # Taxon names that are an accepted scientific name, with authorship.
   
   i <-
-    taxa$tocheck$original_name %in% resources$`APC list (accepted)`$scientific_name
+    taxa$tocheck$original_name %in% resources$APC_accepted$scientific_name
   
   ii <-
     match(
       taxa$tocheck[i,]$original_name,
-      resources$`APC list (accepted)`$scientific_name
+      resources$APC_accepted$scientific_name
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
+      taxon_rank = resources$APC_accepted$taxon_rank[ii],
+      aligned_name = resources$APC_accepted$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of taxon name to an APC-accepted scientific name (including authorship) (",
         Sys.Date(),
@@ -165,19 +165,19 @@ match_taxa <- function(
   # Taxon names that are an APC-known scientific name, with authorship.
   
   i <-
-    taxa$tocheck$original_name %in% resources$`APC list (known names)`$scientific_name
+    taxa$tocheck$original_name %in% resources$APC_synonyms$scientific_name
   
   ii <-
     match(
       taxa$tocheck[i,]$original_name,
-      resources$`APC list (known names)`$scientific_name
+      resources$APC_synonyms$scientific_name
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (known names)`$canonical_name[ii],
+      taxon_rank = resources$APC_synonyms$taxon_rank[ii],
+      aligned_name = resources$APC_synonyms$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of taxon name to an APC-known scientific name (including authorship) (",
         Sys.Date(),
@@ -195,19 +195,19 @@ match_taxa <- function(
   # match_01c: APC-accepted canonical name
   # Taxon names that are exact matches to APC-accepted canonical names, once filler words and punctuation are removed.
   i <-
-    taxa$tocheck$cleaned_name %in% resources$`APC list (accepted)`$canonical_name
+    taxa$tocheck$cleaned_name %in% resources$APC_accepted$canonical_name
   
   ii <-
     match(
       taxa$tocheck[i,]$cleaned_name,
-      resources$`APC list (accepted)`$canonical_name
+      resources$APC_accepted$canonical_name
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
+      taxon_rank = resources$APC_accepted$taxon_rank[ii],
+      aligned_name = resources$APC_accepted$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of taxon name to an APC-accepted canonical name once punctuation and filler words are removed (",
         Sys.Date(),
@@ -225,19 +225,19 @@ match_taxa <- function(
   # match_01d: APC-known canonical name
   # Taxon names that are exact matches to APC-known canonical names, once filler words and punctuation are removed.
   i <-
-    taxa$tocheck$cleaned_name %in% resources$`APC list (known names)`$canonical_name
+    taxa$tocheck$cleaned_name %in% resources$APC_synonyms$canonical_name
   
   ii <-
     match(
       taxa$tocheck[i,]$cleaned_name,
-      resources$`APC list (known names)`$canonical_name
+      resources$APC_synonyms$canonical_name
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (known names)`$canonical_name[ii],
+      taxon_rank = resources$APC_synonyms$taxon_rank[ii],
+      aligned_name = resources$APC_synonyms$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of taxon name to an APC-known canonical name once punctuation and filler words are removed (",
         Sys.Date(),
@@ -785,7 +785,7 @@ match_taxa <- function(
     taxa$tocheck$fuzzy_match_cleaned_APC[i] <-
       fuzzy_match(
         txt = taxa$tocheck$stripped_name[i],
-        accepted_list = resources$`APC list (accepted)`$stripped_canonical,
+        accepted_list = resources$APC_accepted$stripped_canonical,
         max_distance_abs = fuzzy_abs_dist,
         max_distance_rel = fuzzy_rel_dist,
         n_allowed = 1
@@ -793,19 +793,19 @@ match_taxa <- function(
   }
   
   i <-
-    taxa$tocheck$fuzzy_match_cleaned_APC %in% resources$`APC list (accepted)`$stripped_canonical
+    taxa$tocheck$fuzzy_match_cleaned_APC %in% resources$APC_accepted$stripped_canonical
   
   ii <-
     match(
       taxa$tocheck[i,]$fuzzy_match_cleaned_APC,
-      resources$`APC list (accepted)`$stripped_canonical
+      resources$APC_accepted$stripped_canonical
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
+      taxon_rank = resources$APC_accepted$taxon_rank[ii],
+      aligned_name = resources$APC_accepted$canonical_name[ii],
       aligned_reason = paste0(
         "Fuzzy match of taxon name to an APC-accepted canonical name once punctuation and filler words are removed (",
         Sys.Date(),
@@ -826,7 +826,7 @@ match_taxa <- function(
     taxa$tocheck$fuzzy_match_cleaned_APC_synonym[i] <-
       fuzzy_match(
         txt = taxa$tocheck$stripped_name[i],
-        accepted_list = resources$`APC list (known names)`$stripped_canonical,
+        accepted_list = resources$APC_synonyms$stripped_canonical,
         max_distance_abs = fuzzy_abs_dist,
         max_distance_rel = fuzzy_rel_dist,
         n_allowed = 1
@@ -834,19 +834,19 @@ match_taxa <- function(
   }
   
   i <-
-    taxa$tocheck$fuzzy_match_cleaned_APC_synonym %in% resources$`APC list (known names)`$stripped_canonical
+    taxa$tocheck$fuzzy_match_cleaned_APC_synonym %in% resources$APC_synonyms$stripped_canonical
   
   ii <-
     match(
       taxa$tocheck[i,]$fuzzy_match_cleaned_APC_synonym,
-      resources$`APC list (known names)`$stripped_canonical
+      resources$APC_synonyms$stripped_canonical
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (known names)`$canonical_name[ii],
+      taxon_rank = resources$APC_synonyms$taxon_rank[ii],
+      aligned_name = resources$APC_synonyms$canonical_name[ii],
       aligned_reason = paste0(
         "Fuzzy match of taxon name to an APC-known canonical name once punctuation and filler words are removed (",
         Sys.Date(),
@@ -865,19 +865,19 @@ match_taxa <- function(
   # Taxon names that are exact matches to APNI-listed canonical names, once filler words and punctuation are removed.
   if (APNI_matches == TRUE) {
     i <-
-      taxa$tocheck$cleaned_name %in% resources$`APNI names`$canonical_name
+      taxa$tocheck$cleaned_name %in% resources$APNI_names$canonical_name
     
     ii <-
       match(
         taxa$tocheck[i,]$cleaned_name,
-        resources$`APNI names`$canonical_name
+        resources$APNI_names$canonical_name
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       dplyr::mutate(
         taxonomic_dataset = "APNI",
-        taxon_rank = resources$`APNI names`$taxon_rank[ii],
-        aligned_name = resources$`APNI names`$canonical_name[ii],
+        taxon_rank = resources$APNI_names$taxon_rank[ii],
+        aligned_name = resources$APNI_names$canonical_name[ii],
         aligned_reason = paste0(
           "Exact match of taxon name to an APNI-listed canonical name once punctuation and filler words are removed (",
           Sys.Date(),
@@ -1093,7 +1093,7 @@ match_taxa <- function(
       taxa$tocheck$fuzzy_match_cleaned_APC_imprecise[i] <-
         fuzzy_match(
           txt = taxa$tocheck$stripped_name[i],
-          accepted_list = resources$`APC list (accepted)`$stripped_canonical,
+          accepted_list = resources$APC_accepted$stripped_canonical,
           max_distance_abs = imprecise_fuzzy_abs_dist,
           max_distance_rel = imprecise_fuzzy_rel_dist,
           n_allowed = 1,
@@ -1102,19 +1102,19 @@ match_taxa <- function(
     }
     
     i <-
-      taxa$tocheck$fuzzy_match_cleaned_APC_imprecise %in% resources$`APC list (accepted)`$stripped_canonical
+      taxa$tocheck$fuzzy_match_cleaned_APC_imprecise %in% resources$APC_accepted$stripped_canonical
     
     ii <-
       match(
         taxa$tocheck[i,]$fuzzy_match_cleaned_APC_imprecise,
-        resources$`APC list (accepted)`$stripped_canonical
+        resources$APC_accepted$stripped_canonical
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       dplyr::mutate(
         taxonomic_dataset = "APC",
-        taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
-        aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
+        taxon_rank = resources$APC_accepted$taxon_rank[ii],
+        aligned_name = resources$APC_accepted$canonical_name[ii],
         aligned_reason = paste0(
           "Imprecise fuzzy match of taxon name to an APC-accepted canonical name once punctuation and filler words are removed (",
           Sys.Date(),
@@ -1139,7 +1139,7 @@ match_taxa <- function(
       taxa$tocheck$fuzzy_match_cleaned_APC_synonym_imprecise[i] <-
         fuzzy_match(
           txt = taxa$tocheck$stripped_name[i],
-          accepted_list = resources$`APC list (known names)`$stripped_canonical,
+          accepted_list = resources$APC_synonyms$stripped_canonical,
           max_distance_abs = imprecise_fuzzy_abs_dist,
           max_distance_rel = imprecise_fuzzy_rel_dist,
           n_allowed = 1,
@@ -1148,19 +1148,19 @@ match_taxa <- function(
     }
     
     i <-
-      taxa$tocheck$fuzzy_match_cleaned_APC_synonym_imprecise %in% resources$`APC list (known names)`$stripped_canonical
+      taxa$tocheck$fuzzy_match_cleaned_APC_synonym_imprecise %in% resources$APC_synonyms$stripped_canonical
     
     ii <-
       match(
         taxa$tocheck[i,]$fuzzy_match_cleaned_APC_synonym_imprecise,
-        resources$`APC list (known names)`$stripped_canonical
+        resources$APC_synonyms$stripped_canonical
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       dplyr::mutate(
         taxonomic_dataset = "APC",
-        taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
-        aligned_name = resources$`APC list (known names)`$canonical_name[ii],
+        taxon_rank = resources$APC_synonyms$taxon_rank[ii],
+        aligned_name = resources$APC_synonyms$canonical_name[ii],
         aligned_reason = paste0(
           "Imprecise fuzzy match of taxon name to an APC-known canonical name once punctuation and filler words are removed (",
           Sys.Date(),
@@ -1355,19 +1355,19 @@ match_taxa <- function(
   # such names will only be aligned by matches considering only the first three words of the stripped name.
   # This match also does a good job aligning and correcting syntax of phrase names.
   i <-
-    taxa$tocheck$trinomial %in% resources$`APC list (accepted)`$trinomial
+    taxa$tocheck$trinomial %in% resources$APC_accepted$trinomial
   
   ii <-
     match(
       taxa$tocheck[i,]$trinomial,
-      resources$`APC list (accepted)`$trinomial
+      resources$APC_accepted$trinomial
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
+      taxon_rank = resources$APC_accepted$taxon_rank[ii],
+      aligned_name = resources$APC_accepted$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of the first three words of the taxon name to an APC-accepted canonical name (",
         Sys.Date(),
@@ -1389,19 +1389,19 @@ match_taxa <- function(
   # such names will only be aligned by matches considering only the first three words of the stripped name.
   # This match also does a good job aligning and correcting syntax of phrase names.
   i <-
-    taxa$tocheck$trinomial %in% resources$`APC list (known names)`$trinomial
+    taxa$tocheck$trinomial %in% resources$APC_synonyms$trinomial
   
   ii <-
     match(
       taxa$tocheck[i,]$trinomial,
-      resources$`APC list (known names)`$trinomial
+      resources$APC_synonyms$trinomial
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (known names)`$canonical_name[ii],
+      taxon_rank = resources$APC_synonyms$taxon_rank[ii],
+      aligned_name = resources$APC_synonyms$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of the first three words of the taxon name to an APC-known canonical name (",
         Sys.Date(),
@@ -1427,7 +1427,7 @@ match_taxa <- function(
       taxa$tocheck$fuzzy_match_trinomial[i] <-
         fuzzy_match(
           txt = taxa$tocheck$trinomial[i],
-          accepted_list = resources$`APC list (accepted)`$trinomial,
+          accepted_list = resources$APC_accepted$trinomial,
           max_distance_abs = fuzzy_abs_dist,
           max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1
@@ -1436,19 +1436,19 @@ match_taxa <- function(
   }
   
   i <-
-    taxa$tocheck$fuzzy_match_trinomial %in% resources$`APC list (accepted)`$trinomial
+    taxa$tocheck$fuzzy_match_trinomial %in% resources$APC_accepted$trinomial
   
   ii <-
     match(
       taxa$tocheck[i,]$fuzzy_match_trinomial,
-      resources$`APC list (accepted)`$trinomial
+      resources$APC_accepted$trinomial
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
+      taxon_rank = resources$APC_accepted$taxon_rank[ii],
+      aligned_name = resources$APC_accepted$canonical_name[ii],
       aligned_reason = paste0(
         "Fuzzy match of the first three words of the taxon name to an APC-accepted canonical name (",
         Sys.Date(),
@@ -1474,7 +1474,7 @@ match_taxa <- function(
       taxa$tocheck$fuzzy_match_trinomial_synonym[i] <-
         fuzzy_match(
           txt = taxa$tocheck$trinomial[i],
-          accepted_list = resources$`APC list (known names)`$trinomial,
+          accepted_list = resources$APC_synonyms$trinomial,
           max_distance_abs = fuzzy_abs_dist,
           max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1
@@ -1483,19 +1483,19 @@ match_taxa <- function(
   }
   
   i <-
-    taxa$tocheck$fuzzy_match_trinomial_synonym %in% resources$`APC list (known names)`$trinomial
+    taxa$tocheck$fuzzy_match_trinomial_synonym %in% resources$APC_synonyms$trinomial
   
   ii <-
     match(
       taxa$tocheck[i,]$fuzzy_match_trinomial_synonym,
-      resources$`APC list (known names)`$trinomial
+      resources$APC_synonyms$trinomial
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (known names)`$canonical_name[ii],
+      taxon_rank = resources$APC_synonyms$taxon_rank[ii],
+      aligned_name = resources$APC_synonyms$canonical_name[ii],
       aligned_reason = paste0(
         "Fuzzy match of the first three words of the taxon name to an APC-known canonical name (",
         Sys.Date(),
@@ -1519,19 +1519,19 @@ match_taxa <- function(
   # This match also does a good job aligning and correcting syntax of phrase names.
   
   i <-
-    taxa$tocheck$binomial %in% resources$`APC list (accepted)`$binomial
+    taxa$tocheck$binomial %in% resources$APC_accepted$binomial
   
   ii <-
     match(
       taxa$tocheck[i,]$binomial,
-      resources$`APC list (accepted)`$binomial
+      resources$APC_accepted$binomial
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
+      taxon_rank = resources$APC_accepted$taxon_rank[ii],
+      aligned_name = resources$APC_accepted$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of the first two words of the taxon name to an APC-accepted canonical name (",
         Sys.Date(),
@@ -1554,19 +1554,19 @@ match_taxa <- function(
   # Such names will only be aligned by matches considering only the first two words of the stripped name.
   # This match also does a good job aligning and correcting syntax of phrase names.
   i <-
-    taxa$tocheck$binomial %in% resources$`APC list (known names)`$binomial
+    taxa$tocheck$binomial %in% resources$APC_synonyms$binomial
   
   ii <-
     match(
       taxa$tocheck[i,]$binomial,
-      resources$`APC list (known names)`$binomial
+      resources$APC_synonyms$binomial
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (known names)`$canonical_name[ii],
+      taxon_rank = resources$APC_synonyms$taxon_rank[ii],
+      aligned_name = resources$APC_synonyms$canonical_name[ii],
       aligned_reason = paste0(
         "Exact match of the first two words of the taxon name to an APC-known canonical name (",
         Sys.Date(),
@@ -1594,7 +1594,7 @@ match_taxa <- function(
       taxa$tocheck$fuzzy_match_binomial[i] <-
         fuzzy_match(
           txt = taxa$tocheck$binomial[i],
-          accepted_list = resources$`APC list (accepted)`$binomial,
+          accepted_list = resources$APC_accepted$binomial,
           max_distance_abs = fuzzy_abs_dist,
           max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1,
@@ -1604,19 +1604,19 @@ match_taxa <- function(
   }
   
   i <-
-    taxa$tocheck$fuzzy_match_binomial %in% resources$`APC list (accepted)`$binomial
+    taxa$tocheck$fuzzy_match_binomial %in% resources$APC_accepted$binomial
   
   ii <-
     match(
       taxa$tocheck[i,]$fuzzy_match_binomial,
-      resources$`APC list (accepted)`$binomial
+      resources$APC_accepted$binomial
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (accepted)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (accepted)`$canonical_name[ii],
+      taxon_rank = resources$APC_accepted$taxon_rank[ii],
+      aligned_name = resources$APC_accepted$canonical_name[ii],
       aligned_reason = paste0(
         "Fuzzy match of the first two words of the taxon name to an APC-accepted canonical name (",
         Sys.Date(),
@@ -1644,7 +1644,7 @@ match_taxa <- function(
       taxa$tocheck$fuzzy_match_binomial_APC_synonym[i] <-
         fuzzy_match(
           txt = taxa$tocheck$binomial[i],
-          accepted_list = resources$`APC list (known names)`$binomial,
+          accepted_list = resources$APC_synonyms$binomial,
           max_distance_abs = fuzzy_abs_dist,
           max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1,
@@ -1654,19 +1654,19 @@ match_taxa <- function(
   }
   
   i <-
-    taxa$tocheck$fuzzy_match_binomial_APC_synonym %in% resources$`APC list (known names)`$binomial
+    taxa$tocheck$fuzzy_match_binomial_APC_synonym %in% resources$APC_synonyms$binomial
   
   ii <-
     match(
       taxa$tocheck[i,]$fuzzy_match_binomial_APC_synonym,
-      resources$`APC list (known names)`$binomial
+      resources$APC_synonyms$binomial
     )
   
   taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
     dplyr::mutate(
       taxonomic_dataset = "APC",
-      taxon_rank = resources$`APC list (known names)`$taxon_rank[ii],
-      aligned_name = resources$`APC list (known names)`$canonical_name[ii],
+      taxon_rank = resources$APC_synonyms$taxon_rank[ii],
+      aligned_name = resources$APC_synonyms$canonical_name[ii],
       aligned_reason = paste0(
         "Fuzzy match of the first two words of the taxon name to an APC-known canonical name (",
         Sys.Date(),
@@ -1693,7 +1693,7 @@ match_taxa <- function(
       taxa$tocheck$fuzzy_match_cleaned_APNI[i] <-
         fuzzy_match(
           txt = taxa$tocheck$stripped_name[i],
-          accepted_list = resources$`APNI names`$stripped_canonical,
+          accepted_list = resources$APNI_names$stripped_canonical,
           max_distance_abs = fuzzy_abs_dist,
           max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1,
@@ -1702,19 +1702,19 @@ match_taxa <- function(
     }
     
     i <-
-      taxa$tocheck$fuzzy_match_cleaned_APNI %in% resources$`APNI names`$stripped_canonical
+      taxa$tocheck$fuzzy_match_cleaned_APNI %in% resources$APNI_names$stripped_canonical
     
     ii <-
       match(
         taxa$tocheck[i,]$fuzzy_match_cleaned_APNI,
-        resources$`APNI names`$stripped_canonical
+        resources$APNI_names$stripped_canonical
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       dplyr::mutate(
         taxonomic_dataset = "APNI",
-        taxon_rank = resources$`APNI names`$taxon_rank[ii],
-        aligned_name = resources$`APNI names`$canonical_name[ii],
+        taxon_rank = resources$APNI_names$taxon_rank[ii],
+        aligned_name = resources$APNI_names$canonical_name[ii],
         aligned_reason = paste0(
           "Fuzzy match of taxon name to an APNI-listed canonical name once punctuation and filler words are removed (",
           Sys.Date(),
@@ -1740,7 +1740,7 @@ match_taxa <- function(
       taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise[i] <-
         fuzzy_match(
           txt = taxa$tocheck$cleaned_name[i],
-          accepted_list = resources$`APNI names`$canonical_name,
+          accepted_list = resources$APNI_names$canonical_name,
           max_distance_abs = imprecise_fuzzy_abs_dist,
           max_distance_rel = imprecise_fuzzy_rel_dist,
           n_allowed = 1,
@@ -1749,19 +1749,19 @@ match_taxa <- function(
     }
     
     i <-
-      taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise %in% resources$`APNI names`$canonical_name
+      taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise %in% resources$APNI_names$canonical_name
     
     ii <-
       match(
         taxa$tocheck[i,]$fuzzy_match_cleaned_APNI_imprecise,
-        resources$`APNI names`$canonical_name
+        resources$APNI_names$canonical_name
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       dplyr::mutate(
         taxonomic_dataset = "APNI",
-        taxon_rank = resources$`APNI names`$taxon_rank[ii],
-        aligned_name = resources$`APNI names`$canonical_name[ii],
+        taxon_rank = resources$APNI_names$taxon_rank[ii],
+        aligned_name = resources$APNI_names$canonical_name[ii],
         aligned_reason = paste0(
           "Imprecise fuzzy match of taxon name to an APNI-listed canonical name once punctuation and filler words are removed (",
           Sys.Date(),
@@ -1785,19 +1785,19 @@ match_taxa <- function(
   # This match also does a good job aligning and correcting syntax of phrase names.
   if (APNI_matches == TRUE) {
     i <-
-      taxa$tocheck$trinomial %in% resources$`APNI names`$trinomial
+      taxa$tocheck$trinomial %in% resources$APNI_names$trinomial
     
     ii <-
       match(
         taxa$tocheck[i,]$trinomial,
-        resources$`APNI names`$trinomial
+        resources$APNI_names$trinomial
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       dplyr::mutate(
         taxonomic_dataset = "APNI",
-        taxon_rank = resources$`APNI names`$taxon_rank[ii],
-        aligned_name = resources$`APNI names`$canonical_name[ii],
+        taxon_rank = resources$APNI_names$taxon_rank[ii],
+        aligned_name = resources$APNI_names$canonical_name[ii],
         aligned_reason = paste0(
           "Exact match of the first three words of the taxon name to an APNI-listed canonical name (",
           Sys.Date(),
@@ -1822,19 +1822,19 @@ match_taxa <- function(
   # This match also does a good job aligning and correcting syntax of phrase names.
   if (APNI_matches == TRUE) {
     i <-
-      taxa$tocheck$binomial %in% resources$`APNI names`$binomial
+      taxa$tocheck$binomial %in% resources$APNI_names$binomial
     
     ii <-
       match(
         taxa$tocheck[i,]$binomial,
-        resources$`APNI names`$binomial
+        resources$APNI_names$binomial
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       dplyr::mutate(
         taxonomic_dataset = "APNI",
-        taxon_rank = resources$`APNI names`$taxon_rank[ii],
-        aligned_name = resources$`APNI names`$canonical_name[ii],
+        taxon_rank = resources$APNI_names$taxon_rank[ii],
+        aligned_name = resources$APNI_names$canonical_name[ii],
         aligned_reason = paste0(
           "Exact match of the first two words of the taxon name to an APNI-listed canonical name (",
           Sys.Date(),
