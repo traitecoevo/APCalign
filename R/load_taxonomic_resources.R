@@ -178,7 +178,7 @@ load_taxonomic_resources <-
     
     if(!quiet) utils::setTxtProgressBar(pb, 2) 
     # Repeated from above - bionomial, tronomials etc
-    taxonomic_resources[["APNI names"]] <-
+    taxonomic_resources[["APNI_names"]] <-
       taxonomic_resources$APNI %>%
       dplyr::filter(name_element != "sp.") %>%
       dplyr::filter(!canonical_name %in% APC_tmp$canonical_name) %>%

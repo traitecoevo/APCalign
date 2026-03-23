@@ -865,19 +865,19 @@ match_taxa <- function(
   # Taxon names that are exact matches to APNI-listed canonical names, once filler words and punctuation are removed.
   if (APNI_matches == TRUE) {
     i <-
-      taxa$tocheck$cleaned_name %in% resources$`APNI names`$canonical_name
+      taxa$tocheck$cleaned_name %in% resources$APNI_names$canonical_name
     
     ii <-
       match(
         taxa$tocheck[i,]$cleaned_name,
-        resources$`APNI names`$canonical_name
+        resources$APNI_names$canonical_name
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       dplyr::mutate(
         taxonomic_dataset = "APNI",
-        taxon_rank = resources$`APNI names`$taxon_rank[ii],
-        aligned_name = resources$`APNI names`$canonical_name[ii],
+        taxon_rank = resources$APNI_names$taxon_rank[ii],
+        aligned_name = resources$APNI_names$canonical_name[ii],
         aligned_reason = paste0(
           "Exact match of taxon name to an APNI-listed canonical name once punctuation and filler words are removed (",
           Sys.Date(),
@@ -1693,7 +1693,7 @@ match_taxa <- function(
       taxa$tocheck$fuzzy_match_cleaned_APNI[i] <-
         fuzzy_match(
           txt = taxa$tocheck$stripped_name[i],
-          accepted_list = resources$`APNI names`$stripped_canonical,
+          accepted_list = resources$APNI_names$stripped_canonical,
           max_distance_abs = fuzzy_abs_dist,
           max_distance_rel = fuzzy_rel_dist,
           n_allowed = 1,
@@ -1702,19 +1702,19 @@ match_taxa <- function(
     }
     
     i <-
-      taxa$tocheck$fuzzy_match_cleaned_APNI %in% resources$`APNI names`$stripped_canonical
+      taxa$tocheck$fuzzy_match_cleaned_APNI %in% resources$APNI_names$stripped_canonical
     
     ii <-
       match(
         taxa$tocheck[i,]$fuzzy_match_cleaned_APNI,
-        resources$`APNI names`$stripped_canonical
+        resources$APNI_names$stripped_canonical
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       dplyr::mutate(
         taxonomic_dataset = "APNI",
-        taxon_rank = resources$`APNI names`$taxon_rank[ii],
-        aligned_name = resources$`APNI names`$canonical_name[ii],
+        taxon_rank = resources$APNI_names$taxon_rank[ii],
+        aligned_name = resources$APNI_names$canonical_name[ii],
         aligned_reason = paste0(
           "Fuzzy match of taxon name to an APNI-listed canonical name once punctuation and filler words are removed (",
           Sys.Date(),
@@ -1740,7 +1740,7 @@ match_taxa <- function(
       taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise[i] <-
         fuzzy_match(
           txt = taxa$tocheck$cleaned_name[i],
-          accepted_list = resources$`APNI names`$canonical_name,
+          accepted_list = resources$APNI_names$canonical_name,
           max_distance_abs = imprecise_fuzzy_abs_dist,
           max_distance_rel = imprecise_fuzzy_rel_dist,
           n_allowed = 1,
@@ -1749,19 +1749,19 @@ match_taxa <- function(
     }
     
     i <-
-      taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise %in% resources$`APNI names`$canonical_name
+      taxa$tocheck$fuzzy_match_cleaned_APNI_imprecise %in% resources$APNI_names$canonical_name
     
     ii <-
       match(
         taxa$tocheck[i,]$fuzzy_match_cleaned_APNI_imprecise,
-        resources$`APNI names`$canonical_name
+        resources$APNI_names$canonical_name
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       dplyr::mutate(
         taxonomic_dataset = "APNI",
-        taxon_rank = resources$`APNI names`$taxon_rank[ii],
-        aligned_name = resources$`APNI names`$canonical_name[ii],
+        taxon_rank = resources$APNI_names$taxon_rank[ii],
+        aligned_name = resources$APNI_names$canonical_name[ii],
         aligned_reason = paste0(
           "Imprecise fuzzy match of taxon name to an APNI-listed canonical name once punctuation and filler words are removed (",
           Sys.Date(),
@@ -1785,19 +1785,19 @@ match_taxa <- function(
   # This match also does a good job aligning and correcting syntax of phrase names.
   if (APNI_matches == TRUE) {
     i <-
-      taxa$tocheck$trinomial %in% resources$`APNI names`$trinomial
+      taxa$tocheck$trinomial %in% resources$APNI_names$trinomial
     
     ii <-
       match(
         taxa$tocheck[i,]$trinomial,
-        resources$`APNI names`$trinomial
+        resources$APNI_names$trinomial
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       dplyr::mutate(
         taxonomic_dataset = "APNI",
-        taxon_rank = resources$`APNI names`$taxon_rank[ii],
-        aligned_name = resources$`APNI names`$canonical_name[ii],
+        taxon_rank = resources$APNI_names$taxon_rank[ii],
+        aligned_name = resources$APNI_names$canonical_name[ii],
         aligned_reason = paste0(
           "Exact match of the first three words of the taxon name to an APNI-listed canonical name (",
           Sys.Date(),
@@ -1822,19 +1822,19 @@ match_taxa <- function(
   # This match also does a good job aligning and correcting syntax of phrase names.
   if (APNI_matches == TRUE) {
     i <-
-      taxa$tocheck$binomial %in% resources$`APNI names`$binomial
+      taxa$tocheck$binomial %in% resources$APNI_names$binomial
     
     ii <-
       match(
         taxa$tocheck[i,]$binomial,
-        resources$`APNI names`$binomial
+        resources$APNI_names$binomial
       )
     
     taxa$tocheck[i,] <- taxa$tocheck[i,] %>%
       dplyr::mutate(
         taxonomic_dataset = "APNI",
-        taxon_rank = resources$`APNI names`$taxon_rank[ii],
-        aligned_name = resources$`APNI names`$canonical_name[ii],
+        taxon_rank = resources$APNI_names$taxon_rank[ii],
+        aligned_name = resources$APNI_names$canonical_name[ii],
         aligned_reason = paste0(
           "Exact match of the first two words of the taxon name to an APNI-listed canonical name (",
           Sys.Date(),

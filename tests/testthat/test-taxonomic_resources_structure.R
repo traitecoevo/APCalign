@@ -5,7 +5,7 @@ test_that("taxonomic resources contains expected tables", {
 
   expect_setequal(
     names(resources),
-    c("APC", "APNI", "APC_accepted", "APC_synonyms", "APNI names",
+    c("APC", "APNI", "APC_accepted", "APC_synonyms", "APNI_names",
       "genera_accepted", "genera_synonym", "genera_APNI", "genera_all",
       "family_accepted", "family_synonym")
   )
@@ -32,11 +32,11 @@ test_that("APC_synonyms has expected columns", {
   )
 })
 
-test_that("APNI names has expected columns", {
+test_that("APNI_names has expected columns", {
   skip_on_cran()
 
   expect_setequal(
-    names(resources[["APNI names"]]),
+    names(resources[["APNI_names"]]),
     c("canonical_name", "scientific_name", "scientific_name_ID", "name_type",
       "taxon_rank", "taxonomic_status", "stripped_canonical", "stripped_canonical2",
       "stripped_scientific", "binomial", "trinomial", "genus", "taxonomic_dataset")
