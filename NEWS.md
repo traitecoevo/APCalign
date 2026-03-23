@@ -1,3 +1,9 @@
+# APCalign 1.1.6
+
+- Fix issue #262: filter to accepted species only in genus-family lookup
+- Skip problematic tests on CRAN
+- Update maintainer to Elizabeth Wenk, reflecting her leading role in writing the core of the package algorithms and maintaining it going forward.
+
 # APCalign 1.1.3
 
 - Failing gracefully for the edge case when the internet is up generally but github is down for a few seconds
@@ -10,7 +16,7 @@
 
 # APCalign 1.0.2
 
-Minor update to fix 
+Minor update to fix issues
 
 - Deal with the vignette issues that emerged on CRAN 
 - Improve "graceful failing", based on issues that have come up on github CI
