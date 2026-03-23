@@ -445,7 +445,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
     #dplyr::filter(taxonomic_status != "misapplied" & taxonomic_status != "excluded") %>%
     #dplyr::filter(pro_parte == TRUE | taxonomic_status == "accepted") %>% # this is the filter that needs to be applied for what names gets joined in if "return_all" is true
     dplyr::mutate(
-      alternative_accepted_name = resources$'APC list (accepted)'$canonical_name[match(accepted_name_usage_ID, resources$'APC list (accepted)'$accepted_name_usage_ID)],
+      alternative_accepted_name = resources$APC_accepted$canonical_name[match(accepted_name_usage_ID, resources$APC_accepted$accepted_name_usage_ID)],
       alternative_accepted_name = ifelse(is.na(alternative_accepted_name), resources$APC$canonical_name[match(accepted_name_usage_ID, resources$APC$accepted_name_usage_ID)], alternative_accepted_name),
       accepted_name_2 = alternative_accepted_name
     ) %>%
@@ -480,7 +480,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
       dplyr::slice(1) %>%
       dplyr::ungroup() %>%
       dplyr::mutate(
-        alternative_possible_names = ifelse(taxonomic_status_aligned != "accepted" & canonical_name %in% resources$'APC list (accepted)'$canonical_name, NA, alternative_possible_names),
+        alternative_possible_names = ifelse(taxonomic_status_aligned != "accepted" & canonical_name %in% resources$APC_accepted$canonical_name, NA, alternative_possible_names),
         alternative_possible_names = stringr::str_replace_all(alternative_possible_names, "\\ \\|\\ NA", ""),    
         suggested_collapsed_name = paste0(accepted_name_2, " [alternative possible names: ", alternative_possible_names, "]"),
       ) %>%
@@ -518,7 +518,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
     dplyr::slice(1) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
-      alternative_possible_names = ifelse(taxonomic_status_aligned != "accepted" & canonical_name %in% resources$'APC list (accepted)'$canonical_name, NA, alternative_possible_names),
+      alternative_possible_names = ifelse(taxonomic_status_aligned != "accepted" & canonical_name %in% resources$APC_accepted$canonical_name, NA, alternative_possible_names),
       alternative_possible_names = stringr::str_replace_all(alternative_possible_names, "\\ \\|\\ NA", ""),
       suggested_collapsed_name = paste(word(accepted_name_2, 1), "sp. [collapsed names:", alternative_possible_names, "]"),
       taxon_rank = ifelse(number_of_collapsed_taxa > 1 & species_and_infraspecific(taxon_rank), "genus", taxon_rank)
@@ -600,7 +600,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
       suggested_name = ifelse(!is.na(suggested_collapsed_name), suggested_collapsed_name, suggested_name),
       ## these are occasionally taxa where the `accepted_name_usage_ID` links to a taxon that is "known" by APC, but doesn't have taxonomic_status = "accepted"
       ## for these taxa, the suggested name is the `canonical_name` associated with the particular `accepted_name_usage_ID`
-      suggested_name = ifelse(is.na(suggested_name) & !is.na(taxon_ID), resources$`APC list (known names)`$canonical_name[match(taxon_ID,resources$`APC list (known names)`$accepted_name_usage_ID)], suggested_name),
+      suggested_name = ifelse(is.na(suggested_name) & !is.na(taxon_ID), resources$APC_synonyms$canonical_name[match(taxon_ID,resources$APC_synonyms$accepted_name_usage_ID)], suggested_name),
       ## if there are no "accepted names" (or similar), the aligned name becomes the suggested name
       suggested_name = ifelse(is.na(suggested_name), aligned_name, suggested_name),
       taxonomic_status = ifelse(is.na(accepted_name),  taxonomic_status_aligned, "accepted"),

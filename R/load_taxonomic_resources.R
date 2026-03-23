@@ -138,6 +138,7 @@ load_taxonomic_resources <-
         accepted_name_usage_ID,
         name_type,
         taxon_rank,
+        family,
         genus
       ) %>%
       dplyr::mutate(
@@ -164,12 +165,12 @@ load_taxonomic_resources <-
       ) %>%
       dplyr::distinct()
     
-    taxonomic_resources[["APC list (accepted)"]] <-
+    taxonomic_resources[["APC_accepted"]] <-
       APC_tmp %>%
       dplyr::filter(taxonomic_status == "accepted") %>%
       dplyr::mutate(taxonomic_dataset = "APC")
     
-    taxonomic_resources[["APC list (known names)"]] <-
+    taxonomic_resources[["APC_synonyms"]] <-
       APC_tmp %>%
       dplyr::filter(taxonomic_status != "accepted") %>%
       dplyr::mutate(taxonomic_dataset = "APC")
