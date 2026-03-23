@@ -20,7 +20,7 @@
 #'        If not provided, the function will load default taxonomic resources using the
 #'        `load_taxonomic_resources()` function. 
 #' @param include_infrataxa option to include subspecies, varieties and forms in the output. 
-#'   Set to false as the default, outing results just for species-rank taxa.
+#'   Set to false as the default, outputting results just for species-rank taxa.
 #'   
 #' @return A tibble with two columns: `species`, which is the same as the unique values of
 #'  the input `species`, and `native_anywhere_in_aus`, a vector indicating whether each
@@ -41,7 +41,7 @@ native_anywhere_in_australia <- function(species, resources = load_taxonomic_res
   }
   
   if (any(!species %in% full_lookup$species)) {
-    warning("At least one input not found in APC; make sure inputs are at the species level and consider using `create_taxonomic_update_lookup` first.")
+    warning("At least one input not found in APC; consider using `create_taxonomic_update_lookup` first and ensure you've correctly specified the `include_infrataxa` parameter.")
   }
   
   # Filter for native species

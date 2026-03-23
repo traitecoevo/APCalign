@@ -13,7 +13,7 @@
 #'   Loading this can be slow, so call load_taxonomic_resources separately to greatly
 #'   speed this function up and pass the resources in.
 #' @param include_infrataxa option to include subspecies, varieties and forms in the output. 
-#'   Set to false as the default, outing results just for species-rank taxa.
+#'   Set to false as the default, outputting results just for species-rank taxa.
 #'
 #' @return A tibble with columns representing each state and rows representing each
 #'   species. The values in each cell represent the origin of the species in that state.
@@ -40,7 +40,13 @@ create_species_state_origin_matrix <- function(resources = load_taxonomic_resour
   sep_state_data <- separate_states(apc_species)
   apc_places <- identify_places(sep_state_data)
   species_df <- create_species_df(apc_places, apc_species)
-  result_df <- parse_states(species_df, apc_places, apc_species)
+  result_df_tmp <- parse_states(species_df, apc_places, apc_species)
+  
+  # merge in family name and taxon_ID for all species
+  result_df <- apc_species |> dplyr::select(family, species = canonical_name, taxon_ID) |>
+    dplyr::left_join(result_df_tmp, by = "species") |>
+    dplyr::arrange(family, species)
+  
   return(result_df)
 }
 

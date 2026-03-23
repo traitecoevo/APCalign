@@ -38,7 +38,7 @@ Suggests:
     here,
     testthat (>= 3.0.0)
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://traitecoevo.github.io/APCalign/, https://github.com/traitecoevo/APCalign, https://www.publish.csiro.au/bt/pdf/BT24014, https://doi.org/10.1071/BT24014
