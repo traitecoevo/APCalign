@@ -4,18 +4,18 @@
 #' This function generates lists a string of synonyms for currently accepted names to facilitate working out past names of a taxon
 #' when the current name is known
 #' 
-#' @param resources 
-#' @param collapse Offering the option to return a long data table with each synonym in its own row, 
+#' @param accepted_names A character vector of currently accepted taxon names to look up synonyms for.
+#' @param collapse Offering the option to return a long data table with each synonym in its own row,
 #' versus collapsed into a vector for each accepted name
+#' @param resources Taxonomic resources loaded via [load_taxonomic_resources()].
 #'
 #' @returns A table with the currently accepted name and columns documenting all synonyms and all synonyms with taxonomic status.
 #' @export
 #'
 #' @examples
-#' synonyms_for_accepted_names(resources = resources, accepted_names = c("Justicia tenella", "Acacia aneura"), collapse = TRUE)
-#' synonyms_for_accepted_names()
+#' synonyms_for_accepted_names(accepted_names = c("Justicia tenella", "Acacia aneura"), collapse = TRUE)
 #' 
-synonyms_for_accepted_names <- function(resources = load_taxonomic_resources(), accepted_names, collapse = TRUE) {
+synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resources = load_taxonomic_resources()) {
 
   if(is.null(resources)){
     message("Not finding taxonomic resources; check internet connection?")

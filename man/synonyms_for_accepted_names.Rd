@@ -5,16 +5,18 @@
 \title{Synonyms for Currently Accepted Names}
 \usage{
 synonyms_for_accepted_names(
-  resources = load_taxonomic_resources(),
   accepted_names,
-  collapse = TRUE
+  collapse = TRUE,
+  resources = load_taxonomic_resources()
 )
 }
 \arguments{
-\item{resources}{}
+\item{accepted_names}{A character vector of currently accepted taxon names to look up synonyms for.}
 
 \item{collapse}{Offering the option to return a long data table with each synonym in its own row,
 versus collapsed into a vector for each accepted name}
+
+\item{resources}{Taxonomic resources loaded via \code{\link[=load_taxonomic_resources]{load_taxonomic_resources()}}.}
 }
 \value{
 A table with the currently accepted name and columns documenting all synonyms and all synonyms with taxonomic status.
@@ -24,7 +26,6 @@ This function generates lists a string of synonyms for currently accepted names 
 when the current name is known
 }
 \examples{
-synonyms_for_accepted_names(resources = resources, accepted_names = c("Justicia tenella", "Acacia aneura"), collapse = TRUE)
-synonyms_for_accepted_names()
+synonyms_for_accepted_names(accepted_names = c("Justicia tenella", "Acacia aneura"), collapse = TRUE)
 
 }
