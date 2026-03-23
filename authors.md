@@ -2,11 +2,11 @@
 
 ## Authors
 
-- **Daniel Falster**. Author, maintainer, copyright holder.
-  [](https://orcid.org/0000-0002-9814-092X)
-
-- **Elizabeth Wenk**. Author, contributor.
+- **Elizabeth Wenk**. Author, maintainer, copyright holder.
   [](https://orcid.org/0000-0001-5640-5910)
+
+- **Daniel Falster**. Author, contributor.
+  [](https://orcid.org/0000-0002-9814-092X)
 
 - **Will Cornwell**. Author, contributor.
   [](https://orcid.org/0000-0003-4080-4073)

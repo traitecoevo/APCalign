@@ -1,5 +1,14 @@
 # Changelog
 
+## APCalign 1.1.6
+
+- Fix issue [\#262](https://github.com/traitecoevo/APCalign/issues/262):
+  filter to accepted species only in genus-family lookup
+- Skip problematic tests on CRAN
+- Update maintainer to Elizabeth Wenk, reflecting her leading role in
+  writing the core of the package algorithms and maintaining it going
+  forward.
+
 ## APCalign 1.1.3
 
 CRAN release: 2025-02-11
@@ -20,7 +29,7 @@ CRAN release: 2025-01-28
 
 CRAN release: 2024-08-17
 
-Minor update to fix
+Minor update to fix issues
 
 - Deal with the vignette issues that emerged on CRAN
 - Improve “graceful failing”, based on issues that have come up on
