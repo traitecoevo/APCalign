@@ -23,12 +23,12 @@ Defaults to the default version.}
 Defaults to FALSE.}
 }
 \value{
-The taxonomic resources data loaded into the global environment.
+A list of taxonomic resource data frames.
 }
 \description{
 This function loads two taxonomic datasets for Australia's vascular plants,
-the APC and APNI, into the global environment. It creates several data frames
-by filtering and selecting data from the loaded lists.
+the APC and APNI. It creates several data frames by filtering and selecting
+data from the loaded lists.
 }
 \details{
 \itemize{
@@ -36,6 +36,11 @@ by filtering and selecting data from the loaded lists.
 or the default version.
 \item The output is several dataframes that include subsets of the APC/APNI based
 on taxon rank and taxonomic status.
+\item Results are cached in memory for the R session so that repeated calls with
+the same \code{version} and \code{stable_or_current_data} arguments return immediately
+without re-downloading or re-processing the data. Use
+\code{\link[=clear_cached_resources]{clear_cached_resources()}} to force a reload.
+\item \code{"current"} data is not cached because it may change between calls.
 }
 }
 \examples{
