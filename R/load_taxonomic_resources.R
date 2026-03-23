@@ -360,15 +360,21 @@ dataset_access_function <-
     
     # Check if there is internet connection
     ## Dummy variable to allow testing of network
-    network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE)) 
-    
-    
-    if (!curl::has_internet() | !network| is.null(version)) { # Simulate if network is down
+    network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE))
+    offline <- !curl::has_internet() | !network
+
+    # "current" always requires a live internet connection
+    if (offline && type == "current") {
       message("No internet connection, please retry with stable connection (dataset_access_function)")
       return(invisible(NULL))
-    } 
-    
-    # Download from Github Release
+    }
+
+    if (is.null(version)) {
+      message("No internet connection, please retry with stable connection (dataset_access_function)")
+      return(invisible(NULL))
+    }
+
+    # Download from Github Release (dataset_get handles offline fallback)
     if (type == "stable") {
       return(dataset_get(version, path))
     }
@@ -431,9 +437,16 @@ dataset_access_function <-
 default_version <- function() {
   # Check if there is internet connection
   ## Dummy variable to allow testing of network
-  network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE)) 
-  
+  network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE))
+
   if (!curl::has_internet() | !network) { # Simulate if network is down
+    # Fall back to the most recently downloaded local version, if any
+    local_versions <- local_cached_versions()
+    if (length(local_versions) > 0) {
+      version <- sort(local_versions, decreasing = TRUE)[1]
+      message("No internet connection; using most recent locally cached version: ", version)
+      return(version)
+    }
     message("No internet connection, please retry with stable connection (default_version)")
     return(invisible(NULL))
   } else {
@@ -472,19 +485,62 @@ default_version <- function() {
   }
 }
 
+# Returns a character vector of version strings (e.g. "2024-10-11") for which
+# both APC and APNI parquet files exist in the local cache directory.
+#' @noRd
+local_cached_versions <- function(path = tools::R_user_dir("APCalign")) {
+  if (!dir.exists(path)) return(character(0))
+  apc_files <- list.files(path, pattern = "^apc\\d{4}-\\d{2}-\\d{2}\\.parquet$")
+  versions <- gsub("^apc|\\.parquet$", "", apc_files)
+  # Only return versions where the matching APNI file also exists
+  has_apni <- file.exists(file.path(path, paste0("apni", versions, ".parquet")))
+  versions[has_apni]
+}
+
 #' @noRd
 dataset_get <- function(version = default_version(),
                         path = tools::R_user_dir("APCalign")) {
-  
+
   # Check if there is internet connection
   ## Dummy variable to allow testing of network
-  network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE)) 
-  
-  if (!curl::has_internet() | !network | is.null(version)) { # Simulate if network is down
-    message("No internet connection, please retry with stable connection (dataset_get)")
+  network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE))
+  offline <- !curl::has_internet() | !network
+
+  if (is.null(version)) {
+    message(
+      "No internet connection and no locally cached version found (dataset_get)"
+    )
     return(invisible(NULL))
-  } else{
-  
+  }
+
+  if (!dir.exists(path)) {
+    dir.create(path, recursive = TRUE)
+  }
+
+  path_to_apc  <- file.path(path, paste0("apc",  version, ".parquet"))
+  path_to_apni <- file.path(path, paste0("apni", version, ".parquet"))
+
+  # If offline but both files are cached locally, read and return them
+  if (offline) {
+    if (file.exists(path_to_apc) && file.exists(path_to_apni)) {
+      message(
+        "No internet connection; loading locally cached version: ", version
+      )
+      APC  <- arrow::read_parquet(path_to_apc)
+      APNI <- arrow::read_parquet(path_to_apni)
+      current_list <- list(APC, APNI)
+      names(current_list) <- c("APC", "APNI")
+      return(current_list)
+    } else {
+      message(
+        "No internet connection and no local data for version ", version,
+        "; please connect and retry (dataset_get)"
+      )
+      return(invisible(NULL))
+    }
+  }
+
+  # Online path — download if not already cached
   #APC
   apc.url <-
     paste0(
@@ -515,33 +571,23 @@ dataset_get <- function(version = default_version(),
       return(NULL)
     })
   }
-  
-  if (!dir.exists(path)) {
-    dir.create(path, recursive = TRUE)
-  }
-  
-  path_to_apc <- file.path(path, paste0("apc", version, ".parquet"))
-  path_to_apni <- file.path(path, paste0("apni", version, ".parquet"))
-  
+
   APC <- if (!file.exists(path_to_apc)) {
     message("Downloading...")
     download_and_read_parquet(apc.url, path_to_apc)
   } else {
     arrow::read_parquet(path_to_apc)
   }
-  
+
   APNI <- if (!file.exists(path_to_apni)) {
     download_and_read_parquet(apni.url, path_to_apni)
   } else {
     arrow::read_parquet(path_to_apni)
   }
 
-  #combine
   current_list <- list(APC, APNI)
   names(current_list) <- c("APC", "APNI")
   return(current_list)
-  
-  }
 }
 
 

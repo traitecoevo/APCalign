@@ -47,6 +47,63 @@ test_that("after clearing, resources are reloaded without cache message", {
   )
 })
 
+test_that("local_cached_versions() finds previously downloaded versions", {
+  skip_on_cran()
+
+  versions <- local_cached_versions()
+  expect_type(versions, "character")
+  # At least one version should be present (downloaded by helper.R)
+  expect_gt(length(versions), 0)
+  # All returned values should look like dates
+  expect_true(all(grepl("^\\d{4}-\\d{2}-\\d{2}$", versions)))
+})
+
+test_that("local_cached_versions() returns empty vector for empty directory", {
+  tmp <- tempfile()
+  dir.create(tmp)
+  on.exit(unlink(tmp, recursive = TRUE))
+
+  expect_equal(local_cached_versions(path = tmp), character(0))
+})
+
+test_that("local_cached_versions() ignores versions missing the APNI file", {
+  tmp <- tempfile()
+  dir.create(tmp)
+  on.exit(unlink(tmp, recursive = TRUE))
+
+  # Create only the APC file, not the APNI
+  file.create(file.path(tmp, "apc2024-01-01.parquet"))
+  expect_equal(local_cached_versions(path = tmp), character(0))
+})
+
+test_that("default_version() falls back to local cache when offline", {
+  skip_on_cran()
+
+  Sys.setenv("NETWORK_UP" = FALSE)
+  on.exit(Sys.setenv("NETWORK_UP" = TRUE))
+
+  version <- suppressMessages(default_version())
+  # Should return a date-string from the local cache, not NULL
+  expect_type(version, "character")
+  expect_true(grepl("^\\d{4}-\\d{2}-\\d{2}$", version))
+})
+
+test_that("load_taxonomic_resources() works offline when files are cached locally", {
+  skip_on_cran()
+
+  clear_cached_resources()
+  on.exit(Sys.setenv("NETWORK_UP" = TRUE))
+
+  Sys.setenv("NETWORK_UP" = FALSE)
+  result <- suppressMessages(
+    load_taxonomic_resources(quiet = TRUE)
+  )
+
+  expect_type(result, "list")
+  expect_true("APC" %in% names(result))
+  expect_true("APNI" %in% names(result))
+})
+
 test_that("'current' type data is not cached", {
   skip_on_cran()
   skip_on_ci()  # avoid hitting live URL in CI
