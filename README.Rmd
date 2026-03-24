@@ -26,16 +26,26 @@ library(APCalign)
 
 # APCalign <img src="man/figures/APCalign_hex_2.svg" align="right" width="120"/>
 
-`APCalign` uses the [Australian Plant Census (APC)](https://biodiversity.org.au/nsl/services/search/taxonomy) and [Australian Plant Name Index](https://biodiversity.org.au/nsl/services/search/names) to align and update Australian plant taxon names. 'APCalign' also supplies information about the established status (i.e., native/introduced) of plant taxa within different states/territories as compiled by the APC. It's useful for updating species list and intersecting them with the APC consensus for both taxonomy and establishment status.
+When working with biodiversity data, it is important to verify taxonomic names with an authoritative list and correct any out-of-date names or names with typos.
 
-DOI: https://doi.org/10.1071/BT24014 
+The 'APCalign' package simplifies this process by:
+
+-   Accessing up-to-date taxonomic information from the [Australian Plant Census](https://biodiversity.org.au/nsl/services/search/taxonomy) and the [Australia Plant Name Index](https://biodiversity.org.au/nsl/services/search/names).
+-   Aligning authoritative names to your taxonomic names using our [fuzzy matching algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
+-   Updating your taxonomic names in a transparent, reproducible manner
+-   Because APCalign was developed explicitly for the Austraian flora it handles phrase names and aligns disparate phrase name syntax
+-   Indicating when a split leads to uncertainty in a name alignment
+
+'APCalign' also supplies information about the established status (i.e., native/introduced) of plant taxa within different states/territories as compiled by the APC. It's useful for updating species list and intersecting them with the APC consensus for both taxonomy and establishment status.
+
+Read the [APCalign paper](https://doi.org/10.1071/BT24014) to learn more about the motivations for this project and our fuzzy matching and aligning algorithms. 
 
 ## Installation 🛠️
 
 From CRAN:
 
 ```{r install, eval= FALSE}
- install.packages("APCalign")
+install.packages("APCalign")
 
 library(APCalign)
 ```
@@ -46,6 +56,8 @@ OR for the GitHub version:
 install.packages("remotes")
 remotes::install_github("traitecoevo/APCalign")
 ```
+
+Or for the ShinyApp head to [unsw.shinyapps.io/APCalign-app](https://unsw.shinyapps.io/APCalign-app/)
 
 ## A quick demo
 
@@ -69,8 +81,20 @@ tax_resources <- load_taxonomic_resources()
 create_taxonomic_update_lookup( 
   taxa = c(
     "Banksia integrifolia",
+    "Banksya integrifolla",
+    "Banksya integriifolla",
+    "Banksyya integriifolla",
+    "Banksia red flowers",
+    "Banksia sp.",
+    "Banksia catoglypta",
+    "Dryandra catoglypta",
+    "Dryandra cataglypta",
+    "Dryandra australis",
     "Acacia longifolia",
     "Commersonia rosea",
+    "Panicum sp. Hairy glumes (C.R.Michell 4192)",
+    "Panicum sp. Hairy glumes (Michell)",
+    "Panicum sp. Hairy glumes",
     "not a species"
     ),
   resources = tax_resources
@@ -81,8 +105,15 @@ Checking for a list of species to see if they are classified as Australian nativ
 
 ```{r, message=FALSE}
 native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources = tax_resources)
-
 ```
+
+Determining the number of species present in NSW and their establishment means:
+```{r, message=FALSE}
+state_diversity_counts("NSW", resources = tax_resources)
+```
+
+The related function `create_species_state_origin_matrix()` generates a table for all taxa in Australia, indicating their distribution and establishment means, by state.
+
 
 Getting a family lookup table for genera from the specified taxonomy:
 
@@ -95,6 +126,14 @@ get_apc_genus_family_lookup(c("Eucalyptus",
                               "Triodia"), 
                             resources = tax_resources)
 ```
+
+Compiling a list of outdated synonyms for currently accepted names:
+
+```{r, message=FALSE}
+names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
+synonyms_for_accepted_names(resources = tax_resources, accepted_names = names_to_check, collapse = T)
+```
+
 
 ## Cheatsheet
 
