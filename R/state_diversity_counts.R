@@ -13,6 +13,8 @@
 #' @param resources the taxonomic resources required to make the summary
 #'  statistics.  loading this can be slow, so call load_taxonomic_resources
 #'  separately to greatly speed this function up and pass the resources in.
+#' @param include_infrataxa option to include subspecies, varieties and forms in the output. 
+#'   Set to false as the default, outputting results just for species-rank taxa.
 #'
 #' @return A tibble of diversity counts for the specified state or territory,
 #'  including native, introduced, and more complicated species origins.
@@ -28,7 +30,8 @@
 #'  \donttest{state_diversity_counts(state = "NSW")}
 
 state_diversity_counts <- function(state,
-                                   resources = load_taxonomic_resources()) {
+                                   resources = load_taxonomic_resources(),
+                                   include_infrataxa = FALSE) {
   
   if(is.null(resources)){
     message("Not finding taxonomic resources; check internet connection?")
@@ -36,18 +39,17 @@ state_diversity_counts <- function(state,
   }
   
   valid_inputs <- c(
+    "ACT",
     "NSW",
     "NT",
     "Qld",
-    "WA",
-    "ChI",
-    "NSW",
     "SA",
-    "Vic",
     "Tas",
-    "ACT",
+    "Vic",
+    "WA",
     "NI",
     "LHI",
+    "ChI",
     "MI",
     "HI",
     "MDI",
@@ -65,7 +67,7 @@ state_diversity_counts <- function(state,
     ))
   }
   test <-
-    create_species_state_origin_matrix(resources = resources)
+    create_species_state_origin_matrix(resources = resources, include_infrataxa = include_infrataxa)
   test2 <- test[test[[state]] != "not present", ]
   state_table <- table(test2[[state]])
   return(dplyr::tibble(

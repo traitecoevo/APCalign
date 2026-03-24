@@ -4,7 +4,11 @@
 \alias{state_diversity_counts}
 \title{State- and territory-level diversity}
 \usage{
-state_diversity_counts(state, resources = load_taxonomic_resources())
+state_diversity_counts(
+  state,
+  resources = load_taxonomic_resources(),
+  include_infrataxa = FALSE
+)
 }
 \arguments{
 \item{state}{A character string indicating the Australian state or
@@ -15,6 +19,9 @@ territory to calculate the diversity for. Possible values are "NSW", "NT",
 \item{resources}{the taxonomic resources required to make the summary
 statistics.  loading this can be slow, so call load_taxonomic_resources
 separately to greatly speed this function up and pass the resources in.}
+
+\item{include_infrataxa}{option to include subspecies, varieties and forms in the output.
+Set to false as the default, outputting results just for species-rank taxa.}
 }
 \value{
 A tibble of diversity counts for the specified state or territory,

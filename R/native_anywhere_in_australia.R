@@ -18,7 +18,10 @@
 #' @param species A character string typically representing the binomial for the species.  
 #' @param resources An optional list of taxonomic resources to use for the lookup.
 #'        If not provided, the function will load default taxonomic resources using the
-#'        `load_taxonomic_resources()` function.
+#'        `load_taxonomic_resources()` function. 
+#' @param include_infrataxa option to include subspecies, varieties and forms in the output. 
+#'   Set to false as the default, outputting results just for species-rank taxa.
+#'   
 #' @return A tibble with two columns: `species`, which is the same as the unique values of
 #'  the input `species`, and `native_anywhere_in_aus`, a vector indicating whether each
 #'  species is native anywhere in Australia, introduced by humans from elsewhere, or
@@ -27,10 +30,10 @@
 #' @examples
 #' \donttest{native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata","Banksis notaspecies"))}
 
-native_anywhere_in_australia <- function(species, resources = load_taxonomic_resources()) {
+native_anywhere_in_australia <- function(species, resources = load_taxonomic_resources(), include_infrataxa = FALSE) {
   
   # Create lookup tables  
-  full_lookup <- create_species_state_origin_matrix(resources = resources)
+  full_lookup <- create_species_state_origin_matrix(resources = resources, include_infrataxa = include_infrataxa)
   
   if(is.null(resources)){
     message("Not finding taxonomic resources; check internet connection?")
@@ -38,14 +41,14 @@ native_anywhere_in_australia <- function(species, resources = load_taxonomic_res
   }
   
   if (any(!species %in% full_lookup$species)) {
-    warning("At least one input not found in APC; make sure inputs are at the species level and consider using `create_taxonomic_update_lookup` first.")
+    warning("At least one input not found in APC; consider using `create_taxonomic_update_lookup` first and ensure you've correctly specified the `include_infrataxa` parameter.")
   }
   
   # Filter for native species
   full_lookup$native_anywhere <-
     apply(full_lookup, 1, function(x)
       any(grepl("native", x)))
-  native_only<-dplyr::filter(full_lookup,native_anywhere)
+  native_only<-dplyr::filter(full_lookup, native_anywhere)
   
   # Check membership
   natives <- species %in% native_only$species

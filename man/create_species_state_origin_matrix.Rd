@@ -4,12 +4,18 @@
 \alias{create_species_state_origin_matrix}
 \title{State level native and introduced origin status}
 \usage{
-create_species_state_origin_matrix(resources = load_taxonomic_resources())
+create_species_state_origin_matrix(
+  resources = load_taxonomic_resources(),
+  include_infrataxa = FALSE
+)
 }
 \arguments{
 \item{resources}{the taxonomic resources required to make the summary statistics.
 Loading this can be slow, so call load_taxonomic_resources separately to greatly
 speed this function up and pass the resources in.}
+
+\item{include_infrataxa}{option to include subspecies, varieties and forms in the output.
+Set to false as the default, outputting results just for species-rank taxa.}
 }
 \value{
 A tibble with columns representing each state and rows representing each
@@ -23,7 +29,8 @@ This function processes the geographic data available in the APC and
 returns state level native, introduced and more complicated origins status for all taxa.
 }
 \examples{
-\donttest{create_species_state_origin_matrix()}
+\donttest{create_species_state_origin_matrix()}#' 
+\donttest{create_species_state_origin_matrix(include_infrataxa = TRUE)}
 
 
 
