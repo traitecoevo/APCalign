@@ -52,7 +52,11 @@ and more complicated species origins</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">state_diversity_counts</span><span class="op">(</span><span class="va">state</span>, resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">state_diversity_counts</span><span class="op">(</span></span>
+<span>  <span class="va">state</span>,</span>
+<span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  include_infrataxa <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -70,6 +74,11 @@ territory to calculate the diversity for. Possible values are "NSW", "NT",
 <dd><p>the taxonomic resources required to make the summary
 statistics.  loading this can be slow, so call load_taxonomic_resources
 separately to greatly speed this function up and pass the resources in.</p></dd>
+
+
+<dt id="arg-include-infrataxa">include_infrataxa<a class="anchor" aria-label="anchor" href="#arg-include-infrataxa"></a></dt>
+<dd><p>option to include subspecies, varieties and forms in the output.
+Set to false as the default, outputting results just for species-rank taxa.</p></dd>
 
 </dl></div>
     <div class="section level2">

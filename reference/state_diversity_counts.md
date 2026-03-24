@@ -7,7 +7,11 @@ and more complicated species origins
 ## Usage
 
 ``` r
-state_diversity_counts(state, resources = load_taxonomic_resources())
+state_diversity_counts(
+  state,
+  resources = load_taxonomic_resources(),
+  include_infrataxa = FALSE
+)
 ```
 
 ## Arguments
@@ -24,6 +28,12 @@ state_diversity_counts(state, resources = load_taxonomic_resources())
   the taxonomic resources required to make the summary statistics.
   loading this can be slow, so call load_taxonomic_resources separately
   to greatly speed this function up and pass the resources in.
+
+- include_infrataxa:
+
+  option to include subspecies, varieties and forms in the output. Set
+  to false as the default, outputting results just for species-rank
+  taxa.
 
 ## Value
 

@@ -6,7 +6,11 @@ anywhere in Australia according to the APC.
 ## Usage
 
 ``` r
-native_anywhere_in_australia(species, resources = load_taxonomic_resources())
+native_anywhere_in_australia(
+  species,
+  resources = load_taxonomic_resources(),
+  include_infrataxa = FALSE
+)
 ```
 
 ## Arguments
@@ -22,6 +26,12 @@ native_anywhere_in_australia(species, resources = load_taxonomic_resources())
   provided, the function will load default taxonomic resources using the
   [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
   function.
+
+- include_infrataxa:
+
+  option to include subspecies, varieties and forms in the output. Set
+  to false as the default, outputting results just for species-rank
+  taxa.
 
 ## Value
 
@@ -58,7 +68,7 @@ Other diversity methods:
 ``` r
 native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata","Banksis notaspecies"))
 #> Using cached taxonomic resources.
-#> Warning: At least one input not found in APC; make sure inputs are at the species level and consider using `create_taxonomic_update_lookup` first.
+#> Warning: At least one input not found in APC; consider using `create_taxonomic_update_lookup` first and ensure you've correctly specified the `include_infrataxa` parameter.
 #> # A tibble: 3 × 2
 #>   species             native_anywhere_in_aus
 #>   <chr>               <chr>                 
