@@ -26,6 +26,9 @@ This function generates lists a string of synonyms for currently accepted names 
 when the current name is known
 }
 \examples{
-synonyms_for_accepted_names(accepted_names = c("Justicia tenella", "Acacia aneura"), collapse = TRUE)
+synonyms_for_accepted_names(
+  accepted_names = c("Justicia tenella", "Acacia aneura"),
+  collapse = TRUE
+)
 
 }

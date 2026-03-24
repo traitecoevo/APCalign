@@ -13,7 +13,10 @@
 #' @export
 #'
 #' @examples
-#' synonyms_for_accepted_names(accepted_names = c("Justicia tenella", "Acacia aneura"), collapse = TRUE)
+#' synonyms_for_accepted_names(
+#'   accepted_names = c("Justicia tenella", "Acacia aneura"),
+#'   collapse = TRUE
+#' )
 #' 
 synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resources = load_taxonomic_resources()) {
 
