@@ -296,3 +296,35 @@ test_that("No warnings if trying to match input name to empty accepted name set.
     ), NA)
 }
 )
+
+test_that("synonyms_for_accepted_names outputs expected number of rows", {
+  
+  expect_silent(
+    x <- synonyms_for_accepted_names(
+      accepted_names = c("Justicia tenella", "Acacia aneura"), 
+      collapse = TRUE, resources = resources
+    )
+  )
+
+  expect_equal(
+    nrow(x),
+    2
+  )
+  
+  expect_silent(
+    x <- synonyms_for_accepted_names(
+      accepted_names = c("Justicia tenella", "Acacia aneura"), 
+      collapse = FALSE, resources = resources
+    )
+  )
+  
+  # currently there are 9 rows, but this can increase with additional synonyms being added
+  expect_gte(
+    nrow(x),
+    8
+  )
+  
+  expect_contains(x$canonical_name, "Racosperma aneurum")
+
+}
+)
