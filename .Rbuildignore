@@ -19,4 +19,4 @@
 ^revdep
 ^.DS_Store
 ^help
-
+^.claude$

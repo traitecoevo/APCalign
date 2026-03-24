@@ -37,6 +37,9 @@ reference:
   - standardise_taxon_rank
   - strip_names
   - strip_names_extra
+- subtitle: Synonyms for accepted names
+- contents:
+  - synonyms_for_accepted_names
 - subtitle: Established status across states/territories
 - contents:
   - create_species_state_origin_matrix
@@ -45,6 +48,7 @@ reference:
 - subtitle: Data
 - contents:
   - load_taxonomic_resources
+  - clear_cached_resources
   - get_versions
   - default_version
   - gbif_lite

@@ -143,21 +143,24 @@ standardise_names <- function(taxon_names) {
 #' @keywords internal
 #' @noRd
 extract_genus <- function(taxon_name) {
-  
-  taxon_name <- standardise_names(taxon_name)
 
-  genus <- 
-    stringr::str_split_i(taxon_name, " |\\/", 1) |>
-      stringr::str_to_sentence() |> 
-      stringr::str_replace("^\\(", "")
-  
-  # Deal with names that being with x, 
+  taxon_name <- standardise_names(taxon_name)
+  extract_genus_clean(taxon_name)
+}
+
+# Fast genus extraction for already-clean canonical names (e.g. from APC/APNI).
+# Skips standardise_names() since the input is known to be clean.
+#' @noRd
+extract_genus_clean <- function(taxon_name) {
+  genus <- stringr::str_split_i(taxon_name, " |\\/", 1) %>% stringr::str_to_sentence()
+
+  # Deal with names that begin with x,
   # e.g."x Taurodium x toveyanum" or "x Glossadenia tutelata"
-  i <- !is.na(genus) & genus =="X"
-  
-  genus[i] <- 
-    stringr::str_split_i(taxon_name[i], " |\\/", 2) %>% stringr::str_to_sentence() %>%  paste("x", .)
-  
+  i <- !is.na(genus) & genus == "X"
+
+  genus[i] <-
+    stringr::str_split_i(taxon_name[i], " |\\/", 2) %>% stringr::str_to_sentence() %>% paste("x", .)
+
   genus
 }
 

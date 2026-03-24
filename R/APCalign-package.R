@@ -100,7 +100,10 @@ utils::globalVariables(
     "alternative_accepted_name_tmp",
     "pro_parte",
     "suggested_collapsed_name",
-    "versions"
+    "versions",
+    "name_with_status",
+    "synonyms",
+    "taxon_name"
   )
 )
 

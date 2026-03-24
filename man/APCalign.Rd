@@ -40,18 +40,17 @@ Useful links:
 \itemize{
   \item \url{https://traitecoevo.github.io/APCalign/}
   \item \url{https://github.com/traitecoevo/APCalign}
-  \item \url{https://www.publish.csiro.au/bt/pdf/BT24014}
   \item \doi{10.1071/BT24014}
   \item Report bugs at \url{https://github.com/traitecoevo/APCalign/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Daniel Falster \email{daniel.falster@unsw.edu.au} (\href{https://orcid.org/0000-0002-9814-092X}{ORCID}) [copyright holder]
+\strong{Maintainer}: Elizabeth Wenk \email{e.wenk@unsw.edu.au} (\href{https://orcid.org/0000-0001-5640-5910}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{
-  \item Elizabeth Wenk \email{e.wenk@unsw.edu.au} (\href{https://orcid.org/0000-0001-5640-5910}{ORCID}) [contributor]
+  \item Daniel Falster \email{daniel.falster@unsw.edu.au} (\href{https://orcid.org/0000-0002-9814-092X}{ORCID}) [contributor]
   \item Will Cornwell \email{w.cornwell@unsw.edu.au} (\href{https://orcid.org/0000-0003-4080-4073}{ORCID}) [contributor]
   \item Fonti Kar \email{f.kar@unsw.edu.au} (\href{https://orcid.org/0000-0002-2760-3974}{ORCID}) [contributor]
 }
