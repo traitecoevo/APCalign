@@ -30,7 +30,7 @@ returns state level native, introduced and more complicated origins status for a
 }
 \examples{
 \donttest{create_species_state_origin_matrix()}#' 
-\donttest{create_species_state_origin_matrix(resources = resources, include_infrataxa = TRUE)}
+\donttest{create_species_state_origin_matrix(include_infrataxa = TRUE)}
 
 
 
