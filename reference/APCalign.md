@@ -47,13 +47,13 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Daniel Falster <daniel.falster@unsw.edu.au>
-([ORCID](https://orcid.org/0000-0002-9814-092X)) \[copyright holder\]
+**Maintainer**: Elizabeth Wenk <e.wenk@unsw.edu.au>
+([ORCID](https://orcid.org/0000-0001-5640-5910)) \[copyright holder\]
 
 Authors:
 
-- Elizabeth Wenk <e.wenk@unsw.edu.au>
-  ([ORCID](https://orcid.org/0000-0001-5640-5910)) \[contributor\]
+- Daniel Falster <daniel.falster@unsw.edu.au>
+  ([ORCID](https://orcid.org/0000-0002-9814-092X)) \[contributor\]
 
 - Will Cornwell <w.cornwell@unsw.edu.au>
   ([ORCID](https://orcid.org/0000-0003-4080-4073)) \[contributor\]

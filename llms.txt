@@ -196,6 +196,11 @@ can take it from there!
 - [`strip_names_extra()`](https://traitecoevo.github.io/APCalign/reference/strip_names_extra.md)
   : Strip taxon names, extra
 
+### Synonyms for accepted names
+
+- [`synonyms_for_accepted_names()`](https://traitecoevo.github.io/APCalign/reference/synonyms_for_accepted_names.md)
+  : Synonyms for Currently Accepted Names
+
 ### Established status across states/territories
 
 - [`create_species_state_origin_matrix()`](https://traitecoevo.github.io/APCalign/reference/create_species_state_origin_matrix.md)
