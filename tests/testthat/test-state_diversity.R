@@ -28,7 +28,8 @@ test_that("state_diversity() works", {
                         show_col_types = FALSE)
   ss_subset <- dplyr::filter(ss, ss$species %in% sd$species)
   
-  expect_equal(ss_subset[1:200,], sd[1:200,])
+  #readr::write_csv(ss,"tests/testthat/benchmarks/state_diversity.csv")
+  expect_equal(ss_subset, sd)
 })
 
 test_that("state_diversity() works with `include_infrataxa = T`", {
