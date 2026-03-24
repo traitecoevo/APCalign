@@ -23,7 +23,7 @@ synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resourc
   }
   
   # generate list of accepted_name_usage_ID's for accepted species
-  accepted_names_with_usageID <- resources$`APC list (accepted` |>
+  accepted_names_with_usageID <- resources$APC_accepted |>
     dplyr::select(accepted_name_usage_ID, accepted_name = canonical_name) |>
     dplyr::filter(accepted_name %in% accepted_names)
   
