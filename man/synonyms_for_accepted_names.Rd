@@ -22,8 +22,8 @@ versus collapsed into a vector for each accepted name}
 A table with the currently accepted name and columns documenting all synonyms and all synonyms with taxonomic status.
 }
 \description{
-This function generates lists a string of synonyms for currently accepted names to facilitate working out past names of a taxon
-when the current name is known
+This function generates lists a string of synonyms for currently accepted species and infra-species to facilitate working out past names of a taxon
+when the current name is known.
 }
 \examples{
 synonyms_for_accepted_names(
