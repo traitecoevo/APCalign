@@ -52,7 +52,7 @@ create_species_state_origin_matrix()#'
 #> Loading resources into memory...
 #> ================================================================================================================================================================
 #> ...done
-#> # A tibble: 26,606 × 21
+#> # A tibble: 26,620 × 21
 #>    family species taxon_ID ACT   NSW   NT    Qld   SA    Tas   Vic   WA    LHI  
 #>    <chr>  <chr>   <chr>    <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr>
 #>  1 Acant… Acanth… https:/… not … not … nati… nati… not … not … not … nati… not …
@@ -65,12 +65,12 @@ create_species_state_origin_matrix()#'
 #>  8 Acant… Asysta… https:/… not … not … not … not … not … not … not … not … not …
 #>  9 Acant… Asysta… https:/… not … not … not … nati… not … not … not … not … not …
 #> 10 Acant… Asysta… https:/… not … not … not … not … not … not … not … not … not …
-#> # ℹ 26,596 more rows
+#> # ℹ 26,610 more rows
 #> # ℹ 9 more variables: NI <chr>, AR <chr>, CaI <chr>, ChI <chr>, CoI <chr>,
 #> #   CSI <chr>, HI <chr>, MDI <chr>, MI <chr>
 create_species_state_origin_matrix(include_infrataxa = TRUE)
 #> Using cached taxonomic resources.
-#> # A tibble: 30,921 × 21
+#> # A tibble: 30,935 × 21
 #>    family species taxon_ID ACT   NSW   NT    Qld   SA    Tas   Vic   WA    LHI  
 #>    <chr>  <chr>   <chr>    <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr>
 #>  1 Acant… Acanth… https:/… not … not … nati… nati… not … not … not … nati… not …
@@ -83,7 +83,7 @@ create_species_state_origin_matrix(include_infrataxa = TRUE)
 #>  8 Acant… Asysta… https:/… not … natu… natu… natu… not … not … not … natu… not …
 #>  9 Acant… Asysta… https:/… not … not … natu… natu… not … not … not … natu… not …
 #> 10 Acant… Asysta… https:/… not … not … not … natu… not … not … not … not … not …
-#> # ℹ 30,911 more rows
+#> # ℹ 30,925 more rows
 #> # ℹ 9 more variables: NI <chr>, AR <chr>, CaI <chr>, ChI <chr>, CoI <chr>,
 #> #   CSI <chr>, HI <chr>, MDI <chr>, MI <chr>
 

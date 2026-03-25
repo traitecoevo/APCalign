@@ -61,7 +61,7 @@ Other diversity methods:
 #>   <chr>                             <chr> <table[1d]>
 #> 1 doubtfully naturalised            NSW     94       
 #> 2 formerly naturalised              NSW      8       
-#> 3 native                            NSW   5975       
+#> 3 native                            NSW   5980       
 #> 4 native and doubtfully naturalised NSW      2       
 #> 5 native and naturalised            NSW     34       
 #> 6 naturalised                       NSW   1584       
