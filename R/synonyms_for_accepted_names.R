@@ -1,8 +1,8 @@
 #' @title Synonyms for Currently Accepted Names
 #'
 #' @description
-#' This function generates lists a string of synonyms for currently accepted names to facilitate working out past names of a taxon
-#' when the current name is known
+#' This function generates lists a string of synonyms for currently accepted species and infra-species to facilitate working out past names of a taxon
+#' when the current name is known.
 #' 
 #' @param accepted_names A character vector of currently accepted taxon names to look up synonyms for.
 #' @param collapse Offering the option to return a long data table with each synonym in its own row,
@@ -29,6 +29,11 @@ synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resourc
   accepted_names_with_usageID <- resources$APC_accepted |>
     dplyr::select(accepted_name_usage_ID, accepted_name = canonical_name) |>
     dplyr::filter(accepted_name %in% accepted_names)
+  
+  if(nrow(accepted_names_with_usageID) == 0){
+    message("None of the taxon names you submitted are accepted by the APC. Look within `resources$APC_accepted` to ensure you have a properly formatted name.")
+    return(NULL)
+  }
   
   # preferred order of taxonomic updates (function from `update_taxonomy.R`)
   relevel_taxonomic_status_preferred_order <- function(taxonomic_status) {

@@ -19,8 +19,6 @@
 #' @param resources An optional list of taxonomic resources to use for the lookup.
 #'        If not provided, the function will load default taxonomic resources using the
 #'        `load_taxonomic_resources()` function. 
-#' @param include_infrataxa option to include subspecies, varieties and forms in the output. 
-#'   Set to false as the default, outputting results just for species-rank taxa.
 #'   
 #' @return A tibble with two columns: `species`, which is the same as the unique values of
 #'  the input `species`, and `native_anywhere_in_aus`, a vector indicating whether each
@@ -30,10 +28,10 @@
 #' @examples
 #' \donttest{native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata","Banksis notaspecies"))}
 
-native_anywhere_in_australia <- function(species, resources = load_taxonomic_resources(), include_infrataxa = FALSE) {
+native_anywhere_in_australia <- function(species, resources = load_taxonomic_resources()) {
   
   # Create lookup tables  
-  full_lookup <- create_species_state_origin_matrix(resources = resources, include_infrataxa = include_infrataxa)
+  full_lookup <- create_species_state_origin_matrix(resources = resources, include_infrataxa = TRUE)
   
   if(is.null(resources)){
     message("Not finding taxonomic resources; check internet connection?")

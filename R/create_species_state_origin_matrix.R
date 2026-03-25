@@ -24,7 +24,7 @@
 #' @seealso \code{\link{load_taxonomic_resources}}
 #'
 #' @examples
-#' \donttest{create_species_state_origin_matrix()}#' 
+#' \donttest{create_species_state_origin_matrix()} 
 #' \donttest{create_species_state_origin_matrix(include_infrataxa = TRUE)}
 #'
 #'
