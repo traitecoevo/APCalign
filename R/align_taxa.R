@@ -333,12 +333,20 @@ align_taxa <- function(original_name,
     dplyr::filter(original_name %in% resources$APC_accepted$canonical_name) %>%
     dplyr::distinct(original_name) %>%
     nrow()
-  
+
+  synonym_matches <- taxa$tocheck %>%
+    dplyr::filter(original_name %in% resources$APC_synonyms$canonical_name) %>%
+    dplyr::filter(!original_name %in% resources$APC_accepted$canonical_name) %>%
+    dplyr::distinct(original_name) %>%
+    nrow()
+
   if(!quiet)
     message(
       "  -> of these ",
       crayon::blue(perfect_matches),
-      " names have a perfect match to a scientific name in the APC. 
+      " names have a perfect match to an accepted scientific name in the APC, and ",
+      crayon::blue(synonym_matches),
+      " names have a perfect match to a synonym in the APC.
       Alignments being sought for remaining names."
     )
   }
