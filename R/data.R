@@ -14,5 +14,6 @@
 #'   \item{scientificname}{Scientific Name}
 #'   \item{verbatimscientificname}{Scientific name as it appeared in original record}
 #' }
-#' @source <https://www.gbif.org/>
+#' @source Global Biodiversity Information Facility (GBIF),
+#'   \url{https://www.gbif.org/}
 "gbif_lite"

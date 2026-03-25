@@ -103,7 +103,8 @@ utils::globalVariables(
     "versions",
     "name_with_status",
     "synonyms",
-    "taxon_name"
+    "taxon_name",
+    "species"
   )
 )
 

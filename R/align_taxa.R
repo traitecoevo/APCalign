@@ -313,11 +313,11 @@ align_taxa <- function(original_name,
     # check unknown taxa
     message(
     "  -> ",
-    crayon::blue(sum(!is.na(taxa$checked$accepted_name), na.rm = T)),
+    crayon::blue(sum(!is.na(taxa$checked$accepted_name), na.rm = TRUE)),
     " names already matched; ",
     crayon::blue(sum(
       is.na(taxa$checked$accepted_name),
-      na.rm = T
+      na.rm = TRUE
     )),
     " names checked but without a species-level match; ",
     crayon::blue(sum(!is.na(taxa$tocheck$original_name))),
