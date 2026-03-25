@@ -1,6 +1,6 @@
 # Changelog
 
-## APCalign 1.2.0
+## APCalign 2.0.0
 
 - New function
   [`synonyms_for_accepted_names()`](https://traitecoevo.github.io/APCalign/reference/synonyms_for_accepted_names.md)

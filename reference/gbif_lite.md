@@ -43,4 +43,4 @@ gbif_lite
 
 ## Source
 
-<https://www.gbif.org/>
+Global Biodiversity Information Facility (GBIF), <https://www.gbif.org/>
