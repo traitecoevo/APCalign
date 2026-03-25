@@ -74,7 +74,7 @@ synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resourc
     dplyr::filter(taxon_rank %in% c("species", "variety", "form", "subspecies")) |>
     # merge currently accepted names for each taxon onto all the synonyms
     dplyr::right_join(accepted_names_with_usageID, by = "accepted_name_usage_ID") |>
-    dplyr::select(canonical_name, taxonomic_status, accepted_name, accepted_name_usage_ID) |>
+    dplyr::select(canonical_name, taxonomic_status, accepted_name, accepted_name_usage_ID, taxon_ID) |>
     # remove the accepted names themselves
     dplyr::filter(taxonomic_status != "accepted") |>
     dplyr::mutate(
@@ -96,23 +96,23 @@ synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resourc
       dplyr::distinct(accepted_name_usage_ID, synonyms)
 
     accepted_names_with_synonyms <- resources$APC |> 
-      dplyr::select(canonical_name, taxon_rank, name_type, genus, family, scientific_name, accepted_name_usage_ID) |>
+      dplyr::select(canonical_name, family, scientific_name, accepted_name_usage_ID) |>
       dplyr::filter(canonical_name %in% accepted_names_with_usageID$accepted_name & accepted_name_usage_ID %in% accepted_names_with_usageID$accepted_name_usage_ID) |>
       dplyr::distinct(canonical_name, .keep_all = T) |>
       dplyr::left_join(APC_synonyms, by = "accepted_name_usage_ID") |>
-      dplyr::select(family, accepted_name = canonical_name, synonyms, taxon_rank, name_type, scientific_name, accepted_name_usage_ID, genus) |>
+      dplyr::select(family, accepted_name = canonical_name, synonyms, scientific_name, accepted_name_usage_ID) |>
       dplyr::arrange(family, accepted_name)
   
   } else {
     
     # Create a long list if collapse = F, with one row per synonym
     accepted_names_with_synonyms <- resources$APC |> 
-      dplyr::select(canonical_name, taxon_rank, name_type, genus, family, scientific_name, accepted_name_usage_ID) |>
+      dplyr::select(canonical_name, family, scientific_name, accepted_name_usage_ID) |>
       dplyr::filter(canonical_name %in% accepted_names_with_usageID$accepted_name & accepted_name_usage_ID %in% accepted_names_with_usageID$accepted_name_usage_ID) |>
       dplyr::distinct(canonical_name, .keep_all = T) |>
       dplyr::select(-canonical_name) |>
       dplyr::left_join(APC_synonyms_tmp, by = "accepted_name_usage_ID") |>
-      dplyr::select(family, accepted_name, synonym = canonical_name, taxonomic_status, taxon_rank, name_type, scientific_name, accepted_name_usage_ID, genus) |>
+      dplyr::select(family, accepted_name, synonym = canonical_name, taxonomic_status, scientific_name, accepted_name_usage_ID, taxon_ID) |>
       dplyr::arrange(family, accepted_name)
   }
   
