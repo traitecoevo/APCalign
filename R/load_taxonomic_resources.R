@@ -139,7 +139,7 @@ load_taxonomic_resources <-
         family,
         genus
       ) %>%
-      dplyr::arrange(taxonomic_status) %>%
+      dplyr::arrange(relevel_taxonomic_status_preferred_order(taxonomic_status)) %>%
       dplyr::mutate(
         ## strip_names removes punctuation and filler words associated with
         ## infraspecific taxa (subsp, var, f, ser)
@@ -233,6 +233,7 @@ load_taxonomic_resources <-
     taxonomic_resources[["genera_synonym"]] <-
       apc_genera %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$genera_accepted$canonical_name) %>%
+      dplyr::arrange(relevel_taxonomic_status_preferred_order(taxonomic_status)) %>%
       dplyr::mutate(taxonomic_dataset = "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
 
