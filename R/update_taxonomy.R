@@ -600,7 +600,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
       suggested_name = ifelse(!is.na(suggested_collapsed_name), suggested_collapsed_name, suggested_name),
       ## these are occasionally taxa where the `accepted_name_usage_ID` links to a taxon that is "known" by APC, but doesn't have taxonomic_status = "accepted"
       ## for these taxa, the suggested name is the `canonical_name` associated with the particular `accepted_name_usage_ID`
-      suggested_name = ifelse(is.na(suggested_name) & !is.na(taxon_ID), resources$APC_synonyms$canonical_name[match(taxon_ID,resources$APC_synonyms$accepted_name_usage_ID)], suggested_name),
+      suggested_name = ifelse(is.na(suggested_name) & !is.na(taxon_ID), resources$APC$canonical_name[match(taxon_ID, resources$APC$taxon_ID)], suggested_name),
       ## if there are no "accepted names" (or similar), the aligned name becomes the suggested name
       suggested_name = ifelse(is.na(suggested_name), aligned_name, suggested_name),
       taxonomic_status = ifelse(is.na(accepted_name),  taxonomic_status_aligned, "accepted"),
