@@ -1,4 +1,4 @@
-# APCalign 1.2.0
+# APCalign 2.0.0
 
 - New function `synonyms_for_accepted_names()` to list synonyms for currently accepted taxon names.
 - `load_taxonomic_resources()` now caches results in memory for the duration of the R session, so repeated calls with the same version return immediately without re-downloading or re-processing data.

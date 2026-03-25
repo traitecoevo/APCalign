@@ -13,11 +13,13 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' synonyms_for_accepted_names(
 #'   accepted_names = c("Justicia tenella", "Acacia aneura"),
 #'   collapse = TRUE
 #' )
-#' 
+#' }
+#'
 synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resources = load_taxonomic_resources()) {
 
   if(is.null(resources)){
@@ -98,7 +100,7 @@ synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resourc
     accepted_names_with_synonyms <- resources$APC |> 
       dplyr::select(canonical_name, family, scientific_name, accepted_name_usage_ID) |>
       dplyr::filter(canonical_name %in% accepted_names_with_usageID$accepted_name & accepted_name_usage_ID %in% accepted_names_with_usageID$accepted_name_usage_ID) |>
-      dplyr::distinct(canonical_name, .keep_all = T) |>
+      dplyr::distinct(canonical_name, .keep_all = TRUE) |>
       dplyr::left_join(APC_synonyms, by = "accepted_name_usage_ID") |>
       dplyr::select(family, accepted_name = canonical_name, synonyms, scientific_name, accepted_name_usage_ID) |>
       dplyr::arrange(family, accepted_name)
@@ -109,7 +111,7 @@ synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resourc
     accepted_names_with_synonyms <- resources$APC |> 
       dplyr::select(canonical_name, family, scientific_name, accepted_name_usage_ID) |>
       dplyr::filter(canonical_name %in% accepted_names_with_usageID$accepted_name & accepted_name_usage_ID %in% accepted_names_with_usageID$accepted_name_usage_ID) |>
-      dplyr::distinct(canonical_name, .keep_all = T) |>
+      dplyr::distinct(canonical_name, .keep_all = TRUE) |>
       dplyr::select(-canonical_name) |>
       dplyr::left_join(APC_synonyms_tmp, by = "accepted_name_usage_ID") |>
       dplyr::select(family, accepted_name, synonym = canonical_name, taxonomic_status, scientific_name, accepted_name_usage_ID, taxon_ID) |>
