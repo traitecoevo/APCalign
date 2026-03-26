@@ -26,9 +26,11 @@ This function generates lists a string of synonyms for currently accepted specie
 when the current name is known.
 }
 \examples{
+\donttest{
 synonyms_for_accepted_names(
   accepted_names = c("Justicia tenella", "Acacia aneura"),
   collapse = TRUE
 )
+}
 
 }

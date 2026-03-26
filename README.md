@@ -85,8 +85,7 @@ create_taxonomic_update_lookup(
     #> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
     #> #   number_of_collapsed_taxa <dbl>
 
-If you’re going to use `APCalign` more than once, it will save you time
-to load the taxonomic resources into memory first:
+You can alternatively load the taxonomic resources into memory first:
 
 ``` r
 tax_resources <- load_taxonomic_resources()
@@ -124,7 +123,7 @@ create_taxonomic_update_lookup(
 #>  7 Banksia catoglypta Banksia cat… Banksia cato… Banksia catog… Bank… species   
 #>  8 Dryandra catoglyp… Dryandra ca… Banksia cato… Banksia catog… Bank… species   
 #>  9 Dryandra cataglyp… Dryandra ca… Banksia cato… Banksia catog… Bank… species   
-#> 10 Dryandra australis Dryandra sp… <NA>          Banksia sp. [… Bank… genus     
+#> 10 Dryandra australis Dryandra sp… <NA>          Dryandra sp. … Drya… genus     
 #> 11 Acacia longifolia  Acacia long… Acacia longi… Acacia longif… Acac… species   
 #> 12 Commersonia rosea  Commersonia… Androcalva r… Androcalva ro… Andr… species   
 #> 13 Panicum sp. Hairy… Panicum sp.… Panicum sp. … Panicum sp. H… Pani… species   
@@ -158,7 +157,7 @@ state_diversity_counts("NSW", resources = tax_resources)
 #>   <chr>                             <chr> <table[1d]>
 #> 1 doubtfully naturalised            NSW     94       
 #> 2 formerly naturalised              NSW      8       
-#> 3 native                            NSW   5975       
+#> 3 native                            NSW   5980       
 #> 4 native and doubtfully naturalised NSW      2       
 #> 5 native and naturalised            NSW     34       
 #> 6 naturalised                       NSW   1584       
@@ -195,14 +194,13 @@ Compiling a list of outdated synonyms for currently accepted names:
 ``` r
 names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
 synonyms_for_accepted_names(resources = tax_resources, accepted_names = names_to_check, collapse = T)
-#> # A tibble: 4 × 8
-#>   family       accepted_name       synonyms taxon_rank name_type scientific_name
-#>   <chr>        <chr>               <chr>    <chr>      <chr>     <chr>          
-#> 1 Brassicaceae Cardamine gunnii    Cardami… species    scientif… Cardamine gunn…
-#> 2 Fabaceae     Acacia aneura       Acacia … species    scientif… Acacia aneura …
-#> 3 Proteaceae   Banksia nivea       Josephi… species    scientif… Banksia nivea …
-#> 4 Proteaceae   Stenocarpus sinuat… Stenoca… species    scientif… Stenocarpus si…
-#> # ℹ 2 more variables: accepted_name_usage_ID <chr>, genus <chr>
+#> # A tibble: 4 × 5
+#>   family       accepted_name     synonyms scientific_name accepted_name_usage_ID
+#>   <chr>        <chr>             <chr>    <chr>           <chr>                 
+#> 1 Brassicaceae Cardamine gunnii  Cardami… Cardamine gunn… https://id.biodiversi…
+#> 2 Fabaceae     Acacia aneura     Acacia … Acacia aneura … https://id.biodiversi…
+#> 3 Proteaceae   Banksia nivea     Dryandr… Banksia nivea … https://id.biodiversi…
+#> 4 Proteaceae   Stenocarpus sinu… Stenoca… Stenocarpus si… https://id.biodiversi…
 ```
 
 ## Cheatsheet

@@ -73,7 +73,7 @@ create_taxonomic_update_lookup(
 )
 ```
 
-If you're going to use `APCalign` more than once, it will save you time to load the taxonomic resources into memory first:
+You can alternatively load the taxonomic resources into memory first:
 
 ```{r,message=FALSE}
 tax_resources <- load_taxonomic_resources()
