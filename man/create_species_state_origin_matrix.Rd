@@ -29,7 +29,7 @@ This function processes the geographic data available in the APC and
 returns state level native, introduced and more complicated origins status for all taxa.
 }
 \examples{
-\donttest{create_species_state_origin_matrix()}#' 
+\donttest{create_species_state_origin_matrix()} 
 \donttest{create_species_state_origin_matrix(include_infrataxa = TRUE)}
 
 

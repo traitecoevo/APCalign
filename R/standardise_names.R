@@ -118,7 +118,7 @@ standardise_names <- function(taxon_names) {
     f("(\\s|\\()s\\.lat\\.(\\s|\\))", "") %>%
     f("(\\s|\\()s\\.str\\.(\\s|\\))", "") %>%
     
-    ## standarise "ser"
+    ## standardise "ser"
     f("\\sser(\\s|\\.\\s)", " ser. ") %>%
     f("\\sseries(\\s|\\.\\s)", " ser. ") %>%
 
@@ -133,7 +133,7 @@ standardise_names <- function(taxon_names) {
 #' the first two words of the taxon name are extracted (e.g. "x Cynochloris"),
 #' while for a non-hybrid genus just the first word is extracted (e.g. "Banksia").
 #'
-#' @param taxon_name 
+#' @param taxon_name A character vector of scientific names.
 #'
 #' @return The genus for a scientific name.
 #'

@@ -4,11 +4,7 @@
 \alias{native_anywhere_in_australia}
 \title{Native anywhere in Australia}
 \usage{
-native_anywhere_in_australia(
-  species,
-  resources = load_taxonomic_resources(),
-  include_infrataxa = FALSE
-)
+native_anywhere_in_australia(species, resources = load_taxonomic_resources())
 }
 \arguments{
 \item{species}{A character string typically representing the binomial for the species.}
@@ -16,9 +12,6 @@ native_anywhere_in_australia(
 \item{resources}{An optional list of taxonomic resources to use for the lookup.
 If not provided, the function will load default taxonomic resources using the
 \code{load_taxonomic_resources()} function.}
-
-\item{include_infrataxa}{option to include subspecies, varieties and forms in the output.
-Set to false as the default, outputting results just for species-rank taxa.}
 }
 \value{
 A tibble with two columns: \code{species}, which is the same as the unique values of

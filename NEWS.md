@@ -5,6 +5,7 @@
 - New function `clear_cached_resources()` to remove the session cache and force a reload.
 - `load_taxonomic_resources()` now works offline when parquet files have been previously downloaded; `default_version()` falls back to the most recently cached local version when no internet connection is available.
 - Internal taxonomic resource tables renamed to snake_case; `family` column added to resource tables.
+- Functions `create_species_state_origin_matrix()` and `state_diversity_counts()` now includes the parameter `include_infrataxa`, allowing users to select whether just species-rank taxa or species and infra-specific taxa are output in the table. When `create_species_state_origin_matrix()` is called by `native_anywhere_in_australia()`, `include_infrataxa = TRUE` is set as the default, so infrataxa can also be checked by this function.
 
 # APCalign 1.1.6
 

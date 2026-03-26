@@ -1,8 +1,8 @@
 #' @title Synonyms for Currently Accepted Names
 #'
 #' @description
-#' This function generates lists a string of synonyms for currently accepted names to facilitate working out past names of a taxon
-#' when the current name is known
+#' This function generates lists a string of synonyms for currently accepted species and infra-species to facilitate working out past names of a taxon
+#' when the current name is known.
 #' 
 #' @param accepted_names A character vector of currently accepted taxon names to look up synonyms for.
 #' @param collapse Offering the option to return a long data table with each synonym in its own row,
@@ -31,6 +31,11 @@ synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resourc
   accepted_names_with_usageID <- resources$APC_accepted |>
     dplyr::select(accepted_name_usage_ID, accepted_name = canonical_name) |>
     dplyr::filter(accepted_name %in% accepted_names)
+  
+  if(nrow(accepted_names_with_usageID) == 0){
+    message("None of the taxon names you submitted are accepted by the APC. Look within `resources$APC_accepted` to ensure you have a properly formatted name.")
+    return(NULL)
+  }
   
   # preferred order of taxonomic updates (function from `update_taxonomy.R`)
   relevel_taxonomic_status_preferred_order <- function(taxonomic_status) {
@@ -66,12 +71,12 @@ synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resourc
     )
   }
   
-  # generate list of accepted_name_usage_ID's for accepted species
+  # Generate list of accepted_name_usage_ID's for accepted species
   APC_synonyms_tmp <- resources$APC |> 
     dplyr::filter(taxon_rank %in% c("species", "variety", "form", "subspecies")) |>
     # merge currently accepted names for each taxon onto all the synonyms
     dplyr::right_join(accepted_names_with_usageID, by = "accepted_name_usage_ID") |>
-    dplyr::select(canonical_name, taxonomic_status, accepted_name, accepted_name_usage_ID) |>
+    dplyr::select(canonical_name, taxonomic_status, accepted_name, accepted_name_usage_ID, taxon_ID) |>
     # remove the accepted names themselves
     dplyr::filter(taxonomic_status != "accepted") |>
     dplyr::mutate(
@@ -93,22 +98,23 @@ synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resourc
       dplyr::distinct(accepted_name_usage_ID, synonyms)
 
     accepted_names_with_synonyms <- resources$APC |> 
-      dplyr::select(canonical_name, taxon_rank, name_type, genus, family, scientific_name, accepted_name_usage_ID) |>
+      dplyr::select(canonical_name, family, scientific_name, accepted_name_usage_ID) |>
       dplyr::filter(canonical_name %in% accepted_names_with_usageID$accepted_name & accepted_name_usage_ID %in% accepted_names_with_usageID$accepted_name_usage_ID) |>
       dplyr::distinct(canonical_name, .keep_all = TRUE) |>
       dplyr::left_join(APC_synonyms, by = "accepted_name_usage_ID") |>
-      dplyr::rename(taxon_name = canonical_name) |>
-      dplyr::arrange(family, taxon_name)
+      dplyr::select(family, accepted_name = canonical_name, synonyms, scientific_name, accepted_name_usage_ID) |>
+      dplyr::arrange(family, accepted_name)
   
   } else {
     
     # Create a long list if collapse = F, with one row per synonym
     accepted_names_with_synonyms <- resources$APC |> 
-      dplyr::select(canonical_name, taxon_rank, name_type, genus, family, scientific_name, accepted_name_usage_ID) |>
+      dplyr::select(canonical_name, family, scientific_name, accepted_name_usage_ID) |>
       dplyr::filter(canonical_name %in% accepted_names_with_usageID$accepted_name & accepted_name_usage_ID %in% accepted_names_with_usageID$accepted_name_usage_ID) |>
       dplyr::distinct(canonical_name, .keep_all = TRUE) |>
       dplyr::select(-canonical_name) |>
       dplyr::left_join(APC_synonyms_tmp, by = "accepted_name_usage_ID") |>
+      dplyr::select(family, accepted_name, synonym = canonical_name, taxonomic_status, scientific_name, accepted_name_usage_ID, taxon_ID) |>
       dplyr::arrange(family, accepted_name)
   }
   
