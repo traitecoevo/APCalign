@@ -47,7 +47,7 @@ Other diversity methods:
 ## Examples
 
 ``` r
-create_species_state_origin_matrix()#' 
+create_species_state_origin_matrix() 
 #> 
 #> Loading resources into memory...
 #> ================================================================================================================================================================

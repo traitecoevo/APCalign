@@ -19,6 +19,18 @@
   connection is available.
 - Internal taxonomic resource tables renamed to snake_case; `family`
   column added to resource tables.
+- Functions
+  [`create_species_state_origin_matrix()`](https://traitecoevo.github.io/APCalign/reference/create_species_state_origin_matrix.md)
+  and
+  [`state_diversity_counts()`](https://traitecoevo.github.io/APCalign/reference/state_diversity_counts.md)
+  now includes the parameter `include_infrataxa`, allowing users to
+  select whether just species-rank taxa or species and infra-specific
+  taxa are output in the table. When
+  [`create_species_state_origin_matrix()`](https://traitecoevo.github.io/APCalign/reference/create_species_state_origin_matrix.md)
+  is called by
+  [`native_anywhere_in_australia()`](https://traitecoevo.github.io/APCalign/reference/native_anywhere_in_australia.md),
+  `include_infrataxa = TRUE` is set as the default, so infrataxa can
+  also be checked by this function.
 
 ## APCalign 1.1.6
 

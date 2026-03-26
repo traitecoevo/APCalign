@@ -48,6 +48,7 @@
 <li>
 <code><a href="../reference/load_taxonomic_resources.html">load_taxonomic_resources()</a></code> now works offline when parquet files have been previously downloaded; <code><a href="../reference/default_version.html">default_version()</a></code> falls back to the most recently cached local version when no internet connection is available.</li>
 <li>Internal taxonomic resource tables renamed to snake_case; <code>family</code> column added to resource tables.</li>
+<li>Functions <code><a href="../reference/create_species_state_origin_matrix.html">create_species_state_origin_matrix()</a></code> and <code><a href="../reference/state_diversity_counts.html">state_diversity_counts()</a></code> now includes the parameter <code>include_infrataxa</code>, allowing users to select whether just species-rank taxa or species and infra-specific taxa are output in the table. When <code><a href="../reference/create_species_state_origin_matrix.html">create_species_state_origin_matrix()</a></code> is called by <code><a href="../reference/native_anywhere_in_australia.html">native_anywhere_in_australia()</a></code>, <code>include_infrataxa = TRUE</code> is set as the default, so infrataxa can also be checked by this function.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.1.6" id="apcalign-116">APCalign 1.1.6<a class="anchor" aria-label="anchor" href="#apcalign-116"></a></h2>

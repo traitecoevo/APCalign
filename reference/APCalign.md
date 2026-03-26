@@ -9,7 +9,7 @@ states/territories.
 
 ## Functions
 
-**Standarise taxon names**
+**Standardise taxon names**
 
 - [load_taxonomic_resources](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
 

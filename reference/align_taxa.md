@@ -267,7 +267,7 @@ resources <- load_taxonomic_resources()
 # example 1
 align_taxa(c("Poa annua", "Abies alba"), resources=resources)
 #> Checking alignments of 2 taxa
-#>   -> of these 1 names have a perfect match to a scientific name in the APC. 
+#>   -> of these 1 names have a perfect match to an accepted scientific name in the APC, and 0 names have a perfect match to a synonym in the APC.
 #>       Alignments being sought for remaining names.
 #> # A tibble: 2 × 7
 #>   original_name cleaned_name aligned_name taxonomic_dataset taxon_rank
@@ -288,7 +288,7 @@ aligned_taxa <-
     resources=resources
   ) 
 #> Checking alignments of 6 taxa
-#>   -> of these 1 names have a perfect match to a scientific name in the APC. 
+#>   -> of these 1 names have a perfect match to an accepted scientific name in the APC, and 0 names have a perfect match to a synonym in the APC.
 #>       Alignments being sought for remaining names.
   
 # }

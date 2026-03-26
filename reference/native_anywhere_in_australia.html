@@ -49,11 +49,7 @@ Australia according to the APC.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">native_anywhere_in_australia</span><span class="op">(</span></span>
-<span>  <span class="va">species</span>,</span>
-<span>  resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  include_infrataxa <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">native_anywhere_in_australia</span><span class="op">(</span><span class="va">species</span>, resources <span class="op">=</span> <span class="fu"><a href="load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -68,11 +64,6 @@ Australia according to the APC.</p>
 <dd><p>An optional list of taxonomic resources to use for the lookup.
 If not provided, the function will load default taxonomic resources using the
 <code><a href="load_taxonomic_resources.html">load_taxonomic_resources()</a></code> function.</p></dd>
-
-
-<dt id="arg-include-infrataxa">include_infrataxa<a class="anchor" aria-label="anchor" href="#arg-include-infrataxa"></a></dt>
-<dd><p>option to include subspecies, varieties and forms in the output.
-Set to false as the default, outputting results just for species-rank taxa.</p></dd>
 
 </dl></div>
     <div class="section level2">

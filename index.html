@@ -59,20 +59,31 @@
 <div class="section level1">
 <div class="page-header"><h1 id="apcalign-">APCalign <img src="reference/figures/APCalign_hex_2.svg" align="right" width="120"><a class="anchor" aria-label="anchor" href="#apcalign-"></a>
 </h1></div>
-<p><code>APCalign</code> uses the <a href="https://biodiversity.org.au/nsl/services/search/taxonomy" class="external-link">Australian Plant Census (APC)</a> and <a href="https://biodiversity.org.au/nsl/services/search/names" class="external-link">Australian Plant Name Index</a> to align and update Australian plant taxon names. ‘APCalign’ also supplies information about the established status (i.e., native/introduced) of plant taxa within different states/territories as compiled by the APC. It’s useful for updating species list and intersecting them with the APC consensus for both taxonomy and establishment status.</p>
-<p>DOI: <a href="https://doi.org/10.1071/BT24014" class="external-link uri">https://doi.org/10.1071/BT24014</a></p>
+<p>When working with biodiversity data, it is important to verify taxonomic names with an authoritative list and correct any out-of-date names or names with typos.</p>
+<p>The ‘APCalign’ package simplifies this process by:</p>
+<ul>
+<li>Accessing up-to-date taxonomic information from the <a href="https://biodiversity.org.au/nsl/services/search/taxonomy" class="external-link">Australian Plant Census</a> and the <a href="https://biodiversity.org.au/nsl/services/search/names" class="external-link">Australia Plant Name Index</a>.</li>
+<li>Aligning authoritative names to your taxonomic names using our <a href="https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html">fuzzy matching algorithm</a>
+</li>
+<li>Updating your taxonomic names in a transparent, reproducible manner</li>
+<li>Because APCalign was developed explicitly for the Australian flora it handles phrase names and aligns disparate phrase name syntax</li>
+<li>Indicating when a split leads to uncertainty in a name alignment</li>
+</ul>
+<p>‘APCalign’ also supplies information about the established status (i.e., native/introduced) of plant taxa within different states/territories as compiled by the APC. It’s useful for updating species list and intersecting them with the APC consensus for both taxonomy and establishment status.</p>
+<p>Read the <a href="https://doi.org/10.1071/BT24014" class="external-link">APCalign paper</a> to learn more about the motivations for this project and our fuzzy matching and aligning algorithms.</p>
 <div class="section level2">
 <h2 id="installation-️">Installation 🛠️<a class="anchor" aria-label="anchor" href="#installation-%EF%B8%8F"></a>
 </h2>
 <p>From CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"APCalign"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"APCalign"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://traitecoevo.github.io/APCalign/">APCalign</a></span><span class="op">)</span></span></code></pre></div>
 <p>OR for the GitHub version:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"traitecoevo/APCalign"</span><span class="op">)</span></span></code></pre></div>
+<p>Or for the ShinyApp head to <a href="https://unsw.shinyapps.io/APCalign-app/" class="external-link">unsw.shinyapps.io/APCalign-app</a></p>
 </div>
 <div class="section level2">
 <h2 id="a-quick-demo">A quick demo<a class="anchor" aria-label="anchor" href="#a-quick-demo"></a>
@@ -96,38 +107,75 @@
 <span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; # ℹ 6 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
 <span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; #   scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
 <span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; #   number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
-<p>If you’re going to use <code>APCalign</code> more than once, it will save you time to load the taxonomic resources into memory first:</p>
+<p>You can alternatively load the taxonomic resources into memory first:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tax_resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co">#&gt; ================================================================================================================================================================</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">create_taxonomic_update_lookup</span>( </span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">taxa =</span> <span class="fu">c</span>(</span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    <span class="st">"Banksia integrifolia"</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>    <span class="st">"Acacia longifolia"</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>    <span class="st">"Commersonia rosea"</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>    <span class="st">"not a species"</span></span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>    ),</span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  <span class="at">resources =</span> tax_resources</span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>)</span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 12</span></span>
-<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt;   original_name       aligned_name accepted_name suggested_name genus taxon_rank</span></span>
-<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;     </span></span>
-<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   </span></span>
-<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   </span></span>
-<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   </span></span>
-<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; 4 not a species       &lt;NA&gt;         &lt;NA&gt;          &lt;NA&gt;           &lt;NA&gt;  &lt;NA&gt;      </span></span>
-<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; # ℹ 6 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
-<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; #   scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
-<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; #   number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">tax_resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span> </span>
+<span>  taxa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Banksia integrifolia"</span>,</span>
+<span>    <span class="st">"Banksya integrifolla"</span>,</span>
+<span>    <span class="st">"Banksya integriifolla"</span>,</span>
+<span>    <span class="st">"Banksyya integriifolla"</span>,</span>
+<span>    <span class="st">"Banksia red flowers"</span>,</span>
+<span>    <span class="st">"Banksia sp."</span>,</span>
+<span>    <span class="st">"Banksia catoglypta"</span>,</span>
+<span>    <span class="st">"Dryandra catoglypta"</span>,</span>
+<span>    <span class="st">"Dryandra cataglypta"</span>,</span>
+<span>    <span class="st">"Dryandra australis"</span>,</span>
+<span>    <span class="st">"Acacia longifolia"</span>,</span>
+<span>    <span class="st">"Commersonia rosea"</span>,</span>
+<span>    <span class="st">"Panicum sp. Hairy glumes (C.R.Michell 4192)"</span>,</span>
+<span>    <span class="st">"Panicum sp. Hairy glumes (Michell)"</span>,</span>
+<span>    <span class="st">"Panicum sp. Hairy glumes"</span>,</span>
+<span>    <span class="st">"not a species"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>  resources <span class="op">=</span> <span class="va">tax_resources</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 16 × 12</span></span>
+<span><span class="co">#&gt;    original_name      aligned_name accepted_name suggested_name genus taxon_rank</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;              &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;     </span></span>
+<span><span class="co">#&gt;  1 Banksia integrifo… Banksia int… Banksia inte… Banksia integ… Bank… species   </span></span>
+<span><span class="co">#&gt;  2 Banksya integrifo… Banksia int… Banksia inte… Banksia integ… Bank… species   </span></span>
+<span><span class="co">#&gt;  3 Banksya integriif… Banksia int… Banksia inte… Banksia integ… Bank… species   </span></span>
+<span><span class="co">#&gt;  4 Banksyya integrii… Banksia sp.… &lt;NA&gt;          Banksia sp. [… Bank… genus     </span></span>
+<span><span class="co">#&gt;  5 Banksia red flowe… Banksia sp.… &lt;NA&gt;          Banksia sp. [… Bank… genus     </span></span>
+<span><span class="co">#&gt;  6 Banksia sp.        Banksia sp.  &lt;NA&gt;          Banksia sp.    Bank… genus     </span></span>
+<span><span class="co">#&gt;  7 Banksia catoglypta Banksia cat… Banksia cato… Banksia catog… Bank… species   </span></span>
+<span><span class="co">#&gt;  8 Dryandra catoglyp… Dryandra ca… Banksia cato… Banksia catog… Bank… species   </span></span>
+<span><span class="co">#&gt;  9 Dryandra cataglyp… Dryandra ca… Banksia cato… Banksia catog… Bank… species   </span></span>
+<span><span class="co">#&gt; 10 Dryandra australis Dryandra sp… &lt;NA&gt;          Dryandra sp. … Drya… genus     </span></span>
+<span><span class="co">#&gt; 11 Acacia longifolia  Acacia long… Acacia longi… Acacia longif… Acac… species   </span></span>
+<span><span class="co">#&gt; 12 Commersonia rosea  Commersonia… Androcalva r… Androcalva ro… Andr… species   </span></span>
+<span><span class="co">#&gt; 13 Panicum sp. Hairy… Panicum sp.… Panicum sp. … Panicum sp. H… Pani… species   </span></span>
+<span><span class="co">#&gt; 14 Panicum sp. Hairy… Panicum sp.… Panicum sp. … Panicum sp. H… Pani… species   </span></span>
+<span><span class="co">#&gt; 15 Panicum sp. Hairy… Panicum sp.… Panicum sp. … Panicum sp. H… Pani… species   </span></span>
+<span><span class="co">#&gt; 16 not a species      &lt;NA&gt;         &lt;NA&gt;          &lt;NA&gt;           &lt;NA&gt;  &lt;NA&gt;      </span></span>
+<span><span class="co">#&gt; # ℹ 6 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
 <p>Checking for a list of species to see if they are classified as Australian natives:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/native_anywhere_in_australia.html">native_anywhere_in_australia</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus globulus"</span>,<span class="st">"Pinus radiata"</span><span class="op">)</span>, resources <span class="op">=</span> <span class="va">tax_resources</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
 <span><span class="co">#&gt;   species             native_anywhere_in_aus</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;                 </span></span>
 <span><span class="co">#&gt; 1 Eucalyptus globulus native                </span></span>
 <span><span class="co">#&gt; 2 Pinus radiata       introduced</span></span></code></pre></div>
+<p>Determining the number of species present in NSW and their establishment means:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/state_diversity_counts.html">state_diversity_counts</a></span><span class="op">(</span><span class="st">"NSW"</span>, resources <span class="op">=</span> <span class="va">tax_resources</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 7 × 3</span></span>
+<span><span class="co">#&gt;   origin                            state num_species</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                             &lt;chr&gt; &lt;table[1d]&gt;</span></span>
+<span><span class="co">#&gt; 1 doubtfully naturalised            NSW     94       </span></span>
+<span><span class="co">#&gt; 2 formerly naturalised              NSW      8       </span></span>
+<span><span class="co">#&gt; 3 native                            NSW   5980       </span></span>
+<span><span class="co">#&gt; 4 native and doubtfully naturalised NSW      2       </span></span>
+<span><span class="co">#&gt; 5 native and naturalised            NSW     34       </span></span>
+<span><span class="co">#&gt; 6 naturalised                       NSW   1584       </span></span>
+<span><span class="co">#&gt; 7 presumed extinct                  NSW      9</span></span></code></pre></div>
+<p>The related function <code><a href="reference/create_species_state_origin_matrix.html">create_species_state_origin_matrix()</a></code> generates a table for all taxa in Australia, indicating their distribution and establishment means, by state.</p>
 <p>Getting a family lookup table for genera from the specified taxonomy:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/get_apc_genus_family_lookup.html">get_apc_genus_family_lookup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus"</span>,</span>
@@ -146,6 +194,17 @@
 <span><span class="co">#&gt; 4 Banksia    Proteaceae</span></span>
 <span><span class="co">#&gt; 5 Acacia     Fabaceae  </span></span>
 <span><span class="co">#&gt; 6 Triodia    Poaceae</span></span></code></pre></div>
+<p>Compiling a list of outdated synonyms for currently accepted names:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">names_to_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Acacia aneura"</span>, <span class="st">"Banksia nivea"</span>, <span class="st">"Cardamine gunnii"</span>, <span class="st">"Stenocarpus sinuatus"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/synonyms_for_accepted_names.html">synonyms_for_accepted_names</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">tax_resources</span>, accepted_names <span class="op">=</span> <span class="va">names_to_check</span>, collapse <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 5</span></span>
+<span><span class="co">#&gt;   family       accepted_name     synonyms scientific_name accepted_name_usage_ID</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;        &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;                 </span></span>
+<span><span class="co">#&gt; 1 Brassicaceae Cardamine gunnii  Cardami… Cardamine gunn… https://id.biodiversi…</span></span>
+<span><span class="co">#&gt; 2 Fabaceae     Acacia aneura     Acacia … Acacia aneura … https://id.biodiversi…</span></span>
+<span><span class="co">#&gt; 3 Proteaceae   Banksia nivea     Dryandr… Banksia nivea … https://id.biodiversi…</span></span>
+<span><span class="co">#&gt; 4 Proteaceae   Stenocarpus sinu… Stenoca… Stenocarpus si… https://id.biodiversi…</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="cheatsheet">Cheatsheet<a class="anchor" aria-label="anchor" href="#cheatsheet"></a>
@@ -161,15 +220,15 @@
 <h2 id="show-us-support-">Show us support 💛<a class="anchor" aria-label="anchor" href="#show-us-support-"></a>
 </h2>
 <p>Please consider citing our work, we are really proud of it!</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"APCalign"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; To cite package 'APCalign' in publications use:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Wenk E, Cornwell W, Fuchs A, Kar F, Monro A, Sauquet H, Stephens R,</span></span>
 <span><span class="co">#&gt;   Falster D (2024). "APCalign: an R package workflow and app for</span></span>
 <span><span class="co">#&gt;   aligning and updating flora names to the Australian Plant Census."</span></span>
-<span><span class="co">#&gt;   _Australian Journal of Botany_. R package version: 1.0.1,</span></span>
-<span><span class="co">#&gt;   &lt;https://www.biorxiv.org/content/10.1101/2024.02.02.578715v1&gt;.</span></span>
+<span><span class="co">#&gt;   _Australian Journal of Botany_, *72*(4). R package version: 1.1.4,</span></span>
+<span><span class="co">#&gt;   &lt;https://doi.org/10.1071/BT24014&gt;.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; A BibTeX entry for LaTeX users is</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -177,9 +236,12 @@
 <span><span class="co">#&gt;     title = {APCalign: an R package workflow and app for aligning and updating flora names to the Australian Plant Census},</span></span>
 <span><span class="co">#&gt;     journal = {Australian Journal of Botany},</span></span>
 <span><span class="co">#&gt;     author = {Elizabeth Wenk and Will Cornwell and Ann Fuchs and Fonti Kar and Anna Monro and Herve Sauquet and Ruby Stephens and Daniel Falster},</span></span>
+<span><span class="co">#&gt;     volume = {72},</span></span>
+<span><span class="co">#&gt;     number = {4},</span></span>
 <span><span class="co">#&gt;     year = {2024},</span></span>
-<span><span class="co">#&gt;     note = {R package version: 1.0.1},</span></span>
-<span><span class="co">#&gt;     url = {https://www.biorxiv.org/content/10.1101/2024.02.02.578715v1},</span></span>
+<span><span class="co">#&gt;     publisher = {CSIRO Publishing},</span></span>
+<span><span class="co">#&gt;     note = {R package version: 1.1.4},</span></span>
+<span><span class="co">#&gt;     url = {https://doi.org/10.1071/BT24014},</span></span>
 <span><span class="co">#&gt;   }</span></span></code></pre></div>
 </div>
 <div class="section level2">

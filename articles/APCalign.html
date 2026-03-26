@@ -70,7 +70,8 @@
     
 <p>When working with biodiversity data, it is important to verify
 taxonomic names with an authoritative list and correct any out-of-date
-names. The ‘APCalign’ package simplifies this process by:</p>
+names or names with typos. The ‘APCalign’ package simplifies this
+process by:</p>
 <ul>
 <li>Accessing up-to-date taxonomic information from the <a href="https://biodiversity.org.au/nsl/services/search/taxonomy" class="external-link">Australian
 Plant Census</a> and the <a href="https://biodiversity.org.au/nsl/services/search/names" class="external-link">Australia
@@ -84,13 +85,16 @@ manner</li>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>‘APCalign’ is currently not on CRAN. You can install its current
-developmental version using</p>
+<p>The latest version of ‘APCalign’ should be available on CRAN and can
+be installed using <code>install.packages("APCalign")</code>.</p>
+<p>You can alternatively install the current developmental version
+using</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"traitecoevo/APCalign"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://traitecoevo.github.io/APCalign/">APCalign</a></span><span class="op">)</span></span></code></pre></div>
+<p>Alternatively, our ShinyApp, is available at <a href="https://unsw.shinyapps.io/APCalign-app/" class="external-link">unsw.shinyapps.io/APCalign-app</a></p>
 <p>To demonstrate how to use ‘APCalign’, we will use an example dataset
 <code>gbif_lite</code> which is documented in
 <code><a href="../reference/gbif_lite.html">?gbif_lite</a></code></p>
@@ -133,7 +137,7 @@ resources have been stored locally, subsequent retrievals will take less
 time. Retrieving <code>current</code> resources will always take longer
 since it is accessing the latest information from the website. Check out
 our <a href="https://traitecoevo.github.io/APCalign/articles/caching.html">Resource
-Caching</a> article to learn more about how the APC and APNIC databases
+Caching</a> article to learn more about how the APC and APNI databases
 are accessed, stored and retrieved.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Benchmarking the retrieval of `stable` or `current` resources</span></span>
@@ -239,9 +243,13 @@ possible name option for the <code>original_name</code>.</p>
 established status (native/introduced) from the APC.</p>
 <p>We can access the established status data by state/territory using
 <code><a href="../reference/create_species_state_origin_matrix.html">create_species_state_origin_matrix()</a></code></p>
+<p>You can specify to include infrataxa (subspecies, varieties and
+forms) using <code>include_infrataxa = TRUE</code>, or generate
+statistics just for species using
+<code>include_infrataxa = FALSE</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Retrieve status data by state/territory </span></span>
-<span><span class="va">status_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_species_state_origin_matrix.html">create_species_state_origin_matrix</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">status_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_species_state_origin_matrix.html">create_species_state_origin_matrix</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">resources</span>, include_infrataxa <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Here is a breakdown of all possible values for
 <code>origin</code></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -258,27 +266,30 @@ established status (native/introduced) from the APC.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     chisq.test, fisher.test</span></span>
 <span></span>
-<span><span class="co"># Obtain unique values</span></span>
+<span><span class="co"># Obtain unique values for establishment status</span></span>
 <span><span class="va">status_matrix</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">species</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">flatten_chr</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/tabyl.html" class="external-link">tabyl</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  flatten_chr(select(status_matrix, -species))      n      percent</span></span>
-<span><span class="co">#&gt;                        doubtfully naturalised   1129 2.387326e-03</span></span>
-<span><span class="co">#&gt;                          formerly naturalised    277 5.857302e-04</span></span>
-<span><span class="co">#&gt;                                        native  40363 8.534956e-02</span></span>
-<span><span class="co">#&gt;             native and doubtfully naturalised      9 1.903094e-05</span></span>
-<span><span class="co">#&gt;                        native and naturalised    137 2.896933e-04</span></span>
-<span><span class="co">#&gt;                   native and uncertain origin      2 4.229099e-06</span></span>
-<span><span class="co">#&gt;                                   naturalised   8769 1.854248e-02</span></span>
-<span><span class="co">#&gt;                                   not present 422103 8.925576e-01</span></span>
-<span><span class="co">#&gt;                              presumed extinct    102 2.156840e-04</span></span>
-<span><span class="co">#&gt;                              uncertain origin     23 4.863464e-05</span></span></code></pre></div>
-<!-- The formal definitions of the various established status can be found at XX.  -->
+<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="fl">4</span><span class="op">:</span><span class="fl">21</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">value</span> <span class="op">!=</span> <span class="st">"not present"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># value                            </span></span>
+<span><span class="co"># &lt;chr&gt;                            </span></span>
+<span><span class="co">#   1 native                           </span></span>
+<span><span class="co"># 2 naturalised                      </span></span>
+<span><span class="co"># 3 doubtfully naturalised           </span></span>
+<span><span class="co"># 4 native and naturalised           </span></span>
+<span><span class="co"># 5 formerly naturalised             </span></span>
+<span><span class="co"># 6 presumed extinct                 </span></span>
+<span><span class="co"># 7 uncertain origin                 </span></span>
+<span><span class="co"># 8 native and uncertain origin      </span></span>
+<span><span class="co"># 9 native and doubtfully naturalised</span></span></code></pre></div>
+<!-- The formal definitions of the various established status can be found at https://neobiota.pensoft.net/article/113013/  -->
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">status_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">family</span>, <span class="va">species</span>, <span class="va">ACT</span><span class="op">:</span><span class="va">WA</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span></code></pre></div>
 <p>You can also obtain the breakdown of species by established status
 for a particular state/territory using
 <code><a href="../reference/state_diversity_counts.html">state_diversity_counts()</a></code></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/state_diversity_counts.html">state_diversity_counts</a></span><span class="op">(</span><span class="st">"NSW"</span>, resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 7 × 3</span></span>
 <span><span class="co">#&gt;   origin                            state num_species</span></span>
@@ -293,7 +304,7 @@ for a particular state/territory using
 <p>Using the established status data and state/territory information, we
 can check if a plant taxa is a native using
 <code><a href="../reference/native_anywhere_in_australia.html">native_anywhere_in_australia()</a></code></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">updated_gbif_names</span> <span class="op">|&gt;</span> </span>
@@ -365,7 +376,7 @@ not</strong> seek to update outdated taxonomy. That process occurs
 during <a href="#update">update_taxonomy</a> process.
 <code>align_taxa</code> instead aligns each name input to the closest
 match amongst names documented by the APC and APNI.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">aligned_gbif_taxa</span> <span class="op">&lt;-</span> <span class="va">gbif_lite</span> <span class="op">|&gt;</span> </span>
@@ -390,7 +401,7 @@ match amongst names documented by the APC and APNI.</p>
 <p>For every <code>aligned_name</code>, <code><a href="../reference/align_taxa.html">align_taxa()</a></code> will
 provide a <code>aligned_reason</code> which you can review as a table of
 counts:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sfirke/janitor" class="external-link">janitor</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">aligned_gbif_taxa</span> <span class="op">|&gt;</span> </span>
@@ -447,7 +458,7 @@ e.g. <code>Acacia sp. [Blue Mountains]</code>
 <p><code><a href="../reference/update_taxonomy.html">update_taxonomy()</a></code> uses the information generated by
 <code><a href="../reference/align_taxa.html">align_taxa()</a></code> to, whenever possible, update names to
 APC-accepted names.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">updated_gbif_taxa</span> <span class="op">&lt;-</span> <span class="va">aligned_gbif_taxa</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/update_taxonomy.html">update_taxonomy</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span></span>
 <span></span>
@@ -548,7 +559,7 @@ brackets
 </ol>
 </li>
 </ul>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">aligned_gbif_taxa</span> <span class="op">|&gt;</span> </span>
@@ -562,7 +573,7 @@ brackets
 <span><span class="co">#&gt; # ℹ 12 more variables: taxonomic_status_aligned &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   taxon_distribution &lt;chr&gt;, scientific_name &lt;chr&gt;, taxon_ID &lt;chr&gt;, taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   canonical_name &lt;chr&gt;, row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aligned_gbif_taxa</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/update_taxonomy.html">update_taxonomy</a></span><span class="op">(</span>taxonomic_splits <span class="op">=</span> <span class="st">"return_all"</span>,</span>
 <span>                  resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span>  <span class="op">|&gt;</span> </span>
@@ -576,7 +587,7 @@ brackets
 <span><span class="co">#&gt; # ℹ 12 more variables: taxonomic_status_aligned &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   taxon_distribution &lt;chr&gt;, scientific_name &lt;chr&gt;, taxon_ID &lt;chr&gt;, taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   canonical_name &lt;chr&gt;, row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aligned_gbif_taxa</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/update_taxonomy.html">update_taxonomy</a></span><span class="op">(</span>taxonomic_splits <span class="op">=</span> <span class="st">"collapse_to_higher_taxon"</span>,</span>
 <span>                  resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span>  <span class="op">|&gt;</span> </span>
@@ -589,6 +600,48 @@ brackets
 <span><span class="co">#&gt; #   taxon_distribution &lt;chr&gt;, scientific_name &lt;chr&gt;, taxon_ID &lt;chr&gt;, taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   canonical_name &lt;chr&gt;, row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level3">
+<h3 id="synonyms">Generating lists of synonyms<a class="anchor" aria-label="anchor" href="#synonyms"></a>
+</h3>
+<p><code><a href="../reference/synonyms_for_accepted_names.html">synonyms_for_accepted_names()</a></code> compiles a table of all
+outdated and misapplied names which once applied to an accepted taxon
+name. The output can be in a condensed format, with the synonyms for an
+accepted name appearing in a single cell, or in a long format, with a
+separate row for each synonym. Both formats indicate each synonyms
+“type” - <code>nomenclatural_synonym</code>,
+<code>taxonomic_synonym</code>, <code>orthographic_variant</code>,
+<code>misapplied</code>, etc. This function is particularly useful for
+research applications where you know a currently accepted taxon name and
+want to indicate part names that apply, to document the links or to
+efficiently search the literature.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="sc">&gt;</span> names_to_check <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Acacia aneura"</span>, <span class="st">"Banksia nivea"</span>, <span class="st">"Cardamine gunnii"</span>, <span class="st">"Stenocarpus sinuatus"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">synonyms_for_accepted_names</span>(<span class="at">resources =</span> resources, <span class="at">accepted_names =</span> names_to_check, <span class="at">collapse =</span> T)</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a><span class="co"># A tibble: 4 × 8</span></span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a><span class="co">#  family       accepted_name        synonyms                                                                                                                           taxon_rank name_type scientific_name accepted_name_usage_ID genus</span></span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a><span class="co">#  &lt;chr&gt;        &lt;chr&gt;                &lt;chr&gt;                                                                                                                              &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;           &lt;chr&gt;                  &lt;chr&gt;</span></span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a><span class="co">#1 Brassicaceae Cardamine gunnii     Cardamine hirsuta var. heterophylla (taxonomic synonym); Cardamine hirsuta var. debilis (taxonomic synonym); Cardamine gunnii, ty… species    scientif… Cardamine gunn… https://id.biodiversi… Card…</span></span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a><span class="co">#2 Fabaceae     Acacia aneura        Acacia aneura var. intermedia (taxonomic synonym); Racosperma aneurum var. intermedium (taxonomic synonym); Acacia aneura var. (N… species    scientif… Acacia aneura … https://id.biodiversi… Acac…</span></span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a><span class="co">#3 Proteaceae   Banksia nivea        Dryandra nivea var. venosa (taxonomic synonym); Josephia rachidifolia (taxonomic synonym); Dryandra nivea var. adscendens (taxono… species    scientif… Banksia nivea … https://id.biodiversi… Bank…</span></span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a><span class="co">#4 Proteaceae   Stenocarpus sinuatus Agnostus sinuatus (taxonomic synonym); Agnostus sinuata (taxonomic synonym); Stenocarpus sinuosus var. intergrifolius (taxonomic … species    scientif… Stenocarpus si… https://id.biodiversi… Sten…</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>names_to_check <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Acacia aneura"</span>, <span class="st">"Banksia nivea"</span>, <span class="st">"Cardamine gunnii"</span>, <span class="st">"Stenocarpus sinuatus"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">synonyms_for_accepted_names</span>(<span class="at">resources =</span> resources, <span class="at">accepted_names =</span> names_to_check, <span class="at">collapse =</span> F)</span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a><span class="co"># A tibble: 25 × 9</span></span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a><span class="co">#    family       accepted_name    synonym                                            taxonomic_status      taxon_rank name_type  scientific_name                  accepted_name_usage_ID                           genus    </span></span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a><span class="co">#    &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt;                                              &lt;fct&gt;                 &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;                            &lt;chr&gt;                                            &lt;chr&gt;    </span></span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a><span class="co">#  1 Brassicaceae Cardamine gunnii Cardamine hirsuta var. heterophylla                taxonomic synonym     species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine</span></span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a><span class="co">#  2 Brassicaceae Cardamine gunnii Cardamine hirsuta var. debilis                     taxonomic synonym     species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine</span></span>
+<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a><span class="co">#  3 Brassicaceae Cardamine gunnii Cardamine gunnii, type variant                     nomenclatural synonym species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine</span></span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a><span class="co">#  4 Brassicaceae Cardamine gunnii Cardamine heterophylla var. heterophylla           nomenclatural synonym species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine</span></span>
+<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a><span class="co">#  5 Brassicaceae Cardamine gunnii Cardamine heterophylla                             nomenclatural synonym species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine</span></span>
+<span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a><span class="co">#  6 Brassicaceae Cardamine gunnii Cardamine debilis                                  misapplied            species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine</span></span>
+<span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a><span class="co">#  7 Fabaceae     Acacia aneura    Acacia aneura var. intermedia                      taxonomic synonym     species    scientific Acacia aneura F.Muell. ex Benth. https://id.biodiversity.org.au/node/apni/6707550 Acacia   </span></span>
+<span id="cb21-13"><a href="#cb21-13" tabindex="-1"></a><span class="co">#  8 Fabaceae     Acacia aneura    Racosperma aneurum var. intermedium                taxonomic synonym     species    scientific Acacia aneura F.Muell. ex Benth. https://id.biodiversity.org.au/node/apni/6707550 Acacia   </span></span>
+<span id="cb21-14"><a href="#cb21-14" tabindex="-1"></a><span class="co">#  9 Fabaceae     Acacia aneura    Acacia aneura var. (Napperby S.L.Everist 4226)     taxonomic synonym     species    scientific Acacia aneura F.Muell. ex Benth. https://id.biodiversity.org.au/node/apni/6707550 Acacia   </span></span>
+<span id="cb21-15"><a href="#cb21-15" tabindex="-1"></a><span class="co"># 10 Fabaceae     Acacia aneura    Acacia aneura var. (Thargomindah D.E.Boyland 8099) taxonomic synonym     species    scientific Acacia aneura F.Muell. ex Benth. https://id.biodiversity.org.au/node/apni/6707550 Acacia   </span></span>
+<span id="cb21-16"><a href="#cb21-16" tabindex="-1"></a><span class="co"># ℹ 15 more rows</span></span>
+<span id="cb21-17"><a href="#cb21-17" tabindex="-1"></a><span class="co"># ℹ Use `print(n = ...)` to see more rows</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

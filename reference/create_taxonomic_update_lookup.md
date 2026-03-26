@@ -232,7 +232,7 @@ create_taxonomic_update_lookup(c("Eucalyptus regnans",
                                  "Not a species"),
                                  resources = resources)
 #> Checking alignments of 4 taxa
-#>   -> of these 3 names have a perfect match to a scientific name in the APC. 
+#>   -> of these 3 names have a perfect match to an accepted scientific name in the APC, and 0 names have a perfect match to a synonym in the APC.
 #>       Alignments being sought for remaining names.
 #> # A tibble: 4 × 12
 #>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
@@ -256,7 +256,7 @@ create_taxonomic_update_lookup(
     resources = resources
   )
 #> Checking alignments of 6 taxa
-#>   -> of these 1 names have a perfect match to a scientific name in the APC. 
+#>   -> of these 1 names have a perfect match to an accepted scientific name in the APC, and 0 names have a perfect match to a synonym in the APC.
 #>       Alignments being sought for remaining names.
 #> # A tibble: 6 × 21
 #>   original_name     aligned_name       accepted_name suggested_name genus family
@@ -266,7 +266,7 @@ create_taxonomic_update_lookup(
 #> 3 Banksia cerrata   Banksia sp. [Bank… NA            Banksia sp. [… Bank… Prote…
 #> 4 Banksea serrata   Banksia serrata    Banksia serr… Banksia serra… Bank… Prote…
 #> 5 Banksia serrrrata Banksia serrata    Banksia serr… Banksia serra… Bank… Prote…
-#> 6 Dryandra          Dryandra sp. [Dry… NA            Dryandra sp. … Drya… Prote…
+#> 6 Dryandra          Dryandra sp. [Dry… NA            Banksia sp. [… Bank… Prote…
 #> # ℹ 15 more variables: taxon_rank <chr>, taxonomic_dataset <chr>,
 #> #   taxonomic_status <chr>, taxonomic_status_aligned <chr>,
 #> #   aligned_reason <chr>, update_reason <chr>, subclass <chr>,
@@ -287,7 +287,7 @@ create_taxonomic_update_lookup(
     resources = resources
   )
 #> Checking alignments of 32 taxa
-#>   -> of these 10 names have a perfect match to a scientific name in the APC. 
+#>   -> of these 10 names have a perfect match to an accepted scientific name in the APC, and 7 names have a perfect match to a synonym in the APC.
 #>       Alignments being sought for remaining names.
 #> # A tibble: 32 × 21
 #>    original_name          aligned_name accepted_name suggested_name genus family
@@ -297,7 +297,7 @@ create_taxonomic_update_lookup(
 #>  3 Banksee serrate        Banksia ser… Banksia serr… Banksia serra… Bank… Prote…
 #>  4 Banksia cerrata        Banksia sp.… NA            Banksia sp. [… Bank… Prote…
 #>  5 Banksia sp.            Banksia sp.… NA            Banksia sp. [… Bank… Prote…
-#>  6 Dryandra sp.           Dryandra sp… NA            Dryandra sp. … Drya… Prote…
+#>  6 Dryandra sp.           Dryandra sp… NA            Banksia sp. [… Bank… Prote…
 #>  7 Argyrodendron (Whyanb… Argyrodendr… Argyrodendro… Argyrodendron… Argy… Malva…
 #>  8 Argyrodendron ssp. (W… Argyrodendr… Argyrodendro… Argyrodendron… Argy… Malva…
 #>  9 Argyrodendron Whyanbe… Argyrodendr… Argyrodendro… Argyrodendron… Argy… Malva…

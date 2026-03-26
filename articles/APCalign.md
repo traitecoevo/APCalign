@@ -1,8 +1,8 @@
 # APCalign
 
 When working with biodiversity data, it is important to verify taxonomic
-names with an authoritative list and correct any out-of-date names. The
-‘APCalign’ package simplifies this process by:
+names with an authoritative list and correct any out-of-date names or
+names with typos. The ‘APCalign’ package simplifies this process by:
 
 - Accessing up-to-date taxonomic information from the [Australian Plant
   Census](https://biodiversity.org.au/nsl/services/search/taxonomy) and
@@ -15,8 +15,10 @@ names with an authoritative list and correct any out-of-date names. The
 
 ## Installation
 
-‘APCalign’ is currently not on CRAN. You can install its current
-developmental version using
+The latest version of ‘APCalign’ should be available on CRAN and can be
+installed using `install.packages("APCalign")`.
+
+You can alternatively install the current developmental version using
 
 ``` r
 # install.packages("remotes")
@@ -24,6 +26,9 @@ remotes::install_github("traitecoevo/APCalign")
 
 library(APCalign)
 ```
+
+Alternatively, our ShinyApp, is available at
+[unsw.shinyapps.io/APCalign-app](https://unsw.shinyapps.io/APCalign-app/)
 
 To demonstrate how to use ‘APCalign’, we will use an example dataset
 `gbif_lite` which is documented in
@@ -69,8 +74,8 @@ Retrieving `current` resources will always take longer since it is
 accessing the latest information from the website. Check out our
 [Resource
 Caching](https://traitecoevo.github.io/APCalign/articles/caching.html)
-article to learn more about how the APC and APNIC databases are
-accessed, stored and retrieved.
+article to learn more about how the APC and APNI databases are accessed,
+stored and retrieved.
 
 ``` r
 # Benchmarking the retrieval of `stable` or `current` resources
@@ -184,9 +189,13 @@ established status (native/introduced) from the APC.
 We can access the established status data by state/territory using
 [`create_species_state_origin_matrix()`](https://traitecoevo.github.io/APCalign/reference/create_species_state_origin_matrix.md)
 
+You can specify to include infrataxa (subspecies, varieties and forms)
+using `include_infrataxa = TRUE`, or generate statistics just for
+species using `include_infrataxa = FALSE`.
+
 ``` r
 # Retrieve status data by state/territory 
-status_matrix <- create_species_state_origin_matrix(resources = resources)
+status_matrix <- create_species_state_origin_matrix(resources = resources, include_infrataxa = TRUE)
 ```
 
 Here is a breakdown of all possible values for `origin`
@@ -205,22 +214,27 @@ library(janitor)
 #> 
 #>     chisq.test, fisher.test
 
-# Obtain unique values
+# Obtain unique values for establishment status
 status_matrix |> 
-  select(-species) |> 
-  flatten_chr() |> 
-  tabyl()
-#>  flatten_chr(select(status_matrix, -species))      n      percent
-#>                        doubtfully naturalised   1129 2.387326e-03
-#>                          formerly naturalised    277 5.857302e-04
-#>                                        native  40363 8.534956e-02
-#>             native and doubtfully naturalised      9 1.903094e-05
-#>                        native and naturalised    137 2.896933e-04
-#>                   native and uncertain origin      2 4.229099e-06
-#>                                   naturalised   8769 1.854248e-02
-#>                                   not present 422103 8.925576e-01
-#>                              presumed extinct    102 2.156840e-04
-#>                              uncertain origin     23 4.863464e-05
+  tidyr::pivot_longer(4:21) |>
+  filter(value != "not present") |>
+  distinct(value)
+
+# value                            
+# <chr>                            
+#   1 native                           
+# 2 naturalised                      
+# 3 doubtfully naturalised           
+# 4 native and naturalised           
+# 5 formerly naturalised             
+# 6 presumed extinct                 
+# 7 uncertain origin                 
+# 8 native and uncertain origin      
+# 9 native and doubtfully naturalised
+```
+
+``` r
+status_matrix |> select(family, species, ACT:WA) |> print(n=20)
 ```
 
 You can also obtain the breakdown of species by established status for a
@@ -513,4 +527,50 @@ aligned_gbif_taxa |>
 #> # ℹ 12 more variables: taxonomic_status_aligned <chr>, aligned_reason <chr>, update_reason <chr>, subclass <chr>,
 #> #   taxon_distribution <chr>, scientific_name <chr>, taxon_ID <chr>, taxon_ID_genus <chr>, scientific_name_ID <chr>,
 #> #   canonical_name <chr>, row_number <dbl>, number_of_collapsed_taxa <dbl>
+```
+
+### Generating lists of synonyms
+
+[`synonyms_for_accepted_names()`](https://traitecoevo.github.io/APCalign/reference/synonyms_for_accepted_names.md)
+compiles a table of all outdated and misapplied names which once applied
+to an accepted taxon name. The output can be in a condensed format, with
+the synonyms for an accepted name appearing in a single cell, or in a
+long format, with a separate row for each synonym. Both formats indicate
+each synonyms “type” - `nomenclatural_synonym`, `taxonomic_synonym`,
+`orthographic_variant`, `misapplied`, etc. This function is particularly
+useful for research applications where you know a currently accepted
+taxon name and want to indicate part names that apply, to document the
+links or to efficiently search the literature.
+
+``` r
+> names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
+> synonyms_for_accepted_names(resources = resources, accepted_names = names_to_check, collapse = T)
+
+# A tibble: 4 × 8
+#  family       accepted_name        synonyms                                                                                                                           taxon_rank name_type scientific_name accepted_name_usage_ID genus
+#  <chr>        <chr>                <chr>                                                                                                                              <chr>      <chr>     <chr>           <chr>                  <chr>
+#1 Brassicaceae Cardamine gunnii     Cardamine hirsuta var. heterophylla (taxonomic synonym); Cardamine hirsuta var. debilis (taxonomic synonym); Cardamine gunnii, ty… species    scientif… Cardamine gunn… https://id.biodiversi… Card…
+#2 Fabaceae     Acacia aneura        Acacia aneura var. intermedia (taxonomic synonym); Racosperma aneurum var. intermedium (taxonomic synonym); Acacia aneura var. (N… species    scientif… Acacia aneura … https://id.biodiversi… Acac…
+#3 Proteaceae   Banksia nivea        Dryandra nivea var. venosa (taxonomic synonym); Josephia rachidifolia (taxonomic synonym); Dryandra nivea var. adscendens (taxono… species    scientif… Banksia nivea … https://id.biodiversi… Bank…
+#4 Proteaceae   Stenocarpus sinuatus Agnostus sinuatus (taxonomic synonym); Agnostus sinuata (taxonomic synonym); Stenocarpus sinuosus var. intergrifolius (taxonomic … species    scientif… Stenocarpus si… https://id.biodiversi… Sten…
+```
+
+``` r
+names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
+> synonyms_for_accepted_names(resources = resources, accepted_names = names_to_check, collapse = F)
+# A tibble: 25 × 9
+#    family       accepted_name    synonym                                            taxonomic_status      taxon_rank name_type  scientific_name                  accepted_name_usage_ID                           genus    
+#    <chr>        <chr>            <chr>                                              <fct>                 <chr>      <chr>      <chr>                            <chr>                                            <chr>    
+#  1 Brassicaceae Cardamine gunnii Cardamine hirsuta var. heterophylla                taxonomic synonym     species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine
+#  2 Brassicaceae Cardamine gunnii Cardamine hirsuta var. debilis                     taxonomic synonym     species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine
+#  3 Brassicaceae Cardamine gunnii Cardamine gunnii, type variant                     nomenclatural synonym species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine
+#  4 Brassicaceae Cardamine gunnii Cardamine heterophylla var. heterophylla           nomenclatural synonym species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine
+#  5 Brassicaceae Cardamine gunnii Cardamine heterophylla                             nomenclatural synonym species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine
+#  6 Brassicaceae Cardamine gunnii Cardamine debilis                                  misapplied            species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine
+#  7 Fabaceae     Acacia aneura    Acacia aneura var. intermedia                      taxonomic synonym     species    scientific Acacia aneura F.Muell. ex Benth. https://id.biodiversity.org.au/node/apni/6707550 Acacia   
+#  8 Fabaceae     Acacia aneura    Racosperma aneurum var. intermedium                taxonomic synonym     species    scientific Acacia aneura F.Muell. ex Benth. https://id.biodiversity.org.au/node/apni/6707550 Acacia   
+#  9 Fabaceae     Acacia aneura    Acacia aneura var. (Napperby S.L.Everist 4226)     taxonomic synonym     species    scientific Acacia aneura F.Muell. ex Benth. https://id.biodiversity.org.au/node/apni/6707550 Acacia   
+# 10 Fabaceae     Acacia aneura    Acacia aneura var. (Thargomindah D.E.Boyland 8099) taxonomic synonym     species    scientific Acacia aneura F.Muell. ex Benth. https://id.biodiversity.org.au/node/apni/6707550 Acacia   
+# ℹ 15 more rows
+# ℹ Use `print(n = ...)` to see more rows
 ```
