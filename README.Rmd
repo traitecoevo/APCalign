@@ -33,7 +33,7 @@ The 'APCalign' package simplifies this process by:
 -   Accessing up-to-date taxonomic information from the [Australian Plant Census](https://biodiversity.org.au/nsl/services/search/taxonomy) and the [Australia Plant Name Index](https://biodiversity.org.au/nsl/services/search/names).
 -   Aligning authoritative names to your taxonomic names using our [fuzzy matching algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
 -   Updating your taxonomic names in a transparent, reproducible manner
--   Because APCalign was developed explicitly for the Austraian flora it handles phrase names and aligns disparate phrase name syntax
+-   Because APCalign was developed explicitly for the Australian flora it handles phrase names and aligns disparate phrase name syntax
 -   Indicating when a split leads to uncertainty in a name alignment
 
 'APCalign' also supplies information about the established status (i.e., native/introduced) of plant taxa within different states/territories as compiled by the APC. It's useful for updating species list and intersecting them with the APC consensus for both taxonomy and establishment status.

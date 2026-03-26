@@ -26,7 +26,7 @@ The ‘APCalign’ package simplifies this process by:
   matching
   algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
 - Updating your taxonomic names in a transparent, reproducible manner
-- Because APCalign was developed explicitly for the Austraian flora it
+- Because APCalign was developed explicitly for the Australian flora it
   handles phrase names and aligns disparate phrase name syntax
 - Indicating when a split leads to uncertainty in a name alignment
 

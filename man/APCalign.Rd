@@ -14,7 +14,7 @@ the established status of plant taxa across different states/territories.
 }
 \section{Functions}{
 
-\strong{Standarise taxon names}
+\strong{Standardise taxon names}
 \itemize{
 \item \link{load_taxonomic_resources}
 \item \link{create_taxonomic_update_lookup}

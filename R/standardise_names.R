@@ -118,7 +118,7 @@ standardise_names <- function(taxon_names) {
     f("(\\s|\\()s\\.lat\\.(\\s|\\))", "") %>%
     f("(\\s|\\()s\\.str\\.(\\s|\\))", "") %>%
     
-    ## standarise "ser"
+    ## standardise "ser"
     f("\\sser(\\s|\\.\\s)", " ser. ") %>%
     f("\\sseries(\\s|\\.\\s)", " ser. ") %>%
 

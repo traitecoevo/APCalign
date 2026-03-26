@@ -60,7 +60,7 @@ There are two versions of the databases that you can retrieve with the `stable_o
 -   `stable` will retrieve the most recent, archived version of the databases from our [GitHub releases](https://github.com/traitecoevo/APCalign/releases). This is set as the default option.
 -   `current` will retrieve the up-to-date databases directly from the APC and APNI website.
 
-Note that the databases are quite large so the initial retrieval of `stable` versions will take a few minutes. Once the taxonomic resources have been stored locally, subsequent retrievals will take less time. Retrieving `current` resources will always take longer since it is accessing the latest information from the website. Check out our [Resource Caching](https://traitecoevo.github.io/APCalign/articles/caching.html) article to learn more about how the APC and APNIC databases are accessed, stored and retrieved.
+Note that the databases are quite large so the initial retrieval of `stable` versions will take a few minutes. Once the taxonomic resources have been stored locally, subsequent retrievals will take less time. Retrieving `current` resources will always take longer since it is accessing the latest information from the website. Check out our [Resource Caching](https://traitecoevo.github.io/APCalign/articles/caching.html) article to learn more about how the APC and APNI databases are accessed, stored and retrieved.
 
 
 ``` r
@@ -444,7 +444,7 @@ aligned_gbif_taxa |>
 
 ### Generating lists of synonyms {#synonyms}
 
-`synonyms_for_accepted_names()` compiles a table of all outdated and misapplied names which once applied to an accepted taxon name. The output can be in a condensed format,  with the synonyms for an accepted name appearing in a single cell, or in a long format, with a separate row for each synonym. Both formats indicate each synonyms "type" - `nomenclatural_synonym`, `taxonomic_synonym`, `orthographic_variant`, `misapplied`, etc. This function is particularly useful for research applications where you know a currently accepted taxon name and want to indicate part names that apply, to document the links or to effeciently search the literature.
+`synonyms_for_accepted_names()` compiles a table of all outdated and misapplied names which once applied to an accepted taxon name. The output can be in a condensed format,  with the synonyms for an accepted name appearing in a single cell, or in a long format, with a separate row for each synonym. Both formats indicate each synonyms "type" - `nomenclatural_synonym`, `taxonomic_synonym`, `orthographic_variant`, `misapplied`, etc. This function is particularly useful for research applications where you know a currently accepted taxon name and want to indicate part names that apply, to document the links or to efficiently search the literature.
 
 ```r
 > names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
