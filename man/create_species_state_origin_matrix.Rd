@@ -38,8 +38,8 @@ returns state level native, introduced and more complicated origins status for a
 \seealso{
 \code{\link{load_taxonomic_resources}}
 
-Other diversity methods: 
-\code{\link{native_anywhere_in_australia}()},
-\code{\link{state_diversity_counts}()}
+Other diversity methods:
+\code{\link[=native_anywhere_in_australia]{native_anywhere_in_australia()}},
+\code{\link[=state_diversity_counts]{state_diversity_counts()}}
 }
 \concept{diversity methods}

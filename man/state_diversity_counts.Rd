@@ -41,8 +41,8 @@ and more complicated species origins
 \seealso{
 \code{\link{load_taxonomic_resources}}
 
-Other diversity methods: 
-\code{\link{create_species_state_origin_matrix}()},
-\code{\link{native_anywhere_in_australia}()}
+Other diversity methods:
+\code{\link[=create_species_state_origin_matrix]{create_species_state_origin_matrix()}},
+\code{\link[=native_anywhere_in_australia]{native_anywhere_in_australia()}}
 }
 \concept{diversity methods}

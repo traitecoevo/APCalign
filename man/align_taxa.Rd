@@ -213,8 +213,8 @@ aligned_taxa <-
 \seealso{
 \code{\link{load_taxonomic_resources}}
 
-Other taxonomic alignment functions: 
-\code{\link{create_taxonomic_update_lookup}()},
-\code{\link{update_taxonomy}()}
+Other taxonomic alignment functions:
+\code{\link[=create_taxonomic_update_lookup]{create_taxonomic_update_lookup()}},
+\code{\link[=update_taxonomy]{update_taxonomy()}}
 }
 \concept{taxonomic alignment functions}

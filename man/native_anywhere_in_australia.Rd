@@ -39,8 +39,8 @@ within-Australia invasions, use \link{create_species_state_origin_matrix}.
 \donttest{native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata","Banksis notaspecies"))}
 }
 \seealso{
-Other diversity methods: 
-\code{\link{create_species_state_origin_matrix}()},
-\code{\link{state_diversity_counts}()}
+Other diversity methods:
+\code{\link[=create_species_state_origin_matrix]{create_species_state_origin_matrix()}},
+\code{\link[=state_diversity_counts]{state_diversity_counts()}}
 }
 \concept{diversity methods}
