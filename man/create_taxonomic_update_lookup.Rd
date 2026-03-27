@@ -197,8 +197,8 @@ create_taxonomic_update_lookup(
 \seealso{
 \code{\link{load_taxonomic_resources}}
 
-Other taxonomic alignment functions: 
-\code{\link{align_taxa}()},
-\code{\link{update_taxonomy}()}
+Other taxonomic alignment functions:
+\code{\link[=align_taxa]{align_taxa()}},
+\code{\link[=update_taxonomy]{update_taxonomy()}}
 }
 \concept{taxonomic alignment functions}
