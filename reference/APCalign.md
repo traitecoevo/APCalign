@@ -52,6 +52,9 @@ Useful links:
 
 Authors:
 
+- Elizabeth Wenk <e.wenk@unsw.edu.au>
+  ([ORCID](https://orcid.org/0000-0001-5640-5910)) \[copyright holder\]
+
 - Daniel Falster <daniel.falster@unsw.edu.au>
   ([ORCID](https://orcid.org/0000-0002-9814-092X)) \[contributor\]
 
