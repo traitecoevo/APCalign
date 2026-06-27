@@ -5,6 +5,26 @@ Australian Plant Census (APC) and Australian Plant Name Index (APNI). Exported
 functions align messy input names to accepted names, report taxonomic updates,
 and supply native/introduced status by state.
 
+## Cross-package context
+
+APCalign is part of the **AusTraits family**. It is the source of truth for plant
+**taxonomy alignment**, and publishes the `apc.*.parquet` / `apni.*.parquet` resources
+(GitHub releases) that downstream repos (notably `austraits.build`) consume during
+database builds. Family-wide concerns — pipeline order, dependency direction,
+cross-boundary artifacts, source-of-truth rules, gotchas — are documented centrally in the
+**[austraits-meta](https://github.com/traitecoevo/austraits-meta)** repo (don't restate
+them here):
+
+- **[`AGENTS.md`](https://github.com/traitecoevo/austraits-meta/blob/main/AGENTS.md)** —
+  cross-package orientation.
+- **[`dependencies.yml`](https://github.com/traitecoevo/austraits-meta/blob/main/dependencies.yml)** —
+  package graph + artifacts.
+- **[`governance/`](https://github.com/traitecoevo/austraits-meta/tree/main/governance)** —
+  labels, board #9, release playbooks, triage.
+
+> austraits-meta is hand-maintained — verify specifics against the actual repos.
+> Everything below is APCalign-local detail and stays here.
+
 ## Architecture
 
 The user-facing pipeline is **align → update**:
