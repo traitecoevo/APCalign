@@ -963,7 +963,7 @@ match_taxa <- function(
                             paste0(aligned_name_tmp, identifier_string2, "]")
       ),
       aligned_reason = paste0(
-        "Fuzzy match to APC-accepted genus. Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank",
+        "Fuzzy match to APC-accepted genus. Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank (",
         Sys.Date(),
         ")"
       ),
@@ -999,7 +999,7 @@ match_taxa <- function(
                             paste0(aligned_name_tmp, identifier_string2, "]")
       ),
       aligned_reason = paste0(
-        "Fuzzy match to APC-known genus. Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank",
+        "Fuzzy match to APC-known genus. Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank (",
         Sys.Date(),
         ")"
       ),
@@ -1036,7 +1036,7 @@ match_taxa <- function(
                               paste0(aligned_name_tmp, identifier_string2, "]")
         ),
         aligned_reason = paste0(
-          "Fuzzy match to APNI-listed genus. Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank",
+          "Fuzzy match to APNI-listed genus. Taxon name includes 'affinis' or 'aff' indicating an unknown taxon that bears an affinity to a different taxon in the same genus and taxon can only be aligned to genus-rank (",
           Sys.Date(),
           ")"
         ),
