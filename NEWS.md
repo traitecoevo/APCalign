@@ -1,5 +1,6 @@
 # APCalign 2.0.0
 
+- Fix malformed `aligned_reason` text for fuzzy genus-level `aff.`/`affinis` matches (`match_06b`/`06c`/`06d`), which previously appended the date without a separating ` (`.
 - New function `synonyms_for_accepted_names()` to list synonyms for currently accepted taxon names.
 - `load_taxonomic_resources()` now caches results in memory for the duration of the R session, so repeated calls with the same version return immediately without re-downloading or re-processing data.
 - New function `clear_cached_resources()` to remove the session cache and force a reload.
