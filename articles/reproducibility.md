@@ -18,6 +18,7 @@ new taxonomic information and decisions.
 First let’s load `APCalign`
 
 ``` r
+
 library(APCalign)
 ```
 
@@ -26,6 +27,7 @@ library(APCalign)
 To determine the version of the `APCalign` package itself:
 
 ``` r
+
 packageVersion("APCalign")
 ```
 
@@ -44,6 +46,7 @@ version controlled and stored in our repository as
 [releases](https://github.com/traitecoevo/APCalign/releases).
 
 ``` r
+
 load_taxonomic_resources(stable_or_current_data = "stable")
 ```
 
@@ -52,6 +55,7 @@ By default,
 will load the latest version of the static downloads.
 
 ``` r
+
 load_taxonomic_resources(
   stable_or_current_data = "stable",
   version = default_version()
@@ -62,6 +66,7 @@ In order to be more transparent, we recommend you to check what is the
 latest `default_version` before each alignment
 
 ``` r
+
 default_version()
 #> [1] "2026-03-25"
 ```
@@ -75,6 +80,7 @@ To ensure the specific version of taxonomic resources is available for
 subsequent functions make sure to assign them to an object:
 
 ``` r
+
 resources_0.0.4.9000 <- load_taxonomic_resources(
   stable_or_current_data = "stable",
   version = "0.0.4.9000"
@@ -85,6 +91,7 @@ Then during alignment and update, make sure you supply your version of
 taxonomic resources using the `resources` argument:
 
 ``` r
+
 # Align taxa
 aligned_taxa <- align_taxa(gbif_lite$species, resources = resources_0.0.4.9000)
 
@@ -103,6 +110,7 @@ research article introducing the `APCalign`, we will share the details
 of its citation when it is in press.
 
 ``` r
+
 citation("APCalign")
 #> To cite package 'APCalign' in publications use:
 #> 

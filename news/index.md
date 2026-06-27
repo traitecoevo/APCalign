@@ -2,6 +2,8 @@
 
 ## APCalign 2.0.0
 
+CRAN release: 2026-03-27
+
 - New function
   [`synonyms_for_accepted_names()`](https://traitecoevo.github.io/APCalign/reference/synonyms_for_accepted_names.md)
   to list synonyms for currently accepted taxon names.

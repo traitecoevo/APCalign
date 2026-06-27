@@ -33,6 +33,7 @@ aligning algorithms.
 From CRAN:
 
 ``` r
+
 install.packages("APCalign")
 
 library(APCalign)
@@ -41,6 +42,7 @@ library(APCalign)
 OR for the GitHub version:
 
 ``` r
+
 install.packages("remotes")
 remotes::install_github("traitecoevo/APCalign")
 ```
@@ -53,6 +55,7 @@ Or for the ShinyApp head to
 Generating a look-up table can be done with just one function:
 
 ``` r
+
 create_taxonomic_update_lookup( 
   taxa = c(
     "Banksia integrifolia",
@@ -78,6 +81,7 @@ create_taxonomic_update_lookup(
 You can alternatively load the taxonomic resources into memory first:
 
 ``` r
+
 tax_resources <- load_taxonomic_resources()
 
 create_taxonomic_update_lookup( 
@@ -129,6 +133,7 @@ Checking for a list of species to see if they are classified as
 Australian natives:
 
 ``` r
+
 native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata"), resources = tax_resources)
 #> # A tibble: 2 × 2
 #>   species             native_anywhere_in_aus
@@ -141,6 +146,7 @@ Determining the number of species present in NSW and their establishment
 means:
 
 ``` r
+
 state_diversity_counts("NSW", resources = tax_resources)
 #> # A tibble: 7 × 3
 #>   origin                            state num_species
@@ -162,6 +168,7 @@ distribution and establishment means, by state.
 Getting a family lookup table for genera from the specified taxonomy:
 
 ``` r
+
 get_apc_genus_family_lookup(c("Eucalyptus",
                               "Pinus",
                               "Actinotus",
@@ -183,6 +190,7 @@ get_apc_genus_family_lookup(c("Eucalyptus",
 Compiling a list of outdated synonyms for currently accepted names:
 
 ``` r
+
 names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
 synonyms_for_accepted_names(resources = tax_resources, accepted_names = names_to_check, collapse = T)
 #> # A tibble: 4 × 5
@@ -211,6 +219,7 @@ algorithm](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.
 Please consider citing our work, we are really proud of it!
 
 ``` r
+
 citation("APCalign")
 #> To cite package 'APCalign' in publications use:
 #> 
