@@ -58,7 +58,7 @@ remotes::install_github("traitecoevo/APCalign")
 ```
 
 Or for the ShinyApp head to
-[unsw.shinyapps.io/APCalign-app](https://unsw.shinyapps.io/APCalign-app/)
+[app.austraits.org/APCalign-app](https://app.austraits.org/APCalign-app/)
 
 ## A quick demo
 
@@ -226,7 +226,7 @@ citation("APCalign")
 #>   Wenk E, Cornwell W, Fuchs A, Kar F, Monro A, Sauquet H, Stephens R,
 #>   Falster D (2024). "APCalign: an R package workflow and app for
 #>   aligning and updating flora names to the Australian Plant Census."
-#>   _Australian Journal of Botany_, *72*(4). R package version: 1.1.4,
+#>   _Australian Journal of Botany_, *72*(4). R package version: 2.0.0,
 #>   <https://doi.org/10.1071/BT24014>.
 #> 
 #> A BibTeX entry for LaTeX users is
@@ -239,7 +239,7 @@ citation("APCalign")
 #>     number = {4},
 #>     year = {2024},
 #>     publisher = {CSIRO Publishing},
-#>     note = {R package version: 1.1.4},
+#>     note = {R package version: 2.0.0},
 #>     url = {https://doi.org/10.1071/BT24014},
 #>   }
 ```
@@ -268,3 +268,20 @@ Contributing? Issues across the family are tracked on one board,
 read the [issue & labelling guide](https://github.com/traitecoevo/austraits-meta/blob/main/governance/issue-guide.md)
 in [`austraits-meta`](https://github.com/traitecoevo/austraits-meta) — the family's cross-package
 knowledge and governance hub — before filing.
+
+## Acknowledgements
+
+AusTraits is made possible by contributions from our partner organisations — the
+[University of New South Wales](https://www.unsw.edu.au/),
+[Western Sydney University](https://www.westernsydney.edu.au/),
+[Botanic Gardens of Sydney](https://www.botanicgardens.org.au/),
+[the University of Melbourne](https://www.unimelb.edu.au/),
+the [Atlas of Living Australia](https://www.ala.org.au/), and the Australian Government
+[Department of Climate Change, Energy, the Environment and Water](https://www.dcceew.gov.au) — and
+from our [advisory board, data contributors, and past partners](https://austraits.org/team/team-partners.html).
+
+AusTraits is a co-investment partnership with the
+[Australian Research Data Commons](https://ardc.edu.au/) (ARDC) through the Planet Research Data
+Commons ([DOI: 10.3565/nyk4-4r91](https://doi.org/10.3565/nyk4-4r91)). The ARDC is enabled by the
+Australian Government's [National Collaborative Research Infrastructure Strategy](https://www.education.gov.au/ncris)
+(NCRIS).
