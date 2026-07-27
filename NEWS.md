@@ -1,5 +1,6 @@
 # APCalign 2.0.0
 
+- `native_anywhere_in_australia()` now checks for missing taxonomic resources before building the state-origin matrix, so an offline call reports the problem once instead of once per function that gives up. Its native/introduced test also now reads only the state columns, so a taxon whose name contains "native" (e.g. the `nativitatis` epithets) can no longer be misclassified.
 - New function `synonyms_for_accepted_names()` to list synonyms for currently accepted taxon names.
 - `load_taxonomic_resources()` now caches results in memory for the duration of the R session, so repeated calls with the same version return immediately without re-downloading or re-processing data.
 - New function `clear_cached_resources()` to remove the session cache and force a reload.
