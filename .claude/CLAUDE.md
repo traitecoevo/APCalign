@@ -14,13 +14,28 @@ The user-facing pipeline is **align → update**:
 - `align_taxa()` ([R/align_taxa.R](../R/align_taxa.R)) — standardises input names
   and finds the best APC/APNI alignment. Builds a `taxa` list with `tocheck` and
   `checked` tibbles, then delegates to `match_taxa()`.
-- `match_taxa()` ([R/match_taxa.R](../R/match_taxa.R)) — **the core matcher, ~2150
-  lines.** It runs ~54 sequential match branches (`match_01a` … `match_12i`),
-  each: compute a logical index `i`, `match()` against a resource table, `mutate()`
-  the matched rows with `aligned_name`/`taxon_rank`/`taxonomic_dataset`/
-  `aligned_reason`/`alignment_code`, then `redistribute()` checked rows out of
-  `tocheck` and early-return when `tocheck` is empty. Branches are heavily
-  copy-pasted — see "Known issues".
+- `match_taxa()` ([R/match_taxa.R](../R/match_taxa.R)) — **the core matcher.** It
+  runs ~54 sequential match branches (`match_01a` … `match_12i`). Each builds a
+  logical index `i` of the rows it can resolve, calls `apply_match()` to stamp
+  those rows with `aligned_name`/`taxon_rank`/`taxonomic_dataset`/
+  `aligned_reason`/`alignment_code` and `redistribute()` them out of `tocheck`,
+  then early-returns when `tocheck` is empty. **The order of the branches is the
+  algorithm** — do not reorder without re-running the alignment benchmarks.
+
+  Branch helpers, all at the bottom of the same file:
+  - `apply_match()` — the shared branch tail. Appends ` (<date>)` to
+    `aligned_reason` centrally, so that separator can no longer be mistyped
+    per-branch (it was, three times).
+  - `match_reference_name()` — the shape 21 branches share: rows whose key column
+    exactly matches a reference-table column take that row's canonical name and
+    rank.
+  - `genus_sp_name()` / `higher_rank_name()` — build `Acacia sp. [Royal NP]` and
+    `Acacia sp. [acacia aff. dealbata; Royal NP]` respectively.
+  - `fuzzy_match_column()` — fuzzy-match a whole column; NA inputs pass through
+    (`fuzzy_match()` errors on NA).
+  - `drop_scratch()` — removes `identifier_string`/`identifier_string2` on every
+    exit path, so `full = TRUE` output is the documented column set regardless of
+    which branch finished the job.
 - `update_taxonomy()` ([R/update_taxonomy.R](../R/update_taxonomy.R)) — maps aligned
   names to currently accepted names, handling synonyms and taxonomic splits.
 - `load_taxonomic_resources()` ([R/load_taxonomic_resources.R](../R/load_taxonomic_resources.R))

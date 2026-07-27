@@ -1,6 +1,8 @@
 # APCalign 2.0.0
 
 - Fix malformed `aligned_reason` text for fuzzy genus-level `aff.`/`affinis` matches (`match_06b`/`06c`/`06d`), which previously appended the date without a separating ` (`.
+- `align_taxa(full = TRUE)` no longer leaks the internal `identifier_string`, `identifier_string2` and `aligned_name_tmp` columns when every name is aligned before the last match branch runs. The output is now the documented set of columns in all cases.
+- Internal refactor of `match_taxa()`: the ~54 match branches now share helper functions rather than repeating the same block of code. Alignment output is unchanged.
 - New function `synonyms_for_accepted_names()` to list synonyms for currently accepted taxon names.
 - `load_taxonomic_resources()` now caches results in memory for the duration of the R session, so repeated calls with the same version return immediately without re-downloading or re-processing data.
 - New function `clear_cached_resources()` to remove the session cache and force a reload.
