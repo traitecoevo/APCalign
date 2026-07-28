@@ -80,6 +80,17 @@ test_that("get_versions() messages and returns NULL when offline", {
   })
 })
 
+test_that("native_anywhere_in_australia() bails out before doing any work", {
+  # The missing-resources guard runs first, so the user gets one message rather
+  # than one per downstream function that also has to give up.
+  msgs <- capture_messages(
+    result <- native_anywhere_in_australia("Eucalyptus globulus", resources = NULL)
+  )
+
+  expect_null(result)
+  expect_length(msgs, 1)
+})
+
 test_that("functions return visibly when online", {
   skip_on_ci()
   skip_on_cran()
