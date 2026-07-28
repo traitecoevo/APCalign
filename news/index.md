@@ -4,6 +4,13 @@
 
 CRAN release: 2026-03-27
 
+- [`native_anywhere_in_australia()`](https://traitecoevo.github.io/APCalign/reference/native_anywhere_in_australia.md)
+  now checks for missing taxonomic resources before building the
+  state-origin matrix, so an offline call reports the problem once
+  instead of once per function that gives up. Its native/introduced test
+  also now reads only the state columns, so a taxon whose name contains
+  “native” (e.g. the `nativitatis` epithets) can no longer be
+  misclassified.
 - New function
   [`synonyms_for_accepted_names()`](https://traitecoevo.github.io/APCalign/reference/synonyms_for_accepted_names.md)
   to list synonyms for currently accepted taxon names.
