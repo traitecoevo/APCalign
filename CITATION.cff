@@ -1,0 +1,100 @@
+# ------------------------------------------------
+# CITATION.cff file created with {cffr} R package
+# See also: https://docs.ropensci.org/cffr/
+# ------------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "APCalign" in publications use:'
+type: software
+license: MIT
+title: 'APCalign: Resolving Plant Taxon Names Using the Australian Plant Census'
+version: 2.0.0
+doi: 10.1071/BT24014
+identifiers:
+- type: doi
+  value: 10.32614/CRAN.package.APCalign
+- type: url
+  value: https://doi.org/10.1071/BT24014
+abstract: The process of resolving and updating taxon names is necessary when working
+  with biodiversity data. 'APCalign' uses the Australian Plant Census (APC) and the
+  Australian Plant Name Index (APNI) to align and update plant taxon names to current,
+  accepted standards. 'APCalign' also supplies information about the establishment
+  status (i.e. native or introduced) of plant taxa across different states/territories.
+authors:
+- family-names: Wenk
+  given-names: Elizabeth
+  email: e.wenk@unsw.edu.au
+  orcid: https://orcid.org/0000-0001-5640-5910
+- family-names: Falster
+  given-names: Daniel
+  email: daniel.falster@unsw.edu.au
+  orcid: https://orcid.org/0000-0002-9814-092X
+- family-names: Cornwell
+  given-names: Will
+  email: w.cornwell@unsw.edu.au
+  orcid: https://orcid.org/0000-0003-4080-4073
+- family-names: Kar
+  given-names: Fonti
+  email: f.kar@unsw.edu.au
+  orcid: https://orcid.org/0000-0002-2760-3974
+preferred-citation:
+  type: article
+  title: 'APCalign: an R package workflow and app for aligning and updating flora
+    names to the Australian Plant Census'
+  authors:
+  - family-names: Wenk
+    given-names: Elizabeth
+    email: e.wenk@unsw.edu.au
+    orcid: https://orcid.org/0000-0001-5640-5910
+  - family-names: Cornwell
+    given-names: Will
+    email: w.cornwell@unsw.edu.au
+    orcid: https://orcid.org/0000-0003-4080-4073
+  - family-names: Fuchs
+    given-names: Ann
+    email: anne.fuchs@dcceew.gov.au
+    orcid: https://orcid.org/0000-0001-5737-8803
+  - family-names: Kar
+    given-names: Fonti
+    email: f.kar@unsw.edu.au
+    orcid: https://orcid.org/0000-0002-2760-3974
+  - family-names: Monro
+    given-names: Anna
+    email: anna.monro@dcceew.gov.au
+    orcid: https://orcid.org/0000-0001-9031-2670
+  - family-names: Sauquet
+    given-names: Herve
+    email: herve.sauquet@botanicgardens.nsw.gov.au
+    orcid: https://orcid.org/0000-0001-8305-3236
+  - family-names: Stephens
+    given-names: Ruby
+    email: stephenseruby@gmail.com
+    orcid: https://orcid.org/0000-0002-3767-2690
+  - family-names: Falster
+    given-names: Daniel
+    email: daniel.falster@unsw.edu.au
+    orcid: https://orcid.org/0000-0002-9814-092X
+  journal: Australian Journal of Botany
+  volume: '72'
+  issue: '4'
+  year: '2024'
+  publisher:
+    name: CSIRO Publishing
+  notes: 'R package version: 2.0.0'
+  url: https://doi.org/10.1071/BT24014
+  doi: 10.1071/BT24014
+repository: https://CRAN.R-project.org/package=APCalign
+repository-code: https://github.com/traitecoevo/APCalign
+url: https://traitecoevo.github.io/APCalign/
+contact:
+- family-names: Wenk
+  given-names: Elizabeth
+  email: e.wenk@unsw.edu.au
+  orcid: https://orcid.org/0000-0001-5640-5910
+keywords:
+- r-package
+- taxonomy
+- australia
+- plants
+- flora
+
