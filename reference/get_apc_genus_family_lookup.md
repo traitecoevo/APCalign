@@ -36,10 +36,8 @@ A data frame with two columns: "genus", indicating the genus name, and
 
 ``` r
  get_apc_genus_family_lookup(genus = c("Acacia", "Eucalyptus"))
-#> Using cached taxonomic resources.
-#> # A tibble: 2 × 2
-#>   genus      family   
-#>   <chr>      <chr>    
-#> 1 Acacia     Fabaceae 
-#> 2 Eucalyptus Myrtaceae
+#> API currently down, try again later
+#> No internet connection, please retry with stable connection or specify a local version of the data
+#> Not finding taxonomic resources; check internet connection?
+#> NULL
 ```

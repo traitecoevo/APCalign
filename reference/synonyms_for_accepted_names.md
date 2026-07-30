@@ -44,11 +44,9 @@ synonyms_for_accepted_names(
   accepted_names = c("Justicia tenella", "Acacia aneura"),
   collapse = TRUE
 )
-#> Using cached taxonomic resources.
-#> # A tibble: 2 × 5
-#>   family      accepted_name    synonyms   scientific_name accepted_name_usage_ID
-#>   <chr>       <chr>            <chr>      <chr>           <chr>                 
-#> 1 Acanthaceae Justicia tenella Rostellul… Justicia tenel… https://id.biodiversi…
-#> 2 Fabaceae    Acacia aneura    Acacia an… Acacia aneura … https://id.biodiversi…
+#> API currently down, try again later
+#> No internet connection, please retry with stable connection or specify a local version of the data
+#> Not finding taxonomic resources; check internet connection?
+#> NULL
 # }
 ```

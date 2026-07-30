@@ -57,12 +57,8 @@ Other diversity methods:
 
 ``` r
 native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata","Banksis notaspecies"))
-#> Using cached taxonomic resources.
-#> Warning: At least one input not found in APC; consider using `create_taxonomic_update_lookup` first and ensure you've correctly specified the `include_infrataxa` parameter.
-#> # A tibble: 3 × 2
-#>   species             native_anywhere_in_aus
-#>   <chr>               <chr>                 
-#> 1 Eucalyptus globulus native                
-#> 2 Pinus radiata       introduced            
-#> 3 Banksis notaspecies unknown               
+#> API currently down, try again later
+#> No internet connection, please retry with stable connection or specify a local version of the data
+#> Not finding taxonomic resources; check internet connection?
+#> NULL
 ```
