@@ -117,11 +117,16 @@ the CSV.
   (`Gomphrena affinis`). `standardise_names()` only rewrites it to `aff.` where
   it cannot be the epithet — not at the end of a name, and not before a rank
   marker (`not_before_rank_marker` in [R/standardise_names.R](R/standardise_names.R),
-  shared with the affinity predicates in `match_taxa()`). Two cases are still
-  rewritten wrongly and need a taxonomic call before being changed:
-  `Kunzea affinis x Kunzea jucunda` / `... x Kunzea preissiana` (epithet before
-  a hybrid marker). `Deyeuxia sp. aff. affinis (Nunniong Plateau)` is also
-  rewritten, but still aligns correctly via authorship matching.
+  shared with the affinity predicates in `match_taxa()`). Two names are still
+  rewritten wrongly — `Kunzea affinis x Kunzea jucunda` and
+  `... x Kunzea preissiana`, where the epithet is followed by a hybrid marker.
+  **This is a settled decision, not an open bug:** @ehwenk ruled (#289) that
+  this level of error is acceptable where two rules intersect, and that such
+  cases get checked and reverted manually downstream. Don't "fix" them by
+  widening the lookahead — a hybrid marker after an epithet is not the same
+  shape as a rank marker, and chasing it risks the far commoner affinity case.
+  `Deyeuxia sp. aff. affinis (Nunniong Plateau)` is also rewritten, but still
+  aligns correctly via authorship matching.
 - **`native_anywhere_in_australia()`**: the `is.null(resources)` guard runs *after*
   `create_species_state_origin_matrix()` (so offline errors instead of failing
   gracefully), and its `apply(..., grepl("native", x))` greps across all columns
