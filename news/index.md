@@ -4,6 +4,19 @@
 
 CRAN release: 2026-03-27
 
+- [`standardise_names()`](https://traitecoevo.github.io/APCalign/reference/standardise_names.md)
+  no longer rewrites `affinis` to `aff.` when it is the species epithet
+  of an infraspecific name — that is, when the next word is a rank
+  marker (`subsp.`, `var.`, `f.`, `ser.`, `cv.` and their unabbreviated
+  or unpunctuated variants). Previously
+  `Gomphrena affinis subsp. pilbarensis` became
+  `Gomphrena aff. subsp. pilbarensis`, a name that exists nowhere, so it
+  could only ever align to genus rank. Eight APC/APNI names were
+  affected, three of them currently accepted; all now align at their own
+  rank. A trailing `affinis` (`Acacia affinis`) was already left alone
+  and still is. Two hybrid formulas of the form
+  `Genus affinis x Genus epithet` are still rewritten, and are left for
+  a follow-up.
 - Fix malformed `aligned_reason` text for fuzzy genus-level
   `aff.`/`affinis` matches (`match_06b`/`06c`/`06d`), which previously
   appended the date without a separating `(`.

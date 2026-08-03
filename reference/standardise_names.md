@@ -36,6 +36,11 @@ A character vector of standardised taxon names.
 - It standardises or removes a few additional filler words used within
   taxon names (affinis becomes aff.; s.l. and s.s. are removed).
 
+`affinis` is only treated as an affinity qualifier where it cannot be a
+species epithet: it is left alone at the end of a name
+(`Acacia affinis`) and before a rank marker
+(`Gomphrena affinis subsp. pilbarensis`).
+
 ## Examples
 
 ``` r
@@ -45,9 +50,16 @@ standardise_names(c("Quercus suber",
                     "Agave americana var. marginata",
                     "Agave americana v marginata",
                     "Notelaea longifolia forma longifolia",
-                    "Notelaea longifolia f longifolia"))
-#> [1] "Quercus suber"                     "Eucalyptus sp."                   
-#> [3] "Eucalyptus sp."                    "Agave americana var. marginata"   
-#> [5] "Agave americana var. marginata"    "Notelaea longifolia f. longifolia"
-#> [7] "Notelaea longifolia f. longifolia"
+                    "Notelaea longifolia f longifolia",
+                    "Acacia affinis dealbata",
+                    "Gomphrena affinis subsp. pilbarensis"))
+#> [1] "Quercus suber"                       
+#> [2] "Eucalyptus sp."                      
+#> [3] "Eucalyptus sp."                      
+#> [4] "Agave americana var. marginata"      
+#> [5] "Agave americana var. marginata"      
+#> [6] "Notelaea longifolia f. longifolia"   
+#> [7] "Notelaea longifolia f. longifolia"   
+#> [8] "Acacia aff. dealbata"                
+#> [9] "Gomphrena affinis subsp. pilbarensis"
 ```

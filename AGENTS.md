@@ -141,6 +141,25 @@ legitimately change matcher output, regenerate with
   repetition remains (the fuzzy genus/family match steps still repeat a
   recognisable shape), so there is more to collapse — but only ever
   backed by the snapshot above.
+- **`affinis` is ambiguous.** It is both an affinity qualifier
+  (`Acacia affinis dealbata` = a taxon resembling *A. dealbata*) and a
+  real species epithet (`Gomphrena affinis`).
+  [`standardise_names()`](https://traitecoevo.github.io/APCalign/reference/standardise_names.md)
+  only rewrites it to `aff.` where it cannot be the epithet — not at the
+  end of a name, and not before a rank marker (`not_before_rank_marker`
+  in
+  [R/standardise_names.R](https://traitecoevo.github.io/APCalign/R/standardise_names.R),
+  shared with the affinity predicates in `match_taxa()`). Two names are
+  still rewritten wrongly — `Kunzea affinis x Kunzea jucunda` and
+  `... x Kunzea preissiana`, where the epithet is followed by a hybrid
+  marker. **This is a settled decision, not an open bug:** @ehwenk ruled
+  (#289) that this level of error is acceptable where two rules
+  intersect, and that such cases get checked and reverted manually
+  downstream. Don’t “fix” them by widening the lookahead — a hybrid
+  marker after an epithet is not the same shape as a rank marker, and
+  chasing it risks the far commoner affinity case.
+  `Deyeuxia sp. aff. affinis (Nunniong Plateau)` is also rewritten, but
+  still aligns correctly via authorship matching.
 - **[`native_anywhere_in_australia()`](https://traitecoevo.github.io/APCalign/reference/native_anywhere_in_australia.md)**:
   the `is.null(resources)` guard runs *after*
   [`create_species_state_origin_matrix()`](https://traitecoevo.github.io/APCalign/reference/create_species_state_origin_matrix.md)

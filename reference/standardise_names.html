@@ -82,7 +82,11 @@ as output.</p>
 as people use many variants of these terms.</p></li>
 <li><p>It standardises or removes a few additional filler words used within
 taxon names (affinis becomes aff.; s.l. and s.s. are removed).</p></li>
-</ul></div>
+</ul><p><code>affinis</code> is only treated as an affinity qualifier where it cannot be a
+species epithet: it is left alone at the end of a name
+(<code>Acacia affinis</code>) and before a rank marker
+(<code>Gomphrena affinis subsp. pilbarensis</code>).</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -92,11 +96,18 @@ taxon names (affinis becomes aff.; s.l. and s.s. are removed).</p></li>
 <span class="r-in"><span>                    <span class="st">"Agave americana var. marginata"</span>,</span></span>
 <span class="r-in"><span>                    <span class="st">"Agave americana v marginata"</span>,</span></span>
 <span class="r-in"><span>                    <span class="st">"Notelaea longifolia forma longifolia"</span>,</span></span>
-<span class="r-in"><span>                    <span class="st">"Notelaea longifolia f longifolia"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Quercus suber"                     "Eucalyptus sp."                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "Eucalyptus sp."                    "Agave americana var. marginata"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "Agave americana var. marginata"    "Notelaea longifolia f. longifolia"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [7] "Notelaea longifolia f. longifolia"</span>
+<span class="r-in"><span>                    <span class="st">"Notelaea longifolia f longifolia"</span>,</span></span>
+<span class="r-in"><span>                    <span class="st">"Acacia affinis dealbata"</span>,</span></span>
+<span class="r-in"><span>                    <span class="st">"Gomphrena affinis subsp. pilbarensis"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Quercus suber"                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "Eucalyptus sp."                      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "Eucalyptus sp."                      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "Agave americana var. marginata"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "Agave americana var. marginata"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "Notelaea longifolia f. longifolia"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [7] "Notelaea longifolia f. longifolia"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [8] "Acacia aff. dealbata"                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [9] "Gomphrena affinis subsp. pilbarensis"</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
