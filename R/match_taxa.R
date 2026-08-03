@@ -125,15 +125,22 @@ match_taxa <- function(
 
   ## `cf.` is only recognised by the exact-genus step (match_06a); the fuzzy
   ## fall-backs below it look for `aff.`/`affinis` alone.
+  ##
+  ## A bare `affinis` at the end of a name, or one qualified by a rank marker,
+  ## is the species epithet `affinis` rather than an affinity qualifier, so
+  ## neither counts as affinity here. `standardise_names()` leaves both alone
+  ## for the same reason; see `not_before_rank_marker`.
+  affinis_qualifier <- paste0(" affinis", not_before_rank_marker, "\\s")
+
   has_affinity_or_cf <- function(x) {
     stringr::str_detect(x, "[Aa]ff[\\.\\s]") |
-      stringr::str_detect(x, " affinis[\\s|$]") |
+      stringr::str_detect(x, affinis_qualifier) |
       stringr::str_detect(x, " cf[\\.\\s]")
   }
 
   has_affinity <- function(x) {
     stringr::str_detect(x, "[Aa]ff[\\.\\s]") |
-      stringr::str_detect(x, " affinis ")
+      stringr::str_detect(x, affinis_qualifier)
   }
 
   ## Explanations shared between the exact and fuzzy variants of each

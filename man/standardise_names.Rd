@@ -29,6 +29,11 @@ as people use many variants of these terms.
 \item It standardises or removes a few additional filler words used within
 taxon names (affinis becomes aff.; s.l. and s.s. are removed).
 }
+
+\code{affinis} is only treated as an affinity qualifier where it cannot be a
+species epithet: it is left alone at the end of a name
+(\verb{Acacia affinis}) and before a rank marker
+(\verb{Gomphrena affinis subsp. pilbarensis}).
 }
 \examples{
 standardise_names(c("Quercus suber",
@@ -37,5 +42,7 @@ standardise_names(c("Quercus suber",
                     "Agave americana var. marginata",
                     "Agave americana v marginata",
                     "Notelaea longifolia forma longifolia",
-                    "Notelaea longifolia f longifolia"))
+                    "Notelaea longifolia f longifolia",
+                    "Acacia affinis dealbata",
+                    "Gomphrena affinis subsp. pilbarensis"))
 }

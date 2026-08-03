@@ -1,4 +1,19 @@
 
+## Negative lookahead for an infraspecific rank marker.
+##
+## `affinis` is both an affinity qualifier ("Acacia affinis dealbata" = a taxon
+## resembling Acacia dealbata) and a legitimate species epithet. The two are
+## told apart by what follows: an epithet can be qualified by a rank marker,
+## an affinity qualifier cannot. So `Gomphrena affinis subsp. pilbarensis` --
+## an accepted APC name -- must keep its `affinis`.
+##
+## The marker spellings listed here are the ones that can still be present at
+## the point this is applied; `standardise_names()` normalises some of them
+## (forma/form -> f.) only further down its pipeline. Shared with the affinity
+## predicates in `match_taxa()` so the two cannot drift apart.
+not_before_rank_marker <-
+  "(?!\\s+(?:subsp|ssp|subvar|var|forma|form|ser|series|cv|f)\\.?(?:\\s|$))"
+
 #' @title Standardise taxon names
 #' 
 #' @description
@@ -17,6 +32,11 @@
 #' -  It standardises or removes a few additional filler words used within
 #'  taxon names (affinis becomes aff.; s.l. and s.s. are removed).
 #'
+#'  `affinis` is only treated as an affinity qualifier where it cannot be a
+#'  species epithet: it is left alone at the end of a name
+#'  (`Acacia affinis`) and before a rank marker
+#'  (`Gomphrena affinis subsp. pilbarensis`).
+#'
 #' @param taxon_names A character vector of taxon names that need to be standardised.
 #'
 #' @return A character vector of standardised taxon names.
@@ -28,7 +48,9 @@
 #'                     "Agave americana var. marginata",
 #'                     "Agave americana v marginata",
 #'                     "Notelaea longifolia forma longifolia",
-#'                     "Notelaea longifolia f longifolia"))
+#'                     "Notelaea longifolia f longifolia",
+#'                     "Acacia affinis dealbata",
+#'                     "Gomphrena affinis subsp. pilbarensis"))
 #' @export
 standardise_names <- function(taxon_names) {
   f <- function(x, find, replace) {
@@ -90,10 +112,14 @@ standardise_names <- function(taxon_names) {
     f("\\sv(\\s|$|\\.)", " var. ") %>%
     
     ## aff. not affin, aff affn affinis
+    ## `affinis` is also a legitimate species epithet, so it is only rewritten
+    ## when it sits mid-name and is not the epithet of an infraspecific name:
+    ## a trailing `affinis` is left alone (`Acacia affinis`), and so is one
+    ## followed by a rank marker (`Gomphrena affinis subsp. pilbarensis`).
     f("\\saffin(\\s|$)",    " aff. ") %>%
     f("\\saff(\\s|$)",      " aff. ") %>%
     f("\\saffn(\\s|$|\\.)", " aff. ") %>%
-    f("\\saffinis(\\s)",  " aff. ") %>%
+    f(paste0("\\saffinis", not_before_rank_marker, "(\\s)"),  " aff. ") %>%
     
     ## f. not forma or form or form. or f
     f("\\sforma(\\s|$)",       " f. ") %>%

@@ -48,6 +48,33 @@ test_that("previously-untested match branches resolve as expected", {
   expect_false(any(is.na(out$aligned_name[!unknown])))
 })
 
+test_that("`affinis` as a species epithet is not read as an affinity qualifier", {
+  # `affinis` is both an affinity qualifier ("Acacia affinis dealbata" = a taxon
+  # resembling Acacia dealbata) and a legitimate species epithet. Names using it
+  # as the epithet were rewritten to `aff.` by standardise_names() and so could
+  # only ever align to genus rank -- including accepted APC names.
+
+  accepted <- unique(resources$APC_accepted$canonical_name)
+  epithet_affinis <- sort(accepted[stringr::str_detect(accepted, "\\baffinis\\b")])
+  expect_gt(length(epithet_affinis), 0)
+
+  # every accepted name containing `affinis` aligns to itself, at its own rank
+  out <- align_taxa(epithet_affinis, resources = resources, full = TRUE,
+                    quiet = TRUE)
+  expect_equal(out$aligned_name, epithet_affinis)
+  expect_false(any(out$taxon_rank == "genus"))
+
+  # ... and genuine affinity usage still resolves through the affinis match
+  # steps to genus rank, unchanged.
+  affinity <- align_taxa(
+    c("Acacia affinis dealbata", "Banksia affinis serrata", "Banksia aff. serrata"),
+    resources = resources, full = TRUE, quiet = TRUE
+  )
+  expect_equal(affinity$taxon_rank, rep("genus", 3))
+  expect_equal(affinity$alignment_code,
+               rep("match_06a_species_affinis_APC_exact", 3))
+})
+
 test_that("every aligned_reason is well-formed (ends with a parenthesised date)", {
   # Guards against the copy-paste class of bug where a branch's reason string
   # omits the ' (' before the appended Sys.Date(), e.g. '...genus-rank2026-01-01)'.
