@@ -1,5 +1,6 @@
 # APCalign 2.0.0
 
+- `standardise_names()` no longer rewrites `affinis` to `aff.` when it is the species epithet of an infraspecific name — that is, when the next word is a rank marker (`subsp.`, `var.`, `f.`, `ser.`, `cv.` and their unabbreviated or unpunctuated variants). Previously `Gomphrena affinis subsp. pilbarensis` became `Gomphrena aff. subsp. pilbarensis`, a name that exists nowhere, so it could only ever align to genus rank. Eight APC/APNI names were affected, three of them currently accepted; all now align at their own rank. A trailing `affinis` (`Acacia affinis`) was already left alone and still is. Two hybrid formulas of the form `Genus affinis x Genus epithet` are still rewritten, and are left for a follow-up.
 - Fix malformed `aligned_reason` text for fuzzy genus-level `aff.`/`affinis` matches (`match_06b`/`06c`/`06d`), which previously appended the date without a separating ` (`.
 - `align_taxa(full = TRUE)` no longer leaks the internal `identifier_string`, `identifier_string2` and `aligned_name_tmp` columns when every name is aligned before the last match step runs. The output is now the documented set of columns in all cases.
 - Internal refactor of `match_taxa()`: the ~54 match steps now share helper functions rather than repeating the same block of code. Alignment output is unchanged.
