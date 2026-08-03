@@ -4,6 +4,16 @@
 
 CRAN release: 2026-03-27
 
+- Fix malformed `aligned_reason` text for fuzzy genus-level
+  `aff.`/`affinis` matches (`match_06b`/`06c`/`06d`), which previously
+  appended the date without a separating `(`.
+- `align_taxa(full = TRUE)` no longer leaks the internal
+  `identifier_string`, `identifier_string2` and `aligned_name_tmp`
+  columns when every name is aligned before the last match step runs.
+  The output is now the documented set of columns in all cases.
+- Internal refactor of `match_taxa()`: the ~54 match steps now share
+  helper functions rather than repeating the same block of code.
+  Alignment output is unchanged.
 - [`native_anywhere_in_australia()`](https://traitecoevo.github.io/APCalign/reference/native_anywhere_in_australia.md)
   now checks for missing taxonomic resources before building the
   state-origin matrix, so an offline call reports the problem once

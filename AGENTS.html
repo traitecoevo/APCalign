@@ -36,7 +36,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>APCalign — agent &amp; contributor guide</h1>
-      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/2026-07-30/AGENTS.md" class="external-link"><code>AGENTS.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/master/AGENTS.md" class="external-link"><code>AGENTS.md</code></a></small>
     </div>
 
 <div id="apcalign--agent--contributor-guide" class="section level1">
@@ -45,16 +45,24 @@
 <div class="section level2">
 <h2 id="repo-local-guidance">Repo-local guidance<a class="anchor" aria-label="anchor" href="#repo-local-guidance"></a></h2>
 <p>The user-facing pipeline is <strong>align → update</strong>:</p>
+<ul><li><p><code><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup()</a></code> — the main entry point; runs alignment then taxonomy updating end to end.</p></li>
+<li><p><code><a href="reference/align_taxa.html">align_taxa()</a></code> (<a href="R/align_taxa.R">R/align_taxa.R</a>) — standardises input names and finds the best APC/APNI alignment. Builds a <code>taxa</code> list with <code>tocheck</code> and <code>checked</code> tibbles, then delegates to <code>match_taxa()</code>.</p></li>
+<li>
+<p><code>match_taxa()</code> (<a href="R/match_taxa.R">R/match_taxa.R</a>) — <strong>the core matcher.</strong> It runs ~54 sequential match steps (<code>match_01a</code> … <code>match_12i</code>). Each builds a logical index <code>i</code> of the rows it can resolve, calls <code>apply_match()</code> to stamp those rows with <code>aligned_name</code>/<code>taxon_rank</code>/<code>taxonomic_dataset</code>/ <code>aligned_reason</code>/<code>alignment_code</code> and <code>redistribute()</code> them out of <code>tocheck</code>, then early-returns when <code>tocheck</code> is empty. <strong>The order of the match steps is the algorithm</strong> — do not reorder without re-running the alignment benchmarks. It is a linear series of successive checks, not a branching structure; say “match step”, not “branch”.</p>
+<p>Match-step helpers, all at the bottom of the same file. Their arguments are named for the output columns they populate (<code>taxonomic_dataset</code>, <code>taxon_rank</code>, <code>aligned_name</code>, <code>aligned_reason</code>, <code>alignment_code</code>) — keep it that way, since the update side of the package has its own <code>update_reason</code>:</p>
 <ul><li>
-<code><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup()</a></code> — the main entry point; runs alignment then taxonomy updating end to end.</li>
+<code>apply_match()</code> — the shared match-step tail. Appends <code>(&lt;date&gt;)</code> to <code>aligned_reason</code> centrally, so that separator can no longer be mistyped per-step (it was, three times).</li>
 <li>
-<code><a href="reference/align_taxa.html">align_taxa()</a></code> (<a href="R/align_taxa.R">R/align_taxa.R</a>) — standardises input names and finds the best APC/APNI alignment. Builds a <code>taxa</code> list with <code>tocheck</code> and <code>checked</code> tibbles, then delegates to <code>match_taxa()</code>.</li>
+<code>match_reference_name()</code> — the shape 21 match steps share: rows whose <code>key</code> column of <code>tocheck</code> exactly matches the <code>name_type</code> column of a reference table take that reference row’s canonical name and rank.</li>
 <li>
-<code>match_taxa()</code> (<a href="R/match_taxa.R">R/match_taxa.R</a>) — <strong>the core matcher, ~2150 lines.</strong> It runs ~54 sequential match branches (<code>match_01a</code> … <code>match_12i</code>), each: compute a logical index <code>i</code>, <code><a href="https://rdrr.io/r/base/match.html" class="external-link">match()</a></code> against a resource table, <code>mutate()</code> the matched rows with <code>aligned_name</code>/<code>taxon_rank</code>/<code>taxonomic_dataset</code>/ <code>aligned_reason</code>/<code>alignment_code</code>, then <code>redistribute()</code> checked rows out of <code>tocheck</code> and early-return when <code>tocheck</code> is empty. Branches are heavily copy-pasted — see “Known issues”.</li>
+<code>genus_sp_name()</code> / <code>higher_rank_name()</code> — build <code>Acacia sp. [Royal NP]</code> and <code>Acacia sp. [acacia aff. dealbata; Royal NP]</code> respectively.</li>
 <li>
-<code><a href="reference/update_taxonomy.html">update_taxonomy()</a></code> (<a href="R/update_taxonomy.R">R/update_taxonomy.R</a>) — maps aligned names to currently accepted names, handling synonyms and taxonomic splits.</li>
+<code>fuzzy_match_column()</code> — fuzzy-match a whole column; NA inputs pass through (<code>fuzzy_match()</code> errors on NA).</li>
 <li>
-<code><a href="reference/load_taxonomic_resources.html">load_taxonomic_resources()</a></code> (<a href="R/load_taxonomic_resources.R">R/load_taxonomic_resources.R</a>) — downloads/loads APC+APNI parquet files for a dated <code>version</code>, derives the filtered lookup tables (<code>APC_accepted</code>, <code>APC_synonyms</code>, <code>APNI_names</code>, <code>genera_accepted</code>, <code>genera_synonym</code>, <code>genera_APNI</code>, <code>family_accepted</code>, <code>family_synonym</code>, …). Session-cached in the package-private <code>.pkg_cache</code> environment (NOT <code>.GlobalEnv</code> — CRAN compliance). Clear with <code><a href="reference/clear_cached_resources.html">clear_cached_resources()</a></code>.</li>
+<code>drop_scratch()</code> — removes <code>identifier_string</code>/<code>identifier_string2</code> on every exit path, so <code>full = TRUE</code> output is the documented column set regardless of which match step finished the job.</li>
+</ul></li>
+<li><p><code><a href="reference/update_taxonomy.html">update_taxonomy()</a></code> (<a href="R/update_taxonomy.R">R/update_taxonomy.R</a>) — maps aligned names to currently accepted names, handling synonyms and taxonomic splits.</p></li>
+<li><p><code><a href="reference/load_taxonomic_resources.html">load_taxonomic_resources()</a></code> (<a href="R/load_taxonomic_resources.R">R/load_taxonomic_resources.R</a>) — downloads/loads APC+APNI parquet files for a dated <code>version</code>, derives the filtered lookup tables (<code>APC_accepted</code>, <code>APC_synonyms</code>, <code>APNI_names</code>, <code>genera_accepted</code>, <code>genera_synonym</code>, <code>genera_APNI</code>, <code>family_accepted</code>, <code>family_synonym</code>, …). Session-cached in the package-private <code>.pkg_cache</code> environment (NOT <code>.GlobalEnv</code> — CRAN compliance). Clear with <code><a href="reference/clear_cached_resources.html">clear_cached_resources()</a></code>.</p></li>
 </ul><p>Supporting helpers: <code><a href="reference/standardise_names.html">standardise_names()</a></code>/<code><a href="reference/strip_names.html">strip_names()</a></code>/<code><a href="reference/strip_names_extra.html">strip_names_extra()</a></code> (text normalisation), <code>fuzzy_match()</code> (Damerau–Levenshtein with first-letter-per-word constraints), <code>word()</code> (fast <code><a href="https://stringr.tidyverse.org/reference/word.html" class="external-link">stringr::word</a></code> replacement), <code>extract_genus()</code>.</p>
 <p>Diversity functions: <code><a href="reference/native_anywhere_in_australia.html">native_anywhere_in_australia()</a></code>, <code><a href="reference/create_species_state_origin_matrix.html">create_species_state_origin_matrix()</a></code>, <code><a href="reference/state_diversity_counts.html">state_diversity_counts()</a></code>.</p>
 <div class="section level3">
@@ -86,7 +94,7 @@
 <div class="section level3">
 <h3 id="known-issues--landmines">Known issues / landmines<a class="anchor" aria-label="anchor" href="#known-issues--landmines"></a></h3>
 <ul><li>
-<strong><code>match_taxa.R</code> duplication.</strong> ~54 near-identical blocks. This has already bred bugs (a missing <code>(</code> before the date in three <code>aff.</code> fuzzy branches). A helper (<code>apply_match(...)</code>) would collapse it dramatically — do it as its own PR backed by the snapshot above.</li>
+<strong><code>match_taxa.R</code> duplication.</strong> Largely resolved: the ~54 near-identical blocks now go through the helpers above. Some repetition remains (the fuzzy genus/family match steps still repeat a recognisable shape), so there is more to collapse — but only ever backed by the snapshot above.</li>
 <li>
 <strong><code><a href="reference/native_anywhere_in_australia.html">native_anywhere_in_australia()</a></code></strong>: the <code>is.null(resources)</code> guard runs <em>after</em> <code><a href="reference/create_species_state_origin_matrix.html">create_species_state_origin_matrix()</a></code> (so offline errors instead of failing gracefully), and its <code>apply(..., grepl("native", x))</code> greps across all columns including the species name.</li>
 <li>Tests assume resources are available; there is no <code>skip_if_offline()</code> guard in the operation tests.</li>

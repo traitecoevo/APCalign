@@ -55,8 +55,15 @@ Other diversity methods:
 
 ``` r
  state_diversity_counts(state = "NSW")
-#> API currently down, try again later
-#> No internet connection, please retry with stable connection or specify a local version of the data
-#> Not finding taxonomic resources; check internet connection?
-#> NULL
+#> Using cached taxonomic resources.
+#> # A tibble: 7 × 3
+#>   origin                            state num_species
+#>   <chr>                             <chr> <table[1d]>
+#> 1 doubtfully naturalised            NSW     95       
+#> 2 formerly naturalised              NSW      8       
+#> 3 native                            NSW   5982       
+#> 4 native and doubtfully naturalised NSW      2       
+#> 5 native and naturalised            NSW     34       
+#> 6 naturalised                       NSW   1586       
+#> 7 presumed extinct                  NSW      9       
 ```

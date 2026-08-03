@@ -17,5 +17,5 @@ A character string representing the default version for stable data.
 
 ``` r
 default_version()
-#> API currently down, try again later
+#> [1] "2026-07-30"
 ```

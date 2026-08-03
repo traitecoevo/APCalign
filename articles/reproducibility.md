@@ -68,7 +68,7 @@ latest `default_version` before each alignment
 ``` r
 
 default_version()
-#> API currently down, try again later
+#> [1] "2026-07-30"
 ```
 
 Then copying and pasting the output into

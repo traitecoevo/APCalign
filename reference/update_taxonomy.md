@@ -156,8 +156,7 @@ Other taxonomic alignment functions:
 # Update taxonomy for two plant names and print the result
 # \donttest{
 resources <- load_taxonomic_resources()
-#> API currently down, try again later
-#> No internet connection, please retry with stable connection or specify a local version of the data
+#> Using cached taxonomic resources.
 
 update_taxonomy(
  dplyr::tibble(
@@ -170,7 +169,16 @@ update_taxonomy(
  ),
  resources = resources
 )
-#> Not finding taxonomic resources; check internet connection?
-#> NULL
+#> # A tibble: 2 × 21
+#>   original_name     aligned_name      accepted_name  suggested_name genus family
+#>   <chr>             <chr>             <chr>          <chr>          <chr> <chr> 
+#> 1 Dryandra preissii Dryandra preissii Banksia acumi… Banksia acumi… Bank… Prote…
+#> 2 Banksia acuminata Banksia acuminata Banksia acumi… Banksia acumi… Bank… Prote…
+#> # ℹ 15 more variables: taxon_rank <chr>, taxonomic_dataset <chr>,
+#> #   taxonomic_status <chr>, taxonomic_status_aligned <chr>,
+#> #   aligned_reason <chr>, update_reason <chr>, subclass <chr>,
+#> #   taxon_distribution <chr>, scientific_name <chr>, taxon_ID <chr>,
+#> #   taxon_ID_genus <chr>, scientific_name_ID <chr>, canonical_name <chr>,
+#> #   row_number <dbl>, number_of_collapsed_taxa <dbl>
 # }
 ```

@@ -223,8 +223,7 @@ Other taxonomic alignment functions:
 ``` r
 # \donttest{
 resources <- load_taxonomic_resources()
-#> API currently down, try again later
-#> No internet connection, please retry with stable connection or specify a local version of the data
+#> Using cached taxonomic resources.
 
 # example 1
 create_taxonomic_update_lookup(c("Eucalyptus regnans",
@@ -232,8 +231,19 @@ create_taxonomic_update_lookup(c("Eucalyptus regnans",
                                  "Banksia integrifolia",
                                  "Not a species"),
                                  resources = resources)
-#> Not finding taxonomic resources; check internet connection?
-#> NULL
+#> Checking alignments of 4 taxa
+#>   -> of these 3 names have a perfect match to an accepted scientific name in the APC, and 0 names have a perfect match to a synonym in the APC.
+#>       Alignments being sought for remaining names.
+#> # A tibble: 4 × 12
+#>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
+#>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
+#> 1 Eucalyptus regnans  Eucalyptus … Eucalyptus r… Eucalyptus re… Euca… species   
+#> 2 Acacia melanoxylon  Acacia mela… Acacia melan… Acacia melano… Acac… species   
+#> 3 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
+#> 4 Not a species       NA           NA            NA             NA    NA        
+#> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
+#> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
+#> #   number_of_collapsed_taxa <dbl>
                                  
 # example 2
 input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", 
@@ -245,8 +255,24 @@ create_taxonomic_update_lookup(
     full = TRUE,
     resources = resources
   )
-#> Not finding taxonomic resources; check internet connection?
-#> NULL
+#> Checking alignments of 6 taxa
+#>   -> of these 1 names have a perfect match to an accepted scientific name in the APC, and 0 names have a perfect match to a synonym in the APC.
+#>       Alignments being sought for remaining names.
+#> # A tibble: 6 × 21
+#>   original_name     aligned_name       accepted_name suggested_name genus family
+#>   <chr>             <chr>              <chr>         <chr>          <chr> <chr> 
+#> 1 Banksia serrata   Banksia serrata    Banksia serr… Banksia serra… Bank… Prote…
+#> 2 Banksia serrate   Banksia serrata    Banksia serr… Banksia serra… Bank… Prote…
+#> 3 Banksia cerrata   Banksia sp. [Bank… NA            Banksia sp. [… Bank… Prote…
+#> 4 Banksea serrata   Banksia serrata    Banksia serr… Banksia serra… Bank… Prote…
+#> 5 Banksia serrrrata Banksia serrata    Banksia serr… Banksia serra… Bank… Prote…
+#> 6 Dryandra          Dryandra sp. [Dry… NA            Banksia sp. [… Bank… Prote…
+#> # ℹ 15 more variables: taxon_rank <chr>, taxonomic_dataset <chr>,
+#> #   taxonomic_status <chr>, taxonomic_status_aligned <chr>,
+#> #   aligned_reason <chr>, update_reason <chr>, subclass <chr>,
+#> #   taxon_distribution <chr>, scientific_name <chr>, taxon_ID <chr>,
+#> #   taxon_ID_genus <chr>, scientific_name_ID <chr>, canonical_name <chr>,
+#> #   row_number <dbl>, number_of_collapsed_taxa <dbl>
 
 # example 3
 taxon_list <-
@@ -260,7 +286,28 @@ create_taxonomic_update_lookup(
     full = TRUE,
     resources = resources
   )
-#> Not finding taxonomic resources; check internet connection?
-#> NULL
+#> Checking alignments of 32 taxa
+#>   -> of these 10 names have a perfect match to an accepted scientific name in the APC, and 7 names have a perfect match to a synonym in the APC.
+#>       Alignments being sought for remaining names.
+#> # A tibble: 32 × 21
+#>    original_name          aligned_name accepted_name suggested_name genus family
+#>    <chr>                  <chr>        <chr>         <chr>          <chr> <chr> 
+#>  1 Banksia serrata        Banksia ser… Banksia serr… Banksia serra… Bank… Prote…
+#>  2 Banksia serrate        Banksia ser… Banksia serr… Banksia serra… Bank… Prote…
+#>  3 Banksee serrate        Banksia ser… Banksia serr… Banksia serra… Bank… Prote…
+#>  4 Banksia cerrata        Banksia sp.… NA            Banksia sp. [… Bank… Prote…
+#>  5 Banksia sp.            Banksia sp.… NA            Banksia sp. [… Bank… Prote…
+#>  6 Dryandra sp.           Dryandra sp… NA            Banksia sp. [… Bank… Prote…
+#>  7 Argyrodendron (Whyanb… Argyrodendr… Argyrodendro… Argyrodendron… Argy… Malva…
+#>  8 Argyrodendron ssp. (W… Argyrodendr… Argyrodendro… Argyrodendron… Argy… Malva…
+#>  9 Argyrodendron Whyanbe… Argyrodendr… Argyrodendro… Argyrodendron… Argy… Malva…
+#> 10 Argyrodendron sp. (Wh… Argyrodendr… Argyrodendro… Argyrodendron… Argy… Malva…
+#> # ℹ 22 more rows
+#> # ℹ 15 more variables: taxon_rank <chr>, taxonomic_dataset <chr>,
+#> #   taxonomic_status <chr>, taxonomic_status_aligned <chr>,
+#> #   aligned_reason <chr>, update_reason <chr>, subclass <chr>,
+#> #   taxon_distribution <chr>, scientific_name <chr>, taxon_ID <chr>,
+#> #   taxon_ID_genus <chr>, scientific_name_ID <chr>, canonical_name <chr>,
+#> #   row_number <dbl>, number_of_collapsed_taxa <dbl>
 # }
 ```

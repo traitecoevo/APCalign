@@ -256,13 +256,25 @@ Other taxonomic alignment functions:
 # \donttest{
 
 resources <- load_taxonomic_resources()
-#> API currently down, try again later
-#> No internet connection, please retry with stable connection or specify a local version of the data
+#> Downloading...
+#> File downloaded successfully.
+#> File downloaded successfully.
+#> 
+#> Loading resources into memory...
+#> ================================================================================================================================================================
+#> ...done
 
 # example 1
 align_taxa(c("Poa annua", "Abies alba"), resources=resources)
-#> Not finding taxonomic resources; check internet connection?
-#> NULL
+#> Checking alignments of 2 taxa
+#>   -> of these 1 names have a perfect match to an accepted scientific name in the APC, and 0 names have a perfect match to a synonym in the APC.
+#>       Alignments being sought for remaining names.
+#> # A tibble: 2 × 7
+#>   original_name cleaned_name aligned_name taxonomic_dataset taxon_rank
+#>   <chr>         <chr>        <chr>        <chr>             <chr>     
+#> 1 Poa annua     Poa annua    Poa annua    APC               species   
+#> 2 Abies alba    Abies alba   NA           NA                NA        
+#> # ℹ 2 more variables: aligned_reason <chr>, alignment_code <chr>
 
 # example 2
 input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", 
@@ -275,7 +287,9 @@ aligned_taxa <-
     full = TRUE,
     resources=resources
   ) 
-#> Not finding taxonomic resources; check internet connection?
+#> Checking alignments of 6 taxa
+#>   -> of these 1 names have a perfect match to an accepted scientific name in the APC, and 0 names have a perfect match to a synonym in the APC.
+#>       Alignments being sought for remaining names.
   
 # }
 
