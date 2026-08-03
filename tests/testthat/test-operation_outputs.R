@@ -160,6 +160,10 @@ test_that("taxon name alignment matches and updates work as expected", {
   expect_equal(benchmarks$aligned_name,   output_align$aligned_name)
   expect_equal(benchmarks$taxon_rank,     output_align$taxon_rank)
   expect_equal(benchmarks$taxonomic_dataset, output_align$taxonomic_dataset)
+  # alignment_code pins which match branch each name resolves through;
+  # the benchmark now covers all match branches, including the genus/family
+  # fuzzy and "unknown genus" fall-throughs.
+  expect_equal(benchmarks$alignment_code, output_align$alignment_code)
 
   output_updates <- 
     update_taxonomy(
