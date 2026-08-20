@@ -53,10 +53,6 @@ not_before_rank_marker <-
 #'                     "Gomphrena affinis subsp. pilbarensis"))
 #' @export
 standardise_names <- function(taxon_names) {
-  f <- function(x, find, replace) {
-    gsub(find, replace, x, perl = TRUE)
-  }
-  
   taxon_names %>%
     ## remove ? throughout
     f("\\?", "") %>%

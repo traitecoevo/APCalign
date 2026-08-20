@@ -26,11 +26,7 @@
 #'
 #' @export
 strip_names <- function(taxon_names) {
-  
-  f <- function(x, find, replace) {
-    gsub(find, replace, x, perl = TRUE)
-  }
-  
+
   taxon_names %>%
     f("\\.", "") %>%
     f("\\ \\)", "") %>%
@@ -74,11 +70,7 @@ strip_names <- function(taxon_names) {
 #'
 #' @export
 strip_names_extra <- function(taxon_names) {
-  
-  f <- function(x, find, replace) {
-    gsub(find, replace, x, perl = TRUE)
-  }
-  
+
   taxon_names %>%
     f(" species ", " ") %>%
     f(" x ", " ") %>%
