@@ -26,20 +26,19 @@
 #'
 #' @export
 strip_names <- function(taxon_names) {
-
   taxon_names %>%
-    f("\\.", "") %>%
-    f("\\ \\)", "") %>%
-    f("\\(\\ ", "") %>%
+    gsub_perl("\\.", "") %>%
+    gsub_perl("\\ \\)", "") %>%
+    gsub_perl("\\(\\ ", "") %>%
     stringr::str_replace_all("[:punct:]", " ") %>%
     stringr::str_replace_all("\\u2215", " ") %>%
-    f("\\,", "") %>%
-    f("\\=", " ") %>%
-    f("  ", " ") %>%
-    f(" subsp ", " ") %>%
-    f(" var ", " ") %>%   
-    f(" ser ", " ") %>%
-    f(" f ", " ") %>%
+    gsub_perl("\\,", "") %>%
+    gsub_perl("\\=", " ") %>%
+    gsub_perl("  ", " ") %>%
+    gsub_perl(" subsp ", " ") %>%
+    gsub_perl(" var ", " ") %>%   
+    gsub_perl(" ser ", " ") %>%
+    gsub_perl(" f ", " ") %>%
     stringr::str_squish() %>%
     stringr::str_to_lower()
 }
@@ -70,12 +69,11 @@ strip_names <- function(taxon_names) {
 #'
 #' @export
 strip_names_extra <- function(taxon_names) {
-
   taxon_names %>%
-    f(" species ", " ") %>%
-    f(" x ", " ") %>%
-    f(" sp ", " ") %>%
-    f(" sp1", " 1") %>%
-    f(" sp2", " 2") %>%
+    gsub_perl(" species ", " ") %>%
+    gsub_perl(" x ", " ") %>%
+    gsub_perl(" sp ", " ") %>%
+    gsub_perl(" sp1", " 1") %>%
+    gsub_perl(" sp2", " 2") %>%
     stringr::str_squish() 
 }
