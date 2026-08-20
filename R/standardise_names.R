@@ -208,8 +208,21 @@ extract_genus_clean <- function(taxon_name) {
 #' standardise_taxon_rank(c("regnum", "kingdom", "classis", "class"))
 #' @export
 standardise_taxon_rank <- function(taxon_rank) {
+  # Fixed substring replacement, for Latin terms that cannot occur inside an
+  # unrelated word or inside their own English translation.
   f <- function(x, find, replace) {
     gsub(find, replace, x, fixed = TRUE)
+  }
+
+  # Last-word replacement, for the two terms that can. "sectio" is a literal
+  # prefix of its own translation ("section"), and "forma" sits inside
+  # "informal"; replacing either as a bare substring silently corrupts those
+  # values ("section" -> "sectionn", "informal" -> "informl"). Matching only
+  # when the term ends the string still catches the prefixed ranks that do need
+  # translating ("subsectio", "subforma"), and the lookahead keeps any trailing
+  # whitespace, since taxon_rank is not trimmed upstream.
+  g <- function(x, find, replace) {
+    stringr::str_replace(x, paste0(find, "(?=\\s*$)"), replace)
   }
 
   taxon_rank %>%
@@ -219,6 +232,6 @@ standardise_taxon_rank <- function(taxon_rank) {
   f("ordo", "order") %>%
   f("familia", "family") %>%
   f("varietas", "variety") %>%
-  f("forma", "form") %>%
-  gsub("sectio$", "section", x = .) #requires different syntax to avoid updating "section" to "sectionn"
+  g("forma", "form") %>%
+  g("sectio", "section")
 }

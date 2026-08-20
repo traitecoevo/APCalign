@@ -69,4 +69,27 @@ test_that("Standardise taxon rank translates Latin ranks without mangling alread
       "family", "family", "variety", "variety", "form", "form"
     )
   )
+
+  # "forma" is the same class of collision, via an unrelated word rather than via its own
+  # translation: "informal" and "informal group" are DwC/AFD rank values that contain "forma" as a
+  # substring, and used to come back as "informl"/"informl group".
+  expect_equal(
+    standardise_taxon_rank(c("informal", "informal group", "forma", "subforma", "nothoforma")),
+    c("informal", "informal group", "form", "subform", "nothoform")
+  )
+
+  # taxon_rank is not trimmed by load_taxonomic_resources(), and standardise_taxon_rank() is
+  # exported for arbitrary vectors, so a trailing-whitespace value must still translate -- otherwise
+  # it passes through untouched and then silently misses the taxon_rank %in% c(...) filters
+  # downstream. Whitespace itself is preserved, not normalised away.
+  expect_equal(
+    standardise_taxon_rank(c("Sectio ", "sectio\t", "Forma ")),
+    c("section ", "section\t", "form ")
+  )
+
+  # Only the *last* word is a rank, so an embedded Latin term stays put.
+  expect_equal(
+    standardise_taxon_rank("sectio nothosectio"),
+    "sectio nothosection"
+  )
 })
