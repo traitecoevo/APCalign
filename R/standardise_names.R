@@ -211,7 +211,7 @@ standardise_taxon_rank <- function(taxon_rank) {
   f <- function(x, find, replace) {
     gsub(find, replace, x, fixed = TRUE)
   }
-  
+
   taxon_rank %>%
   stringr::str_to_lower() %>%
   f("regnum", "kingdom") %>%
@@ -220,5 +220,5 @@ standardise_taxon_rank <- function(taxon_rank) {
   f("familia", "family") %>%
   f("varietas", "variety") %>%
   f("forma", "form") %>%
-  f("sectio", "section")
+  gsub("sectio$", "section", x = .) #requires different syntax to avoid updating "section" to "sectionn"
 }
