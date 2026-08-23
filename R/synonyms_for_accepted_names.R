@@ -37,40 +37,6 @@ synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resourc
     return(NULL)
   }
   
-  # preferred order of taxonomic updates (function from `update_taxonomy.R`)
-  relevel_taxonomic_status_preferred_order <- function(taxonomic_status) {
-    
-    preferred_order <-
-      c(
-        "accepted",
-        "taxonomic synonym",
-        "basionym",
-        "nomenclatural synonym",
-        "isonym",
-        "orthographic variant",
-        "common name",
-        "doubtful taxonomic synonym",
-        "replaced synonym",
-        "doubtful pro parte taxonomic synonym",
-        "pro parte nomenclatural synonym",
-        "pro parte taxonomic synonym",
-        "pro parte misapplied",
-        "misapplied",
-        "unplaced", 
-        "excluded",
-        "doubtful misapplied",
-        "doubtful pro parte misapplied",
-        "included"
-      )
-    
-    factor(taxonomic_status, levels =
-             subset(
-               preferred_order, 
-               preferred_order %in% taxonomic_status
-             )
-    )
-  }
-  
   # Generate list of accepted_name_usage_ID's for accepted species
   APC_synonyms_tmp <- resources$APC |> 
     dplyr::filter(taxon_rank %in% c("species", "variety", "form", "subspecies")) |>

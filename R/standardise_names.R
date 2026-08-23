@@ -53,13 +53,9 @@ not_before_rank_marker <-
 #'                     "Gomphrena affinis subsp. pilbarensis"))
 #' @export
 standardise_names <- function(taxon_names) {
-  f <- function(x, find, replace) {
-    gsub(find, replace, x, perl = TRUE)
-  }
-  
   taxon_names %>%
     ## remove ? throughout
-    f("\\?", "") %>%
+    gsub_perl("\\?", "") %>%
 
     ## remove all punct and symbols at start of string
     ## this combination should catch almost everything
@@ -69,84 +65,84 @@ standardise_names <- function(taxon_names) {
     stringr::str_replace("^[:punct:]+", "") %>%
     
     ## remove * at end of string
-    f("\\*$", "") %>%
+    gsub_perl("\\*$", "") %>%
 
     ## replace hybrid x marker with standard x 
     ## for certain hybrid x's that aren't dealt with below
-    f("\u00D7", "x") %>%
+    gsub_perl("\u00D7", "x") %>%
 
     ## hybrid markers and other non-standard characters used are replaced with 
     ## the standard equivalent (e.g. x, \)
     stringi::stri_trans_general("Any-Latin; Latin-ASCII") %>%
 
     ## add spaces between letters and /
-    f("([a-zA-Z])/([a-zA-Z])", "\\1 / \\2") %>%
+    gsub_perl("([a-zA-Z])/([a-zA-Z])", "\\1 / \\2") %>%
   
     ## remove ".."
-    f("\\.\\.", "\\.") %>%
+    gsub_perl("\\.\\.", "\\.") %>%
 
     ## Weird formatting
-    f("[\\n\\t]", " ") %>%
-    f("[\\n\\t]", " ") %>%
+    gsub_perl("[\\n\\t]", " ") %>%
+    gsub_perl("[\\n\\t]", " ") %>%
     
     ## Remove spaces before or after brackets
-    f("\\ \\)", "\\)") %>%
-    f("\\(\\ ", "\\(") %>%
+    gsub_perl("\\ \\)", "\\)") %>%
+    gsub_perl("\\(\\ ", "\\(") %>%
     
     ## Capitalise first letter
-    f("^([a-z])", "\\U\\1") %>%
+    gsub_perl("^([a-z])", "\\U\\1") %>%
     
     ## sp. not sp or spp
-    f("\\ssp(\\s|$)",   " sp. ") %>%
-    f("\\sspp.(\\s|$)", " sp. ") %>%
-    f("\\sspp(\\s|$)",  " sp. ") %>%
+    gsub_perl("\\ssp(\\s|$)",   " sp. ") %>%
+    gsub_perl("\\sspp.(\\s|$)", " sp. ") %>%
+    gsub_perl("\\sspp(\\s|$)",  " sp. ") %>%
     
     ## subsp. not ssp, ssp., subsp or sub sp.
-    f("\\sssp(\\s|$)",     " subsp. ") %>%
-    f("\\sssp.(\\s|$)",    " subsp. ") %>%
-    f("\\ssubsp(\\s|$)",   " subsp. ") %>%
-    f("\\ssub sp.(\\s|$)", " subsp. ") %>%
+    gsub_perl("\\sssp(\\s|$)",     " subsp. ") %>%
+    gsub_perl("\\sssp.(\\s|$)",    " subsp. ") %>%
+    gsub_perl("\\ssubsp(\\s|$)",   " subsp. ") %>%
+    gsub_perl("\\ssub sp.(\\s|$)", " subsp. ") %>%
     
     ## var. not var or v or v.
-    f("\\svar(\\s|$)",   " var. ") %>%
-    f("\\sv(\\s|$|\\.)", " var. ") %>%
+    gsub_perl("\\svar(\\s|$)",   " var. ") %>%
+    gsub_perl("\\sv(\\s|$|\\.)", " var. ") %>%
     
     ## aff. not affin, aff affn affinis
     ## `affinis` is also a legitimate species epithet, so it is only rewritten
     ## when it sits mid-name and is not the epithet of an infraspecific name:
     ## a trailing `affinis` is left alone (`Acacia affinis`), and so is one
     ## followed by a rank marker (`Gomphrena affinis subsp. pilbarensis`).
-    f("\\saffin(\\s|$)",    " aff. ") %>%
-    f("\\saff(\\s|$)",      " aff. ") %>%
-    f("\\saffn(\\s|$|\\.)", " aff. ") %>%
-    f(paste0("\\saffinis", not_before_rank_marker, "(\\s)"),  " aff. ") %>%
+    gsub_perl("\\saffin(\\s|$)",    " aff. ") %>%
+    gsub_perl("\\saff(\\s|$)",      " aff. ") %>%
+    gsub_perl("\\saffn(\\s|$|\\.)", " aff. ") %>%
+    gsub_perl(paste0("\\saffinis", not_before_rank_marker, "(\\s)"),  " aff. ") %>%
     
     ## f. not forma or form or form. or f
-    f("\\sforma(\\s|$)",       " f. ") %>%
-    f("\\sform(\\s|$|\\.\\s)", " f. ") %>%
-    f("\\sf(\\s|$)",           " f. ") %>%
+    gsub_perl("\\sforma(\\s|$)",       " f. ") %>%
+    gsub_perl("\\sform(\\s|$|\\.\\s)", " f. ") %>%
+    gsub_perl("\\sf(\\s|$)",           " f. ") %>%
     
     ## remove " ms" if present
-    f("\\sms(\\s|$|\\.\\s)", " ") %>%
+    gsub_perl("\\sms(\\s|$|\\.\\s)", " ") %>%
     
     ## remove " s.l" or " s.s." or "s s " or " s l " if present
-    f("\\ssl(\\s|$)", " ") %>%
-    f("\\ss\\.l\\.(\\s|$)", " ") %>%
-    f("\\sss(\\s|$)", "") %>%
-    f("\\ss\\.s\\.(\\s|$)", " ") %>%
-    f("\\ss\\ss(\\s|$)", " ") %>%
-    f("\\ss\\sl(\\s|$)", " ") %>%
-    f("\\ss\\.\\ss(\\s|$|\\.\\s)", " ") %>%
-    f("\\ss\\.\\sl(\\s|$|\\.\\s)", " ") %>%
-    f("\\ss(\\.\\s|\\s)lat(\\s|$|\\.\\s)", " ") %>%
-    f("\\ssensu\\slato(\\s|$|\\.\\s)", " ") %>%
-    f("\\ssensu\\sstricto(\\s|$|\\.\\s)", " ") %>%
-    f("(\\s|\\()s\\.lat\\.(\\s|\\))", "") %>%
-    f("(\\s|\\()s\\.str\\.(\\s|\\))", "") %>%
+    gsub_perl("\\ssl(\\s|$)", " ") %>%
+    gsub_perl("\\ss\\.l\\.(\\s|$)", " ") %>%
+    gsub_perl("\\sss(\\s|$)", "") %>%
+    gsub_perl("\\ss\\.s\\.(\\s|$)", " ") %>%
+    gsub_perl("\\ss\\ss(\\s|$)", " ") %>%
+    gsub_perl("\\ss\\sl(\\s|$)", " ") %>%
+    gsub_perl("\\ss\\.\\ss(\\s|$|\\.\\s)", " ") %>%
+    gsub_perl("\\ss\\.\\sl(\\s|$|\\.\\s)", " ") %>%
+    gsub_perl("\\ss(\\.\\s|\\s)lat(\\s|$|\\.\\s)", " ") %>%
+    gsub_perl("\\ssensu\\slato(\\s|$|\\.\\s)", " ") %>%
+    gsub_perl("\\ssensu\\sstricto(\\s|$|\\.\\s)", " ") %>%
+    gsub_perl("(\\s|\\()s\\.lat\\.(\\s|\\))", "") %>%
+    gsub_perl("(\\s|\\()s\\.str\\.(\\s|\\))", "") %>%
     
     ## standardise "ser"
-    f("\\sser(\\s|\\.\\s)", " ser. ") %>%
-    f("\\sseries(\\s|\\.\\s)", " ser. ") %>%
+    gsub_perl("\\sser(\\s|\\.\\s)", " ser. ") %>%
+    gsub_perl("\\sseries(\\s|\\.\\s)", " ser. ") %>%
 
     ## clean white space
     stringr::str_squish()
@@ -208,9 +204,7 @@ extract_genus_clean <- function(taxon_name) {
 #' standardise_taxon_rank(c("regnum", "kingdom", "classis", "class"))
 #' @export
 standardise_taxon_rank <- function(taxon_rank) {
-  # Fixed substring replacement, for Latin terms that cannot occur inside an
-  # unrelated word or inside their own English translation.
-  f <- function(x, find, replace) {
+  gsub_fixed <- function(x, find, replace) {
     gsub(find, replace, x, fixed = TRUE)
   }
 
@@ -227,11 +221,11 @@ standardise_taxon_rank <- function(taxon_rank) {
 
   taxon_rank %>%
   stringr::str_to_lower() %>%
-  f("regnum", "kingdom") %>%
-  f("classis", "class") %>%
-  f("ordo", "order") %>%
-  f("familia", "family") %>%
-  f("varietas", "variety") %>%
+  gsub_fixed("regnum", "kingdom") %>%
+  gsub_fixed("classis", "class") %>%
+  gsub_fixed("ordo", "order") %>%
+  gsub_fixed("familia", "family") %>%
+  gsub_fixed("varietas", "variety") %>%
   g("forma", "form") %>%
   g("sectio", "section")
 }
