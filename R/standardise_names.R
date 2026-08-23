@@ -226,6 +226,6 @@ standardise_taxon_rank <- function(taxon_rank) {
   gsub_fixed("ordo", "order") %>%
   gsub_fixed("familia", "family") %>%
   gsub_fixed("varietas", "variety") %>%
-  gsub_fixed("forma", "form") %>%
-  gsub_fixed("sectio", "section")
+  g("forma", "form") %>%
+  g("sectio", "section")
 }
