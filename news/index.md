@@ -4,6 +4,19 @@
 
 CRAN release: 2026-03-27
 
+- [`standardise_taxon_rank()`](https://traitecoevo.github.io/APCalign/reference/standardise_taxon_rank.md)
+  no longer corrupts rank values that are already English, or that
+  merely contain a Latin rank term as a substring. `sectio` is a literal
+  prefix of its own translation (`section`) and `forma` sits inside
+  `informal`, so replacing either anywhere in the input silently mangled
+  `section`/`subsection`/`zoosection` into
+  `sectionn`/`subsectionn`/`zoosectionn`, and
+  `informal`/`informal group` into `informl`/`informl group`. Both terms
+  are now matched only as the last word of the value, which still
+  translates the prefixed ranks that need it (`subsectio`, `subforma`).
+  APC/APNI rank values are unaffected — the fix changes output only for
+  the zoological and DwC vocabularies, where it was found
+  (traitecoevo/taxonAlign#11).
 - [`standardise_names()`](https://traitecoevo.github.io/APCalign/reference/standardise_names.md)
   no longer rewrites `affinis` to `aff.` when it is the species epithet
   of an infraspecific name — that is, when the next word is a rank
