@@ -207,7 +207,18 @@ standardise_taxon_rank <- function(taxon_rank) {
   gsub_fixed <- function(x, find, replace) {
     gsub(find, replace, x, fixed = TRUE)
   }
-  
+
+  # Last-word replacement, for the two terms that can. "sectio" is a literal
+  # prefix of its own translation ("section"), and "forma" sits inside
+  # "informal"; replacing either as a bare substring silently corrupts those
+  # values ("section" -> "sectionn", "informal" -> "informl"). Matching only
+  # when the term ends the string still catches the prefixed ranks that do need
+  # translating ("subsectio", "subforma"), and the lookahead keeps any trailing
+  # whitespace, since taxon_rank is not trimmed upstream.
+  g <- function(x, find, replace) {
+    stringr::str_replace(x, paste0(find, "(?=\\s*$)"), replace)
+  }
+
   taxon_rank %>%
   stringr::str_to_lower() %>%
   gsub_fixed("regnum", "kingdom") %>%
