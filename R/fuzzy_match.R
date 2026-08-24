@@ -38,7 +38,19 @@ fuzzy_match <- function(txt, accepted_list,
     }
   ## identify number of words in the text to match
   words_in_text <- 1 + stringr::str_count(txt," ")
-  
+
+  ## Tokens that flag an uncertain identification ("aff."/"cf.") or a hybrid
+  ## ("x") rather than being an ordinary part of the epithet/locality text. If
+  ## `txt` carries one of these as its own word, a candidate must carry the
+  ## same token too to be confirmed by check_match() below -- otherwise the
+  ## qualifier can silently slot into an unrelated word's position purely by
+  ## first-letter coincidence (e.g. "acacia aff aneura" confirming against
+  ## "acacia aptaneura", since "aff" and "aptaneura" both start with "a").
+  qualifier_tokens <- c("aff", "cf", "x")
+  txt_qualifiers <- qualifier_tokens[purrr::map_lgl(
+    qualifier_tokens, ~ stringr::str_detect(txt, paste0("\\b", .x, "\\b"))
+  )]
+
   ## extract first letter of first word
   txt_word1_start <- stringr::str_extract(txt, "[:alpha:]") %>%
                      stringr::str_to_lower()
@@ -108,7 +120,15 @@ fuzzy_match <- function(txt, accepted_list,
   
   # function to check if a match is ok
   check_match <- function(potential_match) {
-  
+
+    ## reject outright if txt carries a qualifier token ("aff"/"cf"/"x") that
+    ## this candidate doesn't also carry -- see txt_qualifiers above.
+    if (length(txt_qualifiers) > 0) {
+      if (!all(stringr::str_detect(potential_match, paste0("\\b", txt_qualifiers, "\\b")))) {
+        return(FALSE)
+      }
+    }
+
     ## identify number of words in the matched string
     words_in_match <- 1 + stringr::str_count(potential_match," ")
     
