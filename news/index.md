@@ -1,9 +1,19 @@
 # Changelog
 
-## APCalign 2.0.0
+## APCalign 2.0.1
 
-CRAN release: 2026-03-27
-
+- `fuzzy_match()` no longer confirms a fuzzy match against a candidate
+  that drops an `aff.`/`cf.`/`x` qualifier present in the query. Its
+  `check_match()` confirmation step only compared word positions up to
+  the shorter of query/candidate, so `Acacia aff. aneura` (“resembles
+  *Acacia aneura*, not confidently identified”) could fuzzy-match past
+  its qualifier to the unrelated accepted species `Acacia aptaneura`
+  instead of being capped at genus rank. A query containing `aff`, `cf`,
+  or `x` as a standalone word now requires the candidate to contain that
+  same token, or the candidate is rejected outright before the coarser
+  word-position check runs; genuine `aff.`/`cf.`-qualified synonyms and
+  named hybrids that still need fuzzy matching to fix a typo are
+  unaffected.
 - [`standardise_taxon_rank()`](https://traitecoevo.github.io/APCalign/reference/standardise_taxon_rank.md)
   no longer corrupts rank values that are already English, or that
   merely contain a Latin rank term as a substring. `sectio` is a literal
@@ -37,9 +47,6 @@ CRAN release: 2026-03-27
   `identifier_string`, `identifier_string2` and `aligned_name_tmp`
   columns when every name is aligned before the last match step runs.
   The output is now the documented set of columns in all cases.
-- Internal refactor of `match_taxa()`: the ~54 match steps now share
-  helper functions rather than repeating the same block of code.
-  Alignment output is unchanged.
 - [`native_anywhere_in_australia()`](https://traitecoevo.github.io/APCalign/reference/native_anywhere_in_australia.md)
   now checks for missing taxonomic resources before building the
   state-origin matrix, so an offline call reports the problem once
@@ -47,6 +54,25 @@ CRAN release: 2026-03-27
   also now reads only the state columns, so a taxon whose name contains
   “native” (e.g. the `nativitatis` epithets) can no longer be
   misclassified.
+- Internal refactor of `match_taxa()`: the ~54 match steps now share
+  helper functions rather than repeating the same block of code.
+  Alignment output is unchanged.
+- Internal refactor: the duplicated
+  [`gsub()`](https://rdrr.io/r/base/grep.html)-wrapper helper in
+  [`standardise_names()`](https://traitecoevo.github.io/APCalign/reference/standardise_names.md),
+  [`strip_names()`](https://traitecoevo.github.io/APCalign/reference/strip_names.md)
+  and
+  [`strip_names_extra()`](https://traitecoevo.github.io/APCalign/reference/strip_names_extra.md)
+  is now a single shared `gsub_perl()`, and a redundant nested copy of
+  `relevel_taxonomic_status_preferred_order()` inside
+  [`synonyms_for_accepted_names()`](https://traitecoevo.github.io/APCalign/reference/synonyms_for_accepted_names.md)
+  has been removed in favour of the existing top-level function.
+  Behaviour is unchanged.
+
+## APCalign 2.0.0
+
+CRAN release: 2026-03-27
+
 - New function
   [`synonyms_for_accepted_names()`](https://traitecoevo.github.io/APCalign/reference/synonyms_for_accepted_names.md)
   to list synonyms for currently accepted taxon names.

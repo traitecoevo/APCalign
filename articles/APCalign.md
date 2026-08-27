@@ -560,7 +560,7 @@ links or to efficiently search the literature.
 
 ``` r
 > names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
-> synonyms_for_accepted_names(resources = resources, accepted_names = names_to_check, collapse = T)
+> synonyms_for_accepted_names(resources = resources, accepted_names = names_to_check, collapse = TRUE)
 
 # A tibble: 4 × 8
 #  family       accepted_name        synonyms                                                                                                                           taxon_rank name_type scientific_name accepted_name_usage_ID genus
@@ -573,7 +573,7 @@ links or to efficiently search the literature.
 
 ``` r
 names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
-> synonyms_for_accepted_names(resources = resources, accepted_names = names_to_check, collapse = F)
+> synonyms_for_accepted_names(resources = resources, accepted_names = names_to_check, collapse = FALSE)
 # A tibble: 25 × 9
 #    family       accepted_name    synonym                                            taxonomic_status      taxon_rank name_type  scientific_name                  accepted_name_usage_ID                           genus    
 #    <chr>        <chr>            <chr>                                              <fct>                 <chr>      <chr>      <chr>                            <chr>                                            <chr>    
