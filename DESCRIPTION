@@ -16,7 +16,7 @@ Description: The process of resolving and updating taxon names is necessary when
     plant taxa across different states/territories.
 License: MIT + file LICENSE
 Encoding: UTF-8
-Language: en
+Language: en-GB
 LazyData: true
 Depends:
     R (>= 4.1.0),
