@@ -423,7 +423,7 @@ dataset_access_function <-
 #'
 #' @return A character string representing the default version for stable data.
 #' @examples
-#' default_version()
+#' \donttest{default_version()}
 #'
 #' @export
 
@@ -590,7 +590,7 @@ dataset_get <- function(version = default_version(),
 #' @export
 #'
 #' @examples
-#' get_versions()
+#' \donttest{get_versions()}
 get_versions <- function() {
   # Check if there is internet connection
   ## Dummy variable to allow testing of network

@@ -13,5 +13,5 @@ tibble of dates when APC/APNI resources were downloaded as a Github Release
 Which versions of taxonomic resources are available?
 }
 \examples{
-get_versions()
+\donttest{get_versions()}
 }

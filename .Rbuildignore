@@ -20,3 +20,5 @@
 ^.DS_Store
 ^help
 ^.claude$
+^AGENTS\.md$
+^CITATION\.cff$

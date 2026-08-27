@@ -19,7 +19,7 @@
 #' - If prioritises matches to taxa in the APC over names in the APNI.
 #'
 #' Each match step has the same shape: build a logical index `i` of the rows
-#' it can resolve, hand those rows to [apply_match()] to be stamped with the
+#' it can resolve, hand those rows to `apply_match()` to be stamped with the
 #' alignment and moved out of `tocheck`, then stop early if nothing is left.
 #' The order of the match steps *is* the matching algorithm, so they must not
 #' be reordered without re-checking the alignment benchmarks.

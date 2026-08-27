@@ -1,6 +1,6 @@
 Package: APCalign
 Title: Resolving Plant Taxon Names Using the Australian Plant Census
-Version: 2.0.0
+Version: 2.0.1
 Authors@R: c(
   person(given = "Elizabeth", family = "Wenk", role = c("aut", "cre", "cph"), email = "e.wenk@unsw.edu.au", comment = c(ORCID = "0000-0001-5640-5910")),
   person(given = "Daniel", family = "Falster", role = c("aut", "ctb"), email = "daniel.falster@unsw.edu.au", comment = c(ORCID = "0000-0002-9814-092X")),
@@ -16,7 +16,7 @@ Description: The process of resolving and updating taxon names is necessary when
     plant taxa across different states/territories.
 License: MIT + file LICENSE
 Encoding: UTF-8
-Language: en
+Language: en-GB
 LazyData: true
 Depends:
     R (>= 4.1.0),
