@@ -16,7 +16,7 @@ test_that("create_species_state_origin_matrix() works", {
 
 test_that("state_diversity() works", {
   nsw_species_counts <-
-    state_diversity_counts(state = "NSW", resources = resources, include_infrataxa = F)
+    state_diversity_counts(state = "NSW", resources = resources, include_infrataxa = FALSE)
   expect_true(
     sum(nsw_species_counts$num_species) > 7000 &
       sum(nsw_species_counts$num_species) < 10000
@@ -32,13 +32,13 @@ test_that("state_diversity() works", {
   expect_equal(ss_subset, sd)
 })
 
-test_that("state_diversity() works with `include_infrataxa = T`", {
-  
+test_that("state_diversity() works with `include_infrataxa = TRUE`", {
+
   nsw_species_counts_infrataxa <-
-    state_diversity_counts(state = "NSW", resources = resources, include_infrataxa = T)
-  
+    state_diversity_counts(state = "NSW", resources = resources, include_infrataxa = TRUE)
+
   nsw_species_counts <-
-    state_diversity_counts(state = "NSW", resources = resources, include_infrataxa = F)
+    state_diversity_counts(state = "NSW", resources = resources, include_infrataxa = FALSE)
   
   expect_gt(
     sum(nsw_species_counts_infrataxa$num_species),

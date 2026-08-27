@@ -4,24 +4,27 @@
 
 ## Submission notes
 
-* This is a new major version (2.0.0) submission.
-* Version bump to 2.0.0 reflects breaking changes in internal table naming
-  (snake_case) and new user-facing features.
+* This is a patch release (2.0.0 -> 2.0.1): bug fixes and internal cleanups
+  only, no breaking changes, no new exported functions.
 
-## Changes since last CRAN release (1.1.6)
+## Changes since last CRAN release (2.0.0)
 
-* New function `synonyms_for_accepted_names()` to list synonyms for currently
-  accepted taxon names.
-* New function `clear_cached_resources()` to remove the session cache.
-* `load_taxonomic_resources()` now caches results in memory for the R session,
-  so repeated calls with the same version return immediately.
-* `load_taxonomic_resources()` now works offline when parquet files have been
-  previously downloaded; `default_version()` falls back to the most recently
-  cached local version when no internet connection is available.
-* Internal taxonomic resource tables renamed to snake_case; `family` column
-  added to resource tables.
-* `create_species_state_origin_matrix()` and `native_anywhere_in_australia()`
-  gain an `include_infrataxa` parameter.
-* State/territory columns reordered; `family` and `taxon_id` added to output.
-* `standardise_names()` now removes leading `(` from genus names (relevant for
-  some hybrid name formats).
+* `fuzzy_match()` no longer confirms a fuzzy match against a candidate that
+  drops an `aff.`/`cf.`/`x` qualifier present in the query, which previously
+  let affinis- and hybrid-qualified names resolve past their qualifier to an
+  unrelated accepted species instead of being capped at genus rank.
+* `standardise_taxon_rank()` no longer corrupts rank values that are already
+  English, or that merely contain a Latin rank term as a substring (e.g.
+  `section`/`subsection` were being mangled into `sectionn`/`subsectionn`).
+* `standardise_names()` no longer rewrites `affinis` to `aff.` when it is the
+  species epithet of an infraspecific name, which previously produced names
+  that could only ever align to genus rank.
+* Fixed malformed `aligned_reason` text for fuzzy genus-level `aff.`/`affinis`
+  matches.
+* `align_taxa(full = TRUE)` no longer leaks internal scratch columns when
+  every name is aligned before the last match step runs.
+* `native_anywhere_in_australia()` now checks for missing taxonomic resources
+  once up front, and no longer misclassifies taxa whose name contains
+  "native" (e.g. the `nativitatis` epithets).
+* Internal refactor of `match_taxa()` and de-duplication of a repeated string
+  helper; both are behaviour-preserving.

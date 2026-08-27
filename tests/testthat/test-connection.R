@@ -94,6 +94,7 @@ test_that("native_anywhere_in_australia() bails out before doing any work", {
 test_that("functions return visibly when online", {
   skip_on_ci()
   skip_on_cran()
+  skip_if_offline()
 
   Sys.setenv("NETWORK_UP" = TRUE)
   expect_visible(default_version())

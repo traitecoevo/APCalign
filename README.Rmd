@@ -131,7 +131,7 @@ Compiling a list of outdated synonyms for currently accepted names:
 
 ```{r, message=FALSE}
 names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
-synonyms_for_accepted_names(resources = tax_resources, accepted_names = names_to_check, collapse = T)
+synonyms_for_accepted_names(resources = tax_resources, accepted_names = names_to_check, collapse = TRUE)
 ```
 
 
