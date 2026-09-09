@@ -57,7 +57,7 @@ install.packages("remotes")
 remotes::install_github("traitecoevo/APCalign")
 ```
 
-Or for the ShinyApp head to
+Or for the App head to
 [app.austraits.org/APCalign-app](https://app.austraits.org/APCalign-app/)
 
 ## A quick demo
@@ -123,7 +123,7 @@ create_taxonomic_update_lookup(
 #>  7 Banksia catoglypta Banksia cat… Banksia cato… Banksia catog… Bank… species   
 #>  8 Dryandra catoglyp… Dryandra ca… Banksia cato… Banksia catog… Bank… species   
 #>  9 Dryandra cataglyp… Dryandra ca… Banksia cato… Banksia catog… Bank… species   
-#> 10 Dryandra australis Dryandra sp… <NA>          Dryandra sp. … Drya… genus     
+#> 10 Dryandra australis Dryandra sp… <NA>          Banksia sp. [… Bank… genus     
 #> 11 Acacia longifolia  Acacia long… Acacia longi… Acacia longif… Acac… species   
 #> 12 Commersonia rosea  Commersonia… Androcalva r… Androcalva ro… Andr… species   
 #> 13 Panicum sp. Hairy… Panicum sp.… Panicum sp. … Panicum sp. H… Pani… species   
@@ -155,12 +155,12 @@ state_diversity_counts("NSW", resources = tax_resources)
 #> # A tibble: 7 × 3
 #>   origin                            state num_species
 #>   <chr>                             <chr> <table[1d]>
-#> 1 doubtfully naturalised            NSW     94       
+#> 1 doubtfully naturalised            NSW     95       
 #> 2 formerly naturalised              NSW      8       
-#> 3 native                            NSW   5980       
+#> 3 native                            NSW   5982       
 #> 4 native and doubtfully naturalised NSW      2       
 #> 5 native and naturalised            NSW     34       
-#> 6 naturalised                       NSW   1584       
+#> 6 naturalised                       NSW   1586       
 #> 7 presumed extinct                  NSW      9
 ```
 
@@ -193,14 +193,14 @@ Compiling a list of outdated synonyms for currently accepted names:
 
 ``` r
 names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
-synonyms_for_accepted_names(resources = tax_resources, accepted_names = names_to_check, collapse = T)
+synonyms_for_accepted_names(resources = tax_resources, accepted_names = names_to_check, collapse = TRUE)
 #> # A tibble: 4 × 5
 #>   family       accepted_name     synonyms scientific_name accepted_name_usage_ID
 #>   <chr>        <chr>             <chr>    <chr>           <chr>                 
 #> 1 Brassicaceae Cardamine gunnii  Cardami… Cardamine gunn… https://id.biodiversi…
 #> 2 Fabaceae     Acacia aneura     Acacia … Acacia aneura … https://id.biodiversi…
 #> 3 Proteaceae   Banksia nivea     Dryandr… Banksia nivea … https://id.biodiversi…
-#> 4 Proteaceae   Stenocarpus sinu… Stenoca… Stenocarpus si… https://id.biodiversi…
+#> 4 Proteaceae   Stenocarpus sinu… Cybele … Stenocarpus si… https://id.biodiversi…
 ```
 
 ## Cheatsheet
@@ -226,7 +226,7 @@ citation("APCalign")
 #>   Wenk E, Cornwell W, Fuchs A, Kar F, Monro A, Sauquet H, Stephens R,
 #>   Falster D (2024). "APCalign: an R package workflow and app for
 #>   aligning and updating flora names to the Australian Plant Census."
-#>   _Australian Journal of Botany_, *72*(4). R package version: 2.0.0,
+#>   _Australian Journal of Botany_, *72*(4). R package version: 2.0.1,
 #>   <https://doi.org/10.1071/BT24014>.
 #> 
 #> A BibTeX entry for LaTeX users is
@@ -239,7 +239,7 @@ citation("APCalign")
 #>     number = {4},
 #>     year = {2024},
 #>     publisher = {CSIRO Publishing},
-#>     note = {R package version: 2.0.0},
+#>     note = {R package version: 2.0.1},
 #>     url = {https://doi.org/10.1071/BT24014},
 #>   }
 ```
@@ -259,29 +259,35 @@ can take it from there!
 
 ## AusTraits family
 
-`APCalign` is part of the **AusTraits family** of packages maintained by the
-[AusTraits](https://austraits.org) team. See **[austraits.org](https://austraits.org)** for the
-project, the data, and the people behind it.
+`APCalign` is part of the **AusTraits family** of packages maintained by
+the [AusTraits](https://austraits.org) team. See
+**[austraits.org](https://austraits.org)** for the project, the data,
+and the people behind it.
 
 Contributing? Issues across the family are tracked on one board,
-[AusTraits #9](https://github.com/orgs/traitecoevo/projects/9), and new issues are auto-added. Please
-read the [issue & labelling guide](https://github.com/traitecoevo/austraits-meta/blob/main/governance/issue-guide.md)
-in [`austraits-meta`](https://github.com/traitecoevo/austraits-meta) — the family's cross-package
-knowledge and governance hub — before filing.
+[AusTraits \#9](https://github.com/orgs/traitecoevo/projects/9), and new
+issues are auto-added. Please read the [issue & labelling
+guide](https://github.com/traitecoevo/austraits-meta/blob/main/governance/issue-guide.md)
+in [`austraits-meta`](https://github.com/traitecoevo/austraits-meta) —
+the family’s cross-package knowledge and governance hub — before filing.
 
 ## Acknowledgements
 
-AusTraits is made possible by contributions from our partner organisations — the
-[University of New South Wales](https://www.unsw.edu.au/),
-[Western Sydney University](https://www.westernsydney.edu.au/),
-[Botanic Gardens of Sydney](https://www.botanicgardens.org.au/),
-[the University of Melbourne](https://www.unimelb.edu.au/),
-the [Atlas of Living Australia](https://www.ala.org.au/), and the Australian Government
-[Department of Climate Change, Energy, the Environment and Water](https://www.dcceew.gov.au) — and
-from our [advisory board, data contributors, and past partners](https://austraits.org/team/team-partners.html).
+AusTraits is made possible by contributions from our partner
+organisations — the [University of New South
+Wales](https://www.unsw.edu.au/), [Western Sydney
+University](https://www.westernsydney.edu.au/), [Botanic Gardens of
+Sydney](https://www.botanicgardens.org.au/), [the University of
+Melbourne](https://www.unimelb.edu.au/), the [Atlas of Living
+Australia](https://www.ala.org.au/), and the Australian Government
+[Department of Climate Change, Energy, the Environment and
+Water](https://www.dcceew.gov.au) — and from our [advisory board, data
+contributors, and past
+partners](https://austraits.org/team/team-partners.html).
 
-AusTraits is a co-investment partnership with the
-[Australian Research Data Commons](https://ardc.edu.au/) (ARDC) through the Planet Research Data
-Commons ([DOI: 10.3565/nyk4-4r91](https://doi.org/10.3565/nyk4-4r91)). The ARDC is enabled by the
-Australian Government's [National Collaborative Research Infrastructure Strategy](https://www.education.gov.au/ncris)
-(NCRIS).
+AusTraits is a co-investment partnership with the [Australian Research
+Data Commons](https://ardc.edu.au/) (ARDC) through the Planet Research
+Data Commons ([DOI:
+10.3565/nyk4-4r91](https://doi.org/10.3565/nyk4-4r91)). The ARDC is
+enabled by the Australian Government’s [National Collaborative Research
+Infrastructure Strategy](https://www.education.gov.au/ncris) (NCRIS).

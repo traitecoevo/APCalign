@@ -57,7 +57,7 @@ install.packages("remotes")
 remotes::install_github("traitecoevo/APCalign")
 ```
 
-Or for the ShinyApp head to [app.austraits.org/APCalign-app](https://app.austraits.org/APCalign-app/)
+Or for the App head to [app.austraits.org/APCalign-app](https://app.austraits.org/APCalign-app/)
 
 ## A quick demo
 
