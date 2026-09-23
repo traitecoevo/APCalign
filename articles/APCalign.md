@@ -28,8 +28,8 @@ remotes::install_github("traitecoevo/APCalign")
 library(APCalign)
 ```
 
-Alternatively, our ShinyApp, is available at
-[unsw.shinyapps.io/APCalign-app](https://unsw.shinyapps.io/APCalign-app/)
+Alternatively, our app, is available at
+[app.austraits.org/APCalign-app](https://app.austraits.org/APCalign-app/)
 
 To demonstrate how to use ‘APCalign’, we will use an example dataset
 `gbif_lite` which is documented in

@@ -47,7 +47,7 @@ install.packages("remotes")
 remotes::install_github("traitecoevo/APCalign")
 ```
 
-Or for the ShinyApp head to
+Or for the App head to
 [app.austraits.org/APCalign-app](https://app.austraits.org/APCalign-app/)
 
 ## A quick demo
@@ -117,7 +117,7 @@ create_taxonomic_update_lookup(
 #>  7 Banksia catoglypta Banksia cat… Banksia cato… Banksia catog… Bank… species   
 #>  8 Dryandra catoglyp… Dryandra ca… Banksia cato… Banksia catog… Bank… species   
 #>  9 Dryandra cataglyp… Dryandra ca… Banksia cato… Banksia catog… Bank… species   
-#> 10 Dryandra australis Dryandra sp… <NA>          Dryandra sp. … Drya… genus     
+#> 10 Dryandra australis Dryandra sp… <NA>          Banksia sp. [… Bank… genus     
 #> 11 Acacia longifolia  Acacia long… Acacia longi… Acacia longif… Acac… species   
 #> 12 Commersonia rosea  Commersonia… Androcalva r… Androcalva ro… Andr… species   
 #> 13 Panicum sp. Hairy… Panicum sp.… Panicum sp. … Panicum sp. H… Pani… species   
@@ -151,12 +151,12 @@ state_diversity_counts("NSW", resources = tax_resources)
 #> # A tibble: 7 × 3
 #>   origin                            state num_species
 #>   <chr>                             <chr> <table[1d]>
-#> 1 doubtfully naturalised            NSW     94       
+#> 1 doubtfully naturalised            NSW     95       
 #> 2 formerly naturalised              NSW      8       
-#> 3 native                            NSW   5980       
+#> 3 native                            NSW   5982       
 #> 4 native and doubtfully naturalised NSW      2       
 #> 5 native and naturalised            NSW     34       
-#> 6 naturalised                       NSW   1584       
+#> 6 naturalised                       NSW   1586       
 #> 7 presumed extinct                  NSW      9
 ```
 
@@ -192,14 +192,14 @@ Compiling a list of outdated synonyms for currently accepted names:
 ``` r
 
 names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
-synonyms_for_accepted_names(resources = tax_resources, accepted_names = names_to_check, collapse = T)
+synonyms_for_accepted_names(resources = tax_resources, accepted_names = names_to_check, collapse = TRUE)
 #> # A tibble: 4 × 5
 #>   family       accepted_name     synonyms scientific_name accepted_name_usage_ID
 #>   <chr>        <chr>             <chr>    <chr>           <chr>                 
 #> 1 Brassicaceae Cardamine gunnii  Cardami… Cardamine gunn… https://id.biodiversi…
 #> 2 Fabaceae     Acacia aneura     Acacia … Acacia aneura … https://id.biodiversi…
 #> 3 Proteaceae   Banksia nivea     Dryandr… Banksia nivea … https://id.biodiversi…
-#> 4 Proteaceae   Stenocarpus sinu… Stenoca… Stenocarpus si… https://id.biodiversi…
+#> 4 Proteaceae   Stenocarpus sinu… Cybele … Stenocarpus si… https://id.biodiversi…
 ```
 
 ## Cheatsheet
@@ -226,7 +226,7 @@ citation("APCalign")
 #>   Wenk E, Cornwell W, Fuchs A, Kar F, Monro A, Sauquet H, Stephens R,
 #>   Falster D (2024). "APCalign: an R package workflow and app for
 #>   aligning and updating flora names to the Australian Plant Census."
-#>   _Australian Journal of Botany_, *72*(4). R package version: 2.0.0,
+#>   _Australian Journal of Botany_, *72*(4). R package version: 2.0.1,
 #>   <https://doi.org/10.1071/BT24014>.
 #> 
 #> A BibTeX entry for LaTeX users is
@@ -239,7 +239,7 @@ citation("APCalign")
 #>     number = {4},
 #>     year = {2024},
 #>     publisher = {CSIRO Publishing},
-#>     note = {R package version: 2.0.0},
+#>     note = {R package version: 2.0.1},
 #>     url = {https://doi.org/10.1071/BT24014},
 #>   }
 ```

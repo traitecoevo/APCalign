@@ -2,6 +2,8 @@
 
 ## APCalign 2.0.1
 
+CRAN release: 2026-09-09
+
 - `fuzzy_match()` no longer confirms a fuzzy match against a candidate
   that drops an `aff.`/`cf.`/`x` qualifier present in the query. Its
   `check_match()` confirmation step only compared word positions up to
