@@ -184,7 +184,8 @@ create_taxonomic_update_lookup(
 taxon_list <-
   utils::read.csv(
   system.file("extdata", "test_taxa.csv", package = "APCalign"),
-  na.strings = c("", "NA"), strip.white = TRUE)
+  na.strings = c("", "NA"), strip.white = TRUE,
+  fileEncoding = "UTF-8-BOM")
 
 create_taxonomic_update_lookup(
     taxa = taxon_list$original_name,
