@@ -1,3 +1,7 @@
+# APCalign (development version)
+
+- `standardise_names()`, `strip_names()` and `strip_names_extra()` now apply their text substitutions in a loop instead of one long `%>%` chain. Output is unchanged (checked on every APC and APNI name). magrittr's `%>%` runs a chain as nested calls, so the 46-step chain in `standardise_names()` needed an R evaluation depth of about 430 for even a single name. That overflows small stacks: APCalign running in a web browser through webR failed in Safari with "Maximum call stack size exceeded". A full lookup now needs a depth of about 110.
+
 # APCalign 2.0.1
 
 - `fuzzy_match()` no longer confirms a fuzzy match against a candidate that drops an `aff.`/`cf.`/`x` qualifier present in the query. Its `check_match()` confirmation step only compared word positions up to the shorter of query/candidate, so `Acacia aff. aneura` ("resembles *Acacia aneura*, not confidently identified") could fuzzy-match past its qualifier to the unrelated accepted species `Acacia aptaneura` instead of being capped at genus rank. A query containing `aff`, `cf`, or `x` as a standalone word now requires the candidate to contain that same token, or the candidate is rejected outright before the coarser word-position check runs; genuine `aff.`/`cf.`-qualified synonyms and named hybrids that still need fuzzy matching to fix a typo are unaffected.
