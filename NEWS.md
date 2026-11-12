@@ -1,6 +1,6 @@
 # APCalign (development version)
 
-- `standardise_names()`, `strip_names()` and `strip_names_extra()` now apply their text substitutions in a loop instead of one long `%>%` chain. Output is unchanged (checked on every APC and APNI name). magrittr's `%>%` runs a chain as nested calls, so the 46-step chain in `standardise_names()` needed an R evaluation depth of about 430 for even a single name. That overflows small stacks: APCalign running in a web browser through webR failed in Safari with "Maximum call stack size exceeded". A full lookup now needs a depth of about 110.
+- `standardise_names()`, `strip_names()` and `strip_names_extra()` now apply their text substitutions in a loop instead of `%>%` chains. Output is unchanged (checked on every APC and APNI name). magrittr's `%>%` runs a chain as nested calls, and with the 46-step chain in `standardise_names()` a lookup of even a single name needed an R evaluation depth of about 430. That overflows small stacks: APCalign running in a web browser through webR failed in Safari with "Maximum call stack size exceeded". A full lookup now needs a depth of about 110.
 
 # APCalign 2.0.1
 

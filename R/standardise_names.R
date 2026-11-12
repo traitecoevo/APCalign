@@ -86,8 +86,6 @@ standardise_names_rules <- list(
   ## standardise "ser"
   c("\\sser(\\s|\\.\\s)", " ser. "),
   c("\\sseries(\\s|\\.\\s)", " ser. ")
-
-  ## clean white space
 )
 
 #' @title Standardise taxon names
