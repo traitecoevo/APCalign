@@ -21,7 +21,8 @@ align_taxa(
 \arguments{
 \item{original_name}{A list of names to query for taxonomic alignments.}
 
-\item{output}{(optional) The name of the file to save the results to.}
+\item{output}{(optional) The name of the file to save the results to.
+Requires the 'readr' package.}
 
 \item{full}{Parameter to determine how many columns are output}
 
