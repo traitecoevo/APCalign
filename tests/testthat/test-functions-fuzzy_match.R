@@ -78,3 +78,16 @@ test_that("a name with no letter does not stop the lookup", {
   expect_equal(out$original_name, c(odd, "Acacia aneura"))
   expect_equal(out$aligned_name[5], "Acacia aneura")
 })
+
+test_that("a word with no letter or digit after the genus does not stop the lookup", {
+  # "+ ~ $ ^ |" are symbols, not punctuation, so strip_names() keeps them; the
+  # word's first letter is NA, and comparing it used to stop the whole batch.
+  expect_true(is.na(fuzzy_match("acacia --", "acacia ab", 5, 1)))
+  expect_true(is.na(fuzzy_match("acacia b", "acacia", 2, 0.35)))
+  odd <- c("Acacia + aneura", "Eucalyptus |", "Eucalyptus ~", "Acacia \u2297 aneura")
+  out <- expect_no_error(
+    create_taxonomic_update_lookup(c(odd, "Acacia aneura"), resources = resources)
+  )
+  expect_equal(out$original_name, c(odd, "Acacia aneura"))
+  expect_equal(out$aligned_name[5], "Acacia aneura")
+})
