@@ -53,6 +53,12 @@ fuzzy_match <- function(txt, accepted_list,
 
   ## extract first letter of first word
   txt_word1_start <- to_lower(re_extract(txt, "\\p{L}"))
+
+  ## A name with no letter in it (e.g. "12 34") cannot match anything: the
+  ## reference list is narrowed to names with the same first letter. Without
+  ## this, the comparison with NA below stopped the whole lookup with "missing
+  ## value where TRUE/FALSE needed".
+  if (is.na(txt_word1_start)) return(NA)
   
   ## for text matches with 2 or more words,
   ## extract the first letter/digit of the second word
