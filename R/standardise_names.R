@@ -14,6 +14,80 @@
 not_before_rank_marker <-
   "(?!\\s+(?:subsp|ssp|subvar|var|forma|form|ser|series|cv|f)\\.?(?:\\s|$))"
 
+## Replacements applied by `standardise_names()`, in order, after the leading
+## punctuation, `?`, `*` and non-ASCII characters have been dealt with.
+## Each rule is c(find, replace), a Perl regular expression.
+standardise_names_rules <- list(
+  ## add spaces between letters and /
+  c("([a-zA-Z])/([a-zA-Z])", "\\1 / \\2"),
+
+  ## remove ".."
+  c("\\.\\.", "\\."),
+
+  ## Weird formatting
+  c("[\\n\\t]", " "),
+  c("[\\n\\t]", " "),
+
+  ## Remove spaces before or after brackets
+  c("\\ \\)", "\\)"),
+  c("\\(\\ ", "\\("),
+
+  ## Capitalise first letter
+  c("^([a-z])", "\\U\\1"),
+
+  ## sp. not sp or spp
+  c("\\ssp(\\s|$)",   " sp. "),
+  c("\\sspp.(\\s|$)", " sp. "),
+  c("\\sspp(\\s|$)",  " sp. "),
+
+  ## subsp. not ssp, ssp., subsp or sub sp.
+  c("\\sssp(\\s|$)",     " subsp. "),
+  c("\\sssp.(\\s|$)",    " subsp. "),
+  c("\\ssubsp(\\s|$)",   " subsp. "),
+  c("\\ssub sp.(\\s|$)", " subsp. "),
+
+  ## var. not var or v or v.
+  c("\\svar(\\s|$)",   " var. "),
+  c("\\sv(\\s|$|\\.)", " var. "),
+
+  ## aff. not affin, aff affn affinis
+  ## `affinis` is also a legitimate species epithet, so it is only rewritten
+  ## when it sits mid-name and is not the epithet of an infraspecific name:
+  ## a trailing `affinis` is left alone (`Acacia affinis`), and so is one
+  ## followed by a rank marker (`Gomphrena affinis subsp. pilbarensis`).
+  c("\\saffin(\\s|$)",    " aff. "),
+  c("\\saff(\\s|$)",      " aff. "),
+  c("\\saffn(\\s|$|\\.)", " aff. "),
+  c(paste0("\\saffinis", not_before_rank_marker, "(\\s)"),  " aff. "),
+
+  ## f. not forma or form or form. or f
+  c("\\sforma(\\s|$)",       " f. "),
+  c("\\sform(\\s|$|\\.\\s)", " f. "),
+  c("\\sf(\\s|$)",           " f. "),
+
+  ## remove " ms" if present
+  c("\\sms(\\s|$|\\.\\s)", " "),
+
+  ## remove " s.l" or " s.s." or "s s " or " s l " if present
+  c("\\ssl(\\s|$)", " "),
+  c("\\ss\\.l\\.(\\s|$)", " "),
+  c("\\sss(\\s|$)", ""),
+  c("\\ss\\.s\\.(\\s|$)", " "),
+  c("\\ss\\ss(\\s|$)", " "),
+  c("\\ss\\sl(\\s|$)", " "),
+  c("\\ss\\.\\ss(\\s|$|\\.\\s)", " "),
+  c("\\ss\\.\\sl(\\s|$|\\.\\s)", " "),
+  c("\\ss(\\.\\s|\\s)lat(\\s|$|\\.\\s)", " "),
+  c("\\ssensu\\slato(\\s|$|\\.\\s)", " "),
+  c("\\ssensu\\sstricto(\\s|$|\\.\\s)", " "),
+  c("(\\s|\\()s\\.lat\\.(\\s|\\))", ""),
+  c("(\\s|\\()s\\.str\\.(\\s|\\))", ""),
+
+  ## standardise "ser"
+  c("\\sser(\\s|\\.\\s)", " ser. "),
+  c("\\sseries(\\s|\\.\\s)", " ser. ")
+)
+
 #' @title Standardise taxon names
 #' 
 #' @description
@@ -53,99 +127,35 @@ not_before_rank_marker <-
 #'                     "Gomphrena affinis subsp. pilbarensis"))
 #' @export
 standardise_names <- function(taxon_names) {
-  taxon_names %>%
-    ## remove ? throughout
-    gsub_perl("\\?", "") %>%
+  ## Steps run one after another, not as a single `%>%` chain: a long chain
+  ## nests one call per step and overflows small stacks (see gsub_perl_rules()).
 
-    ## remove all punct and symbols at start of string
-    ## this combination should catch almost everything
-    ## it is essential there are no stray characters at the start of strings
-    ## for fuzzy-matching to work once the reference list is split by first-character
-    stringr::str_replace("^[~!@#$%^&*()_+-=`;',./<>?:{}|]+", "") %>%
-    stringr::str_replace("^[:punct:]+", "") %>%
-    
-    ## remove * at end of string
-    gsub_perl("\\*$", "") %>%
+  ## remove ? throughout
+  x <- gsub_perl(taxon_names, "\\?", "")
 
-    ## replace hybrid x marker with standard x 
-    ## for certain hybrid x's that aren't dealt with below
-    gsub_perl("\u00D7", "x") %>%
+  ## remove all punct and symbols at start of string
+  ## this combination should catch almost everything
+  ## it is essential there are no stray characters at the start of strings
+  ## for fuzzy-matching to work once the reference list is split by first-character
+  x <- stringr::str_replace(x, "^[~!@#$%^&*()_+-=`;',./<>?:{}|]+", "")
+  x <- stringr::str_replace(x, "^[:punct:]+", "")
 
-    ## hybrid markers and other non-standard characters used are replaced with 
-    ## the standard equivalent (e.g. x, \)
-    stringi::stri_trans_general("Any-Latin; Latin-ASCII") %>%
+  ## remove * at end of string
+  x <- gsub_perl(x, "\\*$", "")
 
-    ## add spaces between letters and /
-    gsub_perl("([a-zA-Z])/([a-zA-Z])", "\\1 / \\2") %>%
-  
-    ## remove ".."
-    gsub_perl("\\.\\.", "\\.") %>%
+  ## replace hybrid x marker with standard x
+  ## for certain hybrid x's that aren't dealt with below
+  x <- gsub_perl(x, "\u00D7", "x")
 
-    ## Weird formatting
-    gsub_perl("[\\n\\t]", " ") %>%
-    gsub_perl("[\\n\\t]", " ") %>%
-    
-    ## Remove spaces before or after brackets
-    gsub_perl("\\ \\)", "\\)") %>%
-    gsub_perl("\\(\\ ", "\\(") %>%
-    
-    ## Capitalise first letter
-    gsub_perl("^([a-z])", "\\U\\1") %>%
-    
-    ## sp. not sp or spp
-    gsub_perl("\\ssp(\\s|$)",   " sp. ") %>%
-    gsub_perl("\\sspp.(\\s|$)", " sp. ") %>%
-    gsub_perl("\\sspp(\\s|$)",  " sp. ") %>%
-    
-    ## subsp. not ssp, ssp., subsp or sub sp.
-    gsub_perl("\\sssp(\\s|$)",     " subsp. ") %>%
-    gsub_perl("\\sssp.(\\s|$)",    " subsp. ") %>%
-    gsub_perl("\\ssubsp(\\s|$)",   " subsp. ") %>%
-    gsub_perl("\\ssub sp.(\\s|$)", " subsp. ") %>%
-    
-    ## var. not var or v or v.
-    gsub_perl("\\svar(\\s|$)",   " var. ") %>%
-    gsub_perl("\\sv(\\s|$|\\.)", " var. ") %>%
-    
-    ## aff. not affin, aff affn affinis
-    ## `affinis` is also a legitimate species epithet, so it is only rewritten
-    ## when it sits mid-name and is not the epithet of an infraspecific name:
-    ## a trailing `affinis` is left alone (`Acacia affinis`), and so is one
-    ## followed by a rank marker (`Gomphrena affinis subsp. pilbarensis`).
-    gsub_perl("\\saffin(\\s|$)",    " aff. ") %>%
-    gsub_perl("\\saff(\\s|$)",      " aff. ") %>%
-    gsub_perl("\\saffn(\\s|$|\\.)", " aff. ") %>%
-    gsub_perl(paste0("\\saffinis", not_before_rank_marker, "(\\s)"),  " aff. ") %>%
-    
-    ## f. not forma or form or form. or f
-    gsub_perl("\\sforma(\\s|$)",       " f. ") %>%
-    gsub_perl("\\sform(\\s|$|\\.\\s)", " f. ") %>%
-    gsub_perl("\\sf(\\s|$)",           " f. ") %>%
-    
-    ## remove " ms" if present
-    gsub_perl("\\sms(\\s|$|\\.\\s)", " ") %>%
-    
-    ## remove " s.l" or " s.s." or "s s " or " s l " if present
-    gsub_perl("\\ssl(\\s|$)", " ") %>%
-    gsub_perl("\\ss\\.l\\.(\\s|$)", " ") %>%
-    gsub_perl("\\sss(\\s|$)", "") %>%
-    gsub_perl("\\ss\\.s\\.(\\s|$)", " ") %>%
-    gsub_perl("\\ss\\ss(\\s|$)", " ") %>%
-    gsub_perl("\\ss\\sl(\\s|$)", " ") %>%
-    gsub_perl("\\ss\\.\\ss(\\s|$|\\.\\s)", " ") %>%
-    gsub_perl("\\ss\\.\\sl(\\s|$|\\.\\s)", " ") %>%
-    gsub_perl("\\ss(\\.\\s|\\s)lat(\\s|$|\\.\\s)", " ") %>%
-    gsub_perl("\\ssensu\\slato(\\s|$|\\.\\s)", " ") %>%
-    gsub_perl("\\ssensu\\sstricto(\\s|$|\\.\\s)", " ") %>%
-    gsub_perl("(\\s|\\()s\\.lat\\.(\\s|\\))", "") %>%
-    gsub_perl("(\\s|\\()s\\.str\\.(\\s|\\))", "") %>%
-    
-    ## standardise "ser"
-    gsub_perl("\\sser(\\s|\\.\\s)", " ser. ") %>%
-    gsub_perl("\\sseries(\\s|\\.\\s)", " ser. ") %>%
+  ## hybrid markers and other non-standard characters used are replaced with
+  ## the standard equivalent (e.g. x, \)
+  x <- stringi::stri_trans_general(x, "Any-Latin; Latin-ASCII")
 
-    ## clean white space
-    stringr::str_squish()
+  ## the remaining text substitutions (rank markers, qualifiers, filler words)
+  x <- gsub_perl_rules(x, standardise_names_rules)
+
+  ## clean white space
+  stringr::str_squish(x)
 }
 
 #' Extract Genus

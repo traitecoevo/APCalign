@@ -100,6 +100,7 @@ the CSV.
 ### Conventions
 
 - Tidyverse style: `%>%`, `dplyr`/`stringr`/`purrr`, namespaced calls (`dplyr::`).
+- **No long `%>%` chains of text substitutions.** `%>%` (and the native `|>`) run a chain as nested calls, so depth grows with chain length; the old 46-step chain in `standardise_names()` crashed webR in Safari. Put sequential regex replacements in a `c(find, replace)` list and apply them with `gsub_perl_rules()` ([R/utils.R](R/utils.R)), as `standardise_names_rules` does. Short dplyr pipelines are fine.
 - roxygen2 with markdown; run `devtools::document()` after changing `@` docs — keep
   `man/*.Rd` and `NAMESPACE` in sync (do not hand-edit them).
 - User-facing output text changes (e.g. `aligned_reason`) warrant a `NEWS.md` entry.
