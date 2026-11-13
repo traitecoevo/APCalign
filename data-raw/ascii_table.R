@@ -18,7 +18,11 @@ res <- load_taxonomic_resources(version = "2026-07-30", quiet = TRUE)
 ## half/fullwidth forms, plus every non-ASCII character in the APC and APNI tables
 in_data <- unlist(lapply(res[c("APC", "APNI")], function(d)
   unlist(lapply(d[vapply(d, is.character, TRUE)], function(v) utf8ToInt(paste(unique(v), collapse = ""))))))
-codes <- sort(unique(c(0x00A0:0x33FF, 0xFB00:0xFFEF, in_data[in_data > 127])))
+codes <- sort(unique(c(0x00A0:0x33FF, 0xA640:0xA7FF, 0xAB30:0xAB6F, 0xFB00:0xFFEF, in_data[in_data > 127])))
+## U+FEFF (byte-order mark): stringi drops it at the start of a string, which
+## would wrongly turn it into a deletion in the tables; to_lower() and friends
+## handle the leading-BOM case themselves
+codes <- setdiff(codes, 0xFEFF)
 chars <- intToUtf8(codes, multiple = TRUE)
 chars <- chars[!grepl("\\p{Cn}|\\p{Cs}|\\p{Co}", chars, perl = TRUE)]
 
@@ -45,20 +49,27 @@ lower_diff <- lower_icu != tolower(chars)
 let <- chars[grepl("^\\p{L}$", chars, perl = TRUE)]
 title_icu <- stringi::stri_trans_totitle(let)
 title_diff <- title_icu != sub("^(.)", "\\U\\1", stringi::stri_trans_tolower(let), perl = TRUE)
-## characters after which ICU starts a new sentence even with no space between:
-## the sentence terminals, less the full stops (ICU's ATerm), which only end a
-## sentence before a space
-sterm <- chars[stringi::stri_detect_regex(chars, "^\\p{Sentence_Terminal}$")]
-sterm <- setdiff(c("!", "?", sterm), c(".", "\u2024", "\uFE52", "\uFF0E"))
+## ICU's sentence-break classes (Unicode UAX #29), used by to_sentence() for
+## strings with more than one sentence. ASCII is included.
+sb_chars <- c(intToUtf8(c(9:13, 32:126, 0x80:0x9F), multiple = TRUE), chars)  # incl. U+0085, a line break
+sb <- c(ATerm = "AT", STerm = "ST", SContinue = "SC", Close = "CL", Sp = "SP",
+        Sep = "SE", Upper = "UP", Lower = "LO", OLetter = "LE", Numeric = "NU",
+        Extend = "EX", Format = "FO")
+sb_class <- rep(NA_character_, length(sb_chars))
+for (nm in names(sb)) {
+  hit <- is.na(sb_class) & stringi::stri_detect_regex(sb_chars, paste0("^\\p{Sentence_Break=", nm, "}$"))
+  sb_class[hit] <- sb[[nm]]
+}
+keep_sb <- !is.na(sb_class)
 
 case_table <- list(
   lower_from = chars[lower_diff], lower_to = lower_icu[lower_diff],
   title_from = let[title_diff], title_to = title_icu[title_diff],
-  sentence_end = sterm
+  sb_chars = sb_chars[keep_sb], sb_class = sb_class[keep_sb]
 )
 ascii_table <- list(from = from, to = to)
 attr(ascii_table, "source") <- attr(case_table, "source") <-
   paste0("stringi ", packageVersion("stringi"), " (ICU ", stringi::stri_info()$ICU.version, ")")
 save(ascii_table, case_table, file = "R/sysdata.rda", compress = "xz")
 cat("ascii_table:", length(from), "entries;", "lower exceptions:", sum(lower_diff),
-    "; title exceptions:", sum(title_diff), "; sentence terminals:", length(sterm), "\n")
+    "; title exceptions:", sum(title_diff), "; sentence-break classes:", sum(keep_sb), "\n")

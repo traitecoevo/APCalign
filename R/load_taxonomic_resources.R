@@ -126,7 +126,7 @@ load_taxonomic_resources <-
     APC_tmp <-
       taxonomic_resources$APC %>%
       dplyr::filter(taxon_rank %in% c("subspecies", "species", "form", "variety")) %>%
-      dplyr::filter(!re_detect(canonical_name, "[\\s\\p{Z}]sp\\.$")) %>%
+      dplyr::filter(!re_detect(canonical_name, "[\\s\\p{Z}\\x85]sp\\.$")) %>%
       dplyr::select(
         canonical_name,
         scientific_name,

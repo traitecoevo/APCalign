@@ -106,7 +106,7 @@ match_taxa <- function(
   ## the rest of the name matches. Applied to `cleaned_name`, and re-evaluated
   ## by each match step because `tocheck` shrinks as matches are found.
   is_genus_sp <- function(x) {
-    re_detect(x, "[\\s\\p{Z}]sp\\.$") & word(x, 2) %in% "sp."
+    re_detect(x, "[\\s\\p{Z}\\x85]sp\\.$") & word(x, 2) %in% "sp."
   }
 
   is_intergrade <- function(x) re_detect(x, "\\ -- |\\--")
@@ -116,7 +116,7 @@ match_taxa <- function(
   is_indecision <- function(x) {
     (
       re_detect(x, "\\p{L}\\/") |
-        re_detect(x, "[\\s\\p{Z}]\\/")
+        re_detect(x, "[\\s\\p{Z}\\x85]\\/")
     ) &
       !re_detect(x, "\\p{Nd}") &
       !re_detect(x, "\\(") &
@@ -133,13 +133,13 @@ match_taxa <- function(
   affinis_qualifier <- paste0(" affinis", not_before_rank_marker, "\\s")
 
   has_affinity_or_cf <- function(x) {
-    re_detect(x, "[Aa]ff[.\\s\\p{Z}]") |
+    re_detect(x, "[Aa]ff[.\\s\\p{Z}\\x85]") |
       re_detect(x, affinis_qualifier) |
-      re_detect(x, " cf[.\\s\\p{Z}]")
+      re_detect(x, " cf[.\\s\\p{Z}\\x85]")
   }
 
   has_affinity <- function(x) {
-    re_detect(x, "[Aa]ff[.\\s\\p{Z}]") |
+    re_detect(x, "[Aa]ff[.\\s\\p{Z}\\x85]") |
       re_detect(x, affinis_qualifier)
   }
 

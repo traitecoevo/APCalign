@@ -226,7 +226,7 @@ standardise_taxon_rank <- function(taxon_rank) {
   # translating ("subsectio", "subforma"), and the lookahead keeps any trailing
   # whitespace, since taxon_rank is not trimmed upstream.
   g <- function(x, find, replace) {
-    re_replace(x, paste0(find, "(?=[\\s\\p{Z}]*$)"), replace)
+    re_replace(x, paste0(find, "(?=[\\s\\p{Z}\\x85]*$)"), replace)
   }
 
   taxon_rank %>%
