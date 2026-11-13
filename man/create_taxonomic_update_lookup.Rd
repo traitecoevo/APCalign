@@ -71,7 +71,10 @@ to be called repeatedly, it's much faster to load the resources using
 \code{\link{load_taxonomic_resources}} separately and pass the data in.}
 
 \item{quiet}{Logical to indicate whether to display messages while loading data and
-aligning taxa.}
+aligning taxa. Unless \code{TRUE}, the function ends by printing a summary: how
+many names aligned to a species or infraspecific taxon, to a genus or family
+only, or not at all; how many were updated to a different name; and how
+many could refer to more than one accepted taxon.}
 
 \item{output}{file path to save the output. If this file already exists,
 this function will check if it's a subset of the species passed in and try

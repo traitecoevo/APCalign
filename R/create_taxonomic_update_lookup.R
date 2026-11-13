@@ -74,7 +74,10 @@
 #' @param identifier A dataset, location or other identifier,
 #'  which defaults to NA.
 #' @param quiet Logical to indicate whether to display messages while loading data and 
-#'  aligning taxa.
+#'  aligning taxa. Unless `TRUE`, the function ends by printing a summary: how
+#'  many names aligned to a species or infraspecific taxon, to a genus or family
+#'  only, or not at all; how many were updated to a different name; and how
+#'  many could refer to more than one accepted taxon.
 #' @param output file path to save the output. If this file already exists,
 #'  this function will check if it's a subset of the species passed in and try
 #'  to add to this file. This can be useful for large and growing projects.
@@ -191,13 +194,20 @@ create_taxonomic_update_lookup <- function(taxa,
                quiet = quiet,
                output=output)
 
-  updated_data <- 
-    update_taxonomy(aligned_data, 
+  updated_data <-
+    update_taxonomy(aligned_data,
       taxonomic_splits = taxonomic_splits,
       resources = resources,
       quiet = quiet,
       output = output)
-  
+
+  if (!quiet) {
+    message(paste(
+      summarise_update_lookup(aligned_data, updated_data, taxonomic_splits),
+      collapse = "\n"
+    ))
+  }
+
   if (!full) {
     updated_data <-
       updated_data %>%
@@ -214,6 +224,112 @@ create_taxonomic_update_lookup <- function(taxa,
 
   # todo - should we add file caching here? Or is it enough to have in component functions
   return(updated_data)
+}
+
+# The closing summary `create_taxonomic_update_lookup()` prints (#131): how the
+# names aligned, and what updating them changed. Returns the lines rather than
+# printing them, so tests can check the counts.
+#
+# Alignment counts come from `aligned`, the output of `align_taxa()`, because
+# its `taxon_rank` and `taxonomic_dataset` describe the aligned name; in
+# `updated` they describe the suggested name, which a split collapsed to genus
+# has changed. Every count is of distinct input names, since `return_all` gives
+# a split name one row per possible taxon and an input may repeat a name.
+#' @noRd
+summarise_update_lookup <- function(aligned, updated, taxonomic_splits) {
+  if (is.null(aligned) || is.null(updated)) return(character(0))
+
+  aligned <- aligned %>%
+    dplyr::filter(!is.na(original_name)) %>%
+    dplyr::distinct(original_name, .keep_all = TRUE)
+
+  rank <- aligned$taxon_rank
+  dataset <- aligned$taxonomic_dataset
+  is_aligned <- !is.na(aligned$aligned_name)
+  # Not `species_and_infraspecific()`, which also counts `series`: a rank
+  # between genus and species, so it lands under "another rank" here.
+  is_species <- is_aligned &
+    rank %in% c("species", "subspecies", "variety", "form")
+  is_genus <- is_aligned & rank %in% "genus"
+  is_family <- is_aligned & rank %in% "family"
+  is_other <- is_aligned & !is_species & !is_genus & !is_family
+
+  # Collapse `updated` to one row per input name. A row's name changed if its
+  # accepted name (or, with none, its suggested name, as when a genus-only name
+  # moves to the accepted genus: `Dryandra sp.` -> `Banksia sp.`) differs from
+  # the aligned name.
+  per_name <- updated %>%
+    dplyr::filter(!is.na(original_name)) %>%
+    dplyr::mutate(
+      new_name = dplyr::coalesce(accepted_name, suggested_name),
+      changed = !is.na(new_name) & !is.na(aligned_name) &
+        new_name != aligned_name
+    ) %>%
+    dplyr::group_by(original_name) %>%
+    dplyr::summarise(
+      changed = any(changed),
+      n_suggested = dplyr::n_distinct(suggested_name),
+      alternatives = any(grepl(
+        "[alternative possible names:", suggested_name, fixed = TRUE
+      )),
+      collapsed = any(number_of_collapsed_taxa > 1, na.rm = TRUE),
+      .groups = "drop"
+    )
+
+  # Names that could refer to more than one accepted taxon, as each
+  # `taxonomic_splits` option marks them.
+  split <- switch(
+    taxonomic_splits,
+    most_likely_species = per_name$alternatives,
+    collapse_to_higher_taxon = per_name$collapsed,
+    return_all = per_name$n_suggested > 1
+  )
+  split_note <- switch(
+    taxonomic_splits,
+    most_likely_species = paste(
+      "`suggested_name` gives the most likely species and lists the",
+      "alternatives in square brackets"
+    ),
+    collapse_to_higher_taxon =
+      "they were collapsed to genus, and `suggested_name` lists the possible names",
+    return_all = "each is returned as one row per possible taxon"
+  )
+
+  num <- function(x) cli::col_blue(sum(x))
+
+  lines <- c(
+    paste0("Summary of ", num(rep(TRUE, nrow(aligned))), " names:"),
+    paste0(
+      "  -> ", num(is_species), " aligned to a species or infraspecific taxon (",
+      num(is_species & dataset %in% "APC"), " in the APC, ",
+      num(is_species & dataset %in% "APNI"), " in the APNI only)"
+    ),
+    paste0(
+      "  -> ", num(is_genus), " aligned only to a genus and ",
+      num(is_family), " only to a family"
+    ),
+    if (any(is_other))
+      paste0("  -> ", num(is_other), " aligned to another rank"),
+    paste0("  -> ", num(!is_aligned), " could not be aligned"),
+    paste0(
+      "  -> ", num(per_name$changed & !split),
+      " aligned names were updated to a different name (e.g. a synonym to ",
+      "its accepted name, or an outdated genus to the current one)"
+    )
+  )
+
+  if (any(split)) {
+    lines <- c(
+      lines,
+      paste0(
+        "  -> ", num(split), " names could refer to more than one ",
+        "currently accepted taxon. With `taxonomic_splits = \"",
+        taxonomic_splits, "\"`, ", split_note, "."
+      )
+    )
+  }
+
+  lines
 }
 
 #' @noRd
