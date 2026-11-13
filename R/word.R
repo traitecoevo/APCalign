@@ -14,10 +14,10 @@
 #' @noRd 
 word <- function(string, start = 1L, end = start, sep = " ") {
   if(end == start) {
-    stringr::str_split_i(string, " ", start)
+    split_i(string, " ", start)
   } else if(end == start+1) {
-    w1 <- stringr::str_split_i(string, sep, start)
-    w2 <- stringr::str_split_i(string, sep, start+1)
+    w1 <- split_i(string, sep, start)
+    w2 <- split_i(string, sep, start+1)
     
     out <- paste(w1, w2) 
     out[is.na(w2)] <- NA_character_
@@ -25,9 +25,9 @@ word <- function(string, start = 1L, end = start, sep = " ") {
     return(out)
   } else if(end == start+2) {
     
-    w1 <- stringr::str_split_i(string, sep, start)
-    w2 <- stringr::str_split_i(string, sep, start+1)
-    w3 <- stringr::str_split_i(string, sep, start+2)
+    w1 <- split_i(string, sep, start)
+    w2 <- split_i(string, sep, start+1)
+    w3 <- split_i(string, sep, start+2)
     
     out <- paste(w1, w2, w3) 
     out[is.na(w2) | is.na(w3)] <- NA_character_
@@ -36,10 +36,10 @@ word <- function(string, start = 1L, end = start, sep = " ") {
   } else {
     i <- seq(start, end)
     
-    txt <- stringr::str_split(string, sep)
-    out <- purrr::map(txt, ~paste(.x[i], collapse = sep))
+    txt <- split_all(string, sep)
+    out <- lapply(txt, function(.x) paste(.x[i], collapse = sep))
     
-    lngth <- purrr::map_int(txt, length)
+    lngth <- lengths(txt)
     out[lngth < end] <- NA
     
     return(out)

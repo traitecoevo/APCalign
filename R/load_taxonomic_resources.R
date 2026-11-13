@@ -126,7 +126,7 @@ load_taxonomic_resources <-
     APC_tmp <-
       taxonomic_resources$APC %>%
       dplyr::filter(taxon_rank %in% c("subspecies", "species", "form", "variety")) %>%
-      dplyr::filter(!stringr::str_detect(canonical_name, "[:space:]sp\\.$")) %>%
+      dplyr::filter(!re_detect(canonical_name, "[\\s\\p{Z}]sp\\.$")) %>%
       dplyr::select(
         canonical_name,
         scientific_name,
@@ -211,7 +211,7 @@ load_taxonomic_resources <-
     apc_genera <-
       taxonomic_resources$APC %>%
       dplyr::filter(taxon_rank == "genus") %>%
-      dplyr::filter(!stringr::str_detect(genus, "aceae$")) %>%
+      dplyr::filter(!re_detect(genus, "aceae$")) %>%
       dplyr::select(
         canonical_name,
         accepted_name_usage,
@@ -252,7 +252,7 @@ load_taxonomic_resources <-
       ) %>%
       dplyr::filter(taxon_rank %in% c("genus")) %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$APC$canonical_name) %>%
-      dplyr::filter(!stringr::str_detect(genus, "aceae$")) %>%
+      dplyr::filter(!re_detect(genus, "aceae$")) %>%
       dplyr::mutate(taxonomic_dataset = "APNI") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
     

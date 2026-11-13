@@ -137,8 +137,8 @@ standardise_names <- function(taxon_names) {
   ## this combination should catch almost everything
   ## it is essential there are no stray characters at the start of strings
   ## for fuzzy-matching to work once the reference list is split by first-character
-  x <- stringr::str_replace(x, "^[~!@#$%^&*()_+-=`;',./<>?:{}|]+", "")
-  x <- stringr::str_replace(x, "^[:punct:]+", "")
+  x <- re_replace(x, "^[~!@#$%^&*()_+-=`;',./<>?:{}|]+", "")
+  x <- re_replace(x, "^\\p{P}+", "")
 
   ## remove * at end of string
   x <- gsub_perl(x, "\\*$", "")
@@ -149,13 +149,13 @@ standardise_names <- function(taxon_names) {
 
   ## hybrid markers and other non-standard characters used are replaced with
   ## the standard equivalent (e.g. x, \)
-  x <- stringi::stri_trans_general(x, "Any-Latin; Latin-ASCII")
+  x <- to_ascii(x)
 
   ## the remaining text substitutions (rank markers, qualifiers, filler words)
   x <- gsub_perl_rules(x, standardise_names_rules)
 
   ## clean white space
-  stringr::str_squish(x)
+  squish(x)
 }
 
 #' Extract Genus
@@ -184,14 +184,14 @@ extract_genus <- function(taxon_name) {
 # Skips standardise_names() since the input is known to be clean.
 #' @noRd
 extract_genus_clean <- function(taxon_name) {
-  genus <- stringr::str_split_i(taxon_name, " |\\/", 1) %>% stringr::str_to_sentence()
+  genus <- to_sentence(split_i(taxon_name, " |\\/", 1))
 
   # Deal with names that begin with x,
   # e.g."x Taurodium x toveyanum" or "x Glossadenia tutelata"
   i <- !is.na(genus) & genus == "X"
 
   genus[i] <-
-    stringr::str_split_i(taxon_name[i], " |\\/", 2) %>% stringr::str_to_sentence() %>% paste("x", .)
+    paste("x", to_sentence(split_i(taxon_name[i], " |\\/", 2)))
 
   genus
 }
@@ -226,11 +226,11 @@ standardise_taxon_rank <- function(taxon_rank) {
   # translating ("subsectio", "subforma"), and the lookahead keeps any trailing
   # whitespace, since taxon_rank is not trimmed upstream.
   g <- function(x, find, replace) {
-    stringr::str_replace(x, paste0(find, "(?=\\s*$)"), replace)
+    re_replace(x, paste0(find, "(?=[\\s\\p{Z}]*$)"), replace)
   }
 
   taxon_rank %>%
-  stringr::str_to_lower() %>%
+  to_lower() %>%
   gsub_fixed("regnum", "kingdom") %>%
   gsub_fixed("classis", "class") %>%
   gsub_fixed("ordo", "order") %>%
