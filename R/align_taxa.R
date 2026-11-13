@@ -50,6 +50,7 @@
 #'
 #' @param original_name A list of names to query for taxonomic alignments.
 #' @param output (optional) The name of the file to save the results to.
+#'  Requires the 'readr' package.
 #' @param full Parameter to determine how many columns are output
 #' @param resources the taxonomic resources used to align the taxa names.
 #'  Loading this can be slow, so call \code{\link{load_taxonomic_resources}}
@@ -200,9 +201,12 @@ align_taxa <- function(original_name,
     message("Not finding taxonomic resources; check internet connection?")
     return(NULL)
   }
-  
+
+  if (!is.null(output))
+    rlang::check_installed("readr", reason = "to read and write the `output` file.")
+
   if(!quiet)
-    message("Checking alignments of ", 
+    message("Checking alignments of ",
             dplyr::n_distinct(original_name, na.rm = TRUE),
             " taxa\n")
 
@@ -313,14 +317,14 @@ align_taxa <- function(original_name,
     # check unknown taxa
     message(
     "  -> ",
-    crayon::blue(sum(!is.na(taxa$checked$accepted_name), na.rm = TRUE)),
+    cli::col_blue(sum(!is.na(taxa$checked$accepted_name), na.rm = TRUE)),
     " names already matched; ",
-    crayon::blue(sum(
+    cli::col_blue(sum(
       is.na(taxa$checked$accepted_name),
       na.rm = TRUE
     )),
     " names checked but without a species-level match; ",
-    crayon::blue(sum(!is.na(taxa$tocheck$original_name))),
+    cli::col_blue(sum(!is.na(taxa$tocheck$original_name))),
     " taxa yet to be checked"
   )
   }
@@ -343,9 +347,9 @@ align_taxa <- function(original_name,
   if(!quiet)
     message(
       "  -> of these ",
-      crayon::blue(perfect_matches),
+      cli::col_blue(perfect_matches),
       " names have a perfect match to an accepted scientific name in the APC, and ",
-      crayon::blue(synonym_matches),
+      cli::col_blue(synonym_matches),
       " names have a perfect match to a synonym in the APC.
       Alignments being sought for remaining names."
     )

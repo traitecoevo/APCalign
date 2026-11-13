@@ -39,7 +39,7 @@ taxa.}
 
 \item{output}{(optional) Name of the file where results are saved. The
 default is NULL and no file is created. If specified, the output will be
-saved in a CSV file with the given name.}
+saved in a CSV file with the given name. Requires the 'readr' package.}
 
 \item{resources}{the taxonomic resources required to make the summary
 statistics.  Loading this can be slow, so call load_taxonomic_resources

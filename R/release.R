@@ -20,6 +20,8 @@ download_taxonomic_resources_for_release <- function(version_name = NULL,
   #    )
   #    )
   
+  rlang::check_installed("readr", reason = "to download and save the APC/APNI CSV exports.")
+
   dir.create("ignore/", showWarnings = FALSE)
   
   # Download APC
@@ -37,7 +39,7 @@ download_taxonomic_resources_for_release <- function(version_name = NULL,
     )
   
   # Save APC as parquet
-  arrow::write_parquet(APC, sink = paste0(path, "apc.parquet"))
+  nanoparquet::write_parquet(APC, paste0(path, "apc.parquet"))
   # Save APC as tar.gz
   readr::write_csv(APC, file = paste0(path, "apc.tar.gz"))
   
@@ -67,7 +69,7 @@ download_taxonomic_resources_for_release <- function(version_name = NULL,
     dplyr::filter(!canonicalName %in% APC$canonicalName)
   
   # Save APNI as parquet
-  arrow::write_parquet(APNI_cleaned, sink = paste0(path, "apni.parquet"))
+  nanoparquet::write_parquet(APNI_cleaned, paste0(path, "apni.parquet"))
   
   # Save APNI as tar.gz
   readr::write_csv(APNI_cleaned, file = paste0(path, "apni.tar.gz"))

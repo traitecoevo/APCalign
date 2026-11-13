@@ -75,7 +75,8 @@ aligning taxa.}
 
 \item{output}{file path to save the output. If this file already exists,
 this function will check if it's a subset of the species passed in and try
-to add to this file. This can be useful for large and growing projects.}
+to add to this file. This can be useful for large and growing projects.
+Requires the 'readr' package.}
 }
 \value{
 A lookup table containing the accepted and suggested names for each
@@ -181,9 +182,10 @@ create_taxonomic_update_lookup(
 
 # example 3
 taxon_list <-
-  readr::read_csv(
+  utils::read.csv(
   system.file("extdata", "test_taxa.csv", package = "APCalign"),
-  show_col_types = FALSE)
+  na.strings = c("", "NA"), strip.white = TRUE,
+  fileEncoding = "UTF-8-BOM")
 
 create_taxonomic_update_lookup(
     taxa = taxon_list$original_name,

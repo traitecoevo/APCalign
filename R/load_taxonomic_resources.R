@@ -374,6 +374,9 @@ dataset_access_function <-
     
     # Download from NSL
     if (type == "current") {
+      # readr is only in Suggests; check before the tryCatch below, which would
+      # otherwise report a missing package as "resources not available".
+      rlang::check_installed("readr", reason = "to download the current APC/APNI CSV exports.")
       tryCatch({
         APC <- readr::read_csv(
           "https://biodiversity.org.au/nsl/services/export/taxonCsv",
@@ -519,8 +522,8 @@ dataset_get <- function(version = default_version(),
       message(
         "No internet connection; loading locally cached version: ", version
       )
-      APC  <- arrow::read_parquet(path_to_apc)
-      APNI <- arrow::read_parquet(path_to_apni)
+      APC  <- read_parquet_tbl(path_to_apc)
+      APNI <- read_parquet_tbl(path_to_apni)
       current_list <- list(APC, APNI)
       names(current_list) <- c("APC", "APNI")
       return(current_list)
@@ -555,7 +558,7 @@ dataset_get <- function(version = default_version(),
     tryCatch({
       utils::download.file(url, path_to_file, mode = "wb")
       message("File downloaded successfully.")
-      return(arrow::read_parquet(path_to_file))
+      return(read_parquet_tbl(path_to_file))
     }, error = function(e) {
       message(
         "Internet or server may be down; error in downloading or reading the file: ",
@@ -569,18 +572,26 @@ dataset_get <- function(version = default_version(),
     message("Downloading...")
     download_and_read_parquet(apc.url, path_to_apc)
   } else {
-    arrow::read_parquet(path_to_apc)
+    read_parquet_tbl(path_to_apc)
   }
 
   APNI <- if (!file.exists(path_to_apni)) {
     download_and_read_parquet(apni.url, path_to_apni)
   } else {
-    arrow::read_parquet(path_to_apni)
+    read_parquet_tbl(path_to_apni)
   }
 
   current_list <- list(APC, APNI)
   names(current_list) <- c("APC", "APNI")
   return(current_list)
+}
+
+# nanoparquet returns a data frame of class c("tbl", "data.frame"), not a
+# tibble. Convert so that downstream code keeps tibble semantics (e.g.
+# `df[, "col"]` stays a data frame rather than dropping to a vector).
+#' @noRd
+read_parquet_tbl <- function(path) {
+  dplyr::as_tibble(nanoparquet::read_parquet(path))
 }
 
 

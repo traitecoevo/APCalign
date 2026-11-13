@@ -1,6 +1,7 @@
 # APCalign (development version)
 
 - `standardise_names()`, `strip_names()` and `strip_names_extra()` now apply their text substitutions in a loop instead of `%>%` chains. Output is unchanged (checked on every APC and APNI name). magrittr's `%>%` runs a chain as nested calls, and with the 46-step chain in `standardise_names()` a lookup of even a single name needed an R evaluation depth of about 430. That overflows small stacks: APCalign running in a web browser through webR failed in Safari with "Maximum call stack size exceeded". A full lookup now needs a depth of about 110.
+- Lighter dependencies. The cached APC/APNI parquet files are now read with `nanoparquet` instead of `arrow`, a much smaller install that doesn't need the Arrow C++ library. The files and the loaded resources are unchanged. `readr` moves from `Imports` to `Suggests`: it is only needed for `load_taxonomic_resources(stable_or_current_data = "current")` and for the `output` argument of `align_taxa()`, `update_taxonomy()` and `create_taxonomic_update_lookup()`. Each of these now asks you to install it if it is missing. `crayon` is replaced by `cli`, which `dplyr` already installs.
 
 # APCalign 2.0.1
 

@@ -44,7 +44,7 @@
 #' taxa.
 #' @param output (optional) Name of the file where results are saved. The 
 #' default is NULL and no file is created. If specified, the output will be 
-#' saved in a CSV file with the given name.
+#' saved in a CSV file with the given name. Requires the 'readr' package.
 #' @param resources the taxonomic resources required to make the summary 
 #' statistics.  Loading this can be slow, so call load_taxonomic_resources 
 #' separately to greatly speed this function up and pass the resources in.
@@ -121,8 +121,11 @@ update_taxonomy <- function(aligned_data,
     message("Not finding taxonomic resources; check internet connection?")
     return(NULL)
   }
-  
-  aligned_data <- 
+
+  if (!is.null(output))
+    rlang::check_installed("readr", reason = "to write the `output` file.")
+
+  aligned_data <-
     aligned_data %>%
     dplyr::select(original_name, aligned_name, taxon_rank, taxonomic_dataset, aligned_reason) %>%
     dplyr::mutate(

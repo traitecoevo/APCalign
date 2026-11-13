@@ -1,6 +1,6 @@
 Package: APCalign
 Title: Resolving Plant Taxon Names Using the Australian Plant Census
-Version: 2.0.1
+Version: 2.0.1.9000
 Authors@R: c(
   person(given = "Elizabeth", family = "Wenk", role = c("aut", "cre", "cph"), email = "e.wenk@unsw.edu.au", comment = c(ORCID = "0000-0001-5640-5910")),
   person(given = "Daniel", family = "Falster", role = c("aut", "ctb"), email = "daniel.falster@unsw.edu.au", comment = c(ORCID = "0000-0002-9814-092X")),
@@ -21,19 +21,19 @@ LazyData: true
 Depends:
     R (>= 4.1.0),
 Imports:
-    readr,
     purrr,
     dplyr,
     stringr,
     stringi,
     stringdist,
-    crayon,
+    cli,
     httr,
     jsonlite,
     curl,
-    arrow,
-    rlang
+    nanoparquet,
+    rlang (>= 1.0.0)
 Suggests:
+    readr,
     janitor,
     tidyr,
     covr,
@@ -41,7 +41,7 @@ Suggests:
     rmarkdown,
     kableExtra,
     here,
-    testthat (>= 3.0.0)
+    testthat (>= 3.3.0)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3.9000
 Config/testthat/edition: 3
