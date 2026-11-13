@@ -14,6 +14,19 @@
   about 430. That overflows small stacks: APCalign running in a web
   browser through webR failed in Safari with “Maximum call stack size
   exceeded”. A full lookup now needs a depth of about 110.
+- Lighter dependencies. The cached APC/APNI parquet files are now read
+  with `nanoparquet` instead of `arrow`, a much smaller install that
+  doesn’t need the Arrow C++ library. The files and the loaded resources
+  are unchanged. `readr` moves from `Imports` to `Suggests`: it is only
+  needed for
+  `load_taxonomic_resources(stable_or_current_data = "current")` and for
+  the `output` argument of
+  [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md),
+  [`update_taxonomy()`](https://traitecoevo.github.io/APCalign/reference/update_taxonomy.md)
+  and
+  [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md).
+  Each of these now asks you to install it if it is missing. `crayon` is
+  replaced by `cli`, which `dplyr` already installs.
 
 ## APCalign 2.0.1
 

@@ -37,7 +37,8 @@ align_taxa(
 
 - output:
 
-  (optional) The name of the file to save the results to.
+  (optional) The name of the file to save the results to. Requires the
+  'readr' package.
 
 - full:
 

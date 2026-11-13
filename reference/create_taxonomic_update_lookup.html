@@ -15,7 +15,7 @@ and updating of taxonomy."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">APCalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -159,7 +159,8 @@ aligning taxa.</p></dd>
 <dt id="arg-output">output<a class="anchor" aria-label="anchor" href="#arg-output"></a></dt>
 <dd><p>file path to save the output. If this file already exists,
 this function will check if it's a subset of the species passed in and try
-to add to this file. This can be useful for large and growing projects.</p></dd>
+to add to this file. This can be useful for large and growing projects.
+Requires the 'readr' package.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -293,9 +294,10 @@ and family- level names, such as identifier = "Royal NP" would return
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># example 3</span></span></span>
 <span class="r-in"><span><span class="va">taxon_list</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"test_taxa.csv"</span>, package <span class="op">=</span> <span class="st">"APCalign"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  show_col_types <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  na.strings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"NA"</span><span class="op">)</span>, strip.white <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>  fileEncoding <span class="op">=</span> <span class="st">"UTF-8-BOM"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">create_taxonomic_update_lookup</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    taxa <span class="op">=</span> <span class="va">taxon_list</span><span class="op">$</span><span class="va">original_name</span>,</span></span>

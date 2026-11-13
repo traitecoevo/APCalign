@@ -50,7 +50,7 @@ update_taxonomy(
 
   (optional) Name of the file where results are saved. The default is
   NULL and no file is created. If specified, the output will be saved in
-  a CSV file with the given name.
+  a CSV file with the given name. Requires the 'readr' package.
 
 - resources:
 

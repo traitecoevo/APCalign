@@ -25,7 +25,7 @@ Source:
 Wenk E, Cornwell W, Fuchs A, Kar F, Monro A, Sauquet H, Stephens R,
 Falster D (2024). “APCalign: an R package workflow and app for aligning
 and updating flora names to the Australian Plant Census.” *Australian
-Journal of Botany*, **72**(4). R package version: 2.0.1,
+Journal of Botany*, **72**(4). R package version: 2.0.1.9000,
 <https://doi.org/10.1071/BT24014>.
 
     @Article{,
@@ -36,6 +36,6 @@ Journal of Botany*, **72**(4). R package version: 2.0.1,
       number = {4},
       year = {2024},
       publisher = {CSIRO Publishing},
-      note = {R package version: 2.0.1},
+      note = {R package version: 2.0.1.9000},
       url = {https://doi.org/10.1071/BT24014},
     }

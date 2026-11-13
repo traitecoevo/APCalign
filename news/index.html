@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">APCalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,7 @@
 <h2 class="pkg-version" data-toc-text="development version" id="apcalign-development-version">APCalign (development version)<a class="anchor" aria-label="anchor" href="#apcalign-development-version"></a></h2>
 <ul><li>
 <code><a href="../reference/standardise_names.html">standardise_names()</a></code>, <code><a href="../reference/strip_names.html">strip_names()</a></code> and <code><a href="../reference/strip_names_extra.html">strip_names_extra()</a></code> now apply their text substitutions in a loop instead of <code>%&gt;%</code> chains. Output is unchanged (checked on every APC and APNI name). magrittr’s <code>%&gt;%</code> runs a chain as nested calls, and with the 46-step chain in <code><a href="../reference/standardise_names.html">standardise_names()</a></code> a lookup of even a single name needed an R evaluation depth of about 430. That overflows small stacks: APCalign running in a web browser through webR failed in Safari with “Maximum call stack size exceeded”. A full lookup now needs a depth of about 110.</li>
+<li>Lighter dependencies. The cached APC/APNI parquet files are now read with <code>nanoparquet</code> instead of <code>arrow</code>, a much smaller install that doesn’t need the Arrow C++ library. The files and the loaded resources are unchanged. <code>readr</code> moves from <code>Imports</code> to <code>Suggests</code>: it is only needed for <code>load_taxonomic_resources(stable_or_current_data = "current")</code> and for the <code>output</code> argument of <code><a href="../reference/align_taxa.html">align_taxa()</a></code>, <code><a href="../reference/update_taxonomy.html">update_taxonomy()</a></code> and <code><a href="../reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup()</a></code>. Each of these now asks you to install it if it is missing. <code>crayon</code> is replaced by <code>cli</code>, which <code>dplyr</code> already installs.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.1" id="apcalign-201">APCalign 2.0.1<a class="anchor" aria-label="anchor" href="#apcalign-201"></a></h2><p class="text-muted">CRAN release: 2026-09-09</p>
