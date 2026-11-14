@@ -37,7 +37,7 @@ fuzzy_match <- function(txt, accepted_list,
     stop("Epithet must be 1 or 2.")
     }
   ## identify number of words in the text to match
-  words_in_text <- 1 + stringr::str_count(txt," ")
+  words_in_text <- 1 + count_fixed(txt, " ")
 
   ## Tokens that flag an uncertain identification ("aff."/"cf.") or a hybrid
   ## ("x") rather than being an ordinary part of the epithet/locality text. If
@@ -47,34 +47,33 @@ fuzzy_match <- function(txt, accepted_list,
   ## first-letter coincidence (e.g. "acacia aff aneura" confirming against
   ## "acacia aptaneura", since "aff" and "aptaneura" both start with "a").
   qualifier_tokens <- c("aff", "cf", "x")
-  txt_qualifiers <- qualifier_tokens[purrr::map_lgl(
-    qualifier_tokens, ~ stringr::str_detect(txt, paste0("\\b", .x, "\\b"))
+  txt_qualifiers <- qualifier_tokens[vapply(
+    qualifier_tokens, function(q) re_detect(txt, whole_word(q)), logical(1)
   )]
 
   ## extract first letter of first word
-  txt_word1_start <- stringr::str_extract(txt, "[:alpha:]") %>%
-                     stringr::str_to_lower()
+  txt_word1_start <- to_lower(re_extract(txt, "\\p{L}"))
   
   ## for text matches with 2 or more words,
   ## extract the first letter/digit of the second word
   if(words_in_text > 1 & epithet_letters == 2) 
     {if(nchar(word(txt,2)) == 1) {
-      txt_word2_start <- stringr::str_extract(word(txt,2),
-                                              "[:alpha:]|[:digit:]")
+      txt_word2_start <- re_extract(word(txt,2),
+                                              "\\p{L}|\\p{Nd}")
     } else {
-      txt_word2_start <- stringr::str_extract(word(txt,2),
-                                          "[:alpha:][:alpha:]|[:digit:]")     
+      txt_word2_start <- re_extract(word(txt,2),
+                                          "\\p{L}\\p{L}|\\p{Nd}")     
     }
   }
 
   if(words_in_text > 1 & epithet_letters == 1) {
-    txt_word2_start <- stringr::str_extract(word(txt,2), "[:alpha:]|[:digit:]")
+    txt_word2_start <- re_extract(word(txt,2), "\\p{L}|\\p{Nd}")
   }
     
   ## for text matches with 3 or more words,
   ## extract the first letter/digit of the third word
   if(words_in_text > 2) {
-    txt_word3_start <- stringr::str_extract(word(txt,3), "[:alpha:]|[:digit:]")
+    txt_word3_start <- re_extract(word(txt,3), "\\p{L}|\\p{Nd}")
   }
   
   ## subset accepted list to taxa that begin with the same first letter to
@@ -84,9 +83,8 @@ fuzzy_match <- function(txt, accepted_list,
   ## need to add `unique`, because for `APC-known`,
   ## sometimes duplicate canonical names each with a different taxonomic 
   ## status, and then you just want to retain the first one
-  accepted_list <- accepted_list[(stringr::str_extract(accepted_list, "[:alpha:]") %>% 
-                                    stringr::str_to_lower()) == 
-                                    (txt_word1_start  %>% stringr::str_to_lower())] %>%
+  accepted_list <- accepted_list[first_letters(accepted_list) ==
+                                    to_lower(txt_word1_start)] %>%
                     unique()
 
   ## identify the number of characters that must change for the text string to
@@ -97,7 +95,7 @@ fuzzy_match <- function(txt, accepted_list,
   ## identify the minimum number of characters that must change for the text
   ## string to match a string in the list of accepted names
   min_dist_abs_c <-  min(distance_c)
-  min_dist_per_c <-  min(distance_c) / stringr::str_length(txt)
+  min_dist_per_c <-  min(distance_c) / nchar(txt)
 
   i <- which(distance_c==min_dist_abs_c)
   potential_matches <- accepted_list[i]
@@ -124,37 +122,36 @@ fuzzy_match <- function(txt, accepted_list,
     ## reject outright if txt carries a qualifier token ("aff"/"cf"/"x") that
     ## this candidate doesn't also carry -- see txt_qualifiers above.
     if (length(txt_qualifiers) > 0) {
-      if (!all(stringr::str_detect(potential_match, paste0("\\b", txt_qualifiers, "\\b")))) {
+      if (!all(vapply(txt_qualifiers, function(q) re_detect(potential_match, whole_word(q)), logical(1)))) {
         return(FALSE)
       }
     }
 
     ## identify number of words in the matched string
-    words_in_match <- 1 + stringr::str_count(potential_match," ")
+    words_in_match <- 1 + count_fixed(potential_match, " ")
     
     ## identify the first letter of the first word in the matched string
-    match_word1_start <- stringr::str_extract(potential_match, "[:alpha:]") %>% 
-                          stringr::str_to_lower()
+    match_word1_start <- to_lower(re_extract(potential_match, "\\p{L}"))
     
     ## identify the first letter of the second word in the matched string
     ## (if the matched string includes 2+ words)
     if(words_in_text > 1 & epithet_letters == 2) {
       x <- word(potential_match,2)
       if(nchar(x) == 1) {
-        match_word2_start <- stringr::str_extract(x, "[:alpha:]|[:digit:]")
+        match_word2_start <- re_extract(x, "\\p{L}|\\p{Nd}")
       } else {
-        match_word2_start <- stringr::str_extract(x, "[:alpha:][:alpha:]|[:digit:]")
+        match_word2_start <- re_extract(x, "\\p{L}\\p{L}|\\p{Nd}")
       }
     }
     
     if(words_in_text > 1 & epithet_letters == 1) {
-        match_word2_start <- stringr::str_extract(word(potential_match,2), "[:alpha:]|[:digit:]")
+        match_word2_start <- re_extract(word(potential_match,2), "\\p{L}|\\p{Nd}")
     }
 
     ## identify the first letter of the third word in the matched string
     ## (if the matched string includes 3+ words)
     if(words_in_text > 2) {
-      match_word3_start <- stringr::str_extract(word(potential_match,3), "[:alpha:]|[:digit:]")
+      match_word3_start <- re_extract(word(potential_match,3), "\\p{L}|\\p{Nd}")
     }
     
     ## keep match if the first letters of the first three words
@@ -193,10 +190,21 @@ fuzzy_match <- function(txt, accepted_list,
     return(FALSE)
   }
   
-  j <- purrr::map_lgl(potential_matches, check_match)
+  j <- vapply(potential_matches, check_match, logical(1), USE.NAMES = FALSE)
   
   if(!any(j)) return(NA)
   
   return(potential_matches[j])
 }
 
+## The lower-case first letter of each name in `accepted_list`. fuzzy_match()
+## is called once per name with the same reference list, so the result for the
+## last list seen is kept (identical() on the same vector is a fast check).
+.first_letters_cache <- new.env(parent = emptyenv())
+first_letters <- function(accepted_list) {
+  if (!identical(.first_letters_cache$list, accepted_list)) {
+    .first_letters_cache$list <- accepted_list
+    .first_letters_cache$first <- to_lower(re_extract(accepted_list, "\\p{L}"))
+  }
+  .first_letters_cache$first
+}

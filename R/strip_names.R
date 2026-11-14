@@ -32,8 +32,8 @@ strip_names <- function(taxon_names) {
     c("\\ \\)", ""),
     c("\\(\\ ", "")
   ))
-  x <- stringr::str_replace_all(x, "[:punct:]", " ")
-  x <- stringr::str_replace_all(x, "\\u2215", " ")
+  x <- re_replace_all(x, "\\p{P}", " ")
+  x <- gsub("\u2215", " ", x, fixed = TRUE)  # division slash
   x <- gsub_perl_rules(x, list(
     c("\\,", ""),
     c("\\=", " "),
@@ -43,7 +43,7 @@ strip_names <- function(taxon_names) {
     c(" ser ", " "),
     c(" f ", " ")
   ))
-  stringr::str_to_lower(stringr::str_squish(x))
+  to_lower(squish(x))
 }
 
 #' @title Strip taxon names, extra
@@ -79,5 +79,5 @@ strip_names_extra <- function(taxon_names) {
     c(" sp1", " 1"),
     c(" sp2", " 2")
   ))
-  stringr::str_squish(x)
+  squish(x)
 }

@@ -55,7 +55,7 @@ test_that("`affinis` as a species epithet is not read as an affinity qualifier",
   # only ever align to genus rank -- including accepted APC names.
 
   accepted <- unique(resources$APC_accepted$canonical_name)
-  epithet_affinis <- sort(accepted[stringr::str_detect(accepted, "\\baffinis\\b")])
+  epithet_affinis <- sort(accepted[grepl("\\baffinis\\b", accepted, perl = TRUE)])
   expect_gt(length(epithet_affinis), 0)
 
   # every accepted name containing `affinis` aligns to itself, at its own rank
@@ -75,9 +75,10 @@ test_that("`affinis` as a species epithet is not read as an affinity qualifier",
                rep("match_06a_species_affinis_APC_exact", 3))
 })
 
-test_that("every aligned_reason is well-formed (ends with a parenthesised date)", {
-  # Guards against the copy-paste class of bug where a branch's reason string
-  # omits the ' (' before the appended Sys.Date(), e.g. '...genus-rank2026-01-01)'.
+test_that("every aligned_reason is well-formed (ends with the data version)", {
+  # Guards against the copy-paste class of bug where a match step's reason
+  # string omitted the ' (' before the appended stamp, e.g.
+  # '...genus-rank2026-01-01)'.
   benchmarks <- readr::read_csv(
     "benchmarks/test_matches_alignments_updates.csv", show_col_types = FALSE
   )
@@ -94,8 +95,27 @@ test_that("every aligned_reason is well-formed (ends with a parenthesised date)"
   )
 
   reasons <- out$aligned_reason[!is.na(out$aligned_reason)]
-  malformed <- reasons[!stringr::str_detect(reasons, " \\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)$")]
+  malformed <- reasons[!endsWith(reasons, " (APC/APNI version 2024-10-11)")]
   expect_equal(malformed, character(0))
+})
+
+test_that("aligned_reason stamps the data version, not the run date (#281)", {
+  expect_equal(attr(resources, "version"), "2024-10-11")
+
+  out <- align_taxa(c("Banksia serrata", "Banksia serrrrata", "Banksia sp."),
+                    resources = resources, quiet = TRUE)
+  expect_true(all(endsWith(out$aligned_reason, " (APC/APNI version 2024-10-11)")))
+  expect_false(any(grepl(as.character(Sys.Date()), out$aligned_reason, fixed = TRUE)))
+
+  # Resources assembled without load_taxonomic_resources() carry no version;
+  # the reason is then left unstamped rather than given a guessed stamp.
+  unversioned <- resources
+  attr(unversioned, "version") <- NULL
+  out2 <- align_taxa("Banksia serrata", resources = unversioned, quiet = TRUE)
+  expect_equal(
+    out2$aligned_reason,
+    sub(" (APC/APNI version 2024-10-11)", "", out$aligned_reason[1], fixed = TRUE)
+  )
 })
 
 test_that("full alignment output is stable across all match branches (snapshot)", {
@@ -116,8 +136,9 @@ test_that("full alignment output is stable across all match branches (snapshot)"
     quiet = TRUE
   )
 
-  # Pin the alignment contract: which branch fired, the result, and the reason.
-  # Normalise the embedded run-date so the snapshot is stable over time.
+  # Pin the alignment contract: which match step fired, the result, and the
+  # reason. The reason names the data version, not the run date, so it needs no
+  # normalising to stay stable over time (#281).
   contract <- out %>%
     dplyr::transmute(
       original_name,
@@ -126,9 +147,7 @@ test_that("full alignment output is stable across all match branches (snapshot)"
       taxonomic_dataset,
       taxon_rank,
       alignment_code,
-      aligned_reason = stringr::str_replace(
-        aligned_reason, "\\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)$", "(DATE)"
-      )
+      aligned_reason
     ) %>%
     dplyr::arrange(original_name, aligned_name, alignment_code)
 

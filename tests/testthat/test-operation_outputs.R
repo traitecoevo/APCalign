@@ -95,8 +95,8 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
     dplyr::mutate(number_of_collapsed_taxa = ifelse(is.na(number_of_collapsed_taxa), 1, number_of_collapsed_taxa))
   
   rows_gt_1 <- out3 %>% dplyr::filter(number_of_collapsed_taxa > 1)
-  rows_end_sp <- out3 %>% dplyr::filter(stringr::str_detect(suggested_name, "sp."))
-  rows_alt_names <- out3 %>% dplyr::filter(stringr::str_detect(suggested_name, "collapsed names:"))
+  rows_end_sp <- out3 %>% dplyr::filter(grepl("sp.", suggested_name))
+  rows_alt_names <- out3 %>% dplyr::filter(grepl("collapsed names:", suggested_name))
   
   
   expect_equal(nrow(out1), nrow(out3))
@@ -342,8 +342,8 @@ test_that("synonyms_for_accepted_names outputs expected number of rows", {
   
   expect_contains(synonyms_F$synonym, "Racosperma aneurum")
   expect_contains(synonyms_F$synonym, "Cardamine heterophylla")
-  expect_no_error(stringr::str_detect(synonyms_T$synonyms, "Racosperma aneurum"))
-  expect_no_error(stringr::str_detect(synonyms_T$synonyms, "Cardamine heterophylla"))
+  expect_no_error(grepl("Racosperma aneurum", synonyms_T$synonyms))
+  expect_no_error(grepl("Cardamine heterophylla", synonyms_T$synonyms))
   
   
   expect_equal(

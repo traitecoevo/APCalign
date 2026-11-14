@@ -32,7 +32,10 @@
 #' @param quiet A logical indicating whether to print status of loading to screen.
 #'  Defaults to FALSE.
 #'
-#' @return A list of taxonomic resource data frames.
+#' @return A list of taxonomic resource data frames. Its `"version"` attribute
+#'   records which data were loaded: the `version` for stable data, or
+#'   `"current, downloaded <date>"` for current data. [align_taxa()] writes it
+#'   into each `aligned_reason`.
 #' @export
 #'
 #' @examples
@@ -126,7 +129,7 @@ load_taxonomic_resources <-
     APC_tmp <-
       taxonomic_resources$APC %>%
       dplyr::filter(taxon_rank %in% c("subspecies", "species", "form", "variety")) %>%
-      dplyr::filter(!stringr::str_detect(canonical_name, "[:space:]sp\\.$")) %>%
+      dplyr::filter(!re_detect(canonical_name, "[\\s\\p{Z}\\x85]sp\\.$")) %>%
       dplyr::select(
         canonical_name,
         scientific_name,
@@ -211,7 +214,7 @@ load_taxonomic_resources <-
     apc_genera <-
       taxonomic_resources$APC %>%
       dplyr::filter(taxon_rank == "genus") %>%
-      dplyr::filter(!stringr::str_detect(genus, "aceae$")) %>%
+      dplyr::filter(!re_detect(genus, "aceae$")) %>%
       dplyr::select(
         canonical_name,
         accepted_name_usage,
@@ -252,7 +255,7 @@ load_taxonomic_resources <-
       ) %>%
       dplyr::filter(taxon_rank %in% c("genus")) %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$APC$canonical_name) %>%
-      dplyr::filter(!stringr::str_detect(genus, "aceae$")) %>%
+      dplyr::filter(!re_detect(genus, "aceae$")) %>%
       dplyr::mutate(taxonomic_dataset = "APNI") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
     
@@ -292,6 +295,15 @@ load_taxonomic_resources <-
 
     close(pb)
     if(!quiet) message("...done")
+
+    # Record which APC/APNI data these tables were built from. `match_taxa()`
+    # stamps it into every `aligned_reason`, in place of the run date (#281).
+    attr(taxonomic_resources, "version") <-
+      if (stable_or_current_data == "stable") {
+        version
+      } else {
+        paste0("current, downloaded ", Sys.Date())
+      }
 
     # Store in session cache for future calls
     if (use_cache) {
