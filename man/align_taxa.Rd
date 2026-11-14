@@ -66,8 +66,8 @@ value or one value per name; defaults to NA.}
 }
 \value{
 A tibble with one row per input name, with columns original_name,
-cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason
-and alignment_code; \code{full = TRUE} adds the others below.
+cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason,
+alignment_code and chars_changed; \code{full = TRUE} adds the others below.
 \itemize{
 \item original_name: the original plant name input.
 \item aligned_name: the APC or APNI name the original name was aligned to; for
@@ -79,6 +79,17 @@ for hybrids) and the original name (and identifier) in square brackets.
 (from an original name to an aligned name).
 \item alignment_code: a code that accompanies the aligned_reason, indicating the
 relative sequence of the match during the alignment process.
+\item chars_changed: for a fuzzy match, how many characters differ between the
+name and the reference name it was matched to (the Damerau-Levenshtein
+distance, counting an insertion, deletion, substitution or swap of two
+adjacent characters as one change); \code{0} for an exact match; \code{NA} when the
+name was not aligned. Only the part of the name the match step compared is
+counted: for a genus- or family-rank match, just the first word, and in
+most steps after case, punctuation, rank markers and filler words have been
+standardised or removed. It
+is not a measure of how reliable a match is: a phrase name can match
+reliably with several characters changed, while one character can separate
+two species.
 \item cleaned_name: original name with punctuation and infraspecific taxon
 designation terms standardised by the function standardise_names;
 streamlines exact matches.

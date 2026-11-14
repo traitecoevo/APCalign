@@ -51,6 +51,7 @@ utils::globalVariables(
     "canonicalName",
     "changed",
     "ccAttributionIRI",
+    "chars_changed",
     "checked",
     "cleaned_name",
     "family",

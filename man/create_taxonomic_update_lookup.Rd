@@ -95,8 +95,8 @@ original name input, and additional taxonomic information such as taxon
 rank, taxonomic status, taxon IDs and genera. With \code{full = FALSE} (the
 default) the columns are original_name, aligned_name, accepted_name,
 suggested_name, genus, taxon_rank, taxonomic_dataset, taxonomic_status,
-scientific_name, aligned_reason, update_reason and
-number_of_collapsed_taxa; \code{full = TRUE} adds the others below.
+scientific_name, aligned_reason, update_reason, number_of_collapsed_taxa
+and chars_changed; \code{full = TRUE} adds the others below.
 \itemize{
 \item original_name: the original plant name.
 \item aligned_name: the input plant name that has been aligned to a taxon name in
@@ -134,6 +134,10 @@ details of a scientific name; available for both APC and APNI names.
 \item row_number: the row number of a specific original_name in the input.
 \item number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon",
 the number of possible taxon names that have been collapsed.
+\item chars_changed: for a fuzzy match, how many characters of the name were
+changed to match the reference name; \code{0} for an exact match; \code{NA} when the
+name was not aligned. Carried over from \code{\link[=align_taxa]{align_taxa()}}, where it is
+described in full.
 }
 }
 \description{

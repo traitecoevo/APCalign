@@ -1186,10 +1186,12 @@ fuzzy_match_column <- function(x, accepted_list, max_distance_abs,
 
 # Remove the columns that only exist while matching, so callers always see the
 # documented column set regardless of which match step finished the job.
+# Every exit from `match_taxa()` passes through here, so this is also where
+# `chars_changed` is filled in.
 drop_scratch <- function(taxa) {
   scratch <- c("identifier_string", "identifier_string2", "aligned_reason_suffix")
-  taxa$tocheck <- taxa$tocheck %>% dplyr::select(-dplyr::any_of(scratch))
-  taxa$checked <- taxa$checked %>% dplyr::select(-dplyr::any_of(scratch))
+  taxa$tocheck <- taxa$tocheck %>% dplyr::select(-dplyr::any_of(scratch)) %>% add_chars_changed()
+  taxa$checked <- taxa$checked %>% dplyr::select(-dplyr::any_of(scratch)) %>% add_chars_changed()
   taxa
 }
 
@@ -1204,4 +1206,74 @@ aligned_reason_suffix <- function(resources) {
   version <- attr(resources, "version", exact = TRUE)
   if (is.null(version) || length(version) != 1L || is.na(version)) return("")
   paste0(" (APC/APNI version ", version, ")")
+}
+
+
+# For each fuzzy match step (by the `match_NNx` start of its `alignment_code`),
+# the column of `tocheck` it compared and the column holding the reference name
+# it matched -- the same two strings that step's `fuzzy_match()` call compared.
+# Any match step not listed is an exact match. Keep in step with `match_taxa()`
+# when adding or changing a fuzzy step.
+fuzzy_match_steps <- list(
+  match_02b = c("genus", "fuzzy_match_genus"),
+  match_02c = c("genus", "fuzzy_match_genus_synonym"),
+  match_03b = c("genus", "fuzzy_match_genus"),
+  match_03c = c("genus", "fuzzy_match_genus_synonym"),
+  match_03d = c("genus", "fuzzy_match_genus_APNI"),
+  match_04b = c("genus", "fuzzy_match_genus"),
+  match_04c = c("genus", "fuzzy_match_genus_synonym"),
+  match_04d = c("genus", "fuzzy_match_genus_APNI"),
+  match_05a = c("stripped_name", "fuzzy_match_cleaned_APC"),
+  match_05b = c("stripped_name", "fuzzy_match_cleaned_APC_synonym"),
+  match_06b = c("genus", "fuzzy_match_genus"),
+  match_06c = c("genus", "fuzzy_match_genus_synonym"),
+  match_06d = c("genus", "fuzzy_match_genus_APNI"),
+  match_07a = c("stripped_name", "fuzzy_match_cleaned_APC_imprecise"),
+  match_07b = c("stripped_name", "fuzzy_match_cleaned_APC_synonym_imprecise"),
+  match_08b = c("genus", "fuzzy_match_genus"),
+  match_08c = c("genus", "fuzzy_match_genus_synonym"),
+  match_08d = c("genus", "fuzzy_match_genus_APNI"),
+  match_09c = c("trinomial", "fuzzy_match_trinomial"),
+  match_09d = c("trinomial", "fuzzy_match_trinomial_synonym"),
+  match_10c = c("binomial", "fuzzy_match_binomial"),
+  match_10d = c("binomial", "fuzzy_match_binomial_APC_synonym"),
+  match_11a = c("stripped_name", "fuzzy_match_cleaned_APNI"),
+  match_11b = c("cleaned_name", "fuzzy_match_cleaned_APNI_imprecise"),
+  match_12f = c("genus", "fuzzy_match_genus"),
+  match_12g = c("genus", "fuzzy_match_genus_synonym"),
+  match_12h = c("genus", "fuzzy_match_family"),
+  match_12i = c("genus", "fuzzy_match_family_synonym")
+)
+
+
+# `chars_changed`: how many characters a fuzzy match step changed, as the
+# Damerau-Levenshtein distance `fuzzy_match()` uses to choose a match; `0` for
+# an exact match; `NA` where nothing was aligned. It counts only what the step
+# compared, so differences removed before matching (case, punctuation, filler
+# words, and for a genus-level match everything after the genus) are not
+# counted.
+#
+# Only rows a match step aligned in this run carry an `alignment_code`. Rows
+# read back from an `output` file of an earlier run do not (the file is
+# written by `update_taxonomy()`), so they keep the `chars_changed` they were
+# saved with -- read as text, hence the conversion -- rather than being
+# counted as exact matches.
+add_chars_changed <- function(data) {
+  n <- nrow(data)
+  out <- if (is.null(data[["chars_changed"]])) rep(NA_integer_, n) else
+    suppressWarnings(as.integer(data[["chars_changed"]]))
+  code <- if (is.null(data[["alignment_code"]])) rep(NA_character_, n) else
+    data[["alignment_code"]]
+  matched <- !is.na(data[["aligned_name"]]) & !is.na(code)
+  out[matched] <- 0L
+  step <- substr(code, 1, 9)
+  for (s in intersect(names(fuzzy_match_steps), step)) {
+    cols <- fuzzy_match_steps[[s]]
+    i <- which(step == s & matched)
+    out[i] <- as.integer(stringdist::stringdist(
+      data[[cols[1]]][i], data[[cols[2]]][i], method = "dl"
+    ))
+  }
+  data$chars_changed <- out
+  data
 }

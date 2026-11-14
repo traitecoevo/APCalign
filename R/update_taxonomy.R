@@ -88,6 +88,10 @@
 #' - row_number: the row number of a specific original_name in the input.
 #' - number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon", 
 #' the number of possible taxon names that have been collapsed.
+#' - chars_changed: for a fuzzy match, how many characters of the name were
+#'   changed to match the reference name; `0` for an exact match; `NA` when the
+#'   name was not aligned. Carried over from [align_taxa()], where it is
+#'   described in full.
 #'   
 #'
 #' @seealso load_taxonomic_resources
@@ -128,7 +132,7 @@ update_taxonomy <- function(aligned_data,
 
   aligned_data <-
     aligned_data %>%
-    dplyr::select(original_name, aligned_name, taxon_rank, taxonomic_dataset, aligned_reason) %>%
+    dplyr::select(original_name, aligned_name, taxon_rank, taxonomic_dataset, aligned_reason, dplyr::any_of("chars_changed")) %>%
     dplyr::mutate(
       genus = extract_genus(aligned_name),
       row_number = dplyr::row_number()
@@ -194,7 +198,8 @@ update_taxonomy <- function(aligned_data,
         scientific_name_ID = character(0L),
         canonical_name = character(0L),
         row_number = numeric(0L),
-        number_of_collapsed_taxa = numeric(0L)
+        number_of_collapsed_taxa = numeric(0L),
+        chars_changed = integer(0L)
       )
 
   ## bind taxa_out back together.
@@ -227,7 +232,10 @@ update_taxonomy <- function(aligned_data,
   # NA returns a logical column
   for (col in intersect(names(taxa_blank), names(taxa_out))) {
     taxa_out[[col]] <-
-      if (is.character(taxa_blank[[col]])) as.character(taxa_out[[col]]) else as.numeric(taxa_out[[col]])
+      switch(class(taxa_blank[[col]]),
+             character = as.character(taxa_out[[col]]),
+             integer = as.integer(taxa_out[[col]]),
+             as.numeric(taxa_out[[col]]))
   }
 
   taxa_out <- taxa_out %>%
@@ -253,7 +261,8 @@ update_taxonomy <- function(aligned_data,
       "scientific_name_ID",
       "canonical_name",
       "row_number",
-      "number_of_collapsed_taxa"
+      "number_of_collapsed_taxa",
+      "chars_changed"
     )))      
   
   # Assemble output in the order of the input `aligned_names`

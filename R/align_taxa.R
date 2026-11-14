@@ -85,8 +85,8 @@
 #'  value or one value per name; defaults to NA.
 #'
 #' @return A tibble with one row per input name, with columns original_name,
-#'   cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason
-#'   and alignment_code; `full = TRUE` adds the others below.
+#'   cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason,
+#'   alignment_code and chars_changed; `full = TRUE` adds the others below.
 #' - original_name: the original plant name input.
 #' - aligned_name: the APC or APNI name the original name was aligned to; for
 #'   names only aligned to a genus or family, that name followed by `sp.` (`x`
@@ -97,6 +97,17 @@
 #'   (from an original name to an aligned name).
 #' - alignment_code: a code that accompanies the aligned_reason, indicating the
 #'   relative sequence of the match during the alignment process.
+#' - chars_changed: for a fuzzy match, how many characters differ between the
+#'   name and the reference name it was matched to (the Damerau-Levenshtein
+#'   distance, counting an insertion, deletion, substitution or swap of two
+#'   adjacent characters as one change); `0` for an exact match; `NA` when the
+#'   name was not aligned. Only the part of the name the match step compared is
+#'   counted: for a genus- or family-rank match, just the first word, and in
+#'   most steps after case, punctuation, rank markers and filler words have been
+#'   standardised or removed. It
+#'   is not a measure of how reliable a match is: a phrase name can match
+#'   reliably with several characters changed, while one character can separate
+#'   two species.
 #' - cleaned_name: original name with punctuation and infraspecific taxon
 #'   designation terms standardised by the function standardise_names;
 #'   streamlines exact matches.
@@ -264,7 +275,7 @@ align_taxa <- function(original_name,
       taxa %>%
       dplyr::select(original_name, cleaned_name, aligned_name,
                     taxonomic_dataset, taxon_rank, aligned_reason,
-                    alignment_code, identifier)
+                    alignment_code, chars_changed, identifier)
   }
 
   # Assemble output in the order of the input
@@ -321,7 +332,7 @@ align_new_taxa <- function(new, resources, quiet, fuzzy_abs_dist,
     )
 
   if (nrow(taxa$tocheck) == 0) {
-    return(taxa$tocheck)
+    return(add_chars_changed(taxa$tocheck))
   }
 
   # a simple message that indicates the number of perfect matches
@@ -404,6 +415,8 @@ read_output_file <- function(output, required, quiet = FALSE,
   )
   numeric_columns <- intersect(c("row_number", "number_of_collapsed_taxa"), names(cached))
   cached[numeric_columns] <- lapply(cached[numeric_columns], as.numeric)
+  # `chars_changed` is an integer; files written before it existed lack it
+  cached <- add_chars_changed(cached)
   if (!"identifier" %in% names(cached)) cached$identifier <- NA_character_
   cached <- cached %>% dplyr::select(-dplyr::any_of(c("checked", "known")))
 

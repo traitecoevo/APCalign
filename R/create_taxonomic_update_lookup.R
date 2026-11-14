@@ -95,8 +95,8 @@
 #'  rank, taxonomic status, taxon IDs and genera. With `full = FALSE` (the
 #'  default) the columns are original_name, aligned_name, accepted_name,
 #'  suggested_name, genus, taxon_rank, taxonomic_dataset, taxonomic_status,
-#'  scientific_name, aligned_reason, update_reason and
-#'  number_of_collapsed_taxa; `full = TRUE` adds the others below.
+#'  scientific_name, aligned_reason, update_reason, number_of_collapsed_taxa
+#'  and chars_changed; `full = TRUE` adds the others below.
 #' - original_name: the original plant name.
 #' - aligned_name: the input plant name that has been aligned to a taxon name in
 #'   the APC or APNI by the align_taxa function.
@@ -133,6 +133,10 @@
 #' - row_number: the row number of a specific original_name in the input.
 #' - number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon",
 #'   the number of possible taxon names that have been collapsed.
+#' - chars_changed: for a fuzzy match, how many characters of the name were
+#'   changed to match the reference name; `0` for an exact match; `NA` when the
+#'   name was not aligned. Carried over from [align_taxa()], where it is
+#'   described in full.
 #' 
 #' @export
 #'
@@ -256,7 +260,7 @@ create_taxonomic_update_lookup <- function(taxa,
             "original_name", "aligned_name", "accepted_name", "suggested_name",
             "genus", "taxon_rank", "taxonomic_dataset", "taxonomic_status",
             "scientific_name", "aligned_reason", "update_reason",
-            "number_of_collapsed_taxa"
+            "number_of_collapsed_taxa", "chars_changed"
           ))
         )        
   }

@@ -167,6 +167,19 @@ test_that("taxon name alignment matches and updates work as expected", {
   # fuzzy and "unknown genus" fall-throughs.
   expect_equal(benchmarks$alignment_code, output_align$alignment_code)
 
+  # chars_changed: 0 for every exact match, NA when nothing was aligned, and a
+  # count for every fuzzy step. Every fuzzy step in the benchmark must be listed
+  # in `fuzzy_match_steps`, and everything listed there must be a fuzzy step.
+  aligned <- !is.na(output_align$aligned_name)
+  fuzzy <- grepl("fuzzy", output_align$alignment_code)
+  expect_true(all(is.na(output_align$chars_changed[!aligned])))
+  expect_true(all(output_align$chars_changed[aligned & !fuzzy] == 0L))
+  expect_false(anyNA(output_align$chars_changed[aligned & fuzzy]))
+  expect_setequal(
+    names(fuzzy_match_steps),
+    unique(substr(output_align$alignment_code[fuzzy], 1, 9))
+  )
+
   output_updates <- 
     update_taxonomy(
       output_align, 
@@ -375,3 +388,34 @@ test_that("synonyms_for_accepted_names outputs expected number of rows", {
   
 }
 )
+
+test_that("chars_changed counts the characters a fuzzy match changed", {
+  x <- c("Acacia aneura", "eucalyptus regnans", "Acacia aneuraa", "Acaica aneura",
+         "Eucalytpus sp.", "Eucalyptus regnans subsp. regnanss", "Xyzzyplant foo")
+  out <- align_taxa(x, resources = resources, quiet = TRUE)
+  # exact (case is standardised before matching), one added letter, two
+  # swapped letters (one change), a genus-only fuzzy match, a rank marker that
+  # differs (removed before matching) plus one added letter, and no match
+  expect_equal(out$chars_changed, c(0L, 0L, 1L, 1L, 1L, 1L, NA))
+
+  lookup <- create_taxonomic_update_lookup(x, resources = resources, quiet = TRUE)
+  expect_equal(lookup$chars_changed, out$chars_changed)
+})
+
+test_that("chars_changed survives a rerun from a cached output file", {
+  # Rows read back from `output` carry no alignment_code; they must keep the
+  # value they were saved with, not be counted as exact matches.
+  f <- tempfile(fileext = ".csv")
+  on.exit(unlink(f))
+  x <- c("Banksia serrrata", "Acacia aneuraa", "Eucalyptus regnans")
+  first <- create_taxonomic_update_lookup(x, resources = resources, quiet = TRUE, output = f)
+  expect_equal(first$chars_changed, c(1L, 1L, 0L))
+
+  # some names cached, one new
+  second <- create_taxonomic_update_lookup(c(x, "Acacia dealbata"), resources = resources, quiet = TRUE, output = f)
+  expect_equal(second$chars_changed, c(1L, 1L, 0L, 0L))
+
+  # every name cached (align_taxa() returns early)
+  third <- create_taxonomic_update_lookup(c(x, "Acacia dealbata"), resources = resources, quiet = TRUE, output = f)
+  expect_identical(third$chars_changed, c(1L, 1L, 0L, 0L))
+})
