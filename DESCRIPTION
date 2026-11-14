@@ -21,7 +21,7 @@ LazyData: true
 Depends:
     R (>= 4.1.0),
 Imports:
-    dplyr,
+    dplyr (>= 1.1.0),
     stringdist,
     cli,
     httr,
@@ -31,7 +31,6 @@ Imports:
     rlang (>= 1.0.0)
 Suggests:
     readr,
-    purrr,
     stringr,
     stringi,
     janitor,
@@ -40,8 +39,8 @@ Suggests:
     knitr,
     rmarkdown,
     kableExtra,
-    here,
-    testthat (>= 3.3.0)
+    testthat (>= 3.3.0),
+    withr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3.9000
 Config/testthat/edition: 3

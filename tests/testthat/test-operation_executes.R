@@ -1,3 +1,5 @@
+skip_if_no_resources()
+
 # The tests in this file are primarily designed to check that the functions for 
 # taxonomy updating execute with various inputs. Limited attention is given to 
 # the results of the calls, only to check behaviour against input options.
@@ -208,7 +210,7 @@ test_that("handles weird strings", {
   
   out_v <- c(rep(NA_character_, nrow(out1)-1), "Banksia serrata")
   expect_equal(out2$aligned_name, out_v)
-  expect_equal(out2$suggested_name, out2$suggested_name)
+  expect_equal(out2$suggested_name, out_v)
   
   })
 

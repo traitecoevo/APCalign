@@ -8,7 +8,7 @@ message: 'To cite package "APCalign" in publications use:'
 type: software
 license: MIT
 title: 'APCalign: Resolving Plant Taxon Names Using the Australian Plant Census'
-version: 2.0.0
+version: 2.0.1
 doi: 10.1071/BT24014
 identifiers:
 - type: doi
@@ -80,7 +80,7 @@ preferred-citation:
   year: '2024'
   publisher:
     name: CSIRO Publishing
-  notes: 'R package version: 2.0.0'
+  notes: 'R package version: 2.0.1'
   url: https://doi.org/10.1071/BT24014
   doi: 10.1071/BT24014
 repository: https://CRAN.R-project.org/package=APCalign

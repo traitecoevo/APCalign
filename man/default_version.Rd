@@ -11,7 +11,16 @@ A character string representing the default version for stable data.
 }
 \description{
 This function returns the default version for stable data, which is used when no
-version is specified.
+version is specified: the most recent dated release of the taxonomic
+resources on GitHub.
+}
+\details{
+The answer is looked up once per R session and then remembered (until
+\code{\link[=clear_cached_resources]{clear_cached_resources()}}). If GitHub cannot be reached -- no internet
+connection, or the GitHub API is down or rate-limited (it allows 60
+unauthenticated requests an hour) -- the most recent version already
+downloaded to this computer is used instead, with a message. With neither,
+it returns \code{NULL} with a message.
 }
 \examples{
 \donttest{default_version()}

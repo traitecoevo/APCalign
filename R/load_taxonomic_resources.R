@@ -21,13 +21,20 @@
 #'   without re-downloading or re-processing the data. Use
 #'   [clear_cached_resources()] to force a reload.
 #' - `"current"` data is not cached because it may change between calls.
+#' - Stable versions are downloaded once and kept in
+#'   `tools::R_user_dir("APCalign")`, so later sessions, and sessions without
+#'   an internet connection, can load them without downloading again. Each
+#'   version takes about 20 MB; delete the files there to remove versions you
+#'   no longer need.
 #'
 #' @param stable_or_current_data Type of dataset to access.
 #' The default is "stable", which loads the dataset from a github archived file.
 #' If set to "current", the dataset will be loaded from a URL which is the
 #' cutting edge version, but this may change at any time without notice.
-#' @param version The version number of the dataset to use.
-#' Defaults to the default version.
+#' Loading "current" data requires the 'readr' package.
+#' @param version The version number of the dataset to use (see
+#'   [get_versions()]). Defaults to [default_version()], the most recent
+#'   release. Ignored for "current" data.
 #'
 #' @param quiet A logical indicating whether to print status of loading to screen.
 #'  Defaults to FALSE.
@@ -61,32 +68,36 @@ load_taxonomic_resources <-
       return(.pkg_cache[[cache_key]])
     }
 
-    if(is.null(version)){
-      message("No internet connection, please retry with stable connection or specify a local version of the data")
+    if (stable_or_current_data == "stable" && is.null(version)) {
+      message("No version of the taxonomic resources is available (see above); please retry later, or specify a version already downloaded")
       return(invisible(NULL))
     }
-  
+
     taxonomic_resources <- dataset_access_function(
       version = version,
       path = tools::R_user_dir("APCalign"),
       type = stable_or_current_data
     )
 
-    total_steps <- 3  # Define how many steps you expect in the function
-    pb <- utils::txtProgressBar(min = 0, max = total_steps, style = 2)
-    if(!quiet){
-      message("Loading resources into memory...")
-      utils::setTxtProgressBar(pb, 1)  
-    }
     if(is.null(taxonomic_resources)) {
       return(NULL)
     }
-    
+
+    if (!quiet) {
+      message("Loading resources into memory...")
+      # on stderr, like the messages, so it is not mixed into printed output
+      pb <- utils::txtProgressBar(min = 0, max = 3, style = 2, file = stderr())
+      utils::setTxtProgressBar(pb, 1)
+    }
+
     # Give list names
     names(taxonomic_resources) <- c("APC", "APNI")
-    
-    ## todo :review this, why zzz
-    ### Note: Use `zzzz zzzz` because the fuzzy matching algorithm can't handles NA's
+
+    ## Placeholder for a `binomial` or `trinomial` that must never match: a
+    ## name that has no such form (too few words, or a binomial of a
+    ## non-species), or (except for APNI binomials) a duplicate of one already
+    ## listed, so the lookup by first two or three words is unambiguous. A string rather than NA,
+    ## because the fuzzy matching cannot handle NA.
     zzz <- "zzzz zzzz"
     
     column_rename <- 
@@ -178,8 +189,8 @@ load_taxonomic_resources <-
       dplyr::mutate(taxonomic_dataset = "APC")
     
     
-    if(!quiet) utils::setTxtProgressBar(pb, 2) 
-    # Repeated from above - bionomial, tronomials etc
+    if(!quiet) utils::setTxtProgressBar(pb, 2)
+    # The same derived columns as for the APC names above
     taxonomic_resources[["APNI_names"]] <-
       taxonomic_resources$APNI %>%
       dplyr::filter(name_element != "sp.") %>%
@@ -198,12 +209,12 @@ load_taxonomic_resources <-
         binomial = ifelse(
           taxon_rank == "species",
           word(stripped_canonical2, start = 1, end = 2),
-          "zzzz zzzz"
+          zzz
         ),
-        binomial = ifelse(is.na(binomial), "zzzz zzzz", binomial),
+        binomial = ifelse(is.na(binomial), zzz, binomial),
         trinomial = word(stripped_canonical2, start = 1, end = 3),
-        trinomial = ifelse(is.na(trinomial), "zzzz zzzz", trinomial),
-        trinomial = base::replace(trinomial, duplicated(trinomial), "zzzz zzzz"),
+        trinomial = ifelse(is.na(trinomial), zzz, trinomial),
+        trinomial = base::replace(trinomial, duplicated(trinomial), zzz),
         genus = extract_genus_clean(stripped_canonical),
         taxonomic_dataset = "APNI"
       ) %>%
@@ -241,7 +252,13 @@ load_taxonomic_resources <-
       dplyr::distinct(canonical_name, .keep_all = TRUE)
 
 
-    if(!quiet) utils::setTxtProgressBar(pb, 3) 
+    if(!quiet) utils::setTxtProgressBar(pb, 3)
+    # Family names, accepted or not, which a "genus" in APNI must not be: APNI
+    # has a genus-rank record "Leguminosae (=RFK/2760)", which made the family
+    # name Leguminosae align as an APNI genus.
+    apc_family_names <-
+      taxonomic_resources$APC$canonical_name[taxonomic_resources$APC$taxon_rank %in% "family"]
+
     taxonomic_resources[["genera_APNI"]] <-
       taxonomic_resources$APNI %>%
       dplyr::select(
@@ -256,6 +273,7 @@ load_taxonomic_resources <-
       dplyr::filter(taxon_rank %in% c("genus")) %>%
       dplyr::filter(!canonical_name %in% taxonomic_resources$APC$canonical_name) %>%
       dplyr::filter(!re_detect(genus, "aceae$")) %>%
+      dplyr::filter(!genus %in% apc_family_names) %>%
       dplyr::mutate(taxonomic_dataset = "APNI") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
     
@@ -293,8 +311,10 @@ load_taxonomic_resources <-
       dplyr::mutate(taxonomic_dataset = "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
 
-    close(pb)
-    if(!quiet) message("...done")
+    if (!quiet) {
+      close(pb)
+      message("...done")
+    }
 
     # Record which APC/APNI data these tables were built from. `match_taxa()`
     # stamps it into every `aligned_reason`, in place of the run date (#281).
@@ -332,109 +352,106 @@ clear_cached_resources <- function() {
   invisible(NULL)
 }
 
-##' Access Australian Plant Census Dataset
+##' Access the APC and APNI tables
 ##'
-##' This function provides access to the Australian Plant Census dataset
-##' about various species. The dataset can be loaded from a github for a stable file or
-##' from a URL for the most cutting-edge, but not stable version.
+##' Returns the raw APC and APNI tables, as a list of two data frames. "stable"
+##' data are a dated GitHub release, downloaded once and kept in `path`;
+##' "current" data are read from the live NSL export, which may change at any
+##' time without notice.
 ##'
-##' @param version Version number. The default is NULL, which will load the most recent
-##'   version of the dataset on your computer or the most recent version known
-##'   to the package if you have never downloaded the data before. With
-##'   `plant_lookup_del`, specifying `version=NULL` will delete \emph{all} data sets.
-##' @param path Path to store the data at. If not given, `datastorr` will use `rappdirs`
-##'   to find the best place to put persistent application data on your system. You can
-##'   delete the persistent data at any time by running `mydata_del(NULL)` (or
-##'   `mydata_del(NULL, path)` if you use a different path).
-##' @param type Type of dataset to access. The default is "stable", which loads the
-##'   dataset from a github archived file. If set to "current", the dataset will be
-##' loaded from a URL which is the cutting edge version, but this may change at any time
-##'  without notice.
+##' @param version The dated release to load, for "stable" data.
+##' @param path Directory where downloaded releases are kept.
+##' @param type "stable" or "current".
 ##'
 ##' @examples
-##'
-##'
-##' # Load the a stable version of the dataset
-##' dataset_access_function(version="2024-10-11",type = "stable")
+##' dataset_access_function(version = "2024-10-11", type = "stable")
 ##'
 ##' @noRd
 dataset_access_function <-
   function(version = default_version(),
            path = tools::R_user_dir("APCalign"),
            type = "stable") {
-    
-    # Check if there is internet connection
-    ## Dummy variable to allow testing of network
-    network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE))
-    offline <- !curl::has_internet() | !network
 
     # "current" always requires a live internet connection
-    if (offline && type == "current") {
-      message("No internet connection, please retry with stable connection (dataset_access_function)")
-      return(invisible(NULL))
-    }
-
-    if (is.null(version)) {
+    if (type == "current" && is_offline()) {
       message("No internet connection, please retry with stable connection (dataset_access_function)")
       return(invisible(NULL))
     }
 
     # Download from Github Release (dataset_get handles offline fallback)
     if (type == "stable") {
+      if (is.null(version)) {
+        message("No version of the taxonomic resources available, please retry with stable connection (dataset_access_function)")
+        return(invisible(NULL))
+      }
       return(dataset_get(version, path))
     }
-    
+
     # Download from NSL
     if (type == "current") {
       # readr is only in Suggests; check before the tryCatch below, which would
       # otherwise report a missing package as "resources not available".
       rlang::check_installed("readr", reason = "to download the current APC/APNI CSV exports.")
-      tryCatch({
-        APC <- readr::read_csv(
-          "https://biodiversity.org.au/nsl/services/export/taxonCsv",
-          col_types =
-            readr::cols(
-              .default = readr::col_character(),
-              proParte = readr::col_logical(),
-              taxonRankSortOrder = readr::col_double(),
-              created = readr::col_datetime(format = ""),
-              modified = readr::col_datetime(format = "")
-            )
-        )
-        
-        APNI <-
-          readr::read_csv(
-            "https://biodiversity.org.au/nsl/services/export/namesCsv",
-            col_types =
-              readr::cols(
-                .default = readr::col_character(),
-                autonym = readr::col_logical(),
-                hybrid = readr::col_logical(),
-                cultivar = readr::col_logical(),
-                formula = readr::col_logical(),
-                scientific = readr::col_logical(),
-                nomInval = readr::col_logical(),
-                nomIlleg = readr::col_logical(),
-                namePublishedInYear = readr::col_double(),
-                taxonRankSortOrder = readr::col_double(),
-                created = readr::col_datetime(format = ""),
-                modified = readr::col_datetime(format = "")
-              )
-          )
-      }, error = function(e) rlang::abort("Taxonomic resources not currently available, try again later")
-      )
+      return(tryCatch(
+        list(APC = read_nsl_export("APC"), APNI = read_nsl_export("APNI")),
+        error = function(e) rlang::abort("Taxonomic resources not currently available, try again later")
+      ))
     }
-    
-    # Put lists together
-    current_list <- list(APC, APNI)
-    names(current_list) <- c("APC", "APNI")
-    return(current_list)
+
+    rlang::abort(paste0("`type` must be \"stable\" or \"current\", not \"", type, "\"."))
   }
+
+# Read one of the live NSL CSV exports (the "current" data). Shared with
+# download_taxonomic_resources_for_release(), which snapshots the same exports
+# as a release, so both read them with the same column types.
+#' @noRd
+read_nsl_export <- function(dataset = c("APC", "APNI")) {
+  dataset <- match.arg(dataset)
+  rlang::check_installed("readr", reason = "to read the APC/APNI CSV exports.")
+
+  timestamps <- list(
+    created = readr::col_datetime(format = ""),
+    modified = readr::col_datetime(format = "")
+  )
+  if (dataset == "APC") {
+    url <- "https://biodiversity.org.au/nsl/services/export/taxonCsv"
+    types <- c(list(
+      .default = readr::col_character(),
+      proParte = readr::col_logical(),
+      taxonRankSortOrder = readr::col_double()
+    ), timestamps)
+  } else {
+    url <- "https://biodiversity.org.au/nsl/services/export/namesCsv"
+    types <- c(list(
+      .default = readr::col_character(),
+      autonym = readr::col_logical(),
+      hybrid = readr::col_logical(),
+      cultivar = readr::col_logical(),
+      formula = readr::col_logical(),
+      scientific = readr::col_logical(),
+      nomInval = readr::col_logical(),
+      nomIlleg = readr::col_logical(),
+      namePublishedInYear = readr::col_double(),
+      taxonRankSortOrder = readr::col_double()
+    ), timestamps)
+  }
+
+  readr::read_csv(url, col_types = do.call(readr::cols, types))
+}
 
 #' Get the default version for stable data
 #'
 #' This function returns the default version for stable data, which is used when no
-#' version is specified.
+#' version is specified: the most recent dated release of the taxonomic
+#' resources on GitHub.
+#'
+#' @details
+#' The answer is looked up once per R session and then remembered (until
+#' [clear_cached_resources()]). If GitHub cannot be reached -- no internet
+#' connection, or the GitHub API is down or rate-limited (it allows 60
+#' unauthenticated requests an hour) -- the most recent version already
+#' downloaded to this computer is used instead, with a message. With neither,
+#' it returns `NULL` with a message.
 #'
 #' @return A character string representing the default version for stable data.
 #' @examples
@@ -443,54 +460,74 @@ dataset_access_function <-
 #' @export
 
 default_version <- function() {
-  # Check if there is internet connection
-  ## Dummy variable to allow testing of network
-  network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE))
+  if (!is_offline()) {
+    if (!is.null(.pkg_cache$default_version)) return(.pkg_cache$default_version)
 
-  if (!curl::has_internet() | !network) { # Simulate if network is down
-    # Fall back to the most recently downloaded local version, if any
-    local_versions <- local_cached_versions()
-    if (length(local_versions) > 0) {
-      version <- sort(local_versions, decreasing = TRUE)[1]
-      message("No internet connection; using most recent locally cached version: ", version)
-      return(version)
+    tags <- github_release_tags()
+    if (!is.null(tags)) {
+      # Data releases are tagged with their date; skip any other tags
+      dates <- tags[grepl("^\\d{4}-\\d{2}-\\d{2}$", tags)]
+      if (length(dates) > 0) {
+        version <- sort(dates, decreasing = TRUE)[1]
+        .pkg_cache$default_version <- version
+        return(version)
+      }
     }
-    message("No internet connection, please retry with stable connection (default_version)")
-    return(invisible(NULL))
+    reason <- "Could not get the list of versions from GitHub"
   } else {
-    
-    # Get all the releases
-    url <-
-      paste0(
-        "https://api.github.com/repos/",
-        "traitecoevo",
-        "/",
-        "APCalign",
-        "/releases"
-      )
-    
-    response <- httr::GET(url)
-  
-  if(httr::http_error(response) | !network){
-    message("API currently down, try again later")
-    return(invisible(NULL))
-  } else
-  release_data <- httr::content(response, "text") |> jsonlite::fromJSON()
-  
-  # Pull out versions
-  versions <- unique(release_data$tag_name)
-  
-  # Exclude rough semantic versions
-  cleaned_versions <- versions[!grepl("^\\d+\\.\\d+\\.\\d+(\\.\\d+)?$", versions)]
-  
-  # Verify only dates left
-  if(! all(grepl("^\\d{4}-\\d{2}-\\d{2}$", cleaned_versions))) 
-    rlang::abort("Inconsistent date formats detected in versions!")
-    
-  # Return latest version
-    sort(cleaned_versions, decreasing = TRUE) |> #Sort from most recent to oldest
-    dplyr::first() #  and take the first value after sorting
+    reason <- "No internet connection"
   }
+
+  # Fall back to the most recently downloaded local version, if any
+  local_versions <- local_cached_versions()
+  if (length(local_versions) > 0) {
+    version <- sort(local_versions, decreasing = TRUE)[1]
+    message(reason, "; using most recent locally cached version: ", version)
+    return(version)
+  }
+  message(reason, " and no locally cached version found; please retry later (default_version)")
+  invisible(NULL)
+}
+
+# Is the network unavailable? The `NETWORK_UP` environment variable lets tests
+# simulate being offline.
+#' @noRd
+is_offline <- function() {
+  network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE))
+  !isTRUE(network) || !curl::has_internet()
+}
+
+# Tag names of the releases of traitecoevo/APCalign that hold the parquet
+# files `dataset_get()` downloads, or NULL (with a message) if the GitHub API
+# can't be reached. The earliest releases hold only CSV files, so can't be
+# loaded. Shared by default_version() and get_versions().
+#' @noRd
+github_release_tags <- function() {
+  url <- "https://api.github.com/repos/traitecoevo/APCalign/releases?per_page=100"
+
+  response <- tryCatch(
+    httr::GET(url, httr::timeout(20)),
+    error = function(e) {
+      message("Could not reach the GitHub API: ", conditionMessage(e))
+      NULL
+    }
+  )
+  if (is.null(response)) return(NULL)
+
+  if (httr::http_error(response)) {
+    remaining <- httr::headers(response)[["x-ratelimit-remaining"]]
+    if (identical(remaining, "0")) {
+      message("GitHub API rate limit reached (60 requests an hour without authentication); try again later")
+    } else {
+      message("GitHub API currently unavailable (HTTP ", httr::status_code(response), "); try again later")
+    }
+    return(NULL)
+  }
+
+  release_data <- jsonlite::fromJSON(httr::content(response, "text", encoding = "UTF-8"))
+  has_parquet <- vapply(release_data$assets,
+                        function(a) "apc.parquet" %in% a$name, logical(1))
+  unique(release_data$tag_name[has_parquet])
 }
 
 # Returns a character vector of version strings (e.g. "2024-10-11") for which
@@ -509,11 +546,6 @@ local_cached_versions <- function(path = tools::R_user_dir("APCalign")) {
 dataset_get <- function(version = default_version(),
                         path = tools::R_user_dir("APCalign")) {
 
-  # Check if there is internet connection
-  ## Dummy variable to allow testing of network
-  network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE))
-  offline <- !curl::has_internet() | !network
-
   if (is.null(version)) {
     message(
       "No internet connection and no locally cached version found (dataset_get)"
@@ -521,81 +553,63 @@ dataset_get <- function(version = default_version(),
     return(invisible(NULL))
   }
 
-  if (!dir.exists(path)) {
-    dir.create(path, recursive = TRUE)
-  }
-
   path_to_apc  <- file.path(path, paste0("apc",  version, ".parquet"))
   path_to_apni <- file.path(path, paste0("apni", version, ".parquet"))
+  have_local <- file.exists(path_to_apc) && file.exists(path_to_apni)
 
-  # If offline but both files are cached locally, read and return them
-  if (offline) {
-    if (file.exists(path_to_apc) && file.exists(path_to_apni)) {
-      message(
-        "No internet connection; loading locally cached version: ", version
-      )
-      APC  <- read_parquet_tbl(path_to_apc)
-      APNI <- read_parquet_tbl(path_to_apni)
-      current_list <- list(APC, APNI)
-      names(current_list) <- c("APC", "APNI")
-      return(current_list)
-    } else {
+  # Offline, the files can only come from the local cache
+  if (is_offline()) {
+    if (!have_local) {
       message(
         "No internet connection and no local data for version ", version,
         "; please connect and retry (dataset_get)"
       )
       return(invisible(NULL))
     }
+    message("No internet connection; loading locally cached version: ", version)
   }
 
-  # Online path — download if not already cached
-  #APC
-  apc.url <-
-    paste0(
-      "https://github.com/traitecoevo/APCalign/releases/download/",
-      version,
-      "/apc.parquet"
+  if (!dir.exists(path)) {
+    dir.create(path, recursive = TRUE)
+  }
+
+  release_url <- paste0(
+    "https://github.com/traitecoevo/APCalign/releases/download/", version, "/"
+  )
+  APC  <- get_release_file(paste0(release_url, "apc.parquet"),  path_to_apc)
+  APNI <- get_release_file(paste0(release_url, "apni.parquet"), path_to_apni)
+
+  if (is.null(APC) || is.null(APNI)) return(invisible(NULL))
+  list(APC = APC, APNI = APNI)
+}
+
+# Read a release file from the local cache, downloading it first if it isn't
+# there. The download goes to a temporary file that is only moved into the
+# cache once it has been read successfully, so a failed or partial download
+# never leaves a file behind that would be read as the cached copy next time.
+# Returns NULL, with a message, if the file can't be downloaded or read.
+#' @noRd
+get_release_file <- function(url, path_to_file) {
+  if (file.exists(path_to_file)) {
+    return(read_parquet_tbl(path_to_file))
+  }
+
+  message("Downloading ", basename(url), "...")
+  tmp <- tempfile(fileext = ".parquet")
+  on.exit(unlink(tmp), add = TRUE)
+  tryCatch({
+    utils::download.file(url, tmp, mode = "wb", quiet = TRUE)
+    data <- read_parquet_tbl(tmp)
+    file.copy(tmp, path_to_file, overwrite = TRUE)
+    message("File downloaded successfully.")
+    data
+  }, error = function(e) {
+    message(
+      "Internet or server may be down; error in downloading or reading the file: ",
+      conditionMessage(e)
     )
-  
-  # APNI
-  apni.url <-
-    paste0(
-      "https://github.com/traitecoevo/APCalign/releases/download/",
-      version,
-      "/apni.parquet"
-    )
-  
-  
-  download_and_read_parquet <- function(url, path_to_file) {
-    tryCatch({
-      utils::download.file(url, path_to_file, mode = "wb")
-      message("File downloaded successfully.")
-      return(read_parquet_tbl(path_to_file))
-    }, error = function(e) {
-      message(
-        "Internet or server may be down; error in downloading or reading the file: ",
-        e$message
-      )
-      return(NULL)
-    })
-  }
-
-  APC <- if (!file.exists(path_to_apc)) {
-    message("Downloading...")
-    download_and_read_parquet(apc.url, path_to_apc)
-  } else {
-    read_parquet_tbl(path_to_apc)
-  }
-
-  APNI <- if (!file.exists(path_to_apni)) {
-    download_and_read_parquet(apni.url, path_to_apni)
-  } else {
-    read_parquet_tbl(path_to_apni)
-  }
-
-  current_list <- list(APC, APNI)
-  names(current_list) <- c("APC", "APNI")
-  return(current_list)
+    NULL
+  })
 }
 
 # nanoparquet returns a data frame of class c("tbl", "data.frame"), not a
@@ -615,35 +629,13 @@ read_parquet_tbl <- function(path) {
 #' @examples
 #' \donttest{get_versions()}
 get_versions <- function() {
-  # Check if there is internet connection
-  ## Dummy variable to allow testing of network
-  network <- as.logical(Sys.getenv("NETWORK_UP", unset = TRUE)) 
-  
-  if (!curl::has_internet() | !network) { # Simulate if network is down
-    message("No internet connection, please retry with stable connection (default_version)")
+  if (is_offline()) {
+    message("No internet connection, please retry with stable connection (get_versions)")
     return(invisible(NULL))
-  } else {
-    
-    # Get all the releases
-    url <-
-      paste0(
-        "https://api.github.com/repos/",
-        "traitecoevo",
-        "/",
-        "APCalign",
-        "/releases"
-      )
-    
-    response <- httr::GET(url)
-    
-    if(httr::http_error(response) | !network){
-      message("API currently down, try again later")
-      return(invisible(NULL))
-    } else
-      release_data <- httr::content(response, "text") |> jsonlite::fromJSON()
-    
-    # Create table
-    dplyr::tibble(versions = unique(release_data$tag_name) |> sort(decreasing = TRUE)) |> 
-      dplyr::filter(!versions == "2020-05-14") #Excluding first ever release because it is not in parquet format
   }
+
+  tags <- github_release_tags()
+  if (is.null(tags)) return(invisible(NULL))
+
+  dplyr::tibble(versions = sort(tags, decreasing = TRUE))
 }

@@ -21,8 +21,13 @@ align_taxa(
 \arguments{
 \item{original_name}{A list of names to query for taxonomic alignments.}
 
-\item{output}{(optional) The name of the file to save the results to.
-Requires the 'readr' package.}
+\item{output}{(optional) A CSV file in which to keep the results, so that
+names are only aligned once. If the file already exists (written by an
+earlier call to \code{align_taxa()}), names already in it (for the same
+\code{identifier}) are read from it rather than aligned again, and the new names
+are added to it. The file does not record the other arguments, so use the
+same settings and \code{resources} with a given file. Requires the 'readr'
+package.}
 
 \item{full}{Parameter to determine how many columns are output}
 
@@ -55,17 +60,19 @@ makes erroneous matches.}
 \item{APNI_matches}{Name matches to the APNI (Australian Plant Names Index)
 are turned on as a default.}
 
-\item{identifier}{A dataset, location or other identifier,
-which defaults to NA.}
+\item{identifier}{A dataset, location or other identifier, added to the
+aligned names of taxa only aligned to a genus or family. Either a single
+value or one value per name; defaults to NA.}
 }
 \value{
-A tibble with columns that include original_name, aligned_name,
-taxonomic_dataset, taxon_rank, aligned_reason, alignment_code,
-chars_changed.
+A tibble with one row per input name, with columns original_name,
+cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason,
+alignment_code and chars_changed; \code{full = TRUE} adds the others below.
 \itemize{
 \item original_name: the original plant name input.
-\item aligned_name: the original plant name after the function standardise_names
-has standardised the syntax of infraspecific taxon designations.
+\item aligned_name: the APC or APNI name the original name was aligned to; for
+names only aligned to a genus or family, that name followed by \code{sp.} (\code{x}
+for hybrids) and the original name (and identifier) in square brackets.
 \item taxonomic_dataset: the source of the aligned names (APC or APNI).
 \item taxon_rank: the taxonomic rank of the aligned name.
 \item aligned_reason: the explanation of a specific taxon name alignment
@@ -99,8 +106,6 @@ improves phrase name matches.
 \item binomial: the first two words in \code{stripped_name2}, required for matches
 that ignore all other text in the original_name;
 improves phrase name matches.
-\item genus: the first two words in \code{cleaned_name};
-required for genus-rank matches and reprocessing of genus-rank names.
 \item fuzzy_match_genus: fuzzy match of genus column to best match among
 APC-accepted names;
 required for fuzzy matches of genus-rank names.
@@ -126,7 +131,7 @@ match step 05b in the function \code{match_taxa}.
 to APC-accepted names; created for yet-to-be-aligned names at the
 match step 07a in the function \code{match_taxa}.
 \item fuzzy_match_cleaned_APC_synonym_imprecise: imprecise fuzzy match of
-stripped_name to APC-accepted names; created for yet-to-be-aligned names
+stripped_name to APC-synonymous names; created for yet-to-be-aligned names
 at the match step 07b in the function \code{match_taxa}.
 \item fuzzy_match_binomial: fuzzy match of binomial column to best match among
 APC-accepted names; created for yet-to-be-aligned names at
@@ -144,7 +149,7 @@ match step 09d in the function \code{match_taxa}.
 created for yet-to-be-aligned names at the match step 11a in the
 function \code{match_taxa}.
 \item fuzzy_match_cleaned_APNI_imprecise: imprecise fuzzy match of
-stripped_name to APNI names; created for yet-to-be-aligned names
+cleaned_name to APNI names; created for yet-to-be-aligned names
 at the match step 11b in the function \code{match_taxa}.
 }
 }
@@ -166,7 +171,7 @@ function is the first half of create_taxonomic_update_lookup.
 alignments in APNI.
 \item It uses the internal function \code{match_taxa} to attempt to match input
 strings to taxon names in the APC/APNI.
-\item It sequentially searches for matches against more than 20 different string
+\item It sequentially searches for matches against 54 different string
 patterns, prioritising exact matches (to accepted names as well as
 synonyms, orthographic variants) over fuzzy matches.
 \item It prioritises matches to taxa in the APC over names in the APNI.
@@ -182,8 +187,8 @@ Notes:
 many times, it is best to load the taxonomic resources separately using
 resources <- load_taxonomic_resources(), then add the argument
 resources = resources
-\item The name Banksia cerrata does not align as the fuzzy matching algorithm
-does not allow the first letter of the genus and species epithet to change.
+\item The name Banksia cerrata only aligns to the genus (\verb{Banksia sp.  \[Banksia cerrata]}), as the fuzzy matching algorithm does not allow the
+first letter of the genus or species epithet to change.
 \item With this function you have the option of changing the fuzzy matching
 parameters. The defaults, with fuzzy matches only allowing changes of 3
 (or fewer) characters AND 20\% (or less) of characters has been carefully

@@ -17,7 +17,7 @@ navbar:
       text: Articles
       menu:
       - text: Data sources (APC & APNI)
-        href: articles/articles/data-providers.html
+        href: articles/data-providers.html
       - text: Taxon matching
         href: articles/updating-taxon-names.html
       - text: Using APC versions for reproducibility

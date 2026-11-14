@@ -1,3 +1,5 @@
+skip_if_no_resources()
+
 # The closing summary printed by create_taxonomic_update_lookup() (#131)
 
 # One name per summary line, plus a repeated name and an NA, which must not be

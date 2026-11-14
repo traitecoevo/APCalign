@@ -4,9 +4,10 @@
 #' @param string A character vector
 #' @param start,end Pair of integer vectors giving range of words (inclusive)
 #'   to extract. The default value select the first word.
-#' @param sep Separator between words. Defaults to single space.
-#' @return A character vector with the same length as `string`/`start`/`end`.
-#' @noRd
+#' @param sep Separator between words (a regular expression). Defaults to a
+#'   single space.
+#' @return A character vector with the same length as `string`; NA where
+#'   `string` has fewer than `end` words.
 #' @examples
 #' spp <- c("Banksia serrata", "Actinotus helanthii")
 #' APCalign:::word(spp, 1)
@@ -14,7 +15,7 @@
 #' @noRd 
 word <- function(string, start = 1L, end = start, sep = " ") {
   if(end == start) {
-    split_i(string, " ", start)
+    split_i(string, sep, start)
   } else if(end == start+1) {
     w1 <- split_i(string, sep, start)
     w2 <- split_i(string, sep, start+1)
@@ -37,11 +38,10 @@ word <- function(string, start = 1L, end = start, sep = " ") {
     i <- seq(start, end)
     
     txt <- split_all(string, sep)
-    out <- lapply(txt, function(.x) paste(.x[i], collapse = sep))
-    
-    lngth <- lengths(txt)
-    out[lngth < end] <- NA
-    
+    out <- vapply(txt, function(.x) paste(.x[i], collapse = " "), character(1))
+
+    out[lengths(txt) < end | is.na(string)] <- NA_character_
+
     return(out)
   }
 }

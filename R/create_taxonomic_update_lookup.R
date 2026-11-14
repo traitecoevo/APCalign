@@ -20,8 +20,9 @@
 #' many times, it is best to load the taxonomic resources separately using 
 #' `resources <- load_taxonomic_resources()`, then add the argument 
 #' resources = resources
-#' - The name Banksia cerrata does not align as the fuzzy matching algorithm 
-#' does not allow the first letter of the genus and species epithet to change.
+#' - The name Banksia cerrata only aligns to the genus (`Banksia sp.
+#' \[Banksia cerrata]`), as the fuzzy matching algorithm does not allow the
+#' first letter of the genus or species epithet to change.
 #' - The argument taxonomic_splits allows you to choose the outcome for updating 
 #' the names of taxa with ambiguous taxonomic histories; this applies to 
 #' scientific names that were once attached to a more broadly circumscribed 
@@ -41,11 +42,14 @@
 #' @param taxa A list of Australian plant species that needs to be reconciled
 #'  with current taxonomy.
 #' @param stable_or_current_data either "stable" for a consistent version,
-#'  or "current" for the leading edge version.
-#' @param version The version number of the dataset to use.
+#'  or "current" for the leading edge version. Passed to
+#'  [load_taxonomic_resources()] when `resources` is not given.
+#' @param version The version number of the dataset to use. Passed to
+#'  [load_taxonomic_resources()] when `resources` is not given; when it is,
+#'  the version is that of `resources`.
 #' @param taxonomic_splits How to handle one_to_many taxonomic matches.
-#'  Default is "return_all".  The other options are "collapse_to_higher_taxon"
-#'  and "most_likely_species". most_likely_species defaults to the original_name
+#'  Default is "most_likely_species". The other options are "return_all" and
+#'  "collapse_to_higher_taxon". most_likely_species defaults to the original_name
 #'  if that name is accepted by the APC; this will be right for certain species
 #'  subsets, but make errors in other cases, use with caution.
 #' @param full logical for whether the full lookup table is returned or
@@ -63,7 +67,7 @@
 #'  to be called repeatedly, it's much faster to load the resources using
 #'  \code{\link{load_taxonomic_resources}} separately and pass the data in.
 #' @param APNI_matches Name matches to the APNI (Australian Plant Names Index)
-#'  are turned off as a default. 
+#'  are turned on as a default.
 #' @param imprecise_fuzzy_matches Imprecise fuzzy matches uses the fuzzy
 #'  matching function with lenient levels set (absolute distance of
 #'  5 characters; relative distance = 0.25). 
@@ -71,27 +75,35 @@
 #'  corresponding to very distant spelling mistakes. 
 #'  This is FALSE as default and all outputs should be checked as it often
 #'  makes erroneous matches.
-#' @param identifier A dataset, location or other identifier,
-#'  which defaults to NA.
+#' @param identifier A dataset, location or other identifier, added to the
+#'  aligned names of taxa only aligned to a genus or family. Either a single
+#'  value or one value per name; defaults to NA.
 #' @param quiet Logical to indicate whether to display messages while loading data and 
 #'  aligning taxa. Unless `TRUE`, the function ends by printing a summary: how
 #'  many names aligned to a species or infraspecific taxon, to a genus or family
 #'  only, or not at all; how many were updated to a different name; and how
 #'  many could refer to more than one accepted taxon.
-#' @param output file path to save the output. If this file already exists,
-#'  this function will check if it's a subset of the species passed in and try
-#'  to add to this file. This can be useful for large and growing projects.
-#'  Requires the 'readr' package.
+#' @param output (optional) A CSV file in which to keep the lookup, so that
+#'  names are only looked up once. If the file already exists (written by an
+#'  earlier call), names already in it (for the same `identifier`) are read
+#'  from it rather than looked up again, and the new names are added to it.
+#'  This can be useful for large and growing projects. The file does not
+#'  record the other arguments, so use the same settings and `resources` with
+#'  a given file. Requires the 'readr' package.
 #' @return A lookup table containing the accepted and suggested names for each
 #'  original name input, and additional taxonomic information such as taxon
-#'  rank, taxonomic status, taxon IDs and genera. 
+#'  rank, taxonomic status, taxon IDs and genera. With `full = FALSE` (the
+#'  default) the columns are original_name, aligned_name, accepted_name,
+#'  suggested_name, genus, taxon_rank, taxonomic_dataset, taxonomic_status,
+#'  scientific_name, aligned_reason, update_reason, number_of_collapsed_taxa
+#'  and chars_changed; `full = TRUE` adds the others below.
 #' - original_name: the original plant name.
 #' - aligned_name: the input plant name that has been aligned to a taxon name in
 #'   the APC or APNI by the align_taxa function.
 #' - accepted_name: the APC-accepted plant name, when available.
 #' - suggested_name: the suggested plant name to use. Identical to the
 #'   accepted_name, when an accepted_name exists;
-#'   otherwise the the suggested_name is the aligned_name.
+#'   otherwise the suggested_name is the aligned_name.
 #' - genus: the genus of the accepted (or suggested) name; 
 #'  only APC-accepted genus names are filled in.
 #' - family: the family of the accepted (or suggested) name;
@@ -109,7 +121,7 @@
 #' - subclass: the subclass of the accepted name.
 #' - taxon_distribution: the distribution of the accepted name;
 #'   only filled in if an APC accepted_name is available.
-#' - scientific_name_authorship: the authorship information for the accepted
+#' - scientific_name: the scientific name, with authorship, of the accepted
 #'   (or synonymous) name; available for both APC and APNI names.
 #' - taxon_ID: the unique taxon concept identifier for the accepted_name;
 #'   only filled in if an APC accepted_name is available.
@@ -117,6 +129,7 @@
 #'   only filled in if an APC-accepted genus name is available.
 #' - scientific_name_ID: an identifier for the nomenclatural (not taxonomic)
 #'   details of a scientific name; available for both APC and APNI names.
+#' - canonical_name: a copy of suggested_name.
 #' - row_number: the row number of a specific original_name in the input.
 #' - number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon",
 #'   the number of possible taxon names that have been collapsed.
@@ -176,7 +189,11 @@ create_taxonomic_update_lookup <- function(taxa,
                                            APNI_matches = TRUE, 
                                            imprecise_fuzzy_matches = FALSE, 
                                            identifier = NA_character_,
-                                           resources = load_taxonomic_resources(quiet = quiet),
+                                           resources = load_taxonomic_resources(
+                                             stable_or_current_data = stable_or_current_data,
+                                             version = version,
+                                             quiet = quiet
+                                           ),
                                            quiet = FALSE,
                                            output = NULL) {
   
@@ -187,29 +204,52 @@ create_taxonomic_update_lookup <- function(taxa,
 
   validate_taxonomic_splits_input(taxonomic_splits)
 
+  if (!is.null(output))
+    rlang::check_installed("readr", reason = "to read and write the `output` file.")
+
+  input <- name_identifier_pairs(taxa, identifier)
+
+  # Lookups saved by an earlier run with the same `output` file; only the
+  # names not already there are aligned and updated
+  cached <- read_output_file(output, lookup_cache_columns, quiet,
+                             one_row_per_name = FALSE)
+  todo <- !cache_key(input) %in% cache_key(cached)
+
+  if (!quiet && nrow(cached) > 0) {
+    message(
+      "  -> ", cli::col_blue(dplyr::n_distinct(input$original_name[!todo])),
+      " names already in the output file; looking up the other ",
+      cli::col_blue(dplyr::n_distinct(input$original_name[todo], na.rm = TRUE))
+    )
+  }
+
   aligned_data <- 
-    align_taxa(taxa, resources = resources, 
+    align_taxa(input$original_name[todo], resources = resources, 
                APNI_matches = APNI_matches, 
-               identifier = identifier, 
+               identifier = input$identifier[todo], 
                fuzzy_abs_dist = fuzzy_abs_dist, 
                fuzzy_rel_dist = fuzzy_rel_dist, 
                fuzzy_matches = fuzzy_matches, 
                imprecise_fuzzy_matches = imprecise_fuzzy_matches,
-               quiet = quiet,
-               output=output)
+               quiet = quiet)
 
   updated_data <-
     update_taxonomy(aligned_data,
       taxonomic_splits = taxonomic_splits,
       resources = resources,
-      quiet = quiet,
-      output = output)
+      quiet = quiet)
 
-  if (!quiet) {
+  # the summary covers the names looked up in this call
+  if (!quiet && any(todo)) {
     message(paste(
       summarise_update_lookup(aligned_data, updated_data, taxonomic_splits),
       collapse = "\n"
     ))
+  }
+
+  if (!is.null(output)) {
+    updated_data <- merge_with_output_file(updated_data, input, todo, cached,
+                                           output, quiet)
   }
 
   if (!full) {
@@ -219,15 +259,49 @@ create_taxonomic_update_lookup <- function(taxa,
           dplyr::any_of(c(
             "original_name", "aligned_name", "accepted_name", "suggested_name",
             "genus", "taxon_rank", "taxonomic_dataset", "taxonomic_status",
-            "scientific_name", "aligned_reason", "update_reason", 
-            "alternative_possible_names", "possible_names_collapsed",
+            "scientific_name", "aligned_reason", "update_reason",
             "number_of_collapsed_taxa", "chars_changed"
           ))
         )        
   }
 
-  # todo - should we add file caching here? Or is it enough to have in component functions
   return(updated_data)
+}
+
+# The columns a `create_taxonomic_update_lookup()` output file must have to be
+# reused.
+lookup_cache_columns <- c(
+  "original_name", "identifier", "aligned_name", "suggested_name",
+  "taxon_rank", "taxonomic_dataset", "aligned_reason", "update_reason"
+)
+
+# Combine the lookups just made (`updated`, for the input rows `todo`) with
+# those read from the `output` file (`cached`, for the other rows), save them
+# all back to the file, and return the rows for `input` in input order. A name
+# split under `taxonomic_splits = "return_all"` has several rows, kept together.
+merge_with_output_file <- function(updated, input, todo, cached, output, quiet) {
+  # `row_number` indexes the rows aligned in this call; map it back to the
+  # input row, and tag each row with its identifier so the file records it
+  input_row <- which(todo)[updated$row_number]
+  updated$identifier <- input$identifier[input_row]
+
+  # The file keeps one set of rows per name/identifier pair, so drop the rows
+  # repeated because the input repeated a name (and rows for missing names)
+  updated_key <- cache_key(updated)
+  first_row <- updated$row_number[match(updated_key, updated_key)]
+  new_rows <- updated[updated$row_number == first_row & !is.na(updated$original_name), ] %>%
+    dplyr::select(-row_number)
+  write_output_file(dplyr::bind_rows(cached, new_rows), output, quiet)
+
+  # The other input rows take their rows from the file
+  cached_rows <- split(seq_len(nrow(cached)), cache_key(cached))[cache_key(input)[!todo]]
+  from_cache <- cached[unlist(cached_rows), ]
+  from_cache$row_number <- rep(which(!todo), lengths(cached_rows))
+
+  updated$row_number <- input_row
+  dplyr::bind_rows(updated, from_cache) %>%
+    dplyr::arrange(row_number) %>%
+    dplyr::select(-identifier)
 }
 
 # The closing summary `create_taxonomic_update_lookup()` prints (#131): how the

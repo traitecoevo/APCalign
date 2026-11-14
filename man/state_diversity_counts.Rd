@@ -14,7 +14,7 @@ state_diversity_counts(
 \item{state}{A character string indicating the Australian state or
 territory to calculate the diversity for. Possible values are "NSW", "NT",
 "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI",
-"MDI", "CoI", "CSI", and "AR".}
+"MDI", "CoI", "CSI", "AR" and "CaI".}
 
 \item{resources}{the taxonomic resources required to make the summary
 statistics.  loading this can be slow, so call load_taxonomic_resources

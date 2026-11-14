@@ -1,3 +1,5 @@
+skip_if_no_resources()
+
 # The tests in this file are primarily designed to check that the results of the
 # taxonomy updating give expected results. 
 # Limited attention is given to checking all possible ways of running a function
@@ -355,8 +357,10 @@ test_that("synonyms_for_accepted_names outputs expected number of rows", {
   
   expect_contains(synonyms_F$synonym, "Racosperma aneurum")
   expect_contains(synonyms_F$synonym, "Cardamine heterophylla")
-  expect_no_error(grepl("Racosperma aneurum", synonyms_T$synonyms))
-  expect_no_error(grepl("Cardamine heterophylla", synonyms_T$synonyms))
+  expect_true(any(grepl("Racosperma aneurum", synonyms_T$synonyms)))
+  # Cardamine heterophylla is a synonym of Cardamine gunnii, which was not
+  # asked for in `synonyms_T`
+  expect_false(any(grepl("Cardamine heterophylla", synonyms_T$synonyms)))
   
   
   expect_equal(
