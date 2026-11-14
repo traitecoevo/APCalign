@@ -27,5 +27,5 @@ instead, with a message. With neither, it returns `NULL` with a message.
 
 ``` r
 default_version()
-#> [1] "2026-07-30"
+#> [1] "2026-11-15"
 ```

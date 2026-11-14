@@ -61,9 +61,9 @@ Other diversity methods:
 #>   <chr>                             <chr>       <int>
 #> 1 doubtfully naturalised            NSW            95
 #> 2 formerly naturalised              NSW             8
-#> 3 native                            NSW          5982
+#> 3 native                            NSW          5986
 #> 4 native and doubtfully naturalised NSW             2
 #> 5 native and naturalised            NSW            34
-#> 6 naturalised                       NSW          1586
+#> 6 naturalised                       NSW          1587
 #> 7 presumed extinct                  NSW             9
 ```

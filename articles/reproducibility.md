@@ -68,7 +68,7 @@ latest `default_version` before each alignment
 ``` r
 
 default_version()
-#> [1] "2026-07-30"
+#> [1] "2026-11-15"
 ```
 
 Then copying and pasting the output into
