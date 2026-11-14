@@ -311,6 +311,11 @@ load_taxonomic_resources <-
       dplyr::mutate(taxonomic_dataset = "APC") %>%
       dplyr::distinct(canonical_name, .keep_all = TRUE)
 
+    # The hyphenated words of the reference names, for `match_taxa()` to put
+    # the hyphen back into a name written with a space instead (#310)
+    taxonomic_resources[["hyphenated_words"]] <-
+      reference_hyphenated_words(taxonomic_resources)
+
     if (!quiet) {
       close(pb)
       message("...done")
