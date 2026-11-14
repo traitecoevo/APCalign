@@ -21,10 +21,7 @@ LazyData: true
 Depends:
     R (>= 4.1.0),
 Imports:
-    purrr,
     dplyr,
-    stringr,
-    stringi,
     stringdist,
     cli,
     httr,
@@ -34,6 +31,9 @@ Imports:
     rlang (>= 1.0.0)
 Suggests:
     readr,
+    purrr,
+    stringr,
+    stringi,
     janitor,
     tidyr,
     covr,

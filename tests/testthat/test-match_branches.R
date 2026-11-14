@@ -55,7 +55,7 @@ test_that("`affinis` as a species epithet is not read as an affinity qualifier",
   # only ever align to genus rank -- including accepted APC names.
 
   accepted <- unique(resources$APC_accepted$canonical_name)
-  epithet_affinis <- sort(accepted[stringr::str_detect(accepted, "\\baffinis\\b")])
+  epithet_affinis <- sort(accepted[grepl("\\baffinis\\b", accepted, perl = TRUE)])
   expect_gt(length(epithet_affinis), 0)
 
   # every accepted name containing `affinis` aligns to itself, at its own rank
