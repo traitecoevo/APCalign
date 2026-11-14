@@ -102,14 +102,16 @@ and chars_changed; \code{full = TRUE} adds the others below.
 \item aligned_name: the input plant name that has been aligned to a taxon name in
 the APC or APNI by the align_taxa function.
 \item accepted_name: the APC-accepted plant name, when available.
-\item suggested_name: the suggested plant name to use. Identical to the
-accepted_name, when an accepted_name exists;
+\item suggested_name: the suggested plant name to use. The accepted_name, when
+an accepted_name exists, followed for a name affected by a taxonomic
+split by the possible names in square brackets (see \code{taxonomic_splits});
 otherwise the suggested_name is the aligned_name.
 \item genus: the genus of the accepted (or suggested) name;
 only APC-accepted genus names are filled in.
 \item family: the family of the accepted (or suggested) name;
 only APC-accepted family names are filled in.
-\item taxon_rank: the taxonomic rank of the suggested (and accepted) name.
+\item taxon_rank: the taxonomic rank of the suggested (and accepted) name; for a
+name collapsed by \code{collapse_to_higher_taxon}, the rank of the aligned name.
 \item taxonomic_dataset: the source of the suggested (and accepted) names
 (APC or APNI).
 \item taxonomic_status: the taxonomic status of the suggested (and accepted) name.

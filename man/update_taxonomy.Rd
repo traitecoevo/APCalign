@@ -28,17 +28,23 @@ The three options are:
 \itemize{
 \item \code{most_likely_species}, which returns the species name in use before the
 split; alternative names are listed in square brackets in suggested_name,
-e.g. \verb{Acacia aneura [alternative possible names: Acacia minyura (pro parte   misapplied) | ...]}
+e.g. "Acacia aneura [alternative possible names: Acacia minyura (pro
+parte misapplied) | ...]"
 \item \code{return_all}, which returns all possible names, one row each
 \item \code{collapse_to_higher_taxon}, which declares that an ambiguous name cannot
-be assigned to one accepted species/infraspecific name. suggested_name
-becomes \verb{Genus sp. [collapsed names: ...]}, listing the possible names,
-and accepted_name becomes \verb{Genus sp.} (taxonomic_status \code{accepted}). The
-other columns are not demoted: taxon_rank stays the rank of the aligned
-name, and taxon_ID, scientific_name and scientific_name_ID are those of
-the most likely taxon (the one \code{most_likely_species} returns).
-update_reason is "collapsed to genus due to ambiguity" for a synonym, and
-"aligned name accepted by APC" for a name that is itself accepted.
+be assigned to one accepted species/infraspecific name. It applies to
+every species or infraspecific name with a "pro parte" usage in the APC,
+even when its usages all lead to the same taxon (number_of_collapsed_taxa
+is then 1). suggested_name becomes "Genus sp. [collapsed names: ...]",
+listing the possible names, and accepted_name becomes "Genus sp.", with
+taxonomic_status "accepted"; when the most likely taxon is not itself
+accepted, accepted_name is \code{NA} and taxonomic_status is that taxon's
+status. The other columns are not demoted: taxon_rank stays the rank of
+the aligned name, and taxon_ID, scientific_name and scientific_name_ID
+are those of the most likely taxon (the one \code{most_likely_species}
+returns). update_reason is "collapsed to genus due to ambiguity" when
+number_of_collapsed_taxa is more than 1 and the aligned name is not
+accepted; otherwise it is the usual reason for the aligned name.
 }}
 
 \item{quiet}{Logical to indicate whether to display messages while updating
@@ -60,9 +66,10 @@ tibble contains the following columns:
 \item aligned_name: the input plant name that has been aligned to a taxon name
 in the APC or APNI by the align_taxa function.
 \item accepted_name: the APC-accepted plant name, when available.
-\item suggested_name: the suggested plant name to use. Identical to the
-accepted_name, when an accepted_name exists; otherwise the suggested_name
-is the aligned_name.
+\item suggested_name: the suggested plant name to use. The accepted_name, when
+an accepted_name exists, followed for a name affected by a taxonomic split
+by the possible names in square brackets (see \code{taxonomic_splits});
+otherwise the suggested_name is the aligned_name.
 \item genus: the genus of the accepted (or suggested) name; only APC-accepted
 genus names are filled in.
 \item family: the family of the accepted (or suggested) name; only APC-accepted

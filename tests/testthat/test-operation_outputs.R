@@ -123,6 +123,10 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
   expect_equal(rows_gt_1$accepted_name[has_accepted],
                paste(rows_gt_1$genus, "sp.")[has_accepted])
   expect_true(all(rows_gt_1$taxonomic_status[has_accepted] == "accepted"))
+  # when the most likely taxon is not accepted (Abutilon muticum -> Sida mutica),
+  # there is no accepted_name, and the status is that taxon's
+  expect_true(any(!has_accepted))
+  expect_false(any(rows_gt_1$taxonomic_status[!has_accepted] == "accepted"))
   expect_false(any(rows_gt_1$taxon_rank %in% c("genus", "family")))
   expect_equal(
     rows_gt_1$taxon_ID,
@@ -154,6 +158,25 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
   
   
   })
+
+test_that("collapse_to_higher_taxon also collapses a pro parte name with one target", {
+  # Lycopodium selago has two APC usages (pro parte misapplied, misapplied),
+  # both leading to Huperzia australiana. It is still collapsed, with
+  # number_of_collapsed_taxa 1 and its own update_reason, as documented.
+  out <- update_taxonomy(
+    align_taxa("Lycopodium selago", resources = resources, quiet = TRUE),
+    taxonomic_splits = "collapse_to_higher_taxon",
+    resources = resources, quiet = TRUE
+  )
+  expect_equal(out$accepted_name, "Huperzia sp.")
+  expect_equal(
+    out$suggested_name,
+    "Huperzia sp. [collapsed names: Huperzia australiana (pro parte misapplied) ]"
+  )
+  expect_equal(out$number_of_collapsed_taxa, 1)
+  expect_equal(out$taxon_rank, "species")
+  expect_equal(out$update_reason, out$taxonomic_status_aligned)
+})
 
 test_that("taxon name alignment matches and updates work as expected", {
 
