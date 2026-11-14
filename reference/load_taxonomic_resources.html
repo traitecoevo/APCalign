@@ -82,7 +82,10 @@ Defaults to FALSE.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list of taxonomic resource data frames.</p>
+    <p>A list of taxonomic resource data frames. Its <code>"version"</code> attribute
+records which data were loaded: the <code>version</code> for stable data, or
+<code>"current, downloaded &lt;date&gt;"</code> for current data. <code><a href="align_taxa.html">align_taxa()</a></code> writes it
+into each <code>aligned_reason</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -332,6 +335,8 @@ without re-downloading or re-processing the data. Use
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name_ID &lt;chr&gt;, name_type &lt;chr&gt;, taxon_rank &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_dataset &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"version")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2024-10-11"</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -2,6 +2,20 @@
 
 ## APCalign (development version)
 
+- `aligned_reason` now ends with the version of the APC/APNI data used,
+  e.g. `(APC/APNI version 2024-10-11)`, instead of the date the
+  alignment was run. The same names aligned against the same data now
+  give identical output on any day, so results can be diffed and cached.
+  The run date was also the wrong provenance: what an alignment depends
+  on is the data it was made against.
+  [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
+  records this as a `"version"` attribute on the resources it returns.
+  For `stable_or_current_data = "current"` it is
+  `"current, downloaded <date>"`, since the live data has no version.
+  Resources built without
+  [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
+  have no such attribute, and their `aligned_reason` then carries no
+  suffix ([\#281](https://github.com/traitecoevo/APCalign/issues/281)).
 - APCalign no longer imports `stringr`, `stringi` or `purrr`; they move
   to `Suggests` (the tests and vignettes still use them). `stringi`
   bundles the ICU library and was the largest single download when

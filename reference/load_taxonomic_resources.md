@@ -35,7 +35,11 @@ load_taxonomic_resources(
 
 ## Value
 
-A list of taxonomic resource data frames.
+A list of taxonomic resource data frames. Its `"version"` attribute
+records which data were loaded: the `version` for stable data, or
+`"current, downloaded <date>"` for current data.
+[`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md)
+writes it into each `aligned_reason`.
 
 ## Details
 
@@ -288,4 +292,6 @@ version="2024-10-11")# }
 #> #   scientific_name_ID <chr>, name_type <chr>, taxon_rank <chr>, genus <chr>,
 #> #   taxonomic_dataset <chr>
 #> 
+#> attr(,"version")
+#> [1] "2024-10-11"
 ```

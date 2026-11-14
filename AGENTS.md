@@ -37,9 +37,15 @@ The user-facing pipeline is **align → update**:
   `alignment_code`) — keep it that way, since the update side of the
   package has its own `update_reason`:
 
-  - `apply_match()` — the shared match-step tail. Appends `(<date>)` to
-    `aligned_reason` centrally, so that separator can no longer be
-    mistyped per-step (it was, three times).
+  - `apply_match()` — the shared match-step tail. Appends
+    `(APC/APNI version <version>)` to `aligned_reason` centrally, so
+    that suffix can no longer be mistyped per-step (it was, three
+    times). The suffix comes from the `"version"` attribute
+    [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
+    sets on `resources` (`aligned_reason_suffix()`), carried through
+    matching as the scratch column `aligned_reason_suffix`. It is the
+    data version, never the run date: output must be reproducible
+    (#281).
   - `match_reference_name()` — the shape 21 match steps share: rows
     whose `key` column of `tocheck` exactly matches the `name_type`
     column of a reference table take that reference row’s canonical name
@@ -49,9 +55,10 @@ The user-facing pipeline is **align → update**:
     `Acacia sp. [acacia aff. dealbata; Royal NP]` respectively.
   - `fuzzy_match_column()` — fuzzy-match a whole column; NA inputs pass
     through (`fuzzy_match()` errors on NA).
-  - `drop_scratch()` — removes `identifier_string`/`identifier_string2`
-    on every exit path, so `full = TRUE` output is the documented column
-    set regardless of which match step finished the job.
+  - `drop_scratch()` — removes `identifier_string`/`identifier_string2`/
+    `aligned_reason_suffix` on every exit path, so `full = TRUE` output
+    is the documented column set regardless of which match step finished
+    the job.
 
 - [`update_taxonomy()`](https://traitecoevo.github.io/APCalign/reference/update_taxonomy.md)
   ([R/update_taxonomy.R](https://traitecoevo.github.io/APCalign/R/update_taxonomy.R))
@@ -113,8 +120,8 @@ per match branch; covers **all 54 branches**. Asserted in
 `test-operation_outputs.R` for `aligned_name`, `taxon_rank`,
 `taxonomic_dataset`, **and `alignment_code`**. - `test-match_branches.R`
 — dark-branch resolution, `aligned_reason` well-formedness, and a
-**full-output snapshot** (`_snaps/match_branches.md`, date-normalised)
-that pins the alignment contract across all branches.
+**full-output snapshot** (`_snaps/match_branches.md`) that pins the
+alignment contract across all branches.
 
 This snapshot + assertions are the safety net for refactoring
 `match_taxa()`: a behaviour-preserving change leaves them green. If you
@@ -150,9 +157,10 @@ legitimately change matcher output, regenerate with
   them).
 - User-facing output text changes (e.g. `aligned_reason`) warrant a
   `NEWS.md` entry.
-- [`Sys.Date()`](https://rdrr.io/r/base/Sys.time.html) is embedded in
-  every `aligned_reason`, so raw output is not reproducible day to day —
-  normalise the date when snapshotting/diffing.
+- `aligned_reason` ends with the data version, not the run date, so
+  output is reproducible day to day and snapshots need no normalising.
+  Don’t reintroduce [`Sys.Date()`](https://rdrr.io/r/base/Sys.time.html)
+  there (#281).
 
 ### Known issues / landmines
 
