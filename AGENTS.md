@@ -95,7 +95,13 @@ Regression coverage of the matcher lives in:
 - `benchmarks/test_matches_alignments_updates.csv` — curated inputs, one per match
   branch; covers **all 54 branches**. Asserted in
   `test-operation_outputs.R` for `aligned_name`, `taxon_rank`,
-  `taxonomic_dataset`, **and `alignment_code`**.
+  `taxonomic_dataset`, **and `alignment_code`**. Its `updated_name` column is
+  the full expected `suggested_name` (e.g. `Banksia sp. [test_all_matches_TRUE]`),
+  and every row has `updated_name_passes = TRUE`; set it `FALSE` only for a
+  known, accepted failure.
+- `benchmarks/test_splits_synonyms.csv` — split and synonym names; asserts each
+  name's `taxon_ID` and that its recorded status is either the aligned status or
+  one of the alternatives named in `suggested_name`.
 - `test-match_branches.R` — dark-branch resolution, `aligned_reason`
   well-formedness, and a **full-output snapshot** (`_snaps/match_branches.md`)
   that pins the alignment contract across all branches.
@@ -152,12 +158,15 @@ the CSV.
   `align_taxa()` and `create_taxonomic_update_lookup()` each read their own file
   format back (`read_output_file()`), align only the names not already there, and
   write back every row. The file does not record the other arguments.
-- **`taxonomic_splits = "collapse_to_higher_taxon"` disagrees with its docs**: the
-  docs (the `update_taxonomy()` param, the main vignette, and
-  `update_taxonomy_documentation.csv`) say no `accepted_name` is returned and
-  `taxon_rank` becomes genus; the code returns `accepted_name = "Acacia sp."` with
-  `taxon_rank = "species"` (see the vignette's own output for `Acacia aneura`). A
-  maintainer has to decide which is right.
+- **`taxonomic_splits = "collapse_to_higher_taxon"` changes only the names**:
+  `accepted_name` becomes `Genus sp.` and `suggested_name`
+  `Genus sp. [collapsed names: ...]`, while `taxon_rank`, `taxon_ID` and
+  `scientific_name` stay those of the most likely taxon. This is the intended
+  behaviour (maintainer decision on #309) and is documented in `update_taxonomy()`
+  and pinned in `test-operation_outputs.R`; don't "fix" the rank to genus.
+- **Downloaded versions in `tools::R_user_dir("APCalign")` are not pruned**, by
+  decision (#309): each is about 20 MB, and users may want old versions for
+  reproducibility.
 
 ---
 

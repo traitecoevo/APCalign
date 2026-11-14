@@ -171,8 +171,9 @@ taxon concepts, one of which retains the original name. There are three
 options: most_likely_species returns the name that is retained, with
 alternative names documented in square brackets; return_all adds additional
 rows to the output, one for each possible taxon concept;
-collapse_to_higher_taxon returns the genus with possible names in square
-brackets.
+collapse_to_higher_taxon returns \verb{Genus sp.} with the possible names in
+square brackets, while taxon_rank and the IDs stay those of the most likely
+taxon (see \code{\link[=update_taxonomy]{update_taxonomy()}}).
 \item The argument identifier allows you to add a fix text string to all genus-
 and family- level names, such as identifier = "Royal NP" would return
 \verb{Acacia sp. \[Royal NP]}.

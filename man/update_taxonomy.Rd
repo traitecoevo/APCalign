@@ -27,11 +27,18 @@ update taxon names that are ambiguous due to taxonomic splits.
 The three options are:
 \itemize{
 \item \code{most_likely_species}, which returns the species name in use before the
-split; alternative names are returned in a separate column
-\item \code{return_all}, which returns all possible names
+split; alternative names are listed in square brackets in suggested_name,
+e.g. \verb{Acacia aneura [alternative possible names: Acacia minyura (pro parte   misapplied) | ...]}
+\item \code{return_all}, which returns all possible names, one row each
 \item \code{collapse_to_higher_taxon}, which declares that an ambiguous name cannot
-be aligned to an accepted species/infraspecific name and the name is
-demoted to genus rank
+be assigned to one accepted species/infraspecific name. suggested_name
+becomes \verb{Genus sp. [collapsed names: ...]}, listing the possible names,
+and accepted_name becomes \verb{Genus sp.} (taxonomic_status \code{accepted}). The
+other columns are not demoted: taxon_rank stays the rank of the aligned
+name, and taxon_ID, scientific_name and scientific_name_ID are those of
+the most likely taxon (the one \code{most_likely_species} returns).
+update_reason is "collapsed to genus due to ambiguity" for a synonym, and
+"aligned name accepted by APC" for a name that is itself accepted.
 }}
 
 \item{quiet}{Logical to indicate whether to display messages while updating
@@ -60,7 +67,8 @@ is the aligned_name.
 genus names are filled in.
 \item family: the family of the accepted (or suggested) name; only APC-accepted
 family names are filled in.
-\item taxon_rank: the taxonomic rank of the suggested (and accepted) name.
+\item taxon_rank: the taxonomic rank of the suggested (and accepted) name; for a
+name collapsed by \code{collapse_to_higher_taxon}, the rank of the aligned name.
 \item taxonomic_dataset: the source of the suggested (and accepted) names (APC or
 APNI).
 \item taxonomic_status: the taxonomic status of the suggested (and accepted) name.

@@ -34,12 +34,20 @@
 #' @param taxonomic_splits Variable that determines what protocol to use to 
 #' update taxon names that are ambiguous due to taxonomic splits. 
 #' The three options are:
-#'    - `most_likely_species`, which returns the species name in use before the 
-#'    split; alternative names are returned in a separate column
-#'   - `return_all`, which returns all possible names
-#'   - `collapse_to_higher_taxon`, which declares that an ambiguous name cannot 
-#'   be aligned to an accepted species/infraspecific name and the name is 
-#'   demoted to genus rank
+#'   - `most_likely_species`, which returns the species name in use before the
+#'   split; alternative names are listed in square brackets in suggested_name,
+#'   e.g. `Acacia aneura [alternative possible names: Acacia minyura (pro parte
+#'   misapplied) | ...]`
+#'   - `return_all`, which returns all possible names, one row each
+#'   - `collapse_to_higher_taxon`, which declares that an ambiguous name cannot
+#'   be assigned to one accepted species/infraspecific name. suggested_name
+#'   becomes `Genus sp. [collapsed names: ...]`, listing the possible names,
+#'   and accepted_name becomes `Genus sp.` (taxonomic_status `accepted`). The
+#'   other columns are not demoted: taxon_rank stays the rank of the aligned
+#'   name, and taxon_ID, scientific_name and scientific_name_ID are those of
+#'   the most likely taxon (the one `most_likely_species` returns).
+#'   update_reason is "collapsed to genus due to ambiguity" for a synonym, and
+#'   "aligned name accepted by APC" for a name that is itself accepted.
 #' @param quiet Logical to indicate whether to display messages while updating 
 #' taxa.
 #' @param output (optional) Name of the file where results are saved. The 
@@ -63,7 +71,8 @@
 #' genus names are filled in.
 #' - family: the family of the accepted (or suggested) name; only APC-accepted 
 #' family names are filled in.
-#' - taxon_rank: the taxonomic rank of the suggested (and accepted) name.
+#' - taxon_rank: the taxonomic rank of the suggested (and accepted) name; for a
+#' name collapsed by `collapse_to_higher_taxon`, the rank of the aligned name.
 #' - taxonomic_dataset: the source of the suggested (and accepted) names (APC or
 #'  APNI).
 #' - taxonomic_status: the taxonomic status of the suggested (and accepted) name.
@@ -519,9 +528,10 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
       dplyr::filter(taxonomic_status_aligned != "misapplied" & taxonomic_status_aligned != "excluded")
   } 
   
-  ## with the option `collapse_to_higher_taxon` names whose connection to a taxon concept is ambiguous due to a taxonomic split are demoted to taxon_rank = genus
-  ## and the suggested name is given as `genus sp.`
-  ## the possible species/infraspecific taxon names are collapsed into a single column
+  ## with the option `collapse_to_higher_taxon`, names whose connection to a taxon concept is ambiguous due to a taxonomic split
+  ## are given the accepted name `genus sp.` and the suggested name `genus sp. [collapsed names: ...]`, which lists the possible
+  ## species/infraspecific names. Only those two names (and update_reason) change; taxon_rank and the IDs stay those of the
+  ## most likely taxon, as documented for `taxonomic_splits` above.
   if (taxonomic_splits == "collapse_to_higher_taxon") {
   split_taxa_table <-
     split_taxa_table %>%
@@ -546,8 +556,7 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
     dplyr::mutate(
       alternative_possible_names = ifelse(taxonomic_status_aligned != "accepted" & canonical_name %in% resources$APC_accepted$canonical_name, NA, alternative_possible_names),
       alternative_possible_names = re_replace_all(alternative_possible_names, "\\ \\|\\ NA", ""),
-      suggested_collapsed_name = paste(word(accepted_name_2, 1), "sp. [collapsed names:", alternative_possible_names, "]"),
-      taxon_rank = ifelse(number_of_collapsed_taxa > 1 & species_and_infraspecific(taxon_rank), "genus", taxon_rank)
+      suggested_collapsed_name = paste(word(accepted_name_2, 1), "sp. [collapsed names:", alternative_possible_names, "]")
     ) %>%
     dplyr::select(-alternative_accepted_name_tmp, -alternative_possible_names)
   }
