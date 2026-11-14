@@ -66,12 +66,12 @@ filter_data_to_accepted_species <- function(resources, include_infrataxa = FALSE
 
 #' @noRd
 separate_states <- function(data) {
-  stringr::str_split(unique(data$taxon_distribution), ",")
+  split_all(unique(data$taxon_distribution), ",")
 }
 
 #' @noRd
 identify_places <- function(sep_state_data) {
-  all_codes <- unique(stringr::str_trim(unlist(sep_state_data)))
+  all_codes <- unique(trim(unlist(sep_state_data)))
   unique(word(all_codes[!is.na(all_codes)], 1, 1))
 }
 

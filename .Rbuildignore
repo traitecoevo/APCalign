@@ -22,3 +22,4 @@
 ^.claude$
 ^AGENTS\.md$
 ^CITATION\.cff$
+^data-raw$

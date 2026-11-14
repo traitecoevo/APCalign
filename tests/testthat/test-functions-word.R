@@ -16,6 +16,7 @@ test_that("Word", {
       "(Dockrillia pugioniformis x Dockrillia striolata) x Dockrillia pugioniformis"
     )
   
+  skip_if_not_installed("stringr")
   expect_equal(APCalign:::word(taxa, 1), stringr::word(taxa, 1))
   expect_equal(APCalign:::word(taxa, 2), stringr::word(taxa, 2))
   expect_equal(APCalign:::word(taxa, 3), stringr::word(taxa, 3))

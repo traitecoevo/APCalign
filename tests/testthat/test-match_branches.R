@@ -55,7 +55,7 @@ test_that("`affinis` as a species epithet is not read as an affinity qualifier",
   # only ever align to genus rank -- including accepted APC names.
 
   accepted <- unique(resources$APC_accepted$canonical_name)
-  epithet_affinis <- sort(accepted[stringr::str_detect(accepted, "\\baffinis\\b")])
+  epithet_affinis <- sort(accepted[grepl("\\baffinis\\b", accepted, perl = TRUE)])
   expect_gt(length(epithet_affinis), 0)
 
   # every accepted name containing `affinis` aligns to itself, at its own rank
@@ -94,7 +94,7 @@ test_that("every aligned_reason is well-formed (ends with a parenthesised date)"
   )
 
   reasons <- out$aligned_reason[!is.na(out$aligned_reason)]
-  malformed <- reasons[!stringr::str_detect(reasons, " \\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)$")]
+  malformed <- reasons[!grepl(" \\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)$", reasons, perl = TRUE)]
   expect_equal(malformed, character(0))
 })
 
@@ -126,8 +126,8 @@ test_that("full alignment output is stable across all match branches (snapshot)"
       taxonomic_dataset,
       taxon_rank,
       alignment_code,
-      aligned_reason = stringr::str_replace(
-        aligned_reason, "\\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)$", "(DATE)"
+      aligned_reason = sub(
+        "\\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)$", "(DATE)", aligned_reason, perl = TRUE
       )
     ) %>%
     dplyr::arrange(original_name, aligned_name, alignment_code)

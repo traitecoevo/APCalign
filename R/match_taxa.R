@@ -73,11 +73,11 @@ match_taxa <- function(
   ## function fuzzy_match) when matching is being done at the genus level.
   if (fuzzy_matches == TRUE) {
     fuzzy_match_genera <- function(x, y) {
-      purrr::map_chr(x, ~ fuzzy_match(.x, y, 2, 0.35, n_allowed = 1))
+      vapply(x, function(.x) as.character(fuzzy_match(.x, y, 2, 0.35, n_allowed = 1)), character(1), USE.NAMES = FALSE)
     }
   } else {
     fuzzy_match_genera <- function(x, y) {
-      purrr::map_chr(x, ~ fuzzy_match(.x, y, 0, 0.0, n_allowed = 1))
+      vapply(x, function(.x) as.character(fuzzy_match(.x, y, 0, 0.0, n_allowed = 1)), character(1), USE.NAMES = FALSE)
     }
   }
 
@@ -106,21 +106,21 @@ match_taxa <- function(
   ## the rest of the name matches. Applied to `cleaned_name`, and re-evaluated
   ## by each match step because `tocheck` shrinks as matches are found.
   is_genus_sp <- function(x) {
-    stringr::str_detect(x, "[:space:]sp\\.$") & word(x, 2) %in% "sp."
+    re_detect(x, "[\\s\\p{Z}\\x85]sp\\.$") & word(x, 2) %in% "sp."
   }
 
-  is_intergrade <- function(x) stringr::str_detect(x, "\\ -- |\\--")
+  is_intergrade <- function(x) re_detect(x, "\\ -- |\\--")
 
-  is_hybrid <- function(x) stringr::str_detect(x, " [xX] ")
+  is_hybrid <- function(x) re_detect(x, " [xX] ")
 
   is_indecision <- function(x) {
     (
-      stringr::str_detect(x, "[:alpha:]\\/") |
-        stringr::str_detect(x, "\\s\\/")
+      re_detect(x, "\\p{L}\\/") |
+        re_detect(x, "[\\s\\p{Z}\\x85]\\/")
     ) &
-      !stringr::str_detect(x, "[:digit:]") &
-      !stringr::str_detect(x, "\\(") &
-      !stringr::str_detect(x, "\\'")
+      !re_detect(x, "\\p{Nd}") &
+      !re_detect(x, "\\(") &
+      !re_detect(x, "'")
   }
 
   ## `cf.` is only recognised by the exact-genus step (match_06a); the fuzzy
@@ -133,14 +133,14 @@ match_taxa <- function(
   affinis_qualifier <- paste0(" affinis", not_before_rank_marker, "\\s")
 
   has_affinity_or_cf <- function(x) {
-    stringr::str_detect(x, "[Aa]ff[\\.\\s]") |
-      stringr::str_detect(x, affinis_qualifier) |
-      stringr::str_detect(x, " cf[\\.\\s]")
+    re_detect(x, "[Aa]ff[.\\s\\p{Z}\\x85]") |
+      re_detect(x, affinis_qualifier) |
+      re_detect(x, " cf[.\\s\\p{Z}\\x85]")
   }
 
   has_affinity <- function(x) {
-    stringr::str_detect(x, "[Aa]ff[\\.\\s]") |
-      stringr::str_detect(x, affinis_qualifier)
+    re_detect(x, "[Aa]ff[.\\s\\p{Z}\\x85]") |
+      re_detect(x, affinis_qualifier)
   }
 
   ## Explanations shared between the exact and fuzzy variants of each
@@ -1003,7 +1003,7 @@ match_taxa <- function(
   # The 'taxon name' is then reformatted  as `family sp.` with the original name in square brackets.
 
   i <-
-    stringr::str_detect(word(taxa$tocheck$cleaned_name, 1), "aceae$") &
+    re_detect(word(taxa$tocheck$cleaned_name, 1), "aceae$") &
     taxa$tocheck$genus %in% resources$family_accepted$canonical_name
 
   taxa <- apply_match(
@@ -1020,7 +1020,7 @@ match_taxa <- function(
   # Toward the end of the alignment function, see if first word of unmatched taxa is an APC-known family.
 
   i <-
-    stringr::str_detect(word(taxa$tocheck$cleaned_name, 1), "ae$") &
+    re_detect(word(taxa$tocheck$cleaned_name, 1), "ae$") &
     taxa$tocheck$genus %in% resources$family_synonym$canonical_name
 
   taxa <- apply_match(
@@ -1180,17 +1180,17 @@ higher_rank_name <- function(taxa, i, stem, marker = " sp.") {
 # rows are left unmatched.
 fuzzy_match_column <- function(x, accepted_list, max_distance_abs,
                                max_distance_rel, epithet_letters = 1) {
-  purrr::map_chr(x, function(txt) {
+  vapply(x, function(txt) {
     if (is.na(txt)) return(NA_character_)
-    fuzzy_match(
+    as.character(fuzzy_match(
       txt = txt,
       accepted_list = accepted_list,
       max_distance_abs = max_distance_abs,
       max_distance_rel = max_distance_rel,
       n_allowed = 1,
       epithet_letters = epithet_letters
-    )
-  })
+    ))
+  }, character(1), USE.NAMES = FALSE)
 }
 
 
