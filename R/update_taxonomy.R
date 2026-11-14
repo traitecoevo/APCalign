@@ -87,6 +87,10 @@
 #' - row_number: the row number of a specific original_name in the input.
 #' - number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon", 
 #' the number of possible taxon names that have been collapsed.
+#' - chars_changed: for a fuzzy match, how many characters of the name were
+#'   changed to match the reference name; `0` for an exact match; `NA` when the
+#'   name was not aligned. Carried over from [align_taxa()], where it is
+#'   described in full.
 #'   
 #'
 #' @seealso load_taxonomic_resources
@@ -127,7 +131,7 @@ update_taxonomy <- function(aligned_data,
 
   aligned_data <-
     aligned_data %>%
-    dplyr::select(original_name, aligned_name, taxon_rank, taxonomic_dataset, aligned_reason) %>%
+    dplyr::select(original_name, aligned_name, taxon_rank, taxonomic_dataset, aligned_reason, dplyr::any_of("chars_changed")) %>%
     dplyr::mutate(
       genus = extract_genus(aligned_name),
       row_number = dplyr::row_number()
@@ -239,7 +243,8 @@ update_taxonomy <- function(aligned_data,
       "canonical_name",
       "taxonomic_status_aligned",
       "row_number",
-      "number_of_collapsed_taxa"
+      "number_of_collapsed_taxa",
+      "chars_changed"
     )))      
   
   # Assemble output in the order of the input `aligned_names`

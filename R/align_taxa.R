@@ -78,7 +78,8 @@
 #'  which defaults to NA.
 #'
 #' @return A tibble with columns that include original_name, aligned_name,
-#'   taxonomic_dataset, taxon_rank, aligned_reason, alignment_code. 
+#'   taxonomic_dataset, taxon_rank, aligned_reason, alignment_code,
+#'   chars_changed.
 #' - original_name: the original plant name input.
 #' - aligned_name: the original plant name after the function standardise_names
 #'   has standardised the syntax of infraspecific taxon designations.
@@ -88,6 +89,17 @@
 #'   (from an original name to an aligned name).
 #' - alignment_code: a code that accompanies the aligned_reason, indicating the
 #'   relative sequence of the match during the alignment process.
+#' - chars_changed: for a fuzzy match, how many characters differ between the
+#'   name and the reference name it was matched to (the Damerau-Levenshtein
+#'   distance, counting an insertion, deletion, substitution or swap of two
+#'   adjacent characters as one change); `0` for an exact match; `NA` when the
+#'   name was not aligned. Only the part of the name the match step compared is
+#'   counted: for a genus- or family-rank match, just the first word, and in
+#'   most steps after case, punctuation, rank markers and filler words have been
+#'   standardised or removed. It
+#'   is not a measure of how reliable a match is: a phrase name can match
+#'   reliably with several characters changed, while one character can separate
+#'   two species.
 #' - cleaned_name: original name with punctuation and infraspecific taxon
 #'   designation terms standardised by the function standardise_names;
 #'   streamlines exact matches.
@@ -231,7 +243,8 @@ align_taxa <- function(original_name,
                            "scientific_name", "taxon_ID", "taxon_ID_genus",
                            "scientific_name_ID", "canonical_name", "row_number",
                            "number_of_collapsed_taxa", "checked", "known")
-    if(!identical(names(taxa_raw), correct_names)) {
+    # `chars_changed` was added later; accept files written with or without it
+    if(!identical(setdiff(names(taxa_raw), "chars_changed"), correct_names)) {
       stop("Your output file already exists and it's not in the right format. 
          Please check that the file you are passing in to the output option.")
     }
@@ -301,7 +314,7 @@ align_taxa <- function(original_name,
   if (all(taxa$tocheck$checked)|all(is.na(taxa$tocheck$checked))) {
     if(!quiet)
       message("  - all taxa are already checked, yay!")
-    return(invisible(taxa$tocheck))
+    return(invisible(add_chars_changed(taxa$tocheck)))
   }
   
   # move all checked taxa to "checked"
@@ -375,7 +388,7 @@ align_taxa <- function(original_name,
       taxa %>%
       dplyr::select(original_name, cleaned_name, aligned_name,
                     taxonomic_dataset, taxon_rank, aligned_reason,
-                    alignment_code, identifier)      
+                    alignment_code, chars_changed, identifier)
   }
 
   # Assemble output in the order of the input
