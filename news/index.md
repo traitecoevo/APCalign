@@ -2,6 +2,41 @@
 
 ## APCalign (development version)
 
+- APCalign no longer imports `stringr`, `stringi` or `purrr`; they move
+  to `Suggests` (the tests and vignettes still use them). `stringi`
+  bundles the ICU library and was the largest single download when
+  APCalign runs in a web browser through webR (14 MB of about 51 MB).
+  The string handling is now base R, through small internal helpers in
+  `R/strings.R` that reproduce the `stringr` behaviour APCalign relied
+  on: missing values stay missing, and `stringr`’s ICU regular
+  expressions are written as Perl ones with Unicode properties
+  (`[:alpha:]` becomes `\p{L}`, `[:punct:]` becomes `\p{P}`, which is
+  not the same as base R’s `[[:punct:]]`). Transliteration to ASCII and
+  ICU’s lower, title and sentence case use character tables generated
+  once from `stringi` by `data-raw/ascii_table.R` and stored in
+  `R/sysdata.rda`. Output is unchanged:
+  [`standardise_names()`](https://traitecoevo.github.io/APCalign/reference/standardise_names.md),
+  [`strip_names()`](https://traitecoevo.github.io/APCalign/reference/strip_names.md),
+  [`strip_names_extra()`](https://traitecoevo.github.io/APCalign/reference/strip_names_extra.md),
+  `extract_genus()` and
+  [`standardise_taxon_rank()`](https://traitecoevo.github.io/APCalign/reference/standardise_taxon_rank.md)
+  give identical results on 353,776 names (every APC and APNI name, the
+  benchmark names, and versions with random typos, accents, non-breaking
+  spaces and changed case), in both `en_US.UTF-8` and `C.UTF-8` locales,
+  and so do the resource tables,
+  [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
+  (all `taxonomic_splits` and `full` options),
+  [`native_anywhere_in_australia()`](https://traitecoevo.github.io/APCalign/reference/native_anywhere_in_australia.md)
+  and
+  [`create_species_state_origin_matrix()`](https://traitecoevo.github.io/APCalign/reference/create_species_state_origin_matrix.md).
+  The only known differences are for text in other scripts (Greek,
+  Cyrillic, Chinese, …), which ICU transliterates using neighbouring
+  characters and the tables do a character at a time, and for strings of
+  symbols and stacked combining marks that are not plausible names.
+- `fuzzy_match()` keeps the lower-case first letter of each reference
+  name between calls, instead of working it out for the whole reference
+  list for every name. Results are unchanged; a lookup of 790 names with
+  typos took 6.2 s instead of 11.0 s.
 - [`standardise_names()`](https://traitecoevo.github.io/APCalign/reference/standardise_names.md),
   [`strip_names()`](https://traitecoevo.github.io/APCalign/reference/strip_names.md)
   and
