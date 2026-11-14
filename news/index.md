@@ -80,6 +80,29 @@
   [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
   (`scientific_name`, not `scientific_name_authorship`); and the main
   vignette, rebuilt against the current code.
+- [`strip_names()`](https://traitecoevo.github.io/APCalign/reference/strip_names.md)
+  keeps a hyphen between two letters, as in a hyphenated genus
+  (`Van-royena`, ICN Art. 20.3) or epithet (`Alisma plantago-aquatica`,
+  `Acacia undulata-elegans`). It used to turn the hyphen into a space,
+  making one word two and shifting every later word along, so the
+  first-two- and first-three-word keys used by the binomial and
+  trinomial match steps matched the wrong names: `"Van-royena"` aligned
+  to the species *Van-royena castanosperma* instead of the genus, and
+  `"Acacia undulata-elegans var. fooensis"` to a different taxon,
+  *Acacia undulata* var. *elegans*. Hyphens next to a digit, a space or
+  a full stop, or after a rank marker or qualifier (`sp-Mt Magnet`,
+  `var-intermedia`, `x-aneura`), are still removed, as are `--`
+  intergrade markers; the Unicode hyphens U+2010 and U+2011 count as
+  hyphens. The stripped keys of the reference names change the same way,
+  and
+  [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
+  now also returns `hyphenated_words`, the hyphenated words of the
+  reference names. A name written with spaces where the reference name
+  has a hyphen (`Ipomoea pes caprae subsp. brasiliensis`) has the hyphen
+  put back before matching, where the words never occur unhyphenated in
+  the reference names, so it still aligns. All earlier benchmark
+  alignments are unchanged
+  ([\#310](https://github.com/traitecoevo/APCalign/issues/310)).
 - [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md),
   [`update_taxonomy()`](https://traitecoevo.github.io/APCalign/reference/update_taxonomy.md)
   and

@@ -27,7 +27,9 @@ Given a vector of taxonomic names, this function removes:
 
 - subtaxa designations ("subsp.", "var.", "f.", and "ser")
 
-- special characters (e.g., "-", ".", "(", ")", "?")
+- special characters (e.g., "-", ".", "(", ")", "?"), except a hyphen
+  between two letters, which is part of a hyphenated genus or epithet
+  (`Van-royena`, `Alisma plantago-aquatica`)
 
 - extra whitespace
 
@@ -38,7 +40,8 @@ The resulting vector of names is also converted to lowercase.
 ``` r
 strip_names(c("Abies lasiocarpa subsp. lasiocarpa",
               "Quercus kelloggii",
-              "Pinus contorta var. latifolia"))
+              "Pinus contorta var. latifolia",
+              "Alisma plantago-aquatica"))
 #> [1] "abies lasiocarpa lasiocarpa" "quercus kelloggii"          
-#> [3] "pinus contorta latifolia"   
+#> [3] "pinus contorta latifolia"    "alisma plantago-aquatica"   
 ```

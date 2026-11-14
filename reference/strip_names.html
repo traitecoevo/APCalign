@@ -69,7 +69,9 @@ removed, and all letters converted to lowercase.</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Given a vector of taxonomic names, this function removes:</p><ul><li><p>subtaxa designations ("subsp.", "var.", "f.", and "ser")</p></li>
-<li><p>special characters (e.g., "-", ".", "(", ")", "?")</p></li>
+<li><p>special characters (e.g., "-", ".", "(", ")", "?"), except a hyphen
+between two letters, which is part of a hyphenated genus or epithet
+(<code>Van-royena</code>, <code>Alisma plantago-aquatica</code>)</p></li>
 <li><p>extra whitespace</p></li>
 </ul><p>The resulting vector of names is also converted to lowercase.</p>
     </div>
@@ -78,9 +80,10 @@ removed, and all letters converted to lowercase.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">strip_names</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Abies lasiocarpa subsp. lasiocarpa"</span>,</span></span>
 <span class="r-in"><span>              <span class="st">"Quercus kelloggii"</span>,</span></span>
-<span class="r-in"><span>              <span class="st">"Pinus contorta var. latifolia"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>              <span class="st">"Pinus contorta var. latifolia"</span>,</span></span>
+<span class="r-in"><span>              <span class="st">"Alisma plantago-aquatica"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "abies lasiocarpa lasiocarpa" "quercus kelloggii"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "pinus contorta latifolia"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "pinus contorta latifolia"    "alisma plantago-aquatica"   </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
