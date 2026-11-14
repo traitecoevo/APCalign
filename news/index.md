@@ -3,6 +3,17 @@
 ## APCalign (development version)
 
 - [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
+  and
+  [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md)
+  no longer stop with “missing value where TRUE/FALSE needed” when one
+  of a name’s first words has no letter or digit: a genus word like
+  `"12 34"`, `"1 1/2"`, `"\u00bd"` or `"\u00b1 Acacia"` (which becomes
+  `"+/- Acacia"`), or a later word that is only symbols, like
+  `"Acacia + aneura"` or `"Eucalyptus |"`. One such name used to stop
+  the whole lookup; it now goes unmatched where it cannot be aligned.
+  `fuzzy_match()` returns `NA` for text whose first word has no letter,
+  and no longer errors when a word’s first letter is missing.
+- [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
   now ends with a summary of what it did, unless `quiet = TRUE`: how
   many names aligned to a species or infraspecific taxon (in the APC, or
   the APNI only), to a genus or family only, or not at all; how many
