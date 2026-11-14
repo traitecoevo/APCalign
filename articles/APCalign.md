@@ -42,14 +42,14 @@ dim(gbif_lite)
 
 gbif_lite |> print(n = 6)
 #> # A tibble: 129 × 7
-#>   species              infraspecificepithet taxonrank decimalLongitude decimalLatitude scientificname verbatimscientificname
-#>   <chr>                <chr>                <chr>                <dbl>           <dbl> <chr>          <chr>                 
-#> 1 Tetratheca ciliata   <NA>                 SPECIES               145.           -37.4 Tetratheca ci… Tetratheca ciliata    
-#> 2 Peganum harmala      <NA>                 SPECIES               139.           -33.3 Peganum harma… Peganum harmala       
-#> 3 Calotis multicaulis  <NA>                 SPECIES               115.           -24.3 Calotis multi… Calotis multicaulis   
-#> 4 Leptospermum triner… <NA>                 SPECIES               151.           -34.0 Leptospermum … Leptospermum trinervi…
-#> 5 Lepidosperma latera… <NA>                 SPECIES               142.           -37.3 Lepidosperma … Lepidosperma laterale 
-#> 6 Enneapogon polyphyl… <NA>                 SPECIES               129.           -17.8 Enneapogon po… Enneapogon polyphyllus
+#>   species          infraspecificepithet taxonrank decimalLongitude decimalLatitude scientificname verbatimscientificname
+#>   <chr>            <chr>                <chr>                <dbl>           <dbl> <chr>          <chr>                 
+#> 1 Tetratheca cili… <NA>                 SPECIES               145.           -37.4 Tetratheca ci… Tetratheca ciliata    
+#> 2 Peganum harmala  <NA>                 SPECIES               139.           -33.3 Peganum harma… Peganum harmala       
+#> 3 Calotis multica… <NA>                 SPECIES               115.           -24.3 Calotis multi… Calotis multicaulis   
+#> 4 Leptospermum tr… <NA>                 SPECIES               151.           -34.0 Leptospermum … Leptospermum trinervi…
+#> 5 Lepidosperma la… <NA>                 SPECIES               142.           -37.3 Lepidosperma … Lepidosperma laterale 
+#> 6 Enneapogon poly… <NA>                 SPECIES               129.           -17.8 Enneapogon po… Enneapogon polyphyllus
 #> # ℹ 123 more rows
 ```
 
@@ -74,40 +74,24 @@ Note that the databases are quite large so the initial retrieval of
 have been stored locally, subsequent retrievals will take less time.
 Retrieving `current` resources will always take longer since it is
 accessing the latest information from the website. Check out our
-[Resource
-Caching](https://traitecoevo.github.io/APCalign/articles/caching.html)
-article to learn more about how the APC and APNI databases are accessed,
-stored and retrieved.
+[reproducibility](https://traitecoevo.github.io/APCalign/articles/reproducibility.html)
+article to learn more about the versions of the APC and APNI databases
+and how they are stored.
 
 ``` r
 
 # Benchmarking the retrieval of `stable` or `current` resources
 stable_start_time <- Sys.time()
 stable_resources <- load_taxonomic_resources(stable_or_current_data = "stable")
+stable_end_time <-  Sys.time()
+
+current_start_time <- Sys.time()
+current_resources <- load_taxonomic_resources(stable_or_current_data = "current")
+current_end_time <-  Sys.time()
+
+# Compare times
+stable_end_time - stable_start_time
 ```
-
-    #> Loading resources into memory...
-    #> 
-    =========================================
-    ===================================================================================
-    ============================================================================================================================
-    #> ...done
-    stable_end_time <-  Sys.time()
-
-    current_start_time <- Sys.time()
-    current_resources <- load_taxonomic_resources(stable_or_current_data = "current")
-
-    #> Loading resources into memory...
-    #> 
-    =========================================
-    ===================================================================================
-    ============================================================================================================================
-    #> ...done
-    current_end_time <-  Sys.time()
-
-    # Compare times
-    stable_end_time - stable_start_time
-    #> Time difference of 6.69976 secs
 
 For a more reproducible workflow, we recommend specifying the exact
 `stable` version you want to use.
@@ -116,13 +100,6 @@ For a more reproducible workflow, we recommend specifying the exact
 
 resources <- load_taxonomic_resources(stable_or_current_data = "stable", version = "2024-10-11")
 ```
-
-    #> Loading resources into memory...
-    #> 
-    =========================================
-    ===================================================================================
-    ============================================================================================================================
-    #> ...done
 
 ## Align and update plant taxon names
 
@@ -146,36 +123,31 @@ the section [Closer look at name alignment and updating with
 ``` r
 
 library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following object is masked from 'package:testthat':
-#> 
-#>     matches
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
 
 updated_gbif_names <- gbif_lite |> 
   pull(species) |> 
   create_taxonomic_update_lookup(resources = resources)
 #> Checking alignments of 121 taxa
-#>   -> of these 112 names have a perfect match to a scientific name in the APC. 
+#>   -> of these 112 names have a perfect match to an accepted scientific name in the APC, and 6 names have a perfect match to a synonym in the APC.
 #>       Alignments being sought for remaining names.
+#> Summary of 121 names:
+#>   -> 120 aligned to a species or infraspecific taxon (119 in the APC, 1 in the APNI only)
+#>   -> 1 aligned only to a genus and 0 only to a family
+#>   -> 0 could not be aligned
+#>   -> 4 aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)
+#>   -> 13 names could refer to more than one currently accepted taxon. With `taxonomic_splits = "most_likely_species"`, `suggested_name` gives the most likely species and lists the alternatives in square brackets.
 
 updated_gbif_names |> 
   print(n = 6)
 #> # A tibble: 129 × 12
-#>   original_name           aligned_name      accepted_name suggested_name genus taxon_rank taxonomic_dataset taxonomic_status
-#>   <chr>                   <chr>             <chr>         <chr>          <chr> <chr>      <chr>             <chr>           
-#> 1 Tetratheca ciliata      Tetratheca cilia… Tetratheca c… Tetratheca ci… Tetr… species    APC               accepted        
-#> 2 Peganum harmala         Peganum harmala   Peganum harm… Peganum harma… Pega… species    APC               accepted        
-#> 3 Calotis multicaulis     Calotis multicau… Calotis mult… Calotis multi… Calo… species    APC               accepted        
-#> 4 Leptospermum trinervium Leptospermum tri… Leptospermum… Leptospermum … Lept… species    APC               accepted        
-#> 5 Lepidosperma laterale   Lepidosperma lat… Lepidosperma… Lepidosperma … Lepi… species    APC               accepted        
-#> 6 Enneapogon polyphyllus  Enneapogon polyp… Enneapogon p… Enneapogon po… Enne… species    APC               accepted        
+#>   original_name           aligned_name  accepted_name suggested_name genus taxon_rank taxonomic_dataset taxonomic_status
+#>   <chr>                   <chr>         <chr>         <chr>          <chr> <chr>      <chr>             <chr>           
+#> 1 Tetratheca ciliata      Tetratheca c… Tetratheca c… Tetratheca ci… Tetr… species    APC               accepted        
+#> 2 Peganum harmala         Peganum harm… Peganum harm… Peganum harma… Pega… species    APC               accepted        
+#> 3 Calotis multicaulis     Calotis mult… Calotis mult… Calotis multi… Calo… species    APC               accepted        
+#> 4 Leptospermum trinervium Leptospermum… Leptospermum… Leptospermum … Lept… species    APC               accepted        
+#> 5 Lepidosperma laterale   Lepidosperma… Lepidosperma… Lepidosperma … Lepi… species    APC               accepted        
+#> 6 Enneapogon polyphyllus  Enneapogon p… Enneapogon p… Enneapogon po… Enne… species    APC               accepted        
 #> # ℹ 123 more rows
 #> # ℹ 4 more variables: scientific_name <chr>, aligned_reason <chr>, update_reason <chr>, number_of_collapsed_taxa <dbl>
 ```
@@ -208,41 +180,54 @@ Here is a breakdown of all possible values for `origin`
 
 ``` r
 
-library(purrr)
-#> 
-#> Attaching package: 'purrr'
-#> The following object is masked from 'package:testthat':
-#> 
-#>     is_null
 library(janitor)
-#> 
-#> Attaching package: 'janitor'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     chisq.test, fisher.test
 
 # Obtain unique values for establishment status
-status_matrix |> 
-  tidyr::pivot_longer(4:21) |>
+status_matrix |>
+  tidyr::pivot_longer(-c(family, species, taxon_ID)) |>
   filter(value != "not present") |>
   distinct(value)
-
-# value                            
-# <chr>                            
-#   1 native                           
-# 2 naturalised                      
-# 3 doubtfully naturalised           
-# 4 native and naturalised           
-# 5 formerly naturalised             
-# 6 presumed extinct                 
-# 7 uncertain origin                 
-# 8 native and uncertain origin      
-# 9 native and doubtfully naturalised
+#> # A tibble: 9 × 1
+#>   value                            
+#>   <chr>                            
+#> 1 native                           
+#> 2 naturalised                      
+#> 3 doubtfully naturalised           
+#> 4 native and naturalised           
+#> 5 formerly naturalised             
+#> 6 presumed extinct                 
+#> 7 uncertain origin                 
+#> 8 native and uncertain origin      
+#> 9 native and doubtfully naturalised
 ```
 
 ``` r
 
 status_matrix |> select(family, species, ACT:WA) |> print(n=20)
+#> # A tibble: 30,565 × 10
+#>    family      species                                           ACT         NSW     NT    Qld   SA    Tas   Vic   WA   
+#>    <chr>       <chr>                                             <chr>       <chr>   <chr> <chr> <chr> <chr> <chr> <chr>
+#>  1 Acanthaceae Acanthus ebracteatus                              not present not pr… nati… nati… not … not … not … nati…
+#>  2 Acanthaceae Acanthus ebracteatus subsp. ebarbatus             not present not pr… nati… nati… not … not … not … nati…
+#>  3 Acanthaceae Acanthus ilicifolius                              not present not pr… nati… nati… not … not … not … not …
+#>  4 Acanthaceae Acanthus mollis                                   not present natura… not … doub… natu… natu… natu… natu…
+#>  5 Acanthaceae Andrographis paniculata                           not present not pr… natu… doub… not … not … not … not …
+#>  6 Acanthaceae Asystasia alba                                    not present not pr… not … not … not … not … not … not …
+#>  7 Acanthaceae Asystasia australasica                            not present not pr… not … nati… not … not … not … not …
+#>  8 Acanthaceae Asystasia gangetica                               not present natura… natu… natu… not … not … not … natu…
+#>  9 Acanthaceae Asystasia gangetica subsp. gangetica              not present not pr… natu… natu… not … not … not … natu…
+#> 10 Acanthaceae Asystasia gangetica subsp. micrantha              not present not pr… not … natu… not … not … not … not …
+#> 11 Acanthaceae Asystasia sp. Flora of Australia (D.A.Powell 740) not present not pr… not … not … not … not … not … not …
+#> 12 Acanthaceae Asystasia sp. Newcastle Bay (L.J.Brass 18671)     not present not pr… not … nati… not … not … not … not …
+#> 13 Acanthaceae Asystasia sp. Phosphate Hill (D.A.Powell 787)     not present not pr… not … not … not … not … not … not …
+#> 14 Acanthaceae Avicennia integra                                 not present not pr… nati… not … not … not … not … not …
+#> 15 Acanthaceae Avicennia marina                                  not present native  nati… nati… nati… not … nati… nati…
+#> 16 Acanthaceae Avicennia marina subsp. australasica              not present native  not … nati… not … not … nati… not …
+#> 17 Acanthaceae Avicennia marina subsp. eucalyptifolia            not present not pr… nati… nati… not … not … not … nati…
+#> 18 Acanthaceae Avicennia marina subsp. marina                    not present not pr… not … not … nati… not … not … nati…
+#> 19 Acanthaceae Barleria cristata                                 not present not pr… not … natu… not … not … not … not …
+#> 20 Acanthaceae Barleria lupulina                                 not present not pr… natu… natu… not … not … not … natu…
+#> # ℹ 30,545 more rows
 ```
 
 You can also obtain the breakdown of species by established status for a
@@ -254,14 +239,14 @@ particular state/territory using
 state_diversity_counts("NSW", resources = resources)
 #> # A tibble: 7 × 3
 #>   origin                            state num_species
-#>   <chr>                             <chr> <table[1d]>
-#> 1 doubtfully naturalised            NSW     93       
-#> 2 formerly naturalised              NSW      8       
-#> 3 native                            NSW   5968       
-#> 4 native and doubtfully naturalised NSW      2       
-#> 5 native and naturalised            NSW     34       
-#> 6 naturalised                       NSW   1580       
-#> 7 presumed extinct                  NSW      8
+#>   <chr>                             <chr>       <int>
+#> 1 doubtfully naturalised            NSW            93
+#> 2 formerly naturalised              NSW             8
+#> 3 native                            NSW          5968
+#> 4 native and doubtfully naturalised NSW             2
+#> 5 native and naturalised            NSW            34
+#> 6 naturalised                       NSW          1580
+#> 7 presumed extinct                  NSW             8
 ```
 
 Using the established status data and state/territory information, we
@@ -270,16 +255,17 @@ can check if a plant taxa is a native using
 
 ``` r
 
-library(dplyr)
+set.seed(1)
 
-updated_gbif_names |> 
-  sample_n(1) |>  # Choosing a random species
+updated_gbif_names |>
+  filter(taxonomic_status == "accepted") |>
+  sample_n(1) |>  # Choosing a random accepted species
   pull(suggested_name) |> # Extracting this APC accepted name
-  native_anywhere_in_australia(resources = resources) 
+  native_anywhere_in_australia(resources = resources)
 #> # A tibble: 1 × 2
-#>   species             native_anywhere_in_aus
-#>   <chr>               <chr>                 
-#> 1 Lomandra longifolia native
+#>   species           native_anywhere_in_aus
+#>   <chr>             <chr>                 
+#> 1 Carex breviculmis native
 ```
 
 ## Closer look at name standardisation with ‘APCalign’
@@ -287,7 +273,6 @@ updated_gbif_names |>
 `create_taxonomic_update_lookup` is a simple, wrapper, function for
 novice users that want to quickly check and standardise taxon names. For
 more experienced users, you can take a look at the sub functions
-`match_taxa()`,
 [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md)
 and
 [`update_taxonomy()`](https://traitecoevo.github.io/APCalign/reference/update_taxonomy.md)
@@ -304,9 +289,9 @@ The function `align_taxa` will:
       `strip_names_extra` standardise infraspecific taxon designations
       and clean up punctuation and whitespaces
 2.  Find best alignment with APC or APNI to your taxonomic name using
-    our the function
-    [match_taxa](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
-    - A taxonomic name flows through a progression of [50 match
+    our [matching
+    algorithms](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
+    - A taxonomic name flows through a progression of [54 match
       algorithms](https://traitecoevo.github.io/APCalign/articles/updating-taxon-names.html)
       until it is able to be aligned to a name on either the APC or APNI
       list.  
@@ -324,7 +309,7 @@ The function `align_taxa` will:
       information/notes provided as part of the original name in square
       brackets, as in `Acacia sp. [skinny leaves]` or
       `Acacia sp. [Broken Hill]`
-4.  Determine the `taxonomic_reference` (APC or APNI) of each
+4.  Determine the `taxonomic_dataset` (APC or APNI) of each
     name-alignment.
 
 **Note** that `align_taxa` **does not** seek to update outdated
@@ -340,20 +325,20 @@ aligned_gbif_taxa <- gbif_lite |>
   pull(species) |> 
   align_taxa(resources = resources)
 #> Checking alignments of 121 taxa
-#>   -> of these 112 names have a perfect match to a scientific name in the APC. 
+#>   -> of these 112 names have a perfect match to an accepted scientific name in the APC, and 6 names have a perfect match to a synonym in the APC.
 #>       Alignments being sought for remaining names.
 
 aligned_gbif_taxa |> 
   print(n = 6)
 #> # A tibble: 129 × 7
-#>   original_name           cleaned_name            aligned_name    taxonomic_dataset taxon_rank aligned_reason alignment_code
-#>   <chr>                   <chr>                   <chr>           <chr>             <chr>      <chr>          <chr>         
-#> 1 Tetratheca ciliata      Tetratheca ciliata      Tetratheca cil… APC               species    Exact match o… match_01c_acc…
-#> 2 Peganum harmala         Peganum harmala         Peganum harmala APC               species    Exact match o… match_01c_acc…
-#> 3 Calotis multicaulis     Calotis multicaulis     Calotis multic… APC               species    Exact match o… match_01c_acc…
-#> 4 Leptospermum trinervium Leptospermum trinervium Leptospermum t… APC               species    Exact match o… match_01c_acc…
-#> 5 Lepidosperma laterale   Lepidosperma laterale   Lepidosperma l… APC               species    Exact match o… match_01c_acc…
-#> 6 Enneapogon polyphyllus  Enneapogon polyphyllus  Enneapogon pol… APC               species    Exact match o… match_01c_acc…
+#>   original_name           cleaned_name           aligned_name taxonomic_dataset taxon_rank aligned_reason alignment_code
+#>   <chr>                   <chr>                  <chr>        <chr>             <chr>      <chr>          <chr>         
+#> 1 Tetratheca ciliata      Tetratheca ciliata     Tetratheca … APC               species    Exact match o… match_01c_acc…
+#> 2 Peganum harmala         Peganum harmala        Peganum har… APC               species    Exact match o… match_01c_acc…
+#> 3 Calotis multicaulis     Calotis multicaulis    Calotis mul… APC               species    Exact match o… match_01c_acc…
+#> 4 Leptospermum trinervium Leptospermum trinervi… Leptospermu… APC               species    Exact match o… match_01c_acc…
+#> 5 Lepidosperma laterale   Lepidosperma laterale  Lepidosperm… APC               species    Exact match o… match_01c_acc…
+#> 6 Enneapogon polyphyllus  Enneapogon polyphyllus Enneapogon … APC               species    Exact match o… match_01c_acc…
 #> # ℹ 123 more rows
 ```
 
@@ -371,20 +356,20 @@ aligned_gbif_taxa |>
   tabyl() |> 
   tibble() 
 #> # A tibble: 6 × 4
-#>   `pull(aligned_gbif_taxa, aligned_reason)`                                                          n percent valid_percent
-#>   <chr>                                                                                          <int>   <dbl>         <dbl>
-#> 1 Exact match of taxon name to an APC-accepted canonical name once punctuation and filler words…   118 0.915         0.929  
-#> 2 Exact match of taxon name to an APC-known canonical name once punctuation and filler words ar…     6 0.0465        0.0472 
-#> 3 Exact match of taxon name to an APNI-listed canonical name once punctuation and filler words …     1 0.00775       0.00787
-#> 4 Exact match of the first two words of the taxon name to an APC-accepted canonical name (2024-…     1 0.00775       0.00787
-#> 5 Exact match of the first word of the taxon name to an APC-accepted genus (2024-11-14)              1 0.00775       0.00787
-#> 6 <NA>                                                                                               2 0.0155       NA
+#>   `pull(aligned_gbif_taxa, aligned_reason)`                                                      n percent valid_percent
+#>   <chr>                                                                                      <int>   <dbl>         <dbl>
+#> 1 Exact match of taxon name to an APC-accepted canonical name once punctuation and filler w…   118 0.915         0.929  
+#> 2 Exact match of taxon name to an APC-known canonical name once punctuation and filler word…     6 0.0465        0.0472 
+#> 3 Exact match of taxon name to an APNI-listed canonical name once punctuation and filler wo…     1 0.00775       0.00787
+#> 4 Exact match of the first two words of the taxon name to an APC-accepted canonical name (A…     1 0.00775       0.00787
+#> 5 Exact match of the first word of the taxon name to an APC-accepted genus (APC/APNI versio…     1 0.00775       0.00787
+#> 6 <NA>                                                                                           2 0.0155       NA
 ```
 
 #### Configuring matching precision and aligned output
 
 There are arguments in `align_taxa` that allows you to select which of
-the 50 matching algorithms are activated/deactivated and the degree of
+the 54 matching algorithms are activated/deactivated and the degree of
 fuzziness of the fuzzy matching function
 
 - `fuzzy_matches` turns fuzzy matching on / off (it defaults to
@@ -416,14 +401,14 @@ updated_gbif_taxa <- aligned_gbif_taxa |>
 updated_gbif_taxa |> 
   print(n = 6)
 #> # A tibble: 129 × 21
-#>   original_name         aligned_name accepted_name suggested_name genus family taxon_rank taxonomic_dataset taxonomic_status
-#>   <chr>                 <chr>        <chr>         <chr>          <chr> <chr>  <chr>      <chr>             <chr>           
-#> 1 Tetratheca ciliata    Tetratheca … Tetratheca c… Tetratheca ci… Tetr… Elaeo… species    APC               accepted        
-#> 2 Peganum harmala       Peganum har… Peganum harm… Peganum harma… Pega… Nitra… species    APC               accepted        
-#> 3 Calotis multicaulis   Calotis mul… Calotis mult… Calotis multi… Calo… Aster… species    APC               accepted        
-#> 4 Leptospermum trinerv… Leptospermu… Leptospermum… Leptospermum … Lept… Myrta… species    APC               accepted        
-#> 5 Lepidosperma laterale Lepidosperm… Lepidosperma… Lepidosperma … Lepi… Cyper… species    APC               accepted        
-#> 6 Enneapogon polyphyll… Enneapogon … Enneapogon p… Enneapogon po… Enne… Poace… species    APC               accepted        
+#>   original_name     aligned_name accepted_name suggested_name genus family taxon_rank taxonomic_dataset taxonomic_status
+#>   <chr>             <chr>        <chr>         <chr>          <chr> <chr>  <chr>      <chr>             <chr>           
+#> 1 Tetratheca cilia… Tetratheca … Tetratheca c… Tetratheca ci… Tetr… Elaeo… species    APC               accepted        
+#> 2 Peganum harmala   Peganum har… Peganum harm… Peganum harma… Pega… Nitra… species    APC               accepted        
+#> 3 Calotis multicau… Calotis mul… Calotis mult… Calotis multi… Calo… Aster… species    APC               accepted        
+#> 4 Leptospermum tri… Leptospermu… Leptospermum… Leptospermum … Lept… Myrta… species    APC               accepted        
+#> 5 Lepidosperma lat… Lepidosperm… Lepidosperma… Lepidosperma … Lepi… Cyper… species    APC               accepted        
+#> 6 Enneapogon polyp… Enneapogon … Enneapogon p… Enneapogon po… Enne… Poace… species    APC               accepted        
 #> # ℹ 123 more rows
 #> # ℹ 12 more variables: taxonomic_status_aligned <chr>, aligned_reason <chr>, update_reason <chr>, subclass <chr>,
 #> #   taxon_distribution <chr>, scientific_name <chr>, taxon_ID <chr>, taxon_ID_genus <chr>, scientific_name_ID <chr>,
@@ -505,9 +490,9 @@ aligned_gbif_taxa |>
                   resources = resources)  |> 
   filter(original_name == "Acacia aneura")  # Subsetting Acacia aneura as an example 
 #> # A tibble: 1 × 21
-#>   original_name aligned_name  accepted_name suggested_name        genus family taxon_rank taxonomic_dataset taxonomic_status
-#>   <chr>         <chr>         <chr>         <chr>                 <chr> <chr>  <chr>      <chr>             <chr>           
-#> 1 Acacia aneura Acacia aneura Acacia aneura Acacia aneura [alter… Acac… Fabac… species    APC               accepted        
+#>   original_name aligned_name  accepted_name suggested_name    genus family taxon_rank taxonomic_dataset taxonomic_status
+#>   <chr>         <chr>         <chr>         <chr>             <chr> <chr>  <chr>      <chr>             <chr>           
+#> 1 Acacia aneura Acacia aneura Acacia aneura Acacia aneura [a… Acac… Fabac… species    APC               accepted        
 #> # ℹ 12 more variables: taxonomic_status_aligned <chr>, aligned_reason <chr>, update_reason <chr>, subclass <chr>,
 #> #   taxon_distribution <chr>, scientific_name <chr>, taxon_ID <chr>, taxon_ID_genus <chr>, scientific_name_ID <chr>,
 #> #   canonical_name <chr>, row_number <dbl>, number_of_collapsed_taxa <dbl>
@@ -520,11 +505,11 @@ aligned_gbif_taxa |>
                   resources = resources)  |> 
   filter(original_name == "Acacia aneura") # Subsetting Acacia aneura as an example
 #> # A tibble: 3 × 21
-#>   original_name aligned_name  accepted_name    suggested_name   genus  family  taxon_rank taxonomic_dataset taxonomic_status
-#>   <chr>         <chr>         <chr>            <chr>            <chr>  <chr>   <chr>      <chr>             <chr>           
-#> 1 Acacia aneura Acacia aneura Acacia aneura    Acacia aneura    Acacia Fabace… species    APC               accepted        
-#> 2 Acacia aneura Acacia aneura Acacia minyura   Acacia minyura   Acacia Fabace… species    APC               accepted        
-#> 3 Acacia aneura Acacia aneura Acacia paraneura Acacia paraneura Acacia Fabace… species    APC               accepted        
+#>   original_name aligned_name  accepted_name    suggested_name genus family taxon_rank taxonomic_dataset taxonomic_status
+#>   <chr>         <chr>         <chr>            <chr>          <chr> <chr>  <chr>      <chr>             <chr>           
+#> 1 Acacia aneura Acacia aneura Acacia aneura    Acacia aneura  Acac… Fabac… species    APC               accepted        
+#> 2 Acacia aneura Acacia aneura Acacia minyura   Acacia minyura Acac… Fabac… species    APC               accepted        
+#> 3 Acacia aneura Acacia aneura Acacia paraneura Acacia parane… Acac… Fabac… species    APC               accepted        
 #> # ℹ 12 more variables: taxonomic_status_aligned <chr>, aligned_reason <chr>, update_reason <chr>, subclass <chr>,
 #> #   taxon_distribution <chr>, scientific_name <chr>, taxon_ID <chr>, taxon_ID_genus <chr>, scientific_name_ID <chr>,
 #> #   canonical_name <chr>, row_number <dbl>, number_of_collapsed_taxa <dbl>
@@ -537,9 +522,9 @@ aligned_gbif_taxa |>
                   resources = resources)  |> 
   filter(original_name == "Acacia aneura") # Subsetting Acacia aneura as an example
 #> # A tibble: 1 × 21
-#>   original_name aligned_name  accepted_name suggested_name        genus family taxon_rank taxonomic_dataset taxonomic_status
-#>   <chr>         <chr>         <chr>         <chr>                 <chr> <chr>  <chr>      <chr>             <chr>           
-#> 1 Acacia aneura Acacia aneura Acacia sp.    Acacia sp. [collapse… Acac… Fabac… species    APC               accepted        
+#>   original_name aligned_name  accepted_name suggested_name    genus family taxon_rank taxonomic_dataset taxonomic_status
+#>   <chr>         <chr>         <chr>         <chr>             <chr> <chr>  <chr>      <chr>             <chr>           
+#> 1 Acacia aneura Acacia aneura Acacia sp.    Acacia sp. [coll… Acac… Fabac… species    APC               accepted        
 #> # ℹ 12 more variables: taxonomic_status_aligned <chr>, aligned_reason <chr>, update_reason <chr>, subclass <chr>,
 #> #   taxon_distribution <chr>, scientific_name <chr>, taxon_ID <chr>, taxon_ID_genus <chr>, scientific_name_ID <chr>,
 #> #   canonical_name <chr>, row_number <dbl>, number_of_collapsed_taxa <dbl>
@@ -559,34 +544,33 @@ taxon name and want to indicate part names that apply, to document the
 links or to efficiently search the literature.
 
 ``` r
-> names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
-> synonyms_for_accepted_names(resources = resources, accepted_names = names_to_check, collapse = TRUE)
 
-# A tibble: 4 × 8
-#  family       accepted_name        synonyms                                                                                                                           taxon_rank name_type scientific_name accepted_name_usage_ID genus
-#  <chr>        <chr>                <chr>                                                                                                                              <chr>      <chr>     <chr>           <chr>                  <chr>
-#1 Brassicaceae Cardamine gunnii     Cardamine hirsuta var. heterophylla (taxonomic synonym); Cardamine hirsuta var. debilis (taxonomic synonym); Cardamine gunnii, ty… species    scientif… Cardamine gunn… https://id.biodiversi… Card…
-#2 Fabaceae     Acacia aneura        Acacia aneura var. intermedia (taxonomic synonym); Racosperma aneurum var. intermedium (taxonomic synonym); Acacia aneura var. (N… species    scientif… Acacia aneura … https://id.biodiversi… Acac…
-#3 Proteaceae   Banksia nivea        Dryandra nivea var. venosa (taxonomic synonym); Josephia rachidifolia (taxonomic synonym); Dryandra nivea var. adscendens (taxono… species    scientif… Banksia nivea … https://id.biodiversi… Bank…
-#4 Proteaceae   Stenocarpus sinuatus Agnostus sinuatus (taxonomic synonym); Agnostus sinuata (taxonomic synonym); Stenocarpus sinuosus var. intergrifolius (taxonomic … species    scientif… Stenocarpus si… https://id.biodiversi… Sten…
+names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
+synonyms_for_accepted_names(resources = resources, accepted_names = names_to_check, collapse = TRUE)
+#> # A tibble: 4 × 5
+#>   family       accepted_name        synonyms                                      scientific_name accepted_name_usage_ID
+#>   <chr>        <chr>                <chr>                                         <chr>           <chr>                 
+#> 1 Brassicaceae Cardamine gunnii     Cardamine hirsuta var. heterophylla (taxonom… Cardamine gunn… https://id.biodiversi…
+#> 2 Fabaceae     Acacia aneura        Acacia aneura var. intermedia (taxonomic syn… Acacia aneura … https://id.biodiversi…
+#> 3 Proteaceae   Banksia nivea        Dryandra nivea var. venosa (taxonomic synony… Banksia nivea … https://id.biodiversi…
+#> 4 Proteaceae   Stenocarpus sinuatus Agnostus sinuatus (taxonomic synonym); Agnos… Stenocarpus si… https://id.biodiversi…
 ```
 
 ``` r
-names_to_check <- c("Acacia aneura", "Banksia nivea", "Cardamine gunnii", "Stenocarpus sinuatus")
-> synonyms_for_accepted_names(resources = resources, accepted_names = names_to_check, collapse = FALSE)
-# A tibble: 25 × 9
-#    family       accepted_name    synonym                                            taxonomic_status      taxon_rank name_type  scientific_name                  accepted_name_usage_ID                           genus    
-#    <chr>        <chr>            <chr>                                              <fct>                 <chr>      <chr>      <chr>                            <chr>                                            <chr>    
-#  1 Brassicaceae Cardamine gunnii Cardamine hirsuta var. heterophylla                taxonomic synonym     species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine
-#  2 Brassicaceae Cardamine gunnii Cardamine hirsuta var. debilis                     taxonomic synonym     species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine
-#  3 Brassicaceae Cardamine gunnii Cardamine gunnii, type variant                     nomenclatural synonym species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine
-#  4 Brassicaceae Cardamine gunnii Cardamine heterophylla var. heterophylla           nomenclatural synonym species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine
-#  5 Brassicaceae Cardamine gunnii Cardamine heterophylla                             nomenclatural synonym species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine
-#  6 Brassicaceae Cardamine gunnii Cardamine debilis                                  misapplied            species    scientific Cardamine gunnii Hewson          https://id.biodiversity.org.au/node/apni/2886061 Cardamine
-#  7 Fabaceae     Acacia aneura    Acacia aneura var. intermedia                      taxonomic synonym     species    scientific Acacia aneura F.Muell. ex Benth. https://id.biodiversity.org.au/node/apni/6707550 Acacia   
-#  8 Fabaceae     Acacia aneura    Racosperma aneurum var. intermedium                taxonomic synonym     species    scientific Acacia aneura F.Muell. ex Benth. https://id.biodiversity.org.au/node/apni/6707550 Acacia   
-#  9 Fabaceae     Acacia aneura    Acacia aneura var. (Napperby S.L.Everist 4226)     taxonomic synonym     species    scientific Acacia aneura F.Muell. ex Benth. https://id.biodiversity.org.au/node/apni/6707550 Acacia   
-# 10 Fabaceae     Acacia aneura    Acacia aneura var. (Thargomindah D.E.Boyland 8099) taxonomic synonym     species    scientific Acacia aneura F.Muell. ex Benth. https://id.biodiversity.org.au/node/apni/6707550 Acacia   
-# ℹ 15 more rows
-# ℹ Use `print(n = ...)` to see more rows
+
+synonyms_for_accepted_names(resources = resources, accepted_names = names_to_check, collapse = FALSE)
+#> # A tibble: 25 × 7
+#>    family       accepted_name    synonym                taxonomic_status scientific_name accepted_name_usage_ID taxon_ID
+#>    <chr>        <chr>            <chr>                  <fct>            <chr>           <chr>                  <chr>   
+#>  1 Brassicaceae Cardamine gunnii Cardamine hirsuta var… taxonomic synon… Cardamine gunn… https://id.biodiversi… https:/…
+#>  2 Brassicaceae Cardamine gunnii Cardamine hirsuta var… taxonomic synon… Cardamine gunn… https://id.biodiversi… https:/…
+#>  3 Brassicaceae Cardamine gunnii Cardamine gunnii, typ… nomenclatural s… Cardamine gunn… https://id.biodiversi… https:/…
+#>  4 Brassicaceae Cardamine gunnii Cardamine heterophyll… nomenclatural s… Cardamine gunn… https://id.biodiversi… https:/…
+#>  5 Brassicaceae Cardamine gunnii Cardamine heterophylla nomenclatural s… Cardamine gunn… https://id.biodiversi… https:/…
+#>  6 Brassicaceae Cardamine gunnii Cardamine debilis      misapplied       Cardamine gunn… https://id.biodiversi… https:/…
+#>  7 Fabaceae     Acacia aneura    Acacia aneura var. in… taxonomic synon… Acacia aneura … https://id.biodiversi… https:/…
+#>  8 Fabaceae     Acacia aneura    Racosperma aneurum va… taxonomic synon… Acacia aneura … https://id.biodiversi… https:/…
+#>  9 Fabaceae     Acacia aneura    Acacia aneura var. (N… taxonomic synon… Acacia aneura … https://id.biodiversi… https:/…
+#> 10 Fabaceae     Acacia aneura    Acacia aneura var. (T… taxonomic synon… Acacia aneura … https://id.biodiversi… https:/…
+#> # ℹ 15 more rows
 ```

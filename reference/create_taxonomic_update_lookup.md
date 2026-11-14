@@ -22,7 +22,8 @@ create_taxonomic_update_lookup(
   APNI_matches = TRUE,
   imprecise_fuzzy_matches = FALSE,
   identifier = NA_character_,
-  resources = load_taxonomic_resources(quiet = quiet),
+  resources = load_taxonomic_resources(stable_or_current_data = stable_or_current_data,
+    version = version, quiet = quiet),
   quiet = FALSE,
   output = NULL
 )
@@ -38,17 +39,22 @@ create_taxonomic_update_lookup(
 - stable_or_current_data:
 
   either "stable" for a consistent version, or "current" for the leading
-  edge version.
+  edge version. Passed to
+  [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
+  when `resources` is not given.
 
 - version:
 
-  The version number of the dataset to use.
+  The version number of the dataset to use. Passed to
+  [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
+  when `resources` is not given; when it is, the version is that of
+  `resources`.
 
 - taxonomic_splits:
 
-  How to handle one_to_many taxonomic matches. Default is "return_all".
-  The other options are "collapse_to_higher_taxon" and
-  "most_likely_species". most_likely_species defaults to the
+  How to handle one_to_many taxonomic matches. Default is
+  "most_likely_species". The other options are "return_all" and
+  "collapse_to_higher_taxon". most_likely_species defaults to the
   original_name if that name is accepted by the APC; this will be right
   for certain species subsets, but make errors in other cases, use with
   caution.
@@ -76,7 +82,7 @@ create_taxonomic_update_lookup(
 
 - APNI_matches:
 
-  Name matches to the APNI (Australian Plant Names Index) are turned off
+  Name matches to the APNI (Australian Plant Names Index) are turned on
   as a default.
 
 - imprecise_fuzzy_matches:
@@ -90,7 +96,9 @@ create_taxonomic_update_lookup(
 
 - identifier:
 
-  A dataset, location or other identifier, which defaults to NA.
+  A dataset, location or other identifier, added to the aligned names of
+  taxa only aligned to a genus or family. Either a single value or one
+  value per name; defaults to NA.
 
 - resources:
 
@@ -110,16 +118,23 @@ create_taxonomic_update_lookup(
 
 - output:
 
-  file path to save the output. If this file already exists, this
-  function will check if it's a subset of the species passed in and try
-  to add to this file. This can be useful for large and growing
-  projects. Requires the 'readr' package.
+  (optional) A CSV file in which to keep the lookup, so that names are
+  only looked up once. If the file already exists (written by an earlier
+  call), names already in it (for the same `identifier`) are read from
+  it rather than looked up again, and the new names are added to it.
+  This can be useful for large and growing projects. The file does not
+  record the other arguments, so use the same settings and `resources`
+  with a given file. Requires the 'readr' package.
 
 ## Value
 
 A lookup table containing the accepted and suggested names for each
 original name input, and additional taxonomic information such as taxon
-rank, taxonomic status, taxon IDs and genera.
+rank, taxonomic status, taxon IDs and genera. With `full = FALSE` (the
+default) the columns are original_name, aligned_name, accepted_name,
+suggested_name, genus, taxon_rank, taxonomic_dataset, taxonomic_status,
+scientific_name, aligned_reason, update_reason, number_of_collapsed_taxa
+and chars_changed; `full = TRUE` adds the others below.
 
 - original_name: the original plant name.
 
@@ -129,7 +144,7 @@ rank, taxonomic status, taxon IDs and genera.
 - accepted_name: the APC-accepted plant name, when available.
 
 - suggested_name: the suggested plant name to use. Identical to the
-  accepted_name, when an accepted_name exists; otherwise the the
+  accepted_name, when an accepted_name exists; otherwise the
   suggested_name is the aligned_name.
 
 - genus: the genus of the accepted (or suggested) name; only
@@ -160,8 +175,8 @@ rank, taxonomic status, taxon IDs and genera.
 - taxon_distribution: the distribution of the accepted name; only filled
   in if an APC accepted_name is available.
 
-- scientific_name_authorship: the authorship information for the
-  accepted (or synonymous) name; available for both APC and APNI names.
+- scientific_name: the scientific name, with authorship, of the accepted
+  (or synonymous) name; available for both APC and APNI names.
 
 - taxon_ID: the unique taxon concept identifier for the accepted_name;
   only filled in if an APC accepted_name is available.
@@ -172,6 +187,8 @@ rank, taxonomic status, taxon IDs and genera.
 - scientific_name_ID: an identifier for the nomenclatural (not
   taxonomic) details of a scientific name; available for both APC and
   APNI names.
+
+- canonical_name: a copy of suggested_name.
 
 - row_number: the row number of a specific original_name in the input.
 
@@ -200,9 +217,10 @@ Notes:
   `resources <- load_taxonomic_resources()`, then add the argument
   resources = resources
 
-- The name Banksia cerrata does not align as the fuzzy matching
-  algorithm does not allow the first letter of the genus and species
-  epithet to change.
+- The name Banksia cerrata only aligns to the genus
+  (`Banksia sp. \[Banksia cerrata]`), as the fuzzy matching algorithm
+  does not allow the first letter of the genus or species epithet to
+  change.
 
 - The argument taxonomic_splits allows you to choose the outcome for
   updating the names of taxa with ambiguous taxonomic histories; this

@@ -63,10 +63,6 @@ create_taxonomic_update_lookup(
     "Commersonia rosea"
     )
 )
-```
-
-``` R
-#> ================================================================================================================================================================
 #> # A tibble: 3 × 12
 #>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
 #>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
@@ -150,14 +146,14 @@ means:
 state_diversity_counts("NSW", resources = tax_resources)
 #> # A tibble: 7 × 3
 #>   origin                            state num_species
-#>   <chr>                             <chr> <table[1d]>
-#> 1 doubtfully naturalised            NSW     95       
-#> 2 formerly naturalised              NSW      8       
-#> 3 native                            NSW   5982       
-#> 4 native and doubtfully naturalised NSW      2       
-#> 5 native and naturalised            NSW     34       
-#> 6 naturalised                       NSW   1586       
-#> 7 presumed extinct                  NSW      9
+#>   <chr>                             <chr>       <int>
+#> 1 doubtfully naturalised            NSW            95
+#> 2 formerly naturalised              NSW             8
+#> 3 native                            NSW          5982
+#> 4 native and doubtfully naturalised NSW             2
+#> 5 native and naturalised            NSW            34
+#> 6 naturalised                       NSW          1586
+#> 7 presumed extinct                  NSW             9
 ```
 
 The related function
@@ -226,8 +222,8 @@ citation("APCalign")
 #>   Wenk E, Cornwell W, Fuchs A, Kar F, Monro A, Sauquet H, Stephens R,
 #>   Falster D (2024). "APCalign: an R package workflow and app for
 #>   aligning and updating flora names to the Australian Plant Census."
-#>   _Australian Journal of Botany_, *72*(4). R package version: 2.0.1,
-#>   <https://doi.org/10.1071/BT24014>.
+#>   _Australian Journal of Botany_, *72*(4). R package version:
+#>   2.0.1.9000, <https://doi.org/10.1071/BT24014>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -239,7 +235,7 @@ citation("APCalign")
 #>     number = {4},
 #>     year = {2024},
 #>     publisher = {CSIRO Publishing},
-#>     note = {R package version: 2.0.1},
+#>     note = {R package version: 2.0.1.9000},
 #>     url = {https://doi.org/10.1071/BT24014},
 #>   }
 ```

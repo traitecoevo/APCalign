@@ -21,12 +21,16 @@ load_taxonomic_resources(
   Type of dataset to access. The default is "stable", which loads the
   dataset from a github archived file. If set to "current", the dataset
   will be loaded from a URL which is the cutting edge version, but this
-  may change at any time without notice.
+  may change at any time without notice. Loading "current" data requires
+  the 'readr' package.
 
 - version:
 
-  The version number of the dataset to use. Defaults to the default
-  version.
+  The version number of the dataset to use (see
+  [`get_versions()`](https://traitecoevo.github.io/APCalign/reference/get_versions.md)).
+  Defaults to
+  [`default_version()`](https://traitecoevo.github.io/APCalign/reference/default_version.md),
+  the most recent release. Ignored for "current" data.
 
 - quiet:
 
@@ -57,22 +61,23 @@ writes it into each `aligned_reason`.
 
 - `"current"` data is not cached because it may change between calls.
 
+- Stable versions are downloaded once and kept in
+  `tools::R_user_dir("APCalign")`, so later sessions, and sessions
+  without an internet connection, can load them without downloading
+  again. Each version takes about 20 MB; delete the files there to
+  remove versions you no longer need.
+
 ## Examples
 
 ``` r
 # \donttest{
 load_taxonomic_resources(stable_or_current_data="stable", 
 version="2024-10-11")# }
-#> Downloading...
+#> Downloading apc.parquet...
 #> File downloaded successfully.
+#> Downloading apni.parquet...
 #> File downloaded successfully.
-#> 
-
 #> Loading resources into memory...
-#> 
-===========================
-=====================================================
-================================================================================
 #> ...done
 #> $APC
 #> # A tibble: 109,883 × 38
@@ -216,7 +221,7 @@ version="2024-10-11")# }
 #> #   taxonomic_dataset <chr>
 #> 
 #> $genera_APNI
-#> # A tibble: 1,228 × 8
+#> # A tibble: 1,227 × 8
 #>    canonical_name scientific_name  taxonomic_status scientific_name_ID name_type
 #>    <chr>          <chr>            <chr>            <chr>              <chr>    
 #>  1 Hemiadelphis   Hemiadelphis Ne… unplaced         https://id.biodiv… scientif…
@@ -229,11 +234,11 @@ version="2024-10-11")# }
 #>  8 Austrogramme   Austrogramme E.… unplaced         https://id.biodiv… scientif…
 #>  9 Neurogramme    Neurogramme Die… unplaced         https://id.biodiv… scientif…
 #> 10 Chlamydia      Chlamydia Gaert… unplaced         https://id.biodiv… scientif…
-#> # ℹ 1,218 more rows
+#> # ℹ 1,217 more rows
 #> # ℹ 3 more variables: taxon_rank <chr>, genus <chr>, taxonomic_dataset <chr>
 #> 
 #> $genera_all
-#> # A tibble: 7,179 × 12
+#> # A tibble: 7,178 × 12
 #>    canonical_name accepted_name_usage accepted_name_usage_ID     scientific_name
 #>    <chr>          <chr>               <chr>                      <chr>          
 #>  1 Cycas          Cycas L.            https://id.biodiversity.o… Cycas L.       
@@ -246,7 +251,7 @@ version="2024-10-11")# }
 #>  8 Lycopodiella   Lycopodiella Holub  https://id.biodiversity.o… Lycopodiella H…
 #>  9 Lycopodium     Lycopodium L.       https://id.biodiversity.o… Lycopodium L.  
 #> 10 Phlegmariurus  Phlegmariurus Holub https://id.biodiversity.o… Phlegmariurus …
-#> # ℹ 7,169 more rows
+#> # ℹ 7,168 more rows
 #> # ℹ 8 more variables: taxonomic_status <chr>, taxon_ID <chr>,
 #> #   scientific_name_ID <chr>, name_type <chr>, taxon_rank <chr>, genus <chr>,
 #> #   taxonomic_dataset <chr>, cleaned_name <chr>

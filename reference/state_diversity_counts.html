@@ -23,7 +23,7 @@ and more complicated species origins"></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/articles/data-providers.html">Data sources (APC &amp; APNI)</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/data-providers.html">Data sources (APC &amp; APNI)</a></li>
     <li><a class="dropdown-item" href="../articles/updating-taxon-names.html">Taxon matching</a></li>
     <li><a class="dropdown-item" href="../articles/reproducibility.html">Using APC versions for reproducibility</a></li>
   </ul></li>
@@ -67,7 +67,7 @@ and more complicated species origins</p>
 <dd><p>A character string indicating the Australian state or
 territory to calculate the diversity for. Possible values are "NSW", "NT",
 "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI",
-"MDI", "CoI", "CSI", and "AR".</p></dd>
+"MDI", "CoI", "CSI", "AR" and "CaI".</p></dd>
 
 
 <dt id="arg-resources">resources<a class="anchor" aria-label="anchor" href="#arg-resources"></a></dt>
@@ -103,14 +103,14 @@ species, "state" indicating the Australian state or territory, and
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached taxonomic resources.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   origin                            state num_species</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;table[1d]&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> doubtfully naturalised            NSW     95       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> formerly naturalised              NSW      8       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> native                            NSW   5982       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> native and doubtfully naturalised NSW      2       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> native and naturalised            NSW     34       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> naturalised                       NSW   1586       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> presumed extinct                  NSW      9       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> doubtfully naturalised            NSW            95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> formerly naturalised              NSW             8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> native                            NSW          <span style="text-decoration: underline;">5</span>982</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> native and doubtfully naturalised NSW             2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> native and naturalised            NSW            34</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> naturalised                       NSW          <span style="text-decoration: underline;">1</span>586</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> presumed extinct                  NSW             9</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

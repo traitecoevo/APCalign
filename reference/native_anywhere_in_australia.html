@@ -21,7 +21,7 @@ Australia according to the APC."></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/articles/data-providers.html">Data sources (APC &amp; APNI)</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/data-providers.html">Data sources (APC &amp; APNI)</a></li>
     <li><a class="dropdown-item" href="../articles/updating-taxon-names.html">Taxon matching</a></li>
     <li><a class="dropdown-item" href="../articles/reproducibility.html">Using APC versions for reproducibility</a></li>
   </ul></li>
@@ -68,8 +68,8 @@ If not provided, the function will load default taxonomic resources using the
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A tibble with two columns: <code>species</code>, which is the same as the unique values of
-the input <code>species</code>, and <code>native_anywhere_in_aus</code>, a vector indicating whether each
+    <p>A tibble with one row per input name and two columns: <code>species</code>, the
+input <code>species</code>, and <code>native_anywhere_in_aus</code>, a vector indicating whether each
 species is native anywhere in Australia, introduced by humans from elsewhere, or
 unknown with respect to the APC resource.</p>
     </div>
@@ -94,7 +94,7 @@ within-Australia invasions, use <a href="create_species_state_origin_matrix.html
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">native_anywhere_in_australia</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus globulus"</span>,<span class="st">"Pinus radiata"</span>,<span class="st">"Banksis notaspecies"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using cached taxonomic resources.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one input not found in APC; consider using `create_taxonomic_update_lookup` first and ensure you've correctly specified the `include_infrataxa` parameter.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one input not found in APC; consider using `create_taxonomic_update_lookup` first.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   species             native_anywhere_in_aus</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 </span>

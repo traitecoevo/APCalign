@@ -1,6 +1,6 @@
 # Data Providers
 
-![](man/data_providers.png)
+![](data_providers.png)
 
 ## Australian Plant Census (APC)
 

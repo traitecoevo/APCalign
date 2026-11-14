@@ -2,6 +2,84 @@
 
 ## APCalign (development version)
 
+- [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
+  now uses its `version` and `stable_or_current_data` arguments. They
+  were documented but never passed on, so the resources loaded were
+  always the default version: `version = "2024-10-11"` was silently
+  ignored.
+- [`default_version()`](https://traitecoevo.github.io/APCalign/reference/default_version.md)
+  no longer gives up when the GitHub API can’t be reached while the
+  internet can. The API allows 60 unauthenticated requests an hour, and
+  once that was used up (easily, on a shared network or in CI)
+  [`default_version()`](https://traitecoevo.github.io/APCalign/reference/default_version.md)
+  returned `NULL`, so every function loading resources by default
+  returned `NULL` with “No internet connection”, even with the data
+  already downloaded. It now falls back to the most recent locally
+  downloaded version, as it already did offline, and says why. It also
+  asks the API only once per R session.
+  [`get_versions()`](https://traitecoevo.github.io/APCalign/reference/get_versions.md)
+  and
+  [`default_version()`](https://traitecoevo.github.io/APCalign/reference/default_version.md)
+  list only releases that hold the parquet files
+  [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
+  downloads (the 2020-05-14 and 2023-02-28 releases are CSV only).
+- [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
+  no longer leaves a partly downloaded file in its cache when a download
+  fails, which was then read as the cached copy on every later call. A
+  failed download now returns `NULL` with a message, as documented,
+  rather than an error. `stable_or_current_data = "current"` no longer
+  needs the GitHub API to be reachable. The progress bar goes to stderr,
+  with the messages, and is not shown when `quiet = TRUE`.
+- The `output` argument of
+  [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md)
+  and
+  [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
+  now works as documented: a second call with the same file reads the
+  names already there and adds the new ones. Before,
+  [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md)
+  stopped with “not in the right format” on its own file, and
+  [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
+  overwrote the file with just the current names. The file now also
+  records each name’s `identifier`, and is keyed by name and identifier,
+  so the same name with another identifier is looked up afresh. Files
+  written by earlier versions can be reused: their names are read as
+  having no identifier. The other arguments are not recorded, so use the
+  same settings with a given file. When every name is already in the
+  file, the closing summary is not printed.
+- [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md)
+  and
+  [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
+  return one row per input name for any input, including input that is
+  all missing or blank (which returned no rows), and accept a logical
+  all-`NA` vector (what an empty spreadsheet column reads in as), which
+  was an error. `identifier` must be a single value or one per name,
+  with a clear error otherwise. Columns of
+  [`update_taxonomy()`](https://traitecoevo.github.io/APCalign/reference/update_taxonomy.md)
+  output are always their documented type (an all-`NA` column was
+  logical).
+- [`standardise_names()`](https://traitecoevo.github.io/APCalign/reference/standardise_names.md)
+  no longer joins the words either side of `ss`, `s.lat.` or `s.str.`
+  (`"Acacia dealbata s.lat. Royal NP"` became
+  `"Acacia dealbataRoyal NP"`), and now also removes `s.lat.` and
+  `s.str.` at the end of a name. (Leading digits are still removed, so
+  numbered lists still align; they were removed only by accident before,
+  through a character range, `+-=`, that also covered the digits.)
+- Family names that do not end in “-aceae” (Leguminosae) no longer align
+  as an APNI genus: APNI has a genus-rank record “Leguminosae
+  (=RFK/2760)”. They now align as APC family synonyms, like Compositae.
+- [`state_diversity_counts()`](https://traitecoevo.github.io/APCalign/reference/state_diversity_counts.md)
+  returns `num_species` as integers rather than a `table` column, and
+  its error for an unknown state names the argument.
+- Documentation corrections: the defaults of `taxonomic_splits` and
+  `APNI_matches` in
+  [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md);
+  the output columns of
+  [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md),
+  [`update_taxonomy()`](https://traitecoevo.github.io/APCalign/reference/update_taxonomy.md)
+  and
+  [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
+  (`scientific_name`, not `scientific_name_authorship`); and the main
+  vignette, rebuilt against the current code.
 - [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md),
   [`update_taxonomy()`](https://traitecoevo.github.io/APCalign/reference/update_taxonomy.md)
   and
@@ -50,19 +128,20 @@
   [`load_taxonomic_resources()`](https://traitecoevo.github.io/APCalign/reference/load_taxonomic_resources.md)
   have no such attribute, and their `aligned_reason` then carries no
   suffix ([\#281](https://github.com/traitecoevo/APCalign/issues/281)).
-- APCalign no longer imports `stringr`, `stringi` or `purrr`; they move
-  to `Suggests` (the tests and vignettes still use them). `stringi`
-  bundles the ICU library and was the largest single download when
-  APCalign runs in a web browser through webR (14 MB of about 51 MB).
-  The string handling is now base R, through small internal helpers in
-  `R/strings.R` that reproduce the `stringr` behaviour APCalign relied
-  on: missing values stay missing, and `stringr`’s ICU regular
-  expressions are written as Perl ones with Unicode properties
-  (`[:alpha:]` becomes `\p{L}`, `[:punct:]` becomes `\p{P}`, which is
-  not the same as base R’s `[[:punct:]]`). Transliteration to ASCII and
-  ICU’s lower, title and sentence case use character tables generated
-  once from `stringi` by `data-raw/ascii_table.R` and stored in
-  `R/sysdata.rda`. Output is unchanged:
+- APCalign no longer imports `stringr`, `stringi` or `purrr`. `stringr`
+  and `stringi` move to `Suggests`, for the tests; `purrr` is no longer
+  used. `stringi` bundles the ICU library and was the largest single
+  download when APCalign runs in a web browser through webR (14 MB of
+  about 51 MB). The string handling is now base R, through small
+  internal helpers in `R/strings.R` that reproduce the `stringr`
+  behaviour APCalign relied on: missing values stay missing, and
+  `stringr`’s ICU regular expressions are written as Perl ones with
+  Unicode properties (`[:alpha:]` becomes `\p{L}`, `[:punct:]` becomes
+  `\p{P}`, which is not the same as base R’s `[[:punct:]]`).
+  Transliteration to ASCII and ICU’s lower, title and sentence case use
+  character tables generated once from `stringi` by
+  `data-raw/ascii_table.R` and stored in `R/sysdata.rda`. Output is
+  unchanged:
   [`standardise_names()`](https://traitecoevo.github.io/APCalign/reference/standardise_names.md),
   [`strip_names()`](https://traitecoevo.github.io/APCalign/reference/strip_names.md),
   [`strip_names_extra()`](https://traitecoevo.github.io/APCalign/reference/strip_names_extra.md),

@@ -33,7 +33,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/articles/data-providers.html">Data sources (APC &amp; APNI)</a></li>
+<li><a class="dropdown-item" href="../articles/data-providers.html">Data sources (APC &amp; APNI)</a></li>
     <li><a class="dropdown-item" href="../articles/updating-taxon-names.html">Taxon matching</a></li>
     <li><a class="dropdown-item" href="../articles/reproducibility.html">Using APC versions for reproducibility</a></li>
   </ul>
@@ -124,29 +124,29 @@ version of taxonomic resources more explicit in your code.</p>
 <p>To ensure the specific version of taxonomic resources is available
 for subsequent functions make sure to assign them to an object:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">resources_0.0.4.9000</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">resources_2024_10_11</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span></span>
 <span>  stable_or_current_data <span class="op">=</span> <span class="st">"stable"</span>,</span>
-<span>  version <span class="op">=</span> <span class="st">"0.0.4.9000"</span></span>
+<span>  version <span class="op">=</span> <span class="st">"2024-10-11"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Then during alignment and update, make sure you supply your version
 of taxonomic resources using the <code>resources</code> argument:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Align taxa</span></span>
-<span><span class="va">aligned_taxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/align_taxa.html">align_taxa</a></span><span class="op">(</span><span class="va">gbif_lite</span><span class="op">$</span><span class="va">species</span>, resources <span class="op">=</span> <span class="va">resources_0.0.4.9000</span><span class="op">)</span></span>
+<span><span class="va">aligned_taxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/align_taxa.html">align_taxa</a></span><span class="op">(</span><span class="va">gbif_lite</span><span class="op">$</span><span class="va">species</span>, resources <span class="op">=</span> <span class="va">resources_2024_10_11</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Update taxonomy </span></span>
-<span><span class="va">updated_taxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/update_taxonomy.html">update_taxonomy</a></span><span class="op">(</span><span class="va">aligned_taxa</span>, resources <span class="op">=</span> <span class="va">resources_0.0.4.9000</span><span class="op">)</span></span>
+<span><span class="va">updated_taxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/update_taxonomy.html">update_taxonomy</a></span><span class="op">(</span><span class="va">aligned_taxa</span>, resources <span class="op">=</span> <span class="va">resources_2024_10_11</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Align and update all-in-one</span></span>
-<span><span class="va">aligned_updated_taxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="va">gbif_lite</span><span class="op">$</span><span class="va">species</span>, resources <span class="op">=</span> <span class="va">resources_0.0.4.9000</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">aligned_updated_taxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span><span class="va">gbif_lite</span><span class="op">$</span><span class="va">species</span>, resources <span class="op">=</span> <span class="va">resources_2024_10_11</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="citing-the-r-package">Citing the R package<a class="anchor" aria-label="anchor" href="#citing-the-r-package"></a>
 </h4>
 <p>For completion, you can also cite the R package by calling
-<code><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation()</a></code>. We also have a research article introducing the
-<code>APCalign</code>, we will share the details of its citation when it
-is in press.</p>
+<code><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation()</a></code>. We also have a research article introducing
+‘APCalign’, published in the Australian Journal of Botany in 2024 (<a href="https://doi.org/10.1071/BT24014" class="external-link uri">https://doi.org/10.1071/BT24014</a>);
+<code>citation("APCalign")</code> gives it too.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"APCalign"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; To cite package 'APCalign' in publications use:</span></span>

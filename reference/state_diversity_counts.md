@@ -21,7 +21,7 @@ state_diversity_counts(
   A character string indicating the Australian state or territory to
   calculate the diversity for. Possible values are "NSW", "NT", "Qld",
   "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI",
-  "MDI", "CoI", "CSI", and "AR".
+  "MDI", "CoI", "CSI", "AR" and "CaI".
 
 - resources:
 
@@ -58,12 +58,12 @@ Other diversity methods:
 #> Using cached taxonomic resources.
 #> # A tibble: 7 × 3
 #>   origin                            state num_species
-#>   <chr>                             <chr> <table[1d]>
-#> 1 doubtfully naturalised            NSW     95       
-#> 2 formerly naturalised              NSW      8       
-#> 3 native                            NSW   5982       
-#> 4 native and doubtfully naturalised NSW      2       
-#> 5 native and naturalised            NSW     34       
-#> 6 naturalised                       NSW   1586       
-#> 7 presumed extinct                  NSW      9       
+#>   <chr>                             <chr>       <int>
+#> 1 doubtfully naturalised            NSW            95
+#> 2 formerly naturalised              NSW             8
+#> 3 native                            NSW          5982
+#> 4 native and doubtfully naturalised NSW             2
+#> 5 native and naturalised            NSW            34
+#> 6 naturalised                       NSW          1586
+#> 7 presumed extinct                  NSW             9
 ```

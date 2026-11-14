@@ -1,8 +1,8 @@
 # Synonyms for Currently Accepted Names
 
-This function generates lists a string of synonyms for currently
-accepted species and infra-species to facilitate working out past names
-of a taxon when the current name is known.
+This function lists the synonyms for currently accepted species and
+infra-species to facilitate working out past names of a taxon when the
+current name is known.
 
 ## Usage
 

@@ -90,10 +90,13 @@ Diversity functions:
 ### Running tests
 
 Tests need the taxonomic resources loaded. `tests/testthat/helper.R`
-reuses a global `resources` if present, else loads **version
-`2024-10-11`** (the version the benchmarks were built against — do not
-bump it casually; benchmark expected values are tied to it). First load
-downloads parquet files from GitHub releases.
+loads **version `2024-10-11`** (the version the benchmarks were built
+against — do not bump it casually; benchmark expected values are tied to
+it) into `resources`, which later calls get from the session cache.
+First load downloads parquet files from GitHub releases. Without them
+(offline, nothing cached) `resources` is `NULL` and every file or test
+that needs it starts with `skip_if_no_resources()`, so it skips rather
+than fails, as CRAN requires; give any new such test the same guard.
 
 ``` r
 
@@ -152,6 +155,11 @@ legitimately change matcher output, regenerate with
   `c(find, replace)` list and apply them with `gsub_perl_rules()`
   ([R/utils.R](https://traitecoevo.github.io/APCalign/R/utils.R)), as
   `standardise_names_rules` does. Short dplyr pipelines are fine.
+- The main vignette, `vignettes/APCalign.Rmd`, is precomputed because it
+  downloads the resources: edit `vignettes/APCalign.Rmd.orig` and
+  re-knit it with the package installed (the command is at the top of
+  the `.orig`). Never hand-edit the printed output in `APCalign.Rmd`;
+  that is how it drifted before.
 - roxygen2 with markdown; run `devtools::document()` after changing `@`
   docs — keep `man/*.Rd` and `NAMESPACE` in sync (do not hand-edit
   them).
@@ -188,14 +196,30 @@ legitimately change matcher output, regenerate with
   chasing it risks the far commoner affinity case.
   `Deyeuxia sp. aff. affinis (Nunniong Plateau)` is also rewritten, but
   still aligns correctly via authorship matching.
-- **[`native_anywhere_in_australia()`](https://traitecoevo.github.io/APCalign/reference/native_anywhere_in_australia.md)**:
-  the `is.null(resources)` guard runs *after*
-  [`create_species_state_origin_matrix()`](https://traitecoevo.github.io/APCalign/reference/create_species_state_origin_matrix.md)
-  (so offline errors instead of failing gracefully), and its
-  `apply(..., grepl("native", x))` greps across all columns including
-  the species name.
-- Tests assume resources are available; there is no `skip_if_offline()`
-  guard in the operation tests.
+- **[`default_version()`](https://traitecoevo.github.io/APCalign/reference/default_version.md)
+  hits the GitHub API**, which allows 60 unauthenticated requests an
+  hour per IP. It asks once per session and falls back to the newest
+  locally downloaded version when the API fails; keep it that way.
+  Repeated `R CMD check` runs from one machine use the quota up, so a
+  test that needs the live API must skip when it gets `NULL` (see
+  `test-versions.R`), and tests of the API paths mock
+  `github_release_tags()` / `is_offline()` (`test-versions_offline.R`).
+- **`output` files are caches keyed by (`original_name`,
+  `identifier`)**:
+  [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md)
+  and
+  [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
+  each read their own file format back (`read_output_file()`), align
+  only the names not already there, and write back every row. The file
+  does not record the other arguments.
+- **`taxonomic_splits = "collapse_to_higher_taxon"` disagrees with its
+  docs**: the docs (the
+  [`update_taxonomy()`](https://traitecoevo.github.io/APCalign/reference/update_taxonomy.md)
+  param, the main vignette, and `update_taxonomy_documentation.csv`) say
+  no `accepted_name` is returned and `taxon_rank` becomes genus; the
+  code returns `accepted_name = "Acacia sp."` with
+  `taxon_rank = "species"` (see the vignette’s own output for
+  `Acacia aneura`). A maintainer has to decide which is right.
 
 ------------------------------------------------------------------------
 

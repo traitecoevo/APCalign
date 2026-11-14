@@ -23,7 +23,7 @@ to names aligned to either the APC or APNI."></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/articles/data-providers.html">Data sources (APC &amp; APNI)</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/data-providers.html">Data sources (APC &amp; APNI)</a></li>
     <li><a class="dropdown-item" href="../articles/updating-taxon-names.html">Taxon matching</a></li>
     <li><a class="dropdown-item" href="../articles/reproducibility.html">Using APC versions for reproducibility</a></li>
   </ul></li>
@@ -113,7 +113,7 @@ tibble contains the following columns:</p><ul><li><p>original_name: the original
 in the APC or APNI by the align_taxa function.</p></li>
 <li><p>accepted_name: the APC-accepted plant name, when available.</p></li>
 <li><p>suggested_name: the suggested plant name to use. Identical to the
-accepted_name, when an accepted_name exists; otherwise the the suggested_name
+accepted_name, when an accepted_name exists; otherwise the suggested_name
 is the aligned_name.</p></li>
 <li><p>genus: the genus of the accepted (or suggested) name; only APC-accepted
 genus names are filled in.</p></li>
@@ -132,7 +132,7 @@ aligned name to an accepted or suggested name).</p></li>
 <li><p>subclass: the subclass of the accepted name.</p></li>
 <li><p>taxon_distribution: the distribution of the accepted name; only filled in
 if an APC accepted_name is available.</p></li>
-<li><p>scientific_name_authorship: the authorship information for the accepted
+<li><p>scientific_name: the scientific name, with authorship, of the accepted
 (or synonymous) name; available for both APC and APNI names.</p></li>
 <li><p>taxon_ID: the unique taxon concept identifier for the accepted_name; only
 filled in if an APC accepted_name is available.</p></li>
@@ -140,6 +140,7 @@ filled in if an APC accepted_name is available.</p></li>
 APC-accepted genus name is available.</p></li>
 <li><p>scientific_name_ID: an identifier for the nomenclatural (not taxonomic)
 details of a scientific name; available for both APC and APNI names.</p></li>
+<li><p>canonical_name: a copy of suggested_name.</p></li>
 <li><p>row_number: the row number of a specific original_name in the input.</p></li>
 <li><p>number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon",
 the number of possible taxon names that have been collapsed.</p></li>
@@ -190,17 +191,17 @@ the second half of create_taxonomic_update_lookup.</p></li>
 <span class="r-in"><span> <span class="op">)</span>,</span></span>
 <span class="r-in"><span> resources <span class="op">=</span> <span class="va">resources</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 21</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 22</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   original_name     aligned_name      accepted_name  suggested_name genus family</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Dryandra preissii Dryandra preissii Banksia acumi… Banksia acumi… Bank… Prote…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Banksia acuminata Banksia acuminata Banksia acumi… Banksia acumi… Bank… Prote…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: taxon_rank &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 16 more variables: taxon_rank &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_status &lt;chr&gt;, taxonomic_status_aligned &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_distribution &lt;chr&gt;, scientific_name &lt;chr&gt;, taxon_ID &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;, canonical_name &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;, chars_changed &lt;int&gt;</span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

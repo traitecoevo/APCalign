@@ -25,11 +25,10 @@ native_anywhere_in_australia(species, resources = load_taxonomic_resources())
 
 ## Value
 
-A tibble with two columns: `species`, which is the same as the unique
-values of the input `species`, and `native_anywhere_in_aus`, a vector
-indicating whether each species is native anywhere in Australia,
-introduced by humans from elsewhere, or unknown with respect to the APC
-resource.
+A tibble with one row per input name and two columns: `species`, the
+input `species`, and `native_anywhere_in_aus`, a vector indicating
+whether each species is native anywhere in Australia, introduced by
+humans from elsewhere, or unknown with respect to the APC resource.
 
 ## Details
 
@@ -58,7 +57,7 @@ Other diversity methods:
 ``` r
 native_anywhere_in_australia(c("Eucalyptus globulus","Pinus radiata","Banksis notaspecies"))
 #> Using cached taxonomic resources.
-#> Warning: At least one input not found in APC; consider using `create_taxonomic_update_lookup` first and ensure you've correctly specified the `include_infrataxa` parameter.
+#> Warning: At least one input not found in APC; consider using `create_taxonomic_update_lookup` first.
 #> # A tibble: 3 × 2
 #>   species             native_anywhere_in_aus
 #>   <chr>               <chr>                 

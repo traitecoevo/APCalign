@@ -33,7 +33,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/articles/data-providers.html">Data sources (APC &amp; APNI)</a></li>
+<li><a class="dropdown-item" href="../articles/data-providers.html">Data sources (APC &amp; APNI)</a></li>
     <li><a class="dropdown-item" href="../articles/updating-taxon-names.html">Taxon matching</a></li>
     <li><a class="dropdown-item" href="../articles/reproducibility.html">Using APC versions for reproducibility</a></li>
   </ul>
@@ -70,7 +70,7 @@
 <div class="section level2">
 <h2 id="aligning-taxon-names-with-taxon-conceptsnames-in-apc-and-apni">Aligning taxon names with taxon concepts/names in APC and APNI<a class="anchor" aria-label="anchor" href="#aligning-taxon-names-with-taxon-conceptsnames-in-apc-and-apni"></a>
 </h2>
-<p>The following table indicates the rules for each of the 51 separate
+<p>The following table indicates the rules for each of the 54 separate
 algorithms sequentially applied to attempt to align each submitted name
 to a taxon concept in APC or scientific names in APNI.</p>
 <p>Note, if the table is truncated on your screen, use horizontal scroll
@@ -1105,7 +1105,7 @@ match_11b
 Detect canonical names, lacking authorship
 </td>
 <td style="text-align:left;">
-stripped_name
+cleaned_name
 </td>
 <td style="text-align:left;">
 imprecise fuzzy
@@ -1790,7 +1790,7 @@ The source of the suggested (and accepted) names (APC or APNI).
 taxonomic_status
 </td>
 <td style="text-align:left;">
-full
+default
 </td>
 <td style="text-align:left;">
 The taxonomic status of the suggested (and accepted) name.
@@ -1845,14 +1845,14 @@ accepted_name is available.
 </tr>
 <tr>
 <td style="text-align:left;">
-scientific_name_authorship
+scientific_name
 </td>
 <td style="text-align:left;">
 default
 </td>
 <td style="text-align:left;">
-The authorship information for the accepted (or synonymous) name;
-available for both APC and APNI names.
+The scientific name (with authorship) of the accepted (or synonymous)
+name; available for both APC and APNI names.
 </td>
 </tr>
 <tr>
@@ -1901,6 +1901,17 @@ full
 <td style="text-align:left;">
 The taxonomic status of the aligned name before any taxonomic updates
 have been applied.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+canonical_name
+</td>
+<td style="text-align:left;">
+full
+</td>
+<td style="text-align:left;">
+A copy of suggested_name.
 </td>
 </tr>
 <tr>

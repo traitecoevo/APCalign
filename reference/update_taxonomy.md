@@ -71,7 +71,7 @@ contains the following columns:
 - accepted_name: the APC-accepted plant name, when available.
 
 - suggested_name: the suggested plant name to use. Identical to the
-  accepted_name, when an accepted_name exists; otherwise the the
+  accepted_name, when an accepted_name exists; otherwise the
   suggested_name is the aligned_name.
 
 - genus: the genus of the accepted (or suggested) name; only
@@ -102,8 +102,8 @@ contains the following columns:
 - taxon_distribution: the distribution of the accepted name; only filled
   in if an APC accepted_name is available.
 
-- scientific_name_authorship: the authorship information for the
-  accepted (or synonymous) name; available for both APC and APNI names.
+- scientific_name: the scientific name, with authorship, of the accepted
+  (or synonymous) name; available for both APC and APNI names.
 
 - taxon_ID: the unique taxon concept identifier for the accepted_name;
   only filled in if an APC accepted_name is available.
@@ -114,6 +114,8 @@ contains the following columns:
 - scientific_name_ID: an identifier for the nomenclatural (not
   taxonomic) details of a scientific name; available for both APC and
   APNI names.
+
+- canonical_name: a copy of suggested_name.
 
 - row_number: the row number of a specific original_name in the input.
 
@@ -175,16 +177,16 @@ update_taxonomy(
  ),
  resources = resources
 )
-#> # A tibble: 2 × 21
+#> # A tibble: 2 × 22
 #>   original_name     aligned_name      accepted_name  suggested_name genus family
 #>   <chr>             <chr>             <chr>          <chr>          <chr> <chr> 
 #> 1 Dryandra preissii Dryandra preissii Banksia acumi… Banksia acumi… Bank… Prote…
 #> 2 Banksia acuminata Banksia acuminata Banksia acumi… Banksia acumi… Bank… Prote…
-#> # ℹ 15 more variables: taxon_rank <chr>, taxonomic_dataset <chr>,
+#> # ℹ 16 more variables: taxon_rank <chr>, taxonomic_dataset <chr>,
 #> #   taxonomic_status <chr>, taxonomic_status_aligned <chr>,
 #> #   aligned_reason <chr>, update_reason <chr>, subclass <chr>,
 #> #   taxon_distribution <chr>, scientific_name <chr>, taxon_ID <chr>,
 #> #   taxon_ID_genus <chr>, scientific_name_ID <chr>, canonical_name <chr>,
-#> #   row_number <dbl>, number_of_collapsed_taxa <dbl>
+#> #   row_number <dbl>, number_of_collapsed_taxa <dbl>, chars_changed <int>
 # }
 ```

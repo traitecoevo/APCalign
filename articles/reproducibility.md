@@ -81,9 +81,9 @@ subsequent functions make sure to assign them to an object:
 
 ``` r
 
-resources_0.0.4.9000 <- load_taxonomic_resources(
+resources_2024_10_11 <- load_taxonomic_resources(
   stable_or_current_data = "stable",
-  version = "0.0.4.9000"
+  version = "2024-10-11"
 )
 ```
 
@@ -93,21 +93,22 @@ taxonomic resources using the `resources` argument:
 ``` r
 
 # Align taxa
-aligned_taxa <- align_taxa(gbif_lite$species, resources = resources_0.0.4.9000)
+aligned_taxa <- align_taxa(gbif_lite$species, resources = resources_2024_10_11)
 
 # Update taxonomy 
-updated_taxa <- update_taxonomy(aligned_taxa, resources = resources_0.0.4.9000)
+updated_taxa <- update_taxonomy(aligned_taxa, resources = resources_2024_10_11)
 
 # Align and update all-in-one
-aligned_updated_taxa <- create_taxonomic_update_lookup(gbif_lite$species, resources = resources_0.0.4.9000)
+aligned_updated_taxa <- create_taxonomic_update_lookup(gbif_lite$species, resources = resources_2024_10_11)
 ```
 
 #### Citing the R package
 
 For completion, you can also cite the R package by calling
 [`citation()`](https://rdrr.io/r/utils/citation.html). We also have a
-research article introducing the `APCalign`, we will share the details
-of its citation when it is in press.
+research article introducing ‘APCalign’, published in the Australian
+Journal of Botany in 2024 (<https://doi.org/10.1071/BT24014>);
+`citation("APCalign")` gives it too.
 
 ``` r
 

@@ -2,7 +2,7 @@
 
 ## Aligning taxon names with taxon concepts/names in APC and APNI
 
-The following table indicates the rules for each of the 51 separate
+The following table indicates the rules for each of the 54 separate
 algorithms sequentially applied to attempt to align each submitted name
 to a taxon concept in APC or scientific names in APNI.
 
@@ -53,7 +53,7 @@ view the entire table.
 | match_10c | Detect canonical names, by checking first two words in string | two words (from stripped_name_2) | fuzzy | APC accepted taxon concepts | species/infraspecific | NA |
 | match_10d | Detect canonical names, by checking first two words in string | two words (from stripped_name_2) | fuzzy | other APC taxon concepts | species/infraspecific | NA |
 | match_11a | Detect canonical names, lacking authorship | stripped_name | fuzzy | APNI | species/infraspecific | Further checks if strings are APNI taxon names, lacking authorship, now with fuzzy matching or considering just the first three or two words in the string. |
-| match_11b | Detect canonical names, lacking authorship | stripped_name | imprecise fuzzy | APNI | species/infraspecific | NA |
+| match_11b | Detect canonical names, lacking authorship | cleaned_name | imprecise fuzzy | APNI | species/infraspecific | NA |
 | match_11c | Detect canonical names, by checking first three words in string | three words (from stripped_name_2) | exact | APNI | species/infraspecific | NA |
 | match_11d | Detect canonical names, by checking first two words in string | two words (from stripped_name_2) | exact | APNI | species/infraspecific | NA |
 | match_12a | Detect genus, by checking the first word in the string | first word (“genus”) | exact | APC accepted taxon concepts | genus | Check if the first two word in the name string match with a taxon name, allowing an alignment to the genus-level or family-level |
@@ -100,15 +100,16 @@ The following columns are output by the core function
 | family | full | The family of the accepted (or suggested) name; only APC-accepted family names are filled in. |
 | taxon_rank | default | The taxonomic rank of the suggested (and accepted) name. |
 | taxonomic_dataset | default | The source of the suggested (and accepted) names (APC or APNI). |
-| taxonomic_status | full | The taxonomic status of the suggested (and accepted) name. |
+| taxonomic_status | default | The taxonomic status of the suggested (and accepted) name. |
 | aligned_reason | default | The explanation of a specific taxon name alignment (from an original name to an aligned name). |
 | update_reason | default | The explanation of a specific taxon name update (from an aligned name to an accepted or suggested name). |
 | subclass | full | The subclass of the accepted name. |
 | taxon_distribution | full | The distribution of the accepted name; only filled in if an APC accepted_name is available. |
-| scientific_name_authorship | default | The authorship information for the accepted (or synonymous) name; available for both APC and APNI names. |
+| scientific_name | default | The scientific name (with authorship) of the accepted (or synonymous) name; available for both APC and APNI names. |
 | taxon_ID | full | The unique taxon concept identifier for the accepted_name; only filled in if an APC accepted_name is available. |
 | taxon_ID_genus | full | An identifier for the genus; only filled in if an APC-accepted genus name is available. |
 | scientific_name_ID | full | An identifier for the nomenclatural (not taxonomic) details of a scientific name; available for both APC and APNI names. |
 | taxonomic_status_aligned | full | The taxonomic status of the aligned name before any taxonomic updates have been applied. |
+| canonical_name | full | A copy of suggested_name. |
 | row_number | full | The row number of a specific original_name in the input. |
 | number_of_collapsed_taxa | default | The number of possible taxon names that have been collapsed when taxonomic_splits == “collapse_to_higher_taxon”. |
