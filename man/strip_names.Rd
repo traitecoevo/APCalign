@@ -22,7 +22,9 @@ and special characters
 Given a vector of taxonomic names, this function removes:
 \itemize{
 \item subtaxa designations ("subsp.", "var.", "f.", and "ser")
-\item special characters (e.g., "-", ".", "(", ")", "?")
+\item special characters (e.g., "-", ".", "(", ")", "?"), except a hyphen
+between two letters, which is part of a hyphenated genus or epithet
+(\code{Van-royena}, \verb{Alisma plantago-aquatica})
 \item extra whitespace
 }
 
@@ -31,6 +33,7 @@ The resulting vector of names is also converted to lowercase.
 \examples{
 strip_names(c("Abies lasiocarpa subsp. lasiocarpa",
               "Quercus kelloggii",
-              "Pinus contorta var. latifolia"))
+              "Pinus contorta var. latifolia",
+              "Alisma plantago-aquatica"))
 
 }
