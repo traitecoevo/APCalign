@@ -9,14 +9,14 @@
 #' 4. searches for string patterns that suggest a specific taxon rank
 #'
 #' @details
-#' - It cycles through more than 20 different string patterns, sequentially
-#'  searching for additional match patterns.
+#' - It runs 54 match steps in sequence, each searching for a further
+#'  string pattern.
 #' - It identifies string patterns in input names that suggest a name can only be
 #'  aligned to a genus (hybrids that are not accepted names; graded species;
 #'  taxa not identified to species).
 #' - It prioritises matches that do not require fuzzy matching (i.e. synonyms,
 #'  orthographic variants) over those that do.
-#' - If prioritises matches to taxa in the APC over names in the APNI.
+#' - It prioritises matches to taxa in the APC over names in the APNI.
 #'
 #' Each match step has the same shape: build a logical index `i` of the rows
 #' it can resolve, hand those rows to `apply_match()` to be stamped with the
@@ -43,9 +43,9 @@
 #'  corresponding to very distant spelling mistakes. This is FALSE as default
 #'  and all outputs should be checked as it often makes erroneous matches.
 #' @param APNI_matches Name matches to the APNI (Australian Plant Names Index)
-#'  are turned off as a default.
-#' @param identifier A dataset, location or other identifier,
-#'  which defaults to NA.
+#'  are turned on as a default.
+#'
+#' Each row's identifier is read from the `identifier` column of `taxa$tocheck`.
 #'
 #' @noRd
 match_taxa <- function(
@@ -55,8 +55,7 @@ match_taxa <- function(
     fuzzy_rel_dist = 0.2,
     fuzzy_matches = TRUE,
     imprecise_fuzzy_matches = FALSE,
-    APNI_matches = TRUE,
-    identifier = NA_character_
+    APNI_matches = TRUE
 ) {
 
   if(is.null(resources)){
@@ -64,21 +63,13 @@ match_taxa <- function(
     return(NULL)
   }
 
-  update_na_with <- function(current, new) {
-    ifelse(is.na(current), new, current)
-  }
-
-
-  ## A function that specifies particular fuzzy matching conditions (for the
-  ## function fuzzy_match) when matching is being done at the genus level.
-  if (fuzzy_matches == TRUE) {
-    fuzzy_match_genera <- function(x, y) {
-      vapply(x, function(.x) as.character(fuzzy_match(.x, y, 2, 0.35, n_allowed = 1)), character(1), USE.NAMES = FALSE)
-    }
-  } else {
-    fuzzy_match_genera <- function(x, y) {
-      vapply(x, function(.x) as.character(fuzzy_match(.x, y, 0, 0.0, n_allowed = 1)), character(1), USE.NAMES = FALSE)
-    }
+  ## The fuzzy matching conditions used when matching at the genus (and
+  ## family) level: more lenient than for full names, since these are single
+  ## words.
+  genus_fuzzy_abs_dist <- if (fuzzy_matches) 2 else 0
+  genus_fuzzy_rel_dist <- if (fuzzy_matches) 0.35 else 0
+  fuzzy_match_genera <- function(x, y) {
+    fuzzy_match_column(x, y, genus_fuzzy_abs_dist, genus_fuzzy_rel_dist)
   }
 
   ## set default imprecise fuzzy matching parameters
@@ -95,7 +86,6 @@ match_taxa <- function(
   }
 
   ## remove APNI-listed genera from resources if APNI matches are turned off
-  ##(the default)
   if (APNI_matches == TRUE) {
     resources$genera_all2 <- resources$genera_all
   } else {
@@ -164,12 +154,9 @@ match_taxa <- function(
   ## Various stripped versions of the string to match, versions with 1, 2 and 3 words (genus, binomial, trinomial), and fuzzy-matched genera are propagated.
   taxa$tocheck <- taxa$tocheck %>%
     dplyr::mutate(
-      cleaned_name = cleaned_name %>%
-        update_na_with(standardise_names(original_name)),
-      stripped_name = stripped_name %>%
-        update_na_with(strip_names(cleaned_name)),
-      stripped_name2 = stripped_name2 %>%
-        update_na_with(strip_names_extra(stripped_name)),
+      cleaned_name = dplyr::coalesce(cleaned_name, standardise_names(original_name)),
+      stripped_name = dplyr::coalesce(stripped_name, strip_names(cleaned_name)),
+      stripped_name2 = dplyr::coalesce(stripped_name2, strip_names_extra(stripped_name)),
       trinomial = word(stripped_name2, start = 1, end = 3),
       binomial = word(stripped_name2, start = 1, end = 2),
       genus = extract_genus(original_name)

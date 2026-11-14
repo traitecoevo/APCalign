@@ -26,7 +26,6 @@ standardise_names_rules <- list(
 
   ## Weird formatting
   c("[\\n\\t]", " "),
-  c("[\\n\\t]", " "),
 
   ## Remove spaces before or after brackets
   c("\\ \\)", "\\)"),
@@ -37,14 +36,14 @@ standardise_names_rules <- list(
 
   ## sp. not sp or spp
   c("\\ssp(\\s|$)",   " sp. "),
-  c("\\sspp.(\\s|$)", " sp. "),
+  c("\\sspp\\.(\\s|$)", " sp. "),
   c("\\sspp(\\s|$)",  " sp. "),
 
   ## subsp. not ssp, ssp., subsp or sub sp.
   c("\\sssp(\\s|$)",     " subsp. "),
-  c("\\sssp.(\\s|$)",    " subsp. "),
+  c("\\sssp\\.(\\s|$)",    " subsp. "),
   c("\\ssubsp(\\s|$)",   " subsp. "),
-  c("\\ssub sp.(\\s|$)", " subsp. "),
+  c("\\ssub sp\\.(\\s|$)", " subsp. "),
 
   ## var. not var or v or v.
   c("\\svar(\\s|$)",   " var. "),
@@ -68,10 +67,12 @@ standardise_names_rules <- list(
   ## remove " ms" if present
   c("\\sms(\\s|$|\\.\\s)", " "),
 
-  ## remove " s.l" or " s.s." or "s s " or " s l " if present
+  ## remove " s.l" or " s.s." or "s s " or " s l " if present. Each is
+  ## replaced by a space, never "", which would join the words either side
+  ## ("Acacia ss dealbata" -> "Acaciadealbata").
   c("\\ssl(\\s|$)", " "),
   c("\\ss\\.l\\.(\\s|$)", " "),
-  c("\\sss(\\s|$)", ""),
+  c("\\sss(\\s|$)", " "),
   c("\\ss\\.s\\.(\\s|$)", " "),
   c("\\ss\\ss(\\s|$)", " "),
   c("\\ss\\sl(\\s|$)", " "),
@@ -80,8 +81,8 @@ standardise_names_rules <- list(
   c("\\ss(\\.\\s|\\s)lat(\\s|$|\\.\\s)", " "),
   c("\\ssensu\\slato(\\s|$|\\.\\s)", " "),
   c("\\ssensu\\sstricto(\\s|$|\\.\\s)", " "),
-  c("(\\s|\\()s\\.lat\\.(\\s|\\))", ""),
-  c("(\\s|\\()s\\.str\\.(\\s|\\))", ""),
+  c("(\\s|\\()s\\.lat\\.(\\s|\\)|$)", " "),
+  c("(\\s|\\()s\\.str\\.(\\s|\\)|$)", " "),
 
   ## standardise "ser"
   c("\\sser(\\s|\\.\\s)", " ser. "),
@@ -131,21 +132,23 @@ standardise_names <- function(taxon_names) {
   ## nests one call per step and overflows small stacks (see gsub_perl_rules()).
 
   ## remove ? throughout
-  x <- gsub_perl(taxon_names, "\\?", "")
+  x <- re_replace_all(taxon_names, "\\?", "")
 
   ## remove all punct and symbols at start of string
   ## this combination should catch almost everything
   ## it is essential there are no stray characters at the start of strings
   ## for fuzzy-matching to work once the reference list is split by first-character
-  x <- re_replace(x, "^[~!@#$%^&*()_+-=`;',./<>?:{}|]+", "")
+  ## (`-` last in the class: between `+` and `=` it made a range that also
+  ## covered digits)
+  x <- re_replace(x, "^[~!@#$%^&*()_+=`;',./<>?:{}|-]+", "")
   x <- re_replace(x, "^\\p{P}+", "")
 
   ## remove * at end of string
-  x <- gsub_perl(x, "\\*$", "")
+  x <- re_replace_all(x, "\\*$", "")
 
   ## replace hybrid x marker with standard x
   ## for certain hybrid x's that aren't dealt with below
-  x <- gsub_perl(x, "\u00D7", "x")
+  x <- re_replace_all(x, "\u00D7", "x")
 
   ## hybrid markers and other non-standard characters used are replaced with
   ## the standard equivalent (e.g. x, \)

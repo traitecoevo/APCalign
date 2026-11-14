@@ -105,6 +105,7 @@ test_that("fuzzy_match()'s first-letter cache follows the reference list", {
 })
 
 test_that("odd white space and BOMs give the same alignment as clean input", {
+  skip_if_no_resources()
   clean <- create_taxonomic_update_lookup(c("Grevillea sp.", "Acacia dealbata"), resources = resources)
   messy <- create_taxonomic_update_lookup(c("Grevillea sp.\u0085", "\uFEFFAcacia dealbata"), resources = resources)
   expect_equal(messy$aligned_name, clean$aligned_name)

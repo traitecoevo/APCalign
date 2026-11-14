@@ -9,7 +9,7 @@
 #' @param state A character string indicating the Australian state or
 #'  territory to calculate the diversity for. Possible values are "NSW", "NT",
 #'  "Qld", "WA", "ChI", "SA", "Vic", "Tas", "ACT", "NI", "LHI", "MI", "HI",
-#'  "MDI", "CoI", "CSI", and "AR".
+#'  "MDI", "CoI", "CSI", "AR" and "CaI".
 #' @param resources the taxonomic resources required to make the summary
 #'  statistics.  loading this can be slow, so call load_taxonomic_resources
 #'  separately to greatly speed this function up and pass the resources in.
@@ -60,7 +60,7 @@ state_diversity_counts <- function(state,
   )
   if (!(state %in% valid_inputs)) {
     stop(paste(
-      "Invalid str_input:",
+      "Invalid state:",
       state,
       ". Expected one of:",
       paste(valid_inputs, collapse = ", ")
@@ -73,7 +73,7 @@ state_diversity_counts <- function(state,
   return(dplyr::tibble(
     origin = names(state_table),
     state = state,
-    num_species = state_table
+    num_species = as.integer(state_table)
   ))
 }
 

@@ -1,3 +1,5 @@
+skip_if_no_resources()
+
 # Tests for the structure (names and column names) of loaded taxonomic resources
 
 test_that("taxonomic resources contains expected tables", {
