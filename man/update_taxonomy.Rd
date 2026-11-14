@@ -54,7 +54,7 @@ tibble contains the following columns:
 in the APC or APNI by the align_taxa function.
 \item accepted_name: the APC-accepted plant name, when available.
 \item suggested_name: the suggested plant name to use. Identical to the
-accepted_name, when an accepted_name exists; otherwise the the suggested_name
+accepted_name, when an accepted_name exists; otherwise the suggested_name
 is the aligned_name.
 \item genus: the genus of the accepted (or suggested) name; only APC-accepted
 genus names are filled in.
@@ -73,7 +73,7 @@ aligned name to an accepted or suggested name).
 \item subclass: the subclass of the accepted name.
 \item taxon_distribution: the distribution of the accepted name; only filled in
 if an APC accepted_name is available.
-\item scientific_name_authorship: the authorship information for the accepted
+\item scientific_name: the scientific name, with authorship, of the accepted
 (or synonymous) name; available for both APC and APNI names.
 \item taxon_ID: the unique taxon concept identifier for the accepted_name; only
 filled in if an APC accepted_name is available.
@@ -81,6 +81,7 @@ filled in if an APC accepted_name is available.
 APC-accepted genus name is available.
 \item scientific_name_ID: an identifier for the nomenclatural (not taxonomic)
 details of a scientific name; available for both APC and APNI names.
+\item canonical_name: a copy of suggested_name.
 \item row_number: the row number of a specific original_name in the input.
 \item number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon",
 the number of possible taxon names that have been collapsed.

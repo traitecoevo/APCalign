@@ -70,7 +70,7 @@ APCalign_outputs_documentation <-
 
 # Aligning taxon names with taxon concepts/names in APC and APNI
 
-The following table indicates the rules for each of the 51 separate algorithms sequentially applied to attempt to align each submitted name to a taxon concept in APC or scientific names in APNI.
+The following table indicates the rules for each of the 54 separate algorithms sequentially applied to attempt to align each submitted name to a taxon concept in APC or scientific names in APNI.
 
 Note, if the table is truncated on your screen, use horizontal scroll to view the entire table.
 

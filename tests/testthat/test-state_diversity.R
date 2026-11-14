@@ -1,3 +1,5 @@
+skip_if_no_resources()
+
 test_that("create_species_state_origin_matrix() works", {
   state_matrix <- create_species_state_origin_matrix(resources = resources, include_infrataxa = TRUE)
   

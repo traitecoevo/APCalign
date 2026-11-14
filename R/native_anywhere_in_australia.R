@@ -20,8 +20,8 @@
 #'        If not provided, the function will load default taxonomic resources using the
 #'        `load_taxonomic_resources()` function. 
 #'   
-#' @return A tibble with two columns: `species`, which is the same as the unique values of
-#'  the input `species`, and `native_anywhere_in_aus`, a vector indicating whether each
+#' @return A tibble with one row per input name and two columns: `species`, the
+#'  input `species`, and `native_anywhere_in_aus`, a vector indicating whether each
 #'  species is native anywhere in Australia, introduced by humans from elsewhere, or
 #'  unknown with respect to the APC resource.
 #' @export
@@ -39,7 +39,7 @@ native_anywhere_in_australia <- function(species, resources = load_taxonomic_res
   full_lookup <- create_species_state_origin_matrix(resources = resources, include_infrataxa = TRUE)
 
   if (any(!species %in% full_lookup$species)) {
-    warning("At least one input not found in APC; consider using `create_taxonomic_update_lookup` first and ensure you've correctly specified the `include_infrataxa` parameter.")
+    warning("At least one input not found in APC; consider using `create_taxonomic_update_lookup` first.")
   }
 
   # Filter for native species

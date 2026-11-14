@@ -1,3 +1,5 @@
+skip_if_no_resources()
+
 # These tests pin the behaviour of the match_taxa() alignment branches so that
 # internal refactoring of match_taxa() can be verified as behaviour-preserving.
 #

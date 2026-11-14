@@ -14,8 +14,8 @@ If not provided, the function will load default taxonomic resources using the
 \code{load_taxonomic_resources()} function.}
 }
 \value{
-A tibble with two columns: \code{species}, which is the same as the unique values of
-the input \code{species}, and \code{native_anywhere_in_aus}, a vector indicating whether each
+A tibble with one row per input name and two columns: \code{species}, the
+input \code{species}, and \code{native_anywhere_in_aus}, a vector indicating whether each
 species is native anywhere in Australia, introduced by humans from elsewhere, or
 unknown with respect to the APC resource.
 }

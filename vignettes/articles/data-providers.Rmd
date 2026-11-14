@@ -14,7 +14,7 @@ library(dplyr)
 
 ```
 
-![](man/data_providers.png)
+![](data_providers.png)
 
 ## Australian Plant Census (APC)
 

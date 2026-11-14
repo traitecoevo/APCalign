@@ -22,4 +22,6 @@ test_that("Word", {
   expect_equal(APCalign:::word(taxa, 3), stringr::word(taxa, 3))
   expect_equal(APCalign:::word(taxa, 1,2), stringr::word(taxa, 1,2))
   expect_equal(APCalign:::word(taxa, 1,3), stringr::word(taxa, 1,3))
+  expect_equal(APCalign:::word(taxa, 1,4), stringr::word(taxa, 1,4))
+  expect_equal(APCalign:::word(taxa, 2,5), stringr::word(taxa, 2,5))
 })

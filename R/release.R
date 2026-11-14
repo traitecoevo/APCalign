@@ -1,77 +1,23 @@
-#' Download taxonomic resources for GitHub Release
+#' Download taxonomic resources for a GitHub release
 #'
-#' @param version_name character string of version name, follow semantic versioning
-#' @param path to download parquets to upload
+#' Snapshots the current APC and APNI exports, for a maintainer to upload as
+#' the assets of a new dated release (`version_name`, e.g. "2026-07-30"):
+#' `apc.parquet` and `apni.parquet`, which `load_taxonomic_resources()`
+#' downloads.
+#'
+#' @param version_name the release's tag, a date ("YYYY-MM-DD")
+#' @param path directory to save the files in, to upload from
 #' @keywords internal
 #' @noRd
-
 download_taxonomic_resources_for_release <- function(version_name = NULL,
                                                      path = "ignore/") {
-  # TODO: Use gh package to release programmatically
-  #   body <- paste0('{"tag_name":"',version_name,'","target_commitish":"master","name":"',version_name,'","body":"Download of taxonomic resources from APC and APNI as of ',Sys.Date(),'","draft":true,"prerelease":false,"generate_release_notes":false}')
-  #
-  # # Creating release via GH API
-  # gh::gh("POST /repos/{owner}/{repo}/releases",
-  #    owner = "traitecoevo", repo = "APCalign",
-  #    charToRaw(body),
-  #    .send_headers = c(
-  #      Accept = "application/vnd.github.switcheroo-preview+json",
-  #      "Content-Type" = "application/json"
-  #    )
-  #    )
-  
-  rlang::check_installed("readr", reason = "to download and save the APC/APNI CSV exports.")
+  dir.create(path, showWarnings = FALSE, recursive = TRUE)
 
-  dir.create("ignore/", showWarnings = FALSE)
-  
-  # Download APC
-  APC <-
-    readr::read_csv(
-      "https://biodiversity.org.au/nsl/services/export/taxonCsv",
-      col_types =
-        readr::cols(
-          .default = readr::col_character(),
-          proParte = readr::col_logical(),
-          taxonRankSortOrder = readr::col_double(),
-          created = readr::col_datetime(format = ""),
-          modified = readr::col_datetime(format = "")
-        )
-    )
-  
-  # Save APC as parquet
-  nanoparquet::write_parquet(APC, paste0(path, "apc.parquet"))
-  # Save APC as tar.gz
-  readr::write_csv(APC, file = paste0(path, "apc.tar.gz"))
-  
-  # Download APNI
-  APNI <-
-    readr::read_csv(
-      "https://biodiversity.org.au/nsl/services/export/namesCsv",
-      col_types =
-        readr::cols(
-          .default = readr::col_character(),
-          autonym = readr::col_logical(),
-          hybrid = readr::col_logical(),
-          cultivar = readr::col_logical(),
-          formula = readr::col_logical(),
-          scientific = readr::col_logical(),
-          nomInval = readr::col_logical(),
-          nomIlleg = readr::col_logical(),
-          namePublishedInYear = readr::col_double(),
-          taxonRankSortOrder = readr::col_double(),
-          created = readr::col_datetime(format = ""),
-          modified = readr::col_datetime(format = "")
-        )
-    )
-  
+  APC <- read_nsl_export("APC")
+  nanoparquet::write_parquet(APC, file.path(path, "apc.parquet"))
+
   # Exclude names that are in APC from APNI
-  APNI_cleaned <- APNI |>
+  APNI_cleaned <- read_nsl_export("APNI") |>
     dplyr::filter(!canonicalName %in% APC$canonicalName)
-  
-  # Save APNI as parquet
-  nanoparquet::write_parquet(APNI_cleaned, paste0(path, "apni.parquet"))
-  
-  # Save APNI as tar.gz
-  readr::write_csv(APNI_cleaned, file = paste0(path, "apni.tar.gz"))
-  
+  nanoparquet::write_parquet(APNI_cleaned, file.path(path, "apni.parquet"))
 }

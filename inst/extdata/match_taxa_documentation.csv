@@ -41,7 +41,7 @@ match_10b,"Detect canonical names, by checking first two words in string",two wo
 match_10c,"Detect canonical names, by checking first two words in string",two words (from stripped_name_2),fuzzy,APC accepted taxon concepts,species/infraspecific,
 match_10d,"Detect canonical names, by checking first two words in string",two words (from stripped_name_2),fuzzy,other APC taxon concepts,species/infraspecific,
 match_11a,"Detect canonical names, lacking authorship",stripped_name,fuzzy,APNI,species/infraspecific,"Further checks if strings are APNI taxon names, lacking authorship, now with fuzzy matching or considering just the first three or two words in the string."
-match_11b,"Detect canonical names, lacking authorship",stripped_name,imprecise fuzzy,APNI,species/infraspecific,
+match_11b,"Detect canonical names, lacking authorship",cleaned_name,imprecise fuzzy,APNI,species/infraspecific,
 match_11c,"Detect canonical names, by checking first three words in string",three words (from stripped_name_2),exact,APNI,species/infraspecific,
 match_11d,"Detect canonical names, by checking first two words in string",two words (from stripped_name_2),exact,APNI,species/infraspecific,
 match_12a,"Detect genus, by checking the first word in the string","first word (""genus"")",exact,APC accepted taxon concepts,genus,"Check if the first two word in the name string match with a taxon name, allowing an alignment to the genus-level or family-level"

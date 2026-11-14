@@ -17,7 +17,7 @@
 #' alignments in APNI. 
 #' - It uses the internal function `match_taxa` to attempt to match input
 #'  strings to taxon names in the APC/APNI. 
-#' - It sequentially searches for matches against more than 20 different string
+#' - It sequentially searches for matches against 54 different string
 #'  patterns, prioritising exact matches (to accepted names as well as
 #'  synonyms, orthographic variants) over fuzzy matches.
 #' - It prioritises matches to taxa in the APC over names in the APNI.
@@ -32,8 +32,9 @@
 #'  many times, it is best to load the taxonomic resources separately using
 #'   resources <- load_taxonomic_resources(), then add the argument
 #'    resources = resources
-#' - The name Banksia cerrata does not align as the fuzzy matching algorithm
-#'  does not allow the first letter of the genus and species epithet to change.
+#' - The name Banksia cerrata only aligns to the genus (`Banksia sp.
+#'  \[Banksia cerrata]`), as the fuzzy matching algorithm does not allow the
+#'  first letter of the genus or species epithet to change.
 #' - With this function you have the option of changing the fuzzy matching
 #'  parameters. The defaults, with fuzzy matches only allowing changes of 3
 #'   (or fewer) characters AND 20% (or less) of characters has been carefully
@@ -49,8 +50,13 @@
 #'   sp. \[Royal NP]".
 #'
 #' @param original_name A list of names to query for taxonomic alignments.
-#' @param output (optional) The name of the file to save the results to.
-#'  Requires the 'readr' package.
+#' @param output (optional) A CSV file in which to keep the results, so that
+#'  names are only aligned once. If the file already exists (written by an
+#'  earlier call to `align_taxa()`), names already in it (for the same
+#'  `identifier`) are read from it rather than aligned again, and the new names
+#'  are added to it. The file does not record the other arguments, so use the
+#'  same settings and `resources` with a given file. Requires the 'readr'
+#'  package.
 #' @param full Parameter to determine how many columns are output
 #' @param resources the taxonomic resources used to align the taxa names.
 #'  Loading this can be slow, so call \code{\link{load_taxonomic_resources}}
@@ -74,15 +80,17 @@
 #'  makes erroneous matches.
 #' @param APNI_matches Name matches to the APNI (Australian Plant Names Index)
 #'  are turned on as a default.
-#' @param identifier A dataset, location or other identifier,
-#'  which defaults to NA.
+#' @param identifier A dataset, location or other identifier, added to the
+#'  aligned names of taxa only aligned to a genus or family. Either a single
+#'  value or one value per name; defaults to NA.
 #'
-#' @return A tibble with columns that include original_name, aligned_name,
-#'   taxonomic_dataset, taxon_rank, aligned_reason, alignment_code,
-#'   chars_changed.
+#' @return A tibble with one row per input name, with columns original_name,
+#'   cleaned_name, aligned_name, taxonomic_dataset, taxon_rank, aligned_reason,
+#'   alignment_code and chars_changed; `full = TRUE` adds the others below.
 #' - original_name: the original plant name input.
-#' - aligned_name: the original plant name after the function standardise_names
-#'   has standardised the syntax of infraspecific taxon designations.
+#' - aligned_name: the APC or APNI name the original name was aligned to; for
+#'   names only aligned to a genus or family, that name followed by `sp.` (`x`
+#'   for hybrids) and the original name (and identifier) in square brackets.
 #' - taxonomic_dataset: the source of the aligned names (APC or APNI).
 #' - taxon_rank: the taxonomic rank of the aligned name.
 #' - aligned_reason: the explanation of a specific taxon name alignment
@@ -116,8 +124,6 @@
 #' - binomial: the first two words in `stripped_name2`, required for matches
 #'   that ignore all other text in the original_name;
 #'   improves phrase name matches.
-#' - genus: the first two words in `cleaned_name`;
-#'   required for genus-rank matches and reprocessing of genus-rank names.
 #' - fuzzy_match_genus: fuzzy match of genus column to best match among
 #'   APC-accepted names;
 #'   required for fuzzy matches of genus-rank names.
@@ -143,7 +149,7 @@
 #'   to APC-accepted names; created for yet-to-be-aligned names at the
 #'   match step 07a in the function `match_taxa`.
 #' - fuzzy_match_cleaned_APC_synonym_imprecise: imprecise fuzzy match of
-#'   stripped_name to APC-accepted names; created for yet-to-be-aligned names
+#'   stripped_name to APC-synonymous names; created for yet-to-be-aligned names
 #'   at the match step 07b in the function `match_taxa`.
 #' - fuzzy_match_binomial: fuzzy match of binomial column to best match among
 #'   APC-accepted names; created for yet-to-be-aligned names at
@@ -161,7 +167,7 @@
 #'   created for yet-to-be-aligned names at the match step 11a in the
 #'   function `match_taxa`.
 #' - fuzzy_match_cleaned_APNI_imprecise: imprecise fuzzy match of
-#'   stripped_name to APNI names; created for yet-to-be-aligned names
+#'   cleaned_name to APNI names; created for yet-to-be-aligned names
 #'   at the match step 11b in the function `match_taxa`.
 #' 
 #' @export
@@ -214,150 +220,134 @@ align_taxa <- function(original_name,
     return(NULL)
   }
 
+  # One row per input name, paired with its identifier. `as.character()`
+  # accepts factors, and a column read in as all-NA logical.
+  input <- name_identifier_pairs(original_name, identifier)
+
   if (!is.null(output))
     rlang::check_installed("readr", reason = "to read and write the `output` file.")
 
   if(!quiet)
     message("Checking alignments of ",
-            dplyr::n_distinct(original_name, na.rm = TRUE),
+            dplyr::n_distinct(input$original_name, na.rm = TRUE),
             " taxa\n")
 
-  if (!is.null(output) && file.exists(output)) {
-    if(!quiet)
-      message("  - reading existing data from ", output)
-    
-    taxa_raw <-
-      readr::read_csv(
-        output,
-        col_types = readr::cols(
-          checked = readr::col_logical(),
-          known = readr::col_logical(),
-          .default = readr::col_character()
-        )
-      )
-    correct_names <- c("original_name", "aligned_name", "accepted_name",
-                           "suggested_name", "genus", "family", "taxon_rank",
-                           "taxonomic_dataset", "taxonomic_status", 
-                           "taxonomic_status_aligned", "aligned_reason",
-                           "update_reason", "subclass", "taxon_distribution",
-                           "scientific_name", "taxon_ID", "taxon_ID_genus",
-                           "scientific_name_ID", "canonical_name", "row_number",
-                           "number_of_collapsed_taxa", "checked", "known")
-    # `chars_changed` was added later; accept files written with or without it
-    if(!identical(setdiff(names(taxa_raw), "chars_changed"), correct_names)) {
-      stop("Your output file already exists and it's not in the right format. 
-         Please check that the file you are passing in to the output option.")
-    }
+  # Alignments saved by an earlier run with the same `output` file
+  cached <- read_output_file(output, align_taxa_cache_columns, quiet)
+
+  # The names still to align: each distinct name/identifier pair once, leaving
+  # out names that are missing, blank once standardised, or already cached
+  new <- input %>%
+    dplyr::filter(!is.na(original_name)) %>%
+    dplyr::distinct() %>%
+    dplyr::filter(standardise_names(original_name) != "") %>%
+    dplyr::anti_join(cached, by = c("original_name", "identifier"))
+
+  if (!is.null(output) && !quiet && nrow(cached) > 0) {
+    message(
+      "  -> ", cli::col_blue(nrow(input %>% dplyr::semi_join(cached, by = c("original_name", "identifier")) %>% dplyr::distinct())),
+      " names already aligned in the output file; ",
+      cli::col_blue(nrow(new)), " taxa yet to be checked"
+    )
   }
-  else {
-    taxa_raw <-
-      dplyr::tibble(
-        original_name = character(0L),
-        cleaned_name = character(0L),
-        aligned_name = character(0L),
-        taxonomic_dataset = character(0L),
-        identifier = character(0L),
-        known = logical(0L),
-        checked = logical(0L)
-      )
+
+  taxa <- align_new_taxa(new, resources, quiet, fuzzy_abs_dist, fuzzy_rel_dist,
+                         fuzzy_matches, imprecise_fuzzy_matches, APNI_matches)
+
+  # every name aligned so far, with all the columns, whatever `full` is
+  taxa <- dplyr::bind_rows(
+    cached,
+    taxa %>%
+      dplyr::select(-genus, -known, -checked) %>%
+      dplyr::select(original_name, cleaned_name, aligned_name,
+                    taxonomic_dataset, taxon_rank, aligned_reason,
+                    alignment_code, dplyr::everything())
+  )
+
+  ## save outputs to file, useful for caching results: every name aligned so
+  ## far, not only this call's, so the file grows from run to run
+  if (!is.null(output)) {
+    write_output_file(taxa, output, quiet)
   }
-  
+
+  if (full == FALSE) {
+    taxa <-
+      taxa %>%
+      dplyr::select(original_name, cleaned_name, aligned_name,
+                    taxonomic_dataset, taxon_rank, aligned_reason,
+                    alignment_code, chars_changed, identifier)
+  }
+
+  # Assemble output in the order of the input
+  # by joining results into a tibble with inputs as column
+  input %>%
+    dplyr::left_join(by = c("original_name", "identifier"), taxa) %>%
+    # can remove column identifier now that matches are complete
+    dplyr::select(-identifier)
+}
+
+# Align the distinct name/identifier pairs in `new` (a tibble with columns
+# `original_name` and `identifier`), returning one row for each in the wide
+# working format of `match_taxa()`.
+align_new_taxa <- function(new, resources, quiet, fuzzy_abs_dist,
+                           fuzzy_rel_dist, fuzzy_matches,
+                           imprecise_fuzzy_matches, APNI_matches) {
   # create list, will have two elements: tocheck, checked
   taxa <- list()
-  
+
   taxa[["tocheck"]] <-
-    dplyr::bind_rows(
-      taxa_raw,
-      dplyr::tibble(
-        original_name = 
-          # only include new names
-          subset(original_name, 
-            !is.na(original_name) & 
-            !original_name %in% taxa_raw$original_name
-            ),
-        identifier = identifier,
-        cleaned_name = NA_character_,
-        stripped_name = NA_character_,
-        stripped_name2 = NA_character_,
-        trinomial = NA_character_,
-        binomial = NA_character_,
-        genus = NA_character_,
-        aligned_name = NA_character_,
-        aligned_reason = NA_character_,
-        fuzzy_match_genus = NA_character_,
-        fuzzy_match_genus_synonym = NA_character_,
-        fuzzy_match_genus_APNI = NA_character_,
-        fuzzy_match_family = NA_character_,
-        fuzzy_match_family_synonym = NA_character_,
-        fuzzy_match_binomial = NA_character_,
-        fuzzy_match_binomial_APC_synonym = NA_character_,
-        fuzzy_match_trinomial = NA_character_,
-        fuzzy_match_trinomial_synonym = NA_character_,
-        fuzzy_match_cleaned_APC = NA_character_,
-        fuzzy_match_cleaned_APC_synonym = NA_character_,
-        fuzzy_match_cleaned_APNI = NA_character_,
-        fuzzy_match_cleaned_APC_imprecise = NA_character_,
-        fuzzy_match_cleaned_APC_synonym_imprecise = NA_character_,
-        fuzzy_match_cleaned_APNI_imprecise = NA_character_,
-        taxonomic_dataset = NA_character_,
-        taxon_rank = NA_character_,
-        alignment_code = NA_character_,
-        checked = FALSE,
-        known = FALSE
-      )
-    ) %>% 
-    # take unique values of original name by identifier combinations
-    # so each name only processed once (or multiple times if unique identifiers)
-    dplyr::filter(!duplicated(paste0(original_name, identifier))) %>%
-    dplyr::filter(original_name %>% standardise_names() != "")
-  
-  if (all(taxa$tocheck$checked)|all(is.na(taxa$tocheck$checked))) {
-    if(!quiet)
-      message("  - all taxa are already checked, yay!")
-    return(invisible(add_chars_changed(taxa$tocheck)))
-  }
-  
-  # move all checked taxa to "checked"
-  taxa <- redistribute(taxa)
-  
-  # messages if there is an saved list being added to
-  if (
-    !is.null(output) && 
-    file.exists(output) && 
-    !all(taxa$tocheck$checked) && 
-    !quiet
-    ) {
-    # check unknown taxa
-    message(
-    "  -> ",
-    cli::col_blue(sum(!is.na(taxa$checked$accepted_name), na.rm = TRUE)),
-    " names already matched; ",
-    cli::col_blue(sum(
-      is.na(taxa$checked$accepted_name),
-      na.rm = TRUE
-    )),
-    " names checked but without a species-level match; ",
-    cli::col_blue(sum(!is.na(taxa$tocheck$original_name))),
-    " taxa yet to be checked"
-  )
+    dplyr::tibble(
+      # columns in the order earlier versions gave them, which `full = TRUE`
+      # output keeps
+      original_name = new$original_name,
+      cleaned_name = NA_character_,
+      aligned_name = NA_character_,
+      taxonomic_dataset = NA_character_,
+      identifier = new$identifier,
+      known = FALSE,
+      checked = FALSE,
+      stripped_name = NA_character_,
+      stripped_name2 = NA_character_,
+      trinomial = NA_character_,
+      binomial = NA_character_,
+      genus = NA_character_,
+      aligned_reason = NA_character_,
+      fuzzy_match_genus = NA_character_,
+      fuzzy_match_genus_synonym = NA_character_,
+      fuzzy_match_genus_APNI = NA_character_,
+      fuzzy_match_family = NA_character_,
+      fuzzy_match_family_synonym = NA_character_,
+      fuzzy_match_binomial = NA_character_,
+      fuzzy_match_binomial_APC_synonym = NA_character_,
+      fuzzy_match_trinomial = NA_character_,
+      fuzzy_match_trinomial_synonym = NA_character_,
+      fuzzy_match_cleaned_APC = NA_character_,
+      fuzzy_match_cleaned_APC_synonym = NA_character_,
+      fuzzy_match_cleaned_APNI = NA_character_,
+      fuzzy_match_cleaned_APC_imprecise = NA_character_,
+      fuzzy_match_cleaned_APC_synonym_imprecise = NA_character_,
+      fuzzy_match_cleaned_APNI_imprecise = NA_character_,
+      taxon_rank = NA_character_,
+      alignment_code = NA_character_
+    )
+
+  if (nrow(taxa$tocheck) == 0) {
+    return(add_chars_changed(taxa$tocheck))
   }
 
-  # otherwise if there are taxa that require checking add 
-  # simple message that indicates number of perfect matches.
-  if (!all(taxa$tocheck$checked)) {
+  # a simple message that indicates the number of perfect matches
+  if (!quiet) {
+    perfect_matches <- taxa$tocheck %>%
+      dplyr::filter(original_name %in% resources$APC_accepted$canonical_name) %>%
+      dplyr::distinct(original_name) %>%
+      nrow()
 
-  perfect_matches <- taxa$tocheck %>%
-    dplyr::filter(original_name %in% resources$APC_accepted$canonical_name) %>%
-    dplyr::distinct(original_name) %>%
-    nrow()
+    synonym_matches <- taxa$tocheck %>%
+      dplyr::filter(original_name %in% resources$APC_synonyms$canonical_name) %>%
+      dplyr::filter(!original_name %in% resources$APC_accepted$canonical_name) %>%
+      dplyr::distinct(original_name) %>%
+      nrow()
 
-  synonym_matches <- taxa$tocheck %>%
-    dplyr::filter(original_name %in% resources$APC_synonyms$canonical_name) %>%
-    dplyr::filter(!original_name %in% resources$APC_accepted$canonical_name) %>%
-    dplyr::distinct(original_name) %>%
-    nrow()
-
-  if(!quiet)
     message(
       "  -> of these ",
       cli::col_blue(perfect_matches),
@@ -369,48 +359,104 @@ align_taxa <- function(original_name,
   }
 
   # do the actual matching
-  taxa <- 
-    match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches,
-     imprecise_fuzzy_matches, APNI_matches, identifier) %>%
+  match_taxa(taxa, resources, fuzzy_abs_dist, fuzzy_rel_dist, fuzzy_matches,
+             imprecise_fuzzy_matches, APNI_matches) %>%
     # reassemble
     dplyr::bind_rows() %>%
     dplyr::mutate(known = !is.na(aligned_name))
-
-  if (full == TRUE) {
-    taxa <-
-      taxa %>%
-      dplyr::select(-genus, -known, -checked) %>%
-      dplyr::select(original_name, cleaned_name, aligned_name,
-                    taxonomic_dataset, taxon_rank, aligned_reason,
-                    alignment_code, dplyr::everything())
-  } else {
-     taxa <-
-      taxa %>%
-      dplyr::select(original_name, cleaned_name, aligned_name,
-                    taxonomic_dataset, taxon_rank, aligned_reason,
-                    alignment_code, chars_changed, identifier)
-  }
-
-  # Assemble output in the order of the input
-  # by joining results into a tibble with inputs as column
-  taxa <-
-    dplyr::tibble(original_name = original_name, identifier = identifier) %>%
-    dplyr::left_join(by = c("original_name", "identifier"), taxa) %>%
-    # can remove column identifier now that matches are complete
-    dplyr::select(-identifier)
-  
-  ## save outputs to file, useful for caching results 
-  if (!is.null(output)) {
-    dir.create(dirname(output), FALSE, TRUE)
-    taxa$checked<-TRUE
-    taxa$known<-!is.na(taxa$aligned_name)
-    readr::write_csv(taxa, output)
-    if(!quiet)
-      message("  - output saved in file: ", output)
-  }
-
-  return(taxa)
 }
+
+# Pair each input name with its identifier, as a tibble with one row per
+# input. `identifier` is either a single value or one per name.
+name_identifier_pairs <- function(original_name, identifier) {
+  original_name <- as.character(original_name)
+  if (!length(identifier) %in% c(1L, length(original_name))) {
+    stop(
+      "`identifier` must be a single value or have one value per name (",
+      length(original_name), "), not ", length(identifier), ".",
+      call. = FALSE
+    )
+  }
+  dplyr::tibble(
+    original_name = original_name,
+    identifier = rep_len(as.character(identifier), length(original_name))
+  )
+}
+
+# The columns an `align_taxa()` output file must have to be reused.
+align_taxa_cache_columns <- c(
+  "original_name", "identifier", "aligned_name", "taxonomic_dataset",
+  "taxon_rank", "aligned_reason", "alignment_code"
+)
+
+# Read the results an earlier run saved to `output`, to reuse them. Returns a
+# tibble of character columns (except the numeric ones listed below), empty
+# if there is no file yet. Files from APCalign 2.0.1 and earlier have no
+# `identifier` column (their names are read as having none) and have the
+# `checked` and `known` columns those versions wrote, which are dropped.
+read_output_file <- function(output, required, quiet = FALSE,
+                             one_row_per_name = TRUE) {
+  if (is.null(output) || !file.exists(output)) {
+    return(dplyr::tibble(original_name = character(0), identifier = character(0)))
+  }
+
+  rlang::check_installed("readr", reason = "to read the `output` file.")
+  if(!quiet)
+    message("  - reading existing data from ", output)
+
+  # Read the text back exactly as written: no trimming of white space (a name
+  # with a trailing space must still match itself), and only "NA" is missing,
+  # so an empty identifier stays "" (`write_output_file()` writes NA as "NA")
+  cached <- readr::read_csv(
+    output,
+    col_types = readr::cols(.default = readr::col_character()),
+    na = "NA",
+    trim_ws = FALSE
+  )
+  numeric_columns <- intersect(c("row_number", "number_of_collapsed_taxa"), names(cached))
+  cached[numeric_columns] <- lapply(cached[numeric_columns], as.numeric)
+  # `chars_changed` is an integer; files written before it existed lack it
+  cached <- add_chars_changed(cached)
+  if (!"identifier" %in% names(cached)) cached$identifier <- NA_character_
+  cached <- cached %>% dplyr::select(-dplyr::any_of(c("checked", "known")))
+
+  missing <- setdiff(required, names(cached))
+  if (length(missing) > 0) {
+    stop(
+      "The `output` file ", output, " already exists but was not written by ",
+      "this function: it lacks the column(s) ", paste(missing, collapse = ", "),
+      ". Choose another file name, or delete it.",
+      call. = FALSE
+    )
+  }
+
+  # One entry per name/identifier pair. Files from APCalign 2.0.1 and earlier
+  # have a row per input row, so a repeated name is there more than once (and
+  # missing names too); a `create_taxonomic_update_lookup()` file can hold
+  # several rows for one name (`taxonomic_splits = "return_all"`), so there
+  # keep the rows of the first input row the name came from.
+  cached <- cached[!is.na(cached$original_name), ]
+  key <- cache_key(cached)
+  if (one_row_per_name) {
+    cached <- cached[!duplicated(key), ]
+  } else if ("row_number" %in% names(cached)) {
+    first_row <- cached$row_number[match(key, key)]
+    cached <- cached[which(cached$row_number == first_row), ]
+  }
+  cached %>% dplyr::select(-dplyr::any_of("row_number"))
+}
+
+# Write every cached name back to an `output` file.
+write_output_file <- function(cached, output, quiet = FALSE) {
+  dir.create(dirname(output), FALSE, TRUE)
+  readr::write_csv(cached, output, na = "NA")
+  if (!quiet)
+    message("  - output saved in file: ", output)
+}
+
+# Identifies a name/identifier pair, for matching input names to those in an
+# `output` file. (The separator cannot occur in a standardised name.)
+cache_key <- function(d) paste(d$original_name, d$identifier, sep = "\r")
 
 # function moves taxa from tocheck to checked
 redistribute <- function(data) {

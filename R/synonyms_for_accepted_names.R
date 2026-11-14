@@ -1,7 +1,7 @@
 #' @title Synonyms for Currently Accepted Names
 #'
 #' @description
-#' This function generates lists a string of synonyms for currently accepted species and infra-species to facilitate working out past names of a taxon
+#' This function lists the synonyms for currently accepted species and infra-species to facilitate working out past names of a taxon
 #' when the current name is known.
 #' 
 #' @param accepted_names A character vector of currently accepted taxon names to look up synonyms for.
@@ -46,10 +46,10 @@ synonyms_for_accepted_names <- function(accepted_names, collapse = TRUE, resourc
     # remove the accepted names themselves
     dplyr::filter(taxonomic_status != "accepted") |>
     dplyr::mutate(
-      taxonomic_status = (relevel_taxonomic_status_preferred_order(taxonomic_status)),
+      taxonomic_status = relevel_taxonomic_status_preferred_order(taxonomic_status)
     ) |>
     dplyr::distinct(accepted_name, canonical_name, .keep_all = TRUE) |>
-    dplyr::arrange(accepted_name, taxonomic_status, taxonomic_status)
+    dplyr::arrange(accepted_name, taxonomic_status)
   
   
   if(collapse == TRUE) {

@@ -14,10 +14,12 @@ load_taxonomic_resources(
 \item{stable_or_current_data}{Type of dataset to access.
 The default is "stable", which loads the dataset from a github archived file.
 If set to "current", the dataset will be loaded from a URL which is the
-cutting edge version, but this may change at any time without notice.}
+cutting edge version, but this may change at any time without notice.
+Loading "current" data requires the 'readr' package.}
 
-\item{version}{The version number of the dataset to use.
-Defaults to the default version.}
+\item{version}{The version number of the dataset to use (see
+\code{\link[=get_versions]{get_versions()}}). Defaults to \code{\link[=default_version]{default_version()}}, the most recent
+release. Ignored for "current" data.}
 
 \item{quiet}{A logical indicating whether to print status of loading to screen.
 Defaults to FALSE.}
@@ -44,6 +46,11 @@ the same \code{version} and \code{stable_or_current_data} arguments return immed
 without re-downloading or re-processing the data. Use
 \code{\link[=clear_cached_resources]{clear_cached_resources()}} to force a reload.
 \item \code{"current"} data is not cached because it may change between calls.
+\item Stable versions are downloaded once and kept in
+\code{tools::R_user_dir("APCalign")}, so later sessions, and sessions without
+an internet connection, can load them without downloading again. Each
+version takes about 20 MB; delete the files there to remove versions you
+no longer need.
 }
 }
 \examples{

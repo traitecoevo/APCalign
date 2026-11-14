@@ -1,3 +1,5 @@
+skip_if_no_resources()
+
 test_that("fuzzy_match() rejects an affinis/hybrid qualifier masquerading as an ordinary word", {
 
   # Regression test for #291/#294: "Acacia aff. aneura" ("resembles A. aneura, not
