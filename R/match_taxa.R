@@ -160,6 +160,11 @@ match_taxa <- function(
       aligned_reason_suffix = aligned_reason_suffix(resources)
     )
 
+  ## The hyphenated words of the reference names (`pes-caprae`); resources not
+  ## made by `load_taxonomic_resources()` may lack them
+  hyphenated_words <- resources$hyphenated_words
+  if (is.null(hyphenated_words)) hyphenated_words <- reference_hyphenated_words(resources)
+
   ## In the tocheck dataframe, add columns with manipulated versions of the string to match
   ## Various stripped versions of the string to match, versions with 1, 2 and 3 words (genus, binomial, trinomial), and fuzzy-matched genera are propagated.
   taxa$tocheck <- taxa$tocheck %>%
@@ -167,7 +172,7 @@ match_taxa <- function(
       cleaned_name = cleaned_name %>%
         update_na_with(standardise_names(original_name)),
       stripped_name = stripped_name %>%
-        update_na_with(strip_names(cleaned_name)),
+        update_na_with(rehyphenate(strip_names(cleaned_name), hyphenated_words)),
       stripped_name2 = stripped_name2 %>%
         update_na_with(strip_names_extra(stripped_name)),
       trinomial = word(stripped_name2, start = 1, end = 3),
@@ -1289,4 +1294,64 @@ add_chars_changed <- function(data) {
   }
   data$chars_changed <- out
   data
+}
+
+
+# The hyphenated words in the stripped reference names, e.g. `pes-caprae`,
+# `van-royena`, `roseo-albus`, for `rehyphenate()`. A word is left out if the
+# same letters also occur as separate words in a reference name ("a b" as well
+# as "a-b"), since then a name written "a b" may mean either.
+reference_hyphenated_words <- function(resources) {
+  stripped <- unique(c(
+    resources$APC_accepted$stripped_canonical,
+    resources$APC_synonyms$stripped_canonical,
+    resources$APNI_names$stripped_canonical
+  ))
+  stripped <- stripped[!is.na(stripped)]
+  with_hyphen <- stripped[grepl("-", stripped, fixed = TRUE)]
+  words <- unlist(strsplit(with_hyphen, " ", fixed = TRUE), use.names = FALSE)
+  words <- unique(words[grepl("^\\p{L}+(-\\p{L}+)+$", words, perl = TRUE)])
+  if (length(words) == 0) return(character(0))
+
+  spaced <- gsub("-", " ", words, fixed = TRUE)
+  # every pair of adjacent words in the reference names
+  split_words <- strsplit(stripped, " ", fixed = TRUE)
+  all_words <- unlist(split_words, use.names = FALSE)
+  name_id <- rep(seq_along(split_words), lengths(split_words))
+  n <- length(all_words)
+  same_name <- name_id[-1] == name_id[-n]
+  pairs <- paste(all_words[-n], all_words[-1])[same_name]
+
+  two_parts <- lengths(strsplit(words, "-", fixed = TRUE)) == 2
+  ambiguous <- spaced %in% pairs
+  # the few words of three or more parts are looked for directly
+  padded <- paste0(" ", stripped, " ")
+  ambiguous[!two_parts] <- vapply(spaced[!two_parts], function(s) {
+    any(grepl(paste0(" ", s, " "), padded, fixed = TRUE))
+  }, logical(1))
+  sort(words[!ambiguous])
+}
+
+# Put the hyphen back into a hyphenated word written with spaces instead:
+# `ipomoea pes caprae brasiliensis` -> `ipomoea pes-caprae brasiliensis`, when
+# `pes-caprae` is one of `hyphenated_words`. Applied to the stripped input
+# name, so that it, and the `binomial` and `trinomial` built from it, line up
+# with the stripped reference names, which keep their hyphens (#310).
+rehyphenate <- function(x, hyphenated_words) {
+  if (length(hyphenated_words) == 0) return(x)
+  spaced <- gsub("-", " ", hyphenated_words, fixed = TRUE)
+  # longest first, so that "a b c" is joined before "a b"
+  o <- order(-nchar(spaced))
+  spaced <- paste0(" ", spaced[o], " ")
+  joined <- paste0(" ", hyphenated_words[o], " ")
+
+  todo <- which(!is.na(x) & grepl(" ", x, fixed = TRUE))
+  if (length(todo) == 0) return(x)
+  y <- paste0(" ", x[todo], " ")
+  for (k in seq_along(spaced)) {
+    hit <- grepl(spaced[k], y, fixed = TRUE)
+    if (any(hit)) y[hit] <- gsub(spaced[k], joined[k], y[hit], fixed = TRUE)
+  }
+  x[todo] <- substring(y, 2L, nchar(y) - 1L)
+  x
 }

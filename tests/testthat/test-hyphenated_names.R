@@ -12,7 +12,13 @@ test_that("strip_names() keeps a hyphen between two letters, and only there", {
       "Acacia dealbata--mearnsii",   # intergrade marker, not a hyphenated word
       "Acacia sp. (12-3)",           # collector number
       "Acacia - aneura",
-      "Acacia -aneura"
+      "Acacia -aneura",
+      "Acacia sp.-Mt Magnet",        # a hyphen after a rank marker or qualifier
+      "Acacia sp-Mt Magnet",         # separates two words
+      "Acacia aneura var-intermedia",
+      "Acacia aff-aneura",
+      "Acacia x-aneura",
+      "Van\u2010royena"               # the Unicode hyphen U+2010
     )),
     c(
       "van-royena",
@@ -21,9 +27,29 @@ test_that("strip_names() keeps a hyphen between two letters, and only there", {
       "acacia dealbata mearnsii",
       "acacia sp 12 3",
       "acacia aneura",
-      "acacia aneura"
+      "acacia aneura",
+      "acacia sp mt magnet",
+      "acacia sp mt magnet",
+      "acacia aneura intermedia",
+      "acacia aff aneura",
+      "acacia x aneura",
+      "van-royena"
     )
   )
+})
+
+test_that("rehyphenate() joins only known hyphenated words", {
+  words <- c("pes-caprae", "roseo-albus", "van-royena", "a-b-c")
+  expect_equal(
+    rehyphenate(
+      c("ipomoea pes caprae brasiliensis", "ptilotus roseo albus", "van royena",
+        "x a b c y", "acacia aneura", "pes", NA),
+      words
+    ),
+    c("ipomoea pes-caprae brasiliensis", "ptilotus roseo-albus", "van-royena",
+      "x a-b-c y", "acacia aneura", "pes", NA)
+  )
+  expect_equal(rehyphenate("ipomoea pes caprae", character(0)), "ipomoea pes caprae")
 })
 
 test_that("hyphenated genera and epithets align to the right names (#310)", {
@@ -73,4 +99,47 @@ test_that("exact hyphenated names still align to themselves", {
   out <- align_taxa(x, resources = resources, quiet = TRUE)
   expect_equal(out$aligned_name, x)
   expect_equal(out$taxon_rank, rep("species", length(x)))
+})
+
+test_that("a hyphenated name written with spaces still aligns to it", {
+  skip_if(is.null(resources), "Taxonomic resources could not be loaded")
+
+  # Before #310 these matched the reference names because the hyphen was
+  # stripped from both; the input now has its hyphen put back instead
+  x <- c("Ipomoea pes caprae subsp. brasiliensis",
+         "Van royena castanosperma",
+         "Ptilotus roseo albus var. conglomeratus",  # not "Ptilotus roei"
+         "Scandix pecten veneris subsp. pecten veneris",
+         "Pyracantha crenato serrata",
+         "Grevillea montis cole subsp. brevistyla",
+         "Polyscias sp. Douglas Denison")
+  out <- align_taxa(x, resources = resources, quiet = TRUE)
+  expect_equal(
+    out$aligned_name,
+    c("Ipomoea pes-caprae subsp. brasiliensis",
+      "Van-royena castanosperma",
+      "Ptilotus roseo-albus var. conglomeratus",
+      "Scandix pecten-veneris subsp. pecten-veneris",
+      "Pyracantha crenato-serrata",
+      "Grevillea montis-cole subsp. brevistyla",
+      "Polyscias sp. Douglas-Denison (R.Schahinger HO526133)")
+  )
+
+  # the words of a hyphenated name are joined only where the reference names
+  # never use them as two separate words
+  expect_true("pes-caprae" %in% resources$hyphenated_words)
+  expect_false(any(grepl(" ", resources$hyphenated_words)))
+})
+
+test_that("a hyphen after a rank marker or qualifier still separates words", {
+  skip_if(is.null(resources), "Taxonomic resources could not be loaded")
+
+  out <- align_taxa(c("Acacia sp.-Mt Magnet", "Acacia sp-Mt Magnet",
+                      "Acacia aneura var.-intermedia", "Acacia aneura var-intermedia"),
+                    resources = resources, quiet = TRUE)
+  expect_equal(
+    out$aligned_name,
+    c("Acacia sp. Mt Magnet (T.McKenzie 5)", "Acacia sp. Mt Magnet (T.McKenzie 5)",
+      "Acacia aneura var. intermedia", "Acacia aneura var. intermedia")
+  )
 })

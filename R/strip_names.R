@@ -31,6 +31,15 @@
 strip_names <- function(taxon_names) {
   ## Steps run one after another, not as a single `%>%` chain (see gsub_perl_rules()).
   x <- gsub_perl_rules(taxon_names, list(
+    ## the Unicode hyphens (U+2010, U+2011) are hyphens too
+    c("\u2010|\u2011", "-"),
+    ## a hyphen that touches a full stop, or follows a rank marker, qualifier
+    ## or hybrid marker, separates two words rather than joining one:
+    ## `sp.-Mt Magnet`, `sp-Mt Magnet`, `var-intermedia`, `aff-aneura`,
+    ## `Acacia x-aneura`. (Otherwise removing the full stop next would leave a
+    ## hyphen between two letters, `sp-Mt`, which is kept below.)
+    c("(?<=\\.)-|-(?=\\.)", " "),
+    c("(?i)(?<!\\p{L})(sp|spp|ssp|subsp|var|f|forma|ser|aff|cf|x)-(?=\\p{L})", "\\1 "),
     c("\\.", ""),
     c("\\ \\)", ""),
     c("\\(\\ ", "")
