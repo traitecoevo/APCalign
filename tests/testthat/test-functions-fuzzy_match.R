@@ -65,3 +65,29 @@ test_that("align_taxa() caps an affinis-qualified name at genus rank instead of 
   expect_equal(out$taxon_rank, "genus")
   expect_equal(out$alignment_code, "match_06a_species_affinis_APC_exact")
 })
+
+test_that("a name with no letter does not stop the lookup", {
+  # One such name used to stop the whole batch with "missing value where
+  # TRUE/FALSE needed" in fuzzy_match().
+  expect_true(is.na(fuzzy_match("12 34", resources$genera_accepted$genus, 2, 0.35)))
+  odd <- c("12 34", "1 1/2", "\u00bd", "\u00b1 Acacia")
+  out <- expect_no_error(
+    create_taxonomic_update_lookup(c(odd, "Acacia aneura"), resources = resources)
+  )
+  expect_equal(nrow(out), 5)
+  expect_equal(out$original_name, c(odd, "Acacia aneura"))
+  expect_equal(out$aligned_name[5], "Acacia aneura")
+})
+
+test_that("a word with no letter or digit after the genus does not stop the lookup", {
+  # "+ ~ $ ^ |" are symbols, not punctuation, so strip_names() keeps them; the
+  # word's first letter is NA, and comparing it used to stop the whole batch.
+  expect_true(is.na(fuzzy_match("acacia --", "acacia ab", 5, 1)))
+  expect_true(is.na(fuzzy_match("acacia b", "acacia", 2, 0.35)))
+  odd <- c("Acacia + aneura", "Eucalyptus |", "Eucalyptus ~", "Acacia \u2297 aneura")
+  out <- expect_no_error(
+    create_taxonomic_update_lookup(c(odd, "Acacia aneura"), resources = resources)
+  )
+  expect_equal(out$original_name, c(odd, "Acacia aneura"))
+  expect_equal(out$aligned_name[5], "Acacia aneura")
+})

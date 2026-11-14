@@ -53,11 +53,18 @@ fuzzy_match <- function(txt, accepted_list,
 
   ## extract first letter of first word
   txt_word1_start <- to_lower(re_extract(txt, "\\p{L}"))
+
+  ## Text with no letter (e.g. the genus word of "12 34", or "+/-" from
+  ## "\u00b1 Acacia") cannot match anything: the reference list is narrowed to
+  ## names with the same first letter. Without this, the comparison with NA
+  ## below stopped the whole lookup with "missing value where TRUE/FALSE
+  ## needed".
+  if (is.na(txt_word1_start)) return(NA)
   
   ## for text matches with 2 or more words,
   ## extract the first letter/digit of the second word
   if(words_in_text > 1 & epithet_letters == 2) 
-    {if(nchar(word(txt,2)) == 1) {
+    {if(isTRUE(nchar(word(txt,2)) == 1)) {
       txt_word2_start <- re_extract(word(txt,2),
                                               "\\p{L}|\\p{Nd}")
     } else {
@@ -137,7 +144,7 @@ fuzzy_match <- function(txt, accepted_list,
     ## (if the matched string includes 2+ words)
     if(words_in_text > 1 & epithet_letters == 2) {
       x <- word(potential_match,2)
-      if(nchar(x) == 1) {
+      if(isTRUE(nchar(x) == 1)) {
         match_word2_start <- re_extract(x, "\\p{L}|\\p{Nd}")
       } else {
         match_word2_start <- re_extract(x, "\\p{L}\\p{L}|\\p{Nd}")
@@ -156,35 +163,38 @@ fuzzy_match <- function(txt, accepted_list,
     
     ## keep match if the first letters of the first three words
     ## (or fewer if applicable) in the string to match are identical to the
-    ## first letters of the first three words in the matched string
+    ## first letters of the first three words in the matched string.
+    ## isTRUE(): a word with no letter or digit (e.g. "Acacia + aneura") gives
+    ## an NA first letter, which is no match -- not an error that stops the
+    ## whole lookup.
 
     if(words_in_text == 1) {
     ## next line is no longer being used,
     ## since only comparing to first-letter matches
-      if (txt_word1_start == match_word1_start) {  
+      if (isTRUE(txt_word1_start == match_word1_start)) {
         return(TRUE)
       }
       
     } else if(words_in_text == 2) {
-      if (
+      if (isTRUE(
           txt_word1_start == match_word1_start &
           txt_word2_start == match_word2_start
-      ) {
+      )) {
         return(TRUE)
       }
     } else if(words_in_text > 2) {
       if (words_in_match > 2) {
-        if (
-          txt_word1_start == match_word1_start & 
+        if (isTRUE(
+          txt_word1_start == match_word1_start &
           txt_word2_start == match_word2_start &
           txt_word3_start == match_word3_start
-        ) {
+        )) {
           return(TRUE)
         }
-      } else if (
+      } else if (isTRUE(
           txt_word1_start == match_word1_start &
           txt_word2_start == match_word2_start
-        ) {
+        )) {
           return(TRUE)}
     }
     return(FALSE)
