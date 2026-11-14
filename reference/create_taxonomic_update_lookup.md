@@ -103,7 +103,10 @@ create_taxonomic_update_lookup(
 - quiet:
 
   Logical to indicate whether to display messages while loading data and
-  aligning taxa.
+  aligning taxa. Unless `TRUE`, the function ends by printing a summary:
+  how many names aligned to a species or infraspecific taxon, to a genus
+  or family only, or not at all; how many were updated to a different
+  name; and how many could refer to more than one accepted taxon.
 
 - output:
 
@@ -234,6 +237,11 @@ create_taxonomic_update_lookup(c("Eucalyptus regnans",
 #> Checking alignments of 4 taxa
 #>   -> of these 3 names have a perfect match to an accepted scientific name in the APC, and 0 names have a perfect match to a synonym in the APC.
 #>       Alignments being sought for remaining names.
+#> Summary of 4 names:
+#>   -> 3 aligned to a species or infraspecific taxon (3 in the APC, 0 in the APNI only)
+#>   -> 0 aligned only to a genus and 0 only to a family
+#>   -> 1 could not be aligned
+#>   -> 0 aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)
 #> # A tibble: 4 × 12
 #>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
 #>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
@@ -258,6 +266,11 @@ create_taxonomic_update_lookup(
 #> Checking alignments of 6 taxa
 #>   -> of these 1 names have a perfect match to an accepted scientific name in the APC, and 0 names have a perfect match to a synonym in the APC.
 #>       Alignments being sought for remaining names.
+#> Summary of 6 names:
+#>   -> 4 aligned to a species or infraspecific taxon (4 in the APC, 0 in the APNI only)
+#>   -> 2 aligned only to a genus and 0 only to a family
+#>   -> 0 could not be aligned
+#>   -> 1 aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)
 #> # A tibble: 6 × 21
 #>   original_name     aligned_name       accepted_name suggested_name genus family
 #>   <chr>             <chr>              <chr>         <chr>          <chr> <chr> 
@@ -290,6 +303,12 @@ create_taxonomic_update_lookup(
 #> Checking alignments of 32 taxa
 #>   -> of these 10 names have a perfect match to an accepted scientific name in the APC, and 7 names have a perfect match to a synonym in the APC.
 #>       Alignments being sought for remaining names.
+#> Summary of 32 names:
+#>   -> 23 aligned to a species or infraspecific taxon (23 in the APC, 0 in the APNI only)
+#>   -> 7 aligned only to a genus and 1 only to a family
+#>   -> 1 could not be aligned
+#>   -> 10 aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)
+#>   -> 1 names could refer to more than one currently accepted taxon. With `taxonomic_splits = "most_likely_species"`, `suggested_name` gives the most likely species and lists the alternatives in square brackets.
 #> # A tibble: 32 × 21
 #>    original_name          aligned_name accepted_name suggested_name genus family
 #>    <chr>                  <chr>        <chr>         <chr>          <chr> <chr> 

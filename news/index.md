@@ -2,6 +2,15 @@
 
 ## APCalign (development version)
 
+- [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
+  now ends with a summary of what it did, unless `quiet = TRUE`: how
+  many names aligned to a species or infraspecific taxon (in the APC, or
+  the APNI only), to a genus or family only, or not at all; how many
+  aligned names were updated to a different name; and how many could
+  refer to more than one accepted taxon, with a note on how the chosen
+  `taxonomic_splits` option reports them. Each distinct input name is
+  counted once
+  ([\#131](https://github.com/traitecoevo/APCalign/issues/131)).
 - `aligned_reason` now ends with the version of the APC/APNI data used,
   e.g. `(APC/APNI version 2024-10-11)`, instead of the date the
   alignment was run. The same names aligned against the same data now

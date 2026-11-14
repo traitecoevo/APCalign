@@ -153,7 +153,10 @@ to be called repeatedly, it's much faster to load the resources using
 
 <dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
 <dd><p>Logical to indicate whether to display messages while loading data and
-aligning taxa.</p></dd>
+aligning taxa. Unless <code>TRUE</code>, the function ends by printing a summary: how
+many names aligned to a species or infraspecific taxon, to a genus or family
+only, or not at all; how many were updated to a different name; and how
+many could refer to more than one accepted taxon.</p></dd>
 
 
 <dt id="arg-output">output<a class="anchor" aria-label="anchor" href="#arg-output"></a></dt>
@@ -252,6 +255,11 @@ and family- level names, such as identifier = "Royal NP" would return
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Checking alignments of 4 taxa</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; of these <span style="color: #0000BB;">3</span> names have a perfect match to an accepted scientific name in the APC, and <span style="color: #0000BB;">0</span> names have a perfect match to a synonym in the APC.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>       Alignments being sought for remaining names.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Summary of <span style="color: #0000BB;">4</span> names:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">3</span> aligned to a species or infraspecific taxon (<span style="color: #0000BB;">3</span> in the APC, <span style="color: #0000BB;">0</span> in the APNI only)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">0</span> aligned only to a genus and <span style="color: #0000BB;">0</span> only to a family</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">1</span> could not be aligned</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">0</span> aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 12</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   original_name       aligned_name accepted_name suggested_name genus taxon_rank</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
@@ -276,6 +284,11 @@ and family- level names, such as identifier = "Royal NP" would return
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Checking alignments of 6 taxa</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; of these <span style="color: #0000BB;">1</span> names have a perfect match to an accepted scientific name in the APC, and <span style="color: #0000BB;">0</span> names have a perfect match to a synonym in the APC.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>       Alignments being sought for remaining names.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Summary of <span style="color: #0000BB;">6</span> names:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">4</span> aligned to a species or infraspecific taxon (<span style="color: #0000BB;">4</span> in the APC, <span style="color: #0000BB;">0</span> in the APNI only)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">2</span> aligned only to a genus and <span style="color: #0000BB;">0</span> only to a family</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">0</span> could not be aligned</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">1</span> aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 21</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   original_name     aligned_name       accepted_name suggested_name genus family</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
@@ -308,6 +321,12 @@ and family- level names, such as identifier = "Royal NP" would return
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Checking alignments of 32 taxa</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; of these <span style="color: #0000BB;">10</span> names have a perfect match to an accepted scientific name in the APC, and <span style="color: #0000BB;">7</span> names have a perfect match to a synonym in the APC.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>       Alignments being sought for remaining names.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Summary of <span style="color: #0000BB;">32</span> names:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">23</span> aligned to a species or infraspecific taxon (<span style="color: #0000BB;">23</span> in the APC, <span style="color: #0000BB;">0</span> in the APNI only)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">7</span> aligned only to a genus and <span style="color: #0000BB;">1</span> only to a family</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">1</span> could not be aligned</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">10</span> aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">1</span> names could refer to more than one currently accepted taxon. With `taxonomic_splits = "most_likely_species"`, `suggested_name` gives the most likely species and lists the alternatives in square brackets.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 32 × 21</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    original_name          aligned_name accepted_name suggested_name genus family</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
