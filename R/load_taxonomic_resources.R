@@ -32,7 +32,10 @@
 #' @param quiet A logical indicating whether to print status of loading to screen.
 #'  Defaults to FALSE.
 #'
-#' @return A list of taxonomic resource data frames.
+#' @return A list of taxonomic resource data frames. Its `"version"` attribute
+#'   records which data were loaded: the `version` for stable data, or
+#'   `"current, downloaded <date>"` for current data. [align_taxa()] writes it
+#'   into each `aligned_reason`.
 #' @export
 #'
 #' @examples
@@ -292,6 +295,15 @@ load_taxonomic_resources <-
 
     close(pb)
     if(!quiet) message("...done")
+
+    # Record which APC/APNI data these tables were built from. `match_taxa()`
+    # stamps it into every `aligned_reason`, in place of the run date (#281).
+    attr(taxonomic_resources, "version") <-
+      if (stable_or_current_data == "stable") {
+        version
+      } else {
+        paste0("current, downloaded ", Sys.Date())
+      }
 
     # Store in session cache for future calls
     if (use_cache) {

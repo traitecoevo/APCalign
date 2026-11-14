@@ -23,7 +23,10 @@ Defaults to the default version.}
 Defaults to FALSE.}
 }
 \value{
-A list of taxonomic resource data frames.
+A list of taxonomic resource data frames. Its \code{"version"} attribute
+records which data were loaded: the \code{version} for stable data, or
+\code{"current, downloaded <date>"} for current data. \code{\link[=align_taxa]{align_taxa()}} writes it
+into each \code{aligned_reason}.
 }
 \description{
 This function loads two taxonomic datasets for Australia's vascular plants,
