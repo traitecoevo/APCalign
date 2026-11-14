@@ -121,6 +121,10 @@ details of a scientific name; available for both APC and APNI names.
 \item row_number: the row number of a specific original_name in the input.
 \item number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon",
 the number of possible taxon names that have been collapsed.
+\item chars_changed: for a fuzzy match, how many characters of the name were
+changed to match the reference name; \code{0} for an exact match; \code{NA} when the
+name was not aligned. Carried over from \code{\link[=align_taxa]{align_taxa()}}, where it is
+described in full.
 }
 }
 \description{
