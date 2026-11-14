@@ -2,6 +2,20 @@
 
 ## APCalign (development version)
 
+- [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md),
+  [`update_taxonomy()`](https://traitecoevo.github.io/APCalign/reference/update_taxonomy.md)
+  and
+  [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
+  gain a `chars_changed` column: for a fuzzy match, how many characters
+  of the name were changed to match the reference name (the
+  Damerau-Levenshtein distance that `fuzzy_match()` already uses to
+  choose the match), `0` for an exact match, and `NA` when the name was
+  not aligned. Only what the match step compared is counted: for a
+  genus- or family-rank match, just the first word, and in most steps
+  after case, punctuation, rank markers and filler words have been
+  standardised or removed. It describes the size of the correction, not
+  how reliable the match is
+  ([\#307](https://github.com/traitecoevo/APCalign/issues/307)).
 - [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
   and
   [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md)

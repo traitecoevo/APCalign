@@ -179,6 +179,12 @@ rank, taxonomic status, taxon IDs and genera.
   "collapse_to_higher_taxon", the number of possible taxon names that
   have been collapsed.
 
+- chars_changed: for a fuzzy match, how many characters of the name were
+  changed to match the reference name; `0` for an exact match; `NA` when
+  the name was not aligned. Carried over from
+  [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md),
+  where it is described in full.
+
 ## Details
 
 - It uses first the function `align_taxa`, then the function
@@ -242,16 +248,16 @@ create_taxonomic_update_lookup(c("Eucalyptus regnans",
 #>   -> 0 aligned only to a genus and 0 only to a family
 #>   -> 1 could not be aligned
 #>   -> 0 aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)
-#> # A tibble: 4 × 12
+#> # A tibble: 4 × 13
 #>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
 #>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
 #> 1 Eucalyptus regnans  Eucalyptus … Eucalyptus r… Eucalyptus re… Euca… species   
 #> 2 Acacia melanoxylon  Acacia mela… Acacia melan… Acacia melano… Acac… species   
 #> 3 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
 #> 4 Not a species       NA           NA            NA             NA    NA        
-#> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
+#> # ℹ 7 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
 #> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
-#> #   number_of_collapsed_taxa <dbl>
+#> #   number_of_collapsed_taxa <dbl>, chars_changed <int>
                                  
 # example 2
 input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", 
@@ -271,7 +277,7 @@ create_taxonomic_update_lookup(
 #>   -> 2 aligned only to a genus and 0 only to a family
 #>   -> 0 could not be aligned
 #>   -> 1 aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)
-#> # A tibble: 6 × 21
+#> # A tibble: 6 × 22
 #>   original_name     aligned_name       accepted_name suggested_name genus family
 #>   <chr>             <chr>              <chr>         <chr>          <chr> <chr> 
 #> 1 Banksia serrata   Banksia serrata    Banksia serr… Banksia serra… Bank… Prote…
@@ -280,12 +286,12 @@ create_taxonomic_update_lookup(
 #> 4 Banksea serrata   Banksia serrata    Banksia serr… Banksia serra… Bank… Prote…
 #> 5 Banksia serrrrata Banksia serrata    Banksia serr… Banksia serra… Bank… Prote…
 #> 6 Dryandra          Dryandra sp. [Dry… NA            Banksia sp. [… Bank… Prote…
-#> # ℹ 15 more variables: taxon_rank <chr>, taxonomic_dataset <chr>,
+#> # ℹ 16 more variables: taxon_rank <chr>, taxonomic_dataset <chr>,
 #> #   taxonomic_status <chr>, taxonomic_status_aligned <chr>,
 #> #   aligned_reason <chr>, update_reason <chr>, subclass <chr>,
 #> #   taxon_distribution <chr>, scientific_name <chr>, taxon_ID <chr>,
 #> #   taxon_ID_genus <chr>, scientific_name_ID <chr>, canonical_name <chr>,
-#> #   row_number <dbl>, number_of_collapsed_taxa <dbl>
+#> #   row_number <dbl>, number_of_collapsed_taxa <dbl>, chars_changed <int>
 
 # example 3
 taxon_list <-
@@ -309,7 +315,7 @@ create_taxonomic_update_lookup(
 #>   -> 1 could not be aligned
 #>   -> 10 aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)
 #>   -> 1 names could refer to more than one currently accepted taxon. With `taxonomic_splits = "most_likely_species"`, `suggested_name` gives the most likely species and lists the alternatives in square brackets.
-#> # A tibble: 32 × 21
+#> # A tibble: 32 × 22
 #>    original_name          aligned_name accepted_name suggested_name genus family
 #>    <chr>                  <chr>        <chr>         <chr>          <chr> <chr> 
 #>  1 Banksia serrata        Banksia ser… Banksia serr… Banksia serra… Bank… Prote…
@@ -323,11 +329,11 @@ create_taxonomic_update_lookup(
 #>  9 Argyrodendron Whyanbe… Argyrodendr… Argyrodendro… Argyrodendron… Argy… Malva…
 #> 10 Argyrodendron sp. (Wh… Argyrodendr… Argyrodendro… Argyrodendron… Argy… Malva…
 #> # ℹ 22 more rows
-#> # ℹ 15 more variables: taxon_rank <chr>, taxonomic_dataset <chr>,
+#> # ℹ 16 more variables: taxon_rank <chr>, taxonomic_dataset <chr>,
 #> #   taxonomic_status <chr>, taxonomic_status_aligned <chr>,
 #> #   aligned_reason <chr>, update_reason <chr>, subclass <chr>,
 #> #   taxon_distribution <chr>, scientific_name <chr>, taxon_ID <chr>,
 #> #   taxon_ID_genus <chr>, scientific_name_ID <chr>, canonical_name <chr>,
-#> #   row_number <dbl>, number_of_collapsed_taxa <dbl>
+#> #   row_number <dbl>, number_of_collapsed_taxa <dbl>, chars_changed <int>
 # }
 ```

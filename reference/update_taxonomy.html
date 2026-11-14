@@ -143,6 +143,10 @@ details of a scientific name; available for both APC and APNI names.</p></li>
 <li><p>row_number: the row number of a specific original_name in the input.</p></li>
 <li><p>number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon",
 the number of possible taxon names that have been collapsed.</p></li>
+<li><p>chars_changed: for a fuzzy match, how many characters of the name were
+changed to match the reference name; <code>0</code> for an exact match; <code>NA</code> when the
+name was not aligned. Carried over from <code><a href="align_taxa.html">align_taxa()</a></code>, where it is
+described in full.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

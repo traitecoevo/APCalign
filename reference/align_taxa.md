@@ -93,7 +93,8 @@ align_taxa(
 ## Value
 
 A tibble with columns that include original_name, aligned_name,
-taxonomic_dataset, taxon_rank, aligned_reason, alignment_code.
+taxonomic_dataset, taxon_rank, aligned_reason, alignment_code,
+chars_changed.
 
 - original_name: the original plant name input.
 
@@ -110,6 +111,18 @@ taxonomic_dataset, taxon_rank, aligned_reason, alignment_code.
 
 - alignment_code: a code that accompanies the aligned_reason, indicating
   the relative sequence of the match during the alignment process.
+
+- chars_changed: for a fuzzy match, how many characters differ between
+  the name and the reference name it was matched to (the
+  Damerau-Levenshtein distance, counting an insertion, deletion,
+  substitution or swap of two adjacent characters as one change); `0`
+  for an exact match; `NA` when the name was not aligned. Only the part
+  of the name the match step compared is counted: for a genus- or
+  family-rank match, just the first word, and in most steps after case,
+  punctuation, rank markers and filler words have been standardised or
+  removed. It is not a measure of how reliable a match is: a phrase name
+  can match reliably with several characters changed, while one
+  character can separate two species.
 
 - cleaned_name: original name with punctuation and infraspecific taxon
   designation terms standardised by the function standardise_names;
@@ -274,12 +287,13 @@ align_taxa(c("Poa annua", "Abies alba"), resources=resources)
 #> Checking alignments of 2 taxa
 #>   -> of these 1 names have a perfect match to an accepted scientific name in the APC, and 0 names have a perfect match to a synonym in the APC.
 #>       Alignments being sought for remaining names.
-#> # A tibble: 2 × 7
+#> # A tibble: 2 × 8
 #>   original_name cleaned_name aligned_name taxonomic_dataset taxon_rank
 #>   <chr>         <chr>        <chr>        <chr>             <chr>     
 #> 1 Poa annua     Poa annua    Poa annua    APC               species   
 #> 2 Abies alba    Abies alba   NA           NA                NA        
-#> # ℹ 2 more variables: aligned_reason <chr>, alignment_code <chr>
+#> # ℹ 3 more variables: aligned_reason <chr>, alignment_code <chr>,
+#> #   chars_changed <int>
 
 # example 2
 input <- c("Banksia serrata", "Banksia serrate", "Banksia cerrata", 

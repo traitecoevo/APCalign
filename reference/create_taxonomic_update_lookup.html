@@ -205,6 +205,10 @@ details of a scientific name; available for both APC and APNI names.</p></li>
 <li><p>row_number: the row number of a specific original_name in the input.</p></li>
 <li><p>number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon",
 the number of possible taxon names that have been collapsed.</p></li>
+<li><p>chars_changed: for a fuzzy match, how many characters of the name were
+changed to match the reference name; <code>0</code> for an exact match; <code>NA</code> when the
+name was not aligned. Carried over from <code><a href="align_taxa.html">align_taxa()</a></code>, where it is
+described in full.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -260,16 +264,16 @@ and family- level names, such as identifier = "Royal NP" would return
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">0</span> aligned only to a genus and <span style="color: #0000BB;">0</span> only to a family</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">1</span> could not be aligned</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">0</span> aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 13</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   original_name       aligned_name accepted_name suggested_name genus taxon_rank</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Eucalyptus regnans  Eucalyptus … Eucalyptus r… Eucalyptus re… Euca… species   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Acacia melanoxylon  Acacia mela… Acacia melan… Acacia melano… Acac… species   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Not a species       <span style="color: #BB0000;">NA</span>           <span style="color: #BB0000;">NA</span>            <span style="color: #BB0000;">NA</span>             <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 6 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   number_of_collapsed_taxa &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   number_of_collapsed_taxa &lt;dbl&gt;, chars_changed &lt;int&gt;</span></span>
 <span class="r-in"><span>                                 </span></span>
 <span class="r-in"><span><span class="co"># example 2</span></span></span>
 <span class="r-in"><span><span class="va">input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia serrata"</span>, <span class="st">"Banksia serrate"</span>, <span class="st">"Banksia cerrata"</span>, </span></span>
@@ -289,7 +293,7 @@ and family- level names, such as identifier = "Royal NP" would return
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">2</span> aligned only to a genus and <span style="color: #0000BB;">0</span> only to a family</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">0</span> could not be aligned</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">1</span> aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 21</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 22</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   original_name     aligned_name       accepted_name suggested_name genus family</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Banksia serrata   Banksia serrata    Banksia serr… Banksia serra… Bank… Prote…</span>
@@ -298,12 +302,12 @@ and family- level names, such as identifier = "Royal NP" would return
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Banksea serrata   Banksia serrata    Banksia serr… Banksia serra… Bank… Prote…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> Banksia serrrrata Banksia serrata    Banksia serr… Banksia serra… Bank… Prote…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> Dryandra          Dryandra sp. [Dry… <span style="color: #BB0000;">NA</span>            Banksia sp. [… Bank… Prote…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: taxon_rank &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 16 more variables: taxon_rank &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_status &lt;chr&gt;, taxonomic_status_aligned &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_distribution &lt;chr&gt;, scientific_name &lt;chr&gt;, taxon_ID &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;, canonical_name &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;, chars_changed &lt;int&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># example 3</span></span></span>
 <span class="r-in"><span><span class="va">taxon_list</span> <span class="op">&lt;-</span></span></span>
@@ -327,7 +331,7 @@ and family- level names, such as identifier = "Royal NP" would return
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">1</span> could not be aligned</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">10</span> aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; <span style="color: #0000BB;">1</span> names could refer to more than one currently accepted taxon. With `taxonomic_splits = "most_likely_species"`, `suggested_name` gives the most likely species and lists the alternatives in square brackets.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 32 × 21</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 32 × 22</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    original_name          aligned_name accepted_name suggested_name genus family</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Banksia serrata        Banksia ser… Banksia serr… Banksia serra… Bank… Prote…</span>
@@ -341,12 +345,12 @@ and family- level names, such as identifier = "Royal NP" would return
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Argyrodendron Whyanbe… Argyrodendr… Argyrodendro… Argyrodendron… Argy… Malva…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Argyrodendron sp. (Wh… Argyrodendr… Argyrodendro… Argyrodendron… Argy… Malva…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 22 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: taxon_rank &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 16 more variables: taxon_rank &lt;chr&gt;, taxonomic_dataset &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxonomic_status &lt;chr&gt;, taxonomic_status_aligned &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_distribution &lt;chr&gt;, scientific_name &lt;chr&gt;, taxon_ID &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;, canonical_name &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;, chars_changed &lt;int&gt;</span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

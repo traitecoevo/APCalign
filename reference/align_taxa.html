@@ -153,7 +153,8 @@ which defaults to NA.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A tibble with columns that include original_name, aligned_name,
-taxonomic_dataset, taxon_rank, aligned_reason, alignment_code.</p><ul><li><p>original_name: the original plant name input.</p></li>
+taxonomic_dataset, taxon_rank, aligned_reason, alignment_code,
+chars_changed.</p><ul><li><p>original_name: the original plant name input.</p></li>
 <li><p>aligned_name: the original plant name after the function standardise_names
 has standardised the syntax of infraspecific taxon designations.</p></li>
 <li><p>taxonomic_dataset: the source of the aligned names (APC or APNI).</p></li>
@@ -162,6 +163,17 @@ has standardised the syntax of infraspecific taxon designations.</p></li>
 (from an original name to an aligned name).</p></li>
 <li><p>alignment_code: a code that accompanies the aligned_reason, indicating the
 relative sequence of the match during the alignment process.</p></li>
+<li><p>chars_changed: for a fuzzy match, how many characters differ between the
+name and the reference name it was matched to (the Damerau-Levenshtein
+distance, counting an insertion, deletion, substitution or swap of two
+adjacent characters as one change); <code>0</code> for an exact match; <code>NA</code> when the
+name was not aligned. Only the part of the name the match step compared is
+counted: for a genus- or family-rank match, just the first word, and in
+most steps after case, punctuation, rank markers and filler words have been
+standardised or removed. It
+is not a measure of how reliable a match is: a phrase name can match
+reliably with several characters changed, while one character can separate
+two species.</p></li>
 <li><p>cleaned_name: original name with punctuation and infraspecific taxon
 designation terms standardised by the function standardise_names;
 streamlines exact matches.</p></li>
@@ -291,12 +303,13 @@ sp. [Royal NP]".</p></li>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Checking alignments of 2 taxa</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   -&gt; of these <span style="color: #0000BB;">1</span> names have a perfect match to an accepted scientific name in the APC, and <span style="color: #0000BB;">0</span> names have a perfect match to a synonym in the APC.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>       Alignments being sought for remaining names.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 8</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   original_name cleaned_name aligned_name taxonomic_dataset taxon_rank</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Poa annua     Poa annua    Poa annua    APC               species   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Abies alba    Abies alba   <span style="color: #BB0000;">NA</span>           <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: aligned_reason &lt;chr&gt;, alignment_code &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: aligned_reason &lt;chr&gt;, alignment_code &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   chars_changed &lt;int&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># example 2</span></span></span>
 <span class="r-in"><span><span class="va">input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Banksia serrata"</span>, <span class="st">"Banksia serrate"</span>, <span class="st">"Banksia cerrata"</span>, </span></span>

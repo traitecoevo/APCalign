@@ -121,6 +121,12 @@ contains the following columns:
   "collapse_to_higher_taxon", the number of possible taxon names that
   have been collapsed.
 
+- chars_changed: for a fuzzy match, how many characters of the name were
+  changed to match the reference name; `0` for an exact match; `NA` when
+  the name was not aligned. Carried over from
+  [`align_taxa()`](https://traitecoevo.github.io/APCalign/reference/align_taxa.md),
+  where it is described in full.
+
 ## Details
 
 - This function uses the APC to update the taxonomy of names aligned to
