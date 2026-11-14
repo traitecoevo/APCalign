@@ -69,7 +69,7 @@ load_taxonomic_resources <-
     }
 
     if (stable_or_current_data == "stable" && is.null(version)) {
-      message("No internet connection, please retry with stable connection or specify a local version of the data")
+      message("No version of the taxonomic resources is available (see above); please retry later, or specify a version already downloaded")
       return(invisible(NULL))
     }
 

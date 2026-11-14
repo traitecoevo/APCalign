@@ -138,9 +138,10 @@ standardise_names <- function(taxon_names) {
   ## this combination should catch almost everything
   ## it is essential there are no stray characters at the start of strings
   ## for fuzzy-matching to work once the reference list is split by first-character
-  ## (`-` last in the class: between `+` and `=` it made a range that also
-  ## covered digits)
-  x <- re_replace(x, "^[~!@#$%^&*()_+=`;',./<>?:{}|-]+", "")
+  ## Leading digits go too, so numbered lists ("1. Acacia sp.") still align.
+  ## (They always have, but by accident: `+-=` in the class was a range that
+  ## covered the digits; listed explicitly now, with `-` last.)
+  x <- re_replace(x, "^[~!@#$%^&*()_+=`;',./<>?:{}|0-9-]+", "")
   x <- re_replace(x, "^\\p{P}+", "")
 
   ## remove * at end of string

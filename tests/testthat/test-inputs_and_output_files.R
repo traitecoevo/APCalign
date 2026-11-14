@@ -181,3 +181,69 @@ test_that("state_diversity_counts() returns integer counts", {
   expect_type(out$num_species, "integer")
   expect_error(state_diversity_counts("Nsw", resources = resources), "Invalid state")
 })
+
+test_that("the output file cache is keyed exactly by name and identifier", {
+  f <- withr::local_tempfile(fileext = ".csv")
+  rows_in_file <- function() nrow(readr::read_csv(f, show_col_types = FALSE))
+
+  # white space at the ends of a name, and an empty identifier, survive the
+  # round trip through the file, so a repeated call finds them
+  x <- c("Acacia aneura ", "Acacia aneura")
+  for (i in 1:3) {
+    out <- align_taxa(x, output = f, identifier = "", resources = resources, quiet = TRUE)
+    expect_equal(nrow(out), 2)
+    expect_equal(rows_in_file(), 2)
+  }
+  unlink(f)
+  for (i in 1:3) {
+    out <- create_taxonomic_update_lookup(x, output = f, identifier = "",
+                                          resources = resources, quiet = TRUE)
+    expect_equal(out$original_name, x)
+  }
+  expect_equal(rows_in_file(), 2)
+
+  # pairs that would run together with a space separator are kept apart
+  unlink(f)
+  create_taxonomic_update_lookup("Eucalyptus sp. Royal", identifier = "NP",
+                                 output = f, resources = resources, quiet = TRUE)
+  out <- create_taxonomic_update_lookup("Eucalyptus sp.", identifier = "Royal NP",
+                                        output = f, resources = resources, quiet = TRUE)
+  expect_equal(out$suggested_name, "Eucalyptus sp. [Royal NP]")
+})
+
+test_that("align_taxa() returns the columns `full` asks for, whatever the file holds", {
+  f <- withr::local_tempfile(fileext = ".csv")
+  align_taxa("Acacia aneura", output = f, full = TRUE, resources = resources, quiet = TRUE)
+  out <- align_taxa(c("Acacia aneura", "Banksia serrata"), output = f,
+                    resources = resources, quiet = TRUE)
+  expect_equal(out, align_taxa(c("Acacia aneura", "Banksia serrata"),
+                               resources = resources, quiet = TRUE))
+  out <- align_taxa(c("Acacia aneura", "Banksia serrata"), output = f, full = TRUE,
+                    resources = resources, quiet = TRUE)
+  expect_equal(out, align_taxa(c("Acacia aneura", "Banksia serrata"), full = TRUE,
+                               resources = resources, quiet = TRUE))
+})
+
+test_that("an output file from an earlier version, with repeated names, is reused", {
+  # APCalign 2.0.1 wrote one row per input row, including repeats and missing
+  # names, with `row_number`, `checked` and `known` columns and no identifier
+  f <- withr::local_tempfile(fileext = ".csv")
+  x <- c("Acacia aneura", "Acacia sp.", "Acacia aneura", NA)
+  old <- create_taxonomic_update_lookup(x, full = TRUE, resources = resources, quiet = TRUE)
+  old$checked <- TRUE
+  old$known <- !is.na(old$accepted_name)
+  readr::write_csv(old, f)
+
+  y <- c("Acacia aneura", "Eucalyptus regnans", NA)
+  expect_equal(
+    create_taxonomic_update_lookup(y, output = f, resources = resources, quiet = TRUE),
+    create_taxonomic_update_lookup(y, resources = resources, quiet = TRUE)
+  )
+})
+
+test_that("numbered names still align", {
+  out <- align_taxa(c("1 Acacia sp.", "1. Acacia aneura", "3 Acacia bigredflowers"),
+                    resources = resources, quiet = TRUE)
+  expect_equal(out$aligned_name,
+               c("Acacia sp.", "Acacia aneura", "Acacia sp. [Acacia bigredflowers]"))
+})

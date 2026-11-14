@@ -243,30 +243,28 @@ align_taxa <- function(original_name,
   taxa <- align_new_taxa(new, resources, quiet, fuzzy_abs_dist, fuzzy_rel_dist,
                          fuzzy_matches, imprecise_fuzzy_matches, APNI_matches)
 
-  if (full == TRUE) {
-    taxa <-
-      taxa %>%
+  # every name aligned so far, with all the columns, whatever `full` is
+  taxa <- dplyr::bind_rows(
+    cached,
+    taxa %>%
       dplyr::select(-genus, -known, -checked) %>%
       dplyr::select(original_name, cleaned_name, aligned_name,
                     taxonomic_dataset, taxon_rank, aligned_reason,
                     alignment_code, dplyr::everything())
-  } else {
-     taxa <-
-      taxa %>%
-      dplyr::select(original_name, cleaned_name, aligned_name,
-                    taxonomic_dataset, taxon_rank, aligned_reason,
-                    alignment_code, identifier)
-  }
-
-  taxa <- dplyr::bind_rows(cached, taxa)
+  )
 
   ## save outputs to file, useful for caching results: every name aligned so
   ## far, not only this call's, so the file grows from run to run
   if (!is.null(output)) {
-    dir.create(dirname(output), FALSE, TRUE)
-    readr::write_csv(taxa, output, na = "")
-    if(!quiet)
-      message("  - output saved in file: ", output)
+    write_output_file(taxa, output, quiet)
+  }
+
+  if (full == FALSE) {
+    taxa <-
+      taxa %>%
+      dplyr::select(original_name, cleaned_name, aligned_name,
+                    taxonomic_dataset, taxon_rank, aligned_reason,
+                    alignment_code, identifier)
   }
 
   # Assemble output in the order of the input
@@ -385,7 +383,8 @@ align_taxa_cache_columns <- c(
 # if there is no file yet. Files from APCalign 2.0.1 and earlier have no
 # `identifier` column (their names are read as having none) and have the
 # `checked` and `known` columns those versions wrote, which are dropped.
-read_output_file <- function(output, required, quiet = FALSE) {
+read_output_file <- function(output, required, quiet = FALSE,
+                             one_row_per_name = TRUE) {
   if (is.null(output) || !file.exists(output)) {
     return(dplyr::tibble(original_name = character(0), identifier = character(0)))
   }
@@ -394,10 +393,14 @@ read_output_file <- function(output, required, quiet = FALSE) {
   if(!quiet)
     message("  - reading existing data from ", output)
 
+  # Read the text back exactly as written: no trimming of white space (a name
+  # with a trailing space must still match itself), and only "NA" is missing,
+  # so an empty identifier stays "" (`write_output_file()` writes NA as "NA")
   cached <- readr::read_csv(
     output,
     col_types = readr::cols(.default = readr::col_character()),
-    na = c("", "NA")
+    na = "NA",
+    trim_ws = FALSE
   )
   numeric_columns <- intersect(c("row_number", "number_of_collapsed_taxa"), names(cached))
   cached[numeric_columns] <- lapply(cached[numeric_columns], as.numeric)
@@ -413,8 +416,34 @@ read_output_file <- function(output, required, quiet = FALSE) {
       call. = FALSE
     )
   }
-  cached
+
+  # One entry per name/identifier pair. Files from APCalign 2.0.1 and earlier
+  # have a row per input row, so a repeated name is there more than once (and
+  # missing names too); a `create_taxonomic_update_lookup()` file can hold
+  # several rows for one name (`taxonomic_splits = "return_all"`), so there
+  # keep the rows of the first input row the name came from.
+  cached <- cached[!is.na(cached$original_name), ]
+  key <- cache_key(cached)
+  if (one_row_per_name) {
+    cached <- cached[!duplicated(key), ]
+  } else if ("row_number" %in% names(cached)) {
+    first_row <- cached$row_number[match(key, key)]
+    cached <- cached[which(cached$row_number == first_row), ]
+  }
+  cached %>% dplyr::select(-dplyr::any_of("row_number"))
 }
+
+# Write every cached name back to an `output` file.
+write_output_file <- function(cached, output, quiet = FALSE) {
+  dir.create(dirname(output), FALSE, TRUE)
+  readr::write_csv(cached, output, na = "NA")
+  if (!quiet)
+    message("  - output saved in file: ", output)
+}
+
+# Identifies a name/identifier pair, for matching input names to those in an
+# `output` file. (The separator cannot occur in a standardised name.)
+cache_key <- function(d) paste(d$original_name, d$identifier, sep = "\r")
 
 # function moves taxa from tocheck to checked
 redistribute <- function(data) {

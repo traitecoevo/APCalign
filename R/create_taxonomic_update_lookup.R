@@ -207,9 +207,9 @@ create_taxonomic_update_lookup <- function(taxa,
 
   # Lookups saved by an earlier run with the same `output` file; only the
   # names not already there are aligned and updated
-  cached <- read_output_file(output, lookup_cache_columns, quiet)
-  todo <- !paste(input$original_name, input$identifier) %in%
-    paste(cached$original_name, cached$identifier)
+  cached <- read_output_file(output, lookup_cache_columns, quiet,
+                             one_row_per_name = FALSE)
+  todo <- !cache_key(input) %in% cache_key(cached)
 
   if (!quiet && nrow(cached) > 0) {
     message(
@@ -235,7 +235,8 @@ create_taxonomic_update_lookup <- function(taxa,
       resources = resources,
       quiet = quiet)
 
-  if (!quiet) {
+  # the summary covers the names looked up in this call
+  if (!quiet && any(todo)) {
     message(paste(
       summarise_update_lookup(aligned_data, updated_data, taxonomic_splits),
       collapse = "\n"
@@ -282,18 +283,14 @@ merge_with_output_file <- function(updated, input, todo, cached, output, quiet) 
 
   # The file keeps one set of rows per name/identifier pair, so drop the rows
   # repeated because the input repeated a name (and rows for missing names)
-  key <- function(d) paste(d$original_name, d$identifier, sep = "\r")
-  updated_key <- key(updated)
+  updated_key <- cache_key(updated)
   first_row <- updated$row_number[match(updated_key, updated_key)]
   new_rows <- updated[updated$row_number == first_row & !is.na(updated$original_name), ] %>%
     dplyr::select(-row_number)
-  dir.create(dirname(output), FALSE, TRUE)
-  readr::write_csv(dplyr::bind_rows(cached, new_rows), output, na = "")
-  if (!quiet)
-    message("  - output saved in file: ", output)
+  write_output_file(dplyr::bind_rows(cached, new_rows), output, quiet)
 
   # The other input rows take their rows from the file
-  cached_rows <- split(seq_len(nrow(cached)), key(cached))[key(input)[!todo]]
+  cached_rows <- split(seq_len(nrow(cached)), cache_key(cached))[cache_key(input)[!todo]]
   from_cache <- cached[unlist(cached_rows), ]
   from_cache$row_number <- rep(which(!todo), lengths(cached_rows))
 
