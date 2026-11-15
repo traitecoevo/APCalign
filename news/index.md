@@ -2,6 +2,19 @@
 
 ## APCalign (development version)
 
+- The documentation of `taxonomic_splits = "collapse_to_higher_taxon"`
+  now describes what it returns. It said no `accepted_name` is returned
+  and the rank is demoted to genus. In fact `accepted_name` is
+  `Genus sp.` (or `NA` when the most likely taxon is not accepted) and
+  `suggested_name` `Genus sp. [collapsed names: ...]`, while
+  `taxon_rank`, `taxon_ID` and `scientific_name` stay those of the most
+  likely taxon. It applies to every name with a pro parte usage,
+  including names whose usages all lead to one taxon
+  (`number_of_collapsed_taxa` 1). Output is unchanged. The docs of
+  `most_likely_species` are corrected too: the alternative names are in
+  `suggested_name`, not in a separate column.
+- `LICENSE` now names Elizabeth Wenk as copyright holder, matching
+  `DESCRIPTION`, and its year is 2023, the first release.
 - [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
   now uses its `version` and `stable_or_current_data` arguments. They
   were documented but never passed on, so the resources loaded were

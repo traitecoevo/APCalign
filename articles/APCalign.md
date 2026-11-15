@@ -475,11 +475,13 @@ APNI cannot be updated*
 
   3.  `collapse_to_higher_taxon` declares that for split names, there is
       no way to be certain about which accepted name is appropriate and
-      therefore that the best possible match is at the genus level; no
-      `accepted_name` is returned, the `taxon_rank` is demoted to
-      `genus` and the suggested name documents the possible
-      species-level names in square brackets
-      (`Acacia sp. [collapsed names: Acacia aneura (accepted) | Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied)]`)
+      therefore that the best possible match is at the genus level; the
+      `accepted_name` becomes `Acacia sp.` and the suggested name
+      documents the possible species-level names in square brackets
+      (`Acacia sp. [collapsed names: Acacia aneura (accepted) | Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied)]`).
+      Only these two names change: `taxon_rank`, `taxon_ID` and
+      `scientific_name` stay those of the most likely taxon, here
+      *Acacia aneura* at species rank, as the output below shows.
 
 ``` r
 

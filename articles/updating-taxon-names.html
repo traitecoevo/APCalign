@@ -61,7 +61,7 @@
       <h1>Methods for updating taxon names in APCalign</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/2026-11-15/vignettes/updating-taxon-names.Rmd" class="external-link"><code>vignettes/updating-taxon-names.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/master/vignettes/updating-taxon-names.Rmd" class="external-link"><code>vignettes/updating-taxon-names.Rmd</code></a></small>
       <div class="d-none name"><code>updating-taxon-names.Rmd</code></div>
     </div>
 
@@ -1607,13 +1607,13 @@ collapsed to APC accepted genus
 <code>genus sp.</code> [collapsed names]
 </td>
 <td style="text-align:left;">
-no
+<code>genus sp.</code>; taxon_ID of most likely taxon
 </td>
 <td style="text-align:left;">
 yes
 </td>
 <td style="text-align:left;">
-no
+yes, of most likely taxon
 </td>
 </tr>
 <tr>
@@ -1734,9 +1734,11 @@ suggested_name
 default
 </td>
 <td style="text-align:left;">
-The suggested plant name to use. Identical to the accepted_name when an
-accepted_name exists; otherwise the suggested_name is the aligned_name
-or the aligned name with an outdated genus updated.
+The suggested plant name to use. The accepted_name when an accepted_name
+exists, followed for a name affected by a taxonomic split by the
+possible names in square brackets (see taxonomic_splits); otherwise the
+suggested_name is the aligned_name or the aligned name with an outdated
+genus updated.
 </td>
 </tr>
 <tr>
@@ -1771,7 +1773,8 @@ taxon_rank
 default
 </td>
 <td style="text-align:left;">
-The taxonomic rank of the suggested (and accepted) name.
+The taxonomic rank of the suggested (and accepted) name; for a name
+collapsed by collapse_to_higher_taxon, the rank of the aligned name.
 </td>
 </tr>
 <tr>

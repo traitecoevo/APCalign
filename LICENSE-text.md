@@ -1,4 +1,4 @@
 # License
 
-    YEAR: 2024
-    COPYRIGHT HOLDER: Daniel Falster
+    YEAR: 2023
+    COPYRIGHT HOLDER: Elizabeth Wenk

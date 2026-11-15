@@ -36,12 +36,15 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/traitecoevo/APCalign/blob/2026-11-15/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/traitecoevo/APCalign/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="apcalign-development-version">APCalign (development version)<a class="anchor" aria-label="anchor" href="#apcalign-development-version"></a></h2>
-<ul><li>
+<ul><li>The documentation of <code>taxonomic_splits = "collapse_to_higher_taxon"</code> now describes what it returns. It said no <code>accepted_name</code> is returned and the rank is demoted to genus. In fact <code>accepted_name</code> is <code>Genus sp.</code> (or <code>NA</code> when the most likely taxon is not accepted) and <code>suggested_name</code> <code>Genus sp. [collapsed names: ...]</code>, while <code>taxon_rank</code>, <code>taxon_ID</code> and <code>scientific_name</code> stay those of the most likely taxon. It applies to every name with a pro parte usage, including names whose usages all lead to one taxon (<code>number_of_collapsed_taxa</code> 1). Output is unchanged. The docs of <code>most_likely_species</code> are corrected too: the alternative names are in <code>suggested_name</code>, not in a separate column.</li>
+<li>
+<code>LICENSE</code> now names Elizabeth Wenk as copyright holder, matching <code>DESCRIPTION</code>, and its year is 2023, the first release.</li>
+<li>
 <code><a href="../reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup()</a></code> now uses its <code>version</code> and <code>stable_or_current_data</code> arguments. They were documented but never passed on, so the resources loaded were always the default version: <code>version = "2024-10-11"</code> was silently ignored.</li>
 <li>
 <code><a href="../reference/default_version.html">default_version()</a></code> no longer gives up when the GitHub API can’t be reached while the internet can. The API allows 60 unauthenticated requests an hour, and once that was used up (easily, on a shared network or in CI) <code><a href="../reference/default_version.html">default_version()</a></code> returned <code>NULL</code>, so every function loading resources by default returned <code>NULL</code> with “No internet connection”, even with the data already downloaded. It now falls back to the most recent locally downloaded version, as it already did offline, and says why. It also asks the API only once per R session. <code><a href="../reference/get_versions.html">get_versions()</a></code> and <code><a href="../reference/default_version.html">default_version()</a></code> list only releases that hold the parquet files <code><a href="../reference/load_taxonomic_resources.html">load_taxonomic_resources()</a></code> downloads (the 2020-05-14 and 2023-02-28 releases are CSV only).</li>

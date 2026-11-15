@@ -36,7 +36,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>APCalign — agent &amp; contributor guide</h1>
-      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/2026-11-15/AGENTS.md" class="external-link"><code>AGENTS.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/master/AGENTS.md" class="external-link"><code>AGENTS.md</code></a></small>
     </div>
 
 <div id="apcalign--agent--contributor-guide" class="section level1">
@@ -80,7 +80,7 @@
 </div>
 <div class="section level3">
 <h3 id="test-design-important-for-changing-match_taxa">Test design (important for changing <code>match_taxa</code>)<a class="anchor" aria-label="anchor" href="#test-design-important-for-changing-match_taxa"></a></h3>
-<p>Regression coverage of the matcher lives in: - <code>benchmarks/test_matches_alignments_updates.csv</code> — curated inputs, one per match branch; covers <strong>all 54 branches</strong>. Asserted in <code>test-operation_outputs.R</code> for <code>aligned_name</code>, <code>taxon_rank</code>, <code>taxonomic_dataset</code>, <strong>and <code>alignment_code</code></strong>. - <code>test-match_branches.R</code> — dark-branch resolution, <code>aligned_reason</code> well-formedness, and a <strong>full-output snapshot</strong> (<code>_snaps/match_branches.md</code>) that pins the alignment contract across all branches.</p>
+<p>Regression coverage of the matcher lives in: - <code>benchmarks/test_matches_alignments_updates.csv</code> — curated inputs, one per match branch; covers <strong>all 54 branches</strong>. Asserted in <code>test-operation_outputs.R</code> for <code>aligned_name</code>, <code>taxon_rank</code>, <code>taxonomic_dataset</code>, <strong>and <code>alignment_code</code></strong>. Its <code>updated_name</code> column is the full expected <code>suggested_name</code> (e.g. <code>Banksia sp. [test_all_matches_TRUE]</code>), and every row has <code>updated_name_passes = TRUE</code>; set it <code>FALSE</code> only for a known, accepted failure. - <code>benchmarks/test_splits_synonyms.csv</code> — split and synonym names; asserts each name’s <code>taxon_ID</code> and that its recorded status is either the aligned status or one of the alternatives named in <code>suggested_name</code>. - <code>test-match_branches.R</code> — dark-branch resolution, <code>aligned_reason</code> well-formedness, and a <strong>full-output snapshot</strong> (<code>_snaps/match_branches.md</code>) that pins the alignment contract across all branches.</p>
 <p>This snapshot + assertions are the safety net for refactoring <code>match_taxa()</code>: a behaviour-preserving change leaves them green. If you legitimately change matcher output, regenerate with <code>testthat::snapshot_accept("match_branches")</code> and update the CSV.</p>
 </div>
 <div class="section level3">
@@ -107,7 +107,9 @@
 <li>
 <strong><code>output</code> files are caches keyed by (<code>original_name</code>, <code>identifier</code>)</strong>: <code><a href="reference/align_taxa.html">align_taxa()</a></code> and <code><a href="reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup()</a></code> each read their own file format back (<code>read_output_file()</code>), align only the names not already there, and write back every row. The file does not record the other arguments.</li>
 <li>
-<strong><code>taxonomic_splits = "collapse_to_higher_taxon"</code> disagrees with its docs</strong>: the docs (the <code><a href="reference/update_taxonomy.html">update_taxonomy()</a></code> param, the main vignette, and <code>update_taxonomy_documentation.csv</code>) say no <code>accepted_name</code> is returned and <code>taxon_rank</code> becomes genus; the code returns <code>accepted_name = "Acacia sp."</code> with <code>taxon_rank = "species"</code> (see the vignette’s own output for <code>Acacia aneura</code>). A maintainer has to decide which is right.</li>
+<strong><code>taxonomic_splits = "collapse_to_higher_taxon"</code> changes only the names</strong>: <code>accepted_name</code> becomes <code>Genus sp.</code> (<code>NA</code> if the most likely taxon is not accepted) and <code>suggested_name</code> <code>Genus sp. [collapsed names: ...]</code>, while <code>taxon_rank</code>, <code>taxon_ID</code> and <code>scientific_name</code> stay those of the most likely taxon. It applies to every name with a pro parte usage, even when all its usages lead to one taxon (<code>number_of_collapsed_taxa</code> 1). This is the intended behaviour (maintainer decision on #309), documented in <code><a href="reference/update_taxonomy.html">update_taxonomy()</a></code> and pinned in <code>test-operation_outputs.R</code>; don’t “fix” the rank to genus.</li>
+<li>
+<strong>Downloaded versions in <code>tools::R_user_dir("APCalign")</code> are not pruned</strong>, by decision (#309): each is about 20 MB, and users may want old versions for reproducibility.</li>
 </ul><hr></div>
 </div>
 <div class="section level2">

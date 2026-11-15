@@ -40,7 +40,7 @@ to names aligned to either the APC or APNI."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Update to currently accepted APC name and add APC/APNI name metadata</h1>
-      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/2026-11-15/R/update_taxonomy.R" class="external-link"><code>R/update_taxonomy.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/master/R/update_taxonomy.R" class="external-link"><code>R/update_taxonomy.R</code></a></small>
       <div class="d-none name"><code>update_taxonomy.Rd</code></div>
     </div>
 
@@ -80,11 +80,24 @@ names are case insensitive.</p></dd>
 <dd><p>Variable that determines what protocol to use to
 update taxon names that are ambiguous due to taxonomic splits.
 The three options are:</p><ul><li><p><code>most_likely_species</code>, which returns the species name in use before the
-split; alternative names are returned in a separate column</p></li>
-<li><p><code>return_all</code>, which returns all possible names</p></li>
+split; alternative names are listed in square brackets in suggested_name,
+e.g. "Acacia aneura [alternative possible names: Acacia minyura (pro
+parte misapplied) | ...]"</p></li>
+<li><p><code>return_all</code>, which returns all possible names, one row each</p></li>
 <li><p><code>collapse_to_higher_taxon</code>, which declares that an ambiguous name cannot
-be aligned to an accepted species/infraspecific name and the name is
-demoted to genus rank</p></li>
+be assigned to one accepted species/infraspecific name. It applies to
+every species or infraspecific name with a "pro parte" usage in the APC,
+even when its usages all lead to the same taxon (number_of_collapsed_taxa
+is then 1). suggested_name becomes "Genus sp. [collapsed names: ...]",
+listing the possible names, and accepted_name becomes "Genus sp.", with
+taxonomic_status "accepted"; when the most likely taxon is not itself
+accepted, accepted_name is <code>NA</code> and taxonomic_status is that taxon's
+status. The other columns are not demoted: taxon_rank stays the rank of
+the aligned name, and taxon_ID, scientific_name and scientific_name_ID
+are those of the most likely taxon (the one <code>most_likely_species</code>
+returns). update_reason is "collapsed to genus due to ambiguity" when
+number_of_collapsed_taxa is more than 1 and the aligned name is not
+accepted; otherwise it is the usual reason for the aligned name.</p></li>
 </ul></dd>
 
 
@@ -112,14 +125,16 @@ tibble contains the following columns:</p><ul><li><p>original_name: the original
 <li><p>aligned_name: the input plant name that has been aligned to a taxon name
 in the APC or APNI by the align_taxa function.</p></li>
 <li><p>accepted_name: the APC-accepted plant name, when available.</p></li>
-<li><p>suggested_name: the suggested plant name to use. Identical to the
-accepted_name, when an accepted_name exists; otherwise the suggested_name
-is the aligned_name.</p></li>
+<li><p>suggested_name: the suggested plant name to use. The accepted_name, when
+an accepted_name exists, followed for a name affected by a taxonomic split
+by the possible names in square brackets (see <code>taxonomic_splits</code>);
+otherwise the suggested_name is the aligned_name.</p></li>
 <li><p>genus: the genus of the accepted (or suggested) name; only APC-accepted
 genus names are filled in.</p></li>
 <li><p>family: the family of the accepted (or suggested) name; only APC-accepted
 family names are filled in.</p></li>
-<li><p>taxon_rank: the taxonomic rank of the suggested (and accepted) name.</p></li>
+<li><p>taxon_rank: the taxonomic rank of the suggested (and accepted) name; for a
+name collapsed by <code>collapse_to_higher_taxon</code>, the rank of the aligned name.</p></li>
 <li><p>taxonomic_dataset: the source of the suggested (and accepted) names (APC or
 APNI).</p></li>
 <li><p>taxonomic_status: the taxonomic status of the suggested (and accepted) name.</p></li>

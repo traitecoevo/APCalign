@@ -61,7 +61,7 @@
       <h1>APCalign</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/2026-11-15/vignettes/APCalign.Rmd" class="external-link"><code>vignettes/APCalign.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/traitecoevo/APCalign/blob/master/vignettes/APCalign.Rmd" class="external-link"><code>vignettes/APCalign.Rmd</code></a></small>
       <div class="d-none name"><code>APCalign.Rmd</code></div>
     </div>
 
@@ -540,11 +540,14 @@ unique taxon_ID)</p></li>
 <li><p><code>collapse_to_higher_taxon</code> declares that for split
 names, there is no way to be certain about which accepted name is
 appropriate and therefore that the best possible match is at the genus
-level; no <code>accepted_name</code> is returned, the
-<code>taxon_rank</code> is demoted to <code>genus</code> and the
-suggested name documents the possible species-level names in square
-brackets
-(<code>Acacia sp. [collapsed names: Acacia aneura (accepted) | Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied)]</code>)</p></li>
+level; the <code>accepted_name</code> becomes <code>Acacia sp.</code>
+and the suggested name documents the possible species-level names in
+square brackets
+(<code>Acacia sp. [collapsed names: Acacia aneura (accepted) | Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied)]</code>).
+Only these two names change: <code>taxon_rank</code>,
+<code>taxon_ID</code> and <code>scientific_name</code> stay those of the
+most likely taxon, here <em>Acacia aneura</em> at species rank, as the
+output below shows.</p></li>
 </ol>
 </li>
 </ul>

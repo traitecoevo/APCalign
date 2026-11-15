@@ -34,13 +34,27 @@ update_taxonomy(
   that are ambiguous due to taxonomic splits. The three options are:
 
   - `most_likely_species`, which returns the species name in use before
-    the split; alternative names are returned in a separate column
+    the split; alternative names are listed in square brackets in
+    suggested_name, e.g. "Acacia aneura \[alternative possible names:
+    Acacia minyura (pro parte misapplied) \| ...\]"
 
-  - `return_all`, which returns all possible names
+  - `return_all`, which returns all possible names, one row each
 
   - `collapse_to_higher_taxon`, which declares that an ambiguous name
-    cannot be aligned to an accepted species/infraspecific name and the
-    name is demoted to genus rank
+    cannot be assigned to one accepted species/infraspecific name. It
+    applies to every species or infraspecific name with a "pro parte"
+    usage in the APC, even when its usages all lead to the same taxon
+    (number_of_collapsed_taxa is then 1). suggested_name becomes "Genus
+    sp. \[collapsed names: ...\]", listing the possible names, and
+    accepted_name becomes "Genus sp.", with taxonomic_status "accepted";
+    when the most likely taxon is not itself accepted, accepted_name is
+    `NA` and taxonomic_status is that taxon's status. The other columns
+    are not demoted: taxon_rank stays the rank of the aligned name, and
+    taxon_ID, scientific_name and scientific_name_ID are those of the
+    most likely taxon (the one `most_likely_species` returns).
+    update_reason is "collapsed to genus due to ambiguity" when
+    number_of_collapsed_taxa is more than 1 and the aligned name is not
+    accepted; otherwise it is the usual reason for the aligned name.
 
 - quiet:
 
@@ -70,9 +84,10 @@ contains the following columns:
 
 - accepted_name: the APC-accepted plant name, when available.
 
-- suggested_name: the suggested plant name to use. Identical to the
-  accepted_name, when an accepted_name exists; otherwise the
-  suggested_name is the aligned_name.
+- suggested_name: the suggested plant name to use. The accepted_name,
+  when an accepted_name exists, followed for a name affected by a
+  taxonomic split by the possible names in square brackets (see
+  `taxonomic_splits`); otherwise the suggested_name is the aligned_name.
 
 - genus: the genus of the accepted (or suggested) name; only
   APC-accepted genus names are filled in.
@@ -80,7 +95,9 @@ contains the following columns:
 - family: the family of the accepted (or suggested) name; only
   APC-accepted family names are filled in.
 
-- taxon_rank: the taxonomic rank of the suggested (and accepted) name.
+- taxon_rank: the taxonomic rank of the suggested (and accepted) name;
+  for a name collapsed by `collapse_to_higher_taxon`, the rank of the
+  aligned name.
 
 - taxonomic_dataset: the source of the suggested (and accepted) names
   (APC or APNI).

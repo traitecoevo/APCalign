@@ -143,9 +143,10 @@ and chars_changed; `full = TRUE` adds the others below.
 
 - accepted_name: the APC-accepted plant name, when available.
 
-- suggested_name: the suggested plant name to use. Identical to the
-  accepted_name, when an accepted_name exists; otherwise the
-  suggested_name is the aligned_name.
+- suggested_name: the suggested plant name to use. The accepted_name,
+  when an accepted_name exists, followed for a name affected by a
+  taxonomic split by the possible names in square brackets (see
+  `taxonomic_splits`); otherwise the suggested_name is the aligned_name.
 
 - genus: the genus of the accepted (or suggested) name; only
   APC-accepted genus names are filled in.
@@ -153,7 +154,9 @@ and chars_changed; `full = TRUE` adds the others below.
 - family: the family of the accepted (or suggested) name; only
   APC-accepted family names are filled in.
 
-- taxon_rank: the taxonomic rank of the suggested (and accepted) name.
+- taxon_rank: the taxonomic rank of the suggested (and accepted) name;
+  for a name collapsed by `collapse_to_higher_taxon`, the rank of the
+  aligned name.
 
 - taxonomic_dataset: the source of the suggested (and accepted) names
   (APC or APNI).
@@ -230,8 +233,10 @@ Notes:
   original name. There are three options: most_likely_species returns
   the name that is retained, with alternative names documented in square
   brackets; return_all adds additional rows to the output, one for each
-  possible taxon concept; collapse_to_higher_taxon returns the genus
-  with possible names in square brackets.
+  possible taxon concept; collapse_to_higher_taxon returns `Genus sp.`
+  with the possible names in square brackets, while taxon_rank and the
+  IDs stay those of the most likely taxon (see
+  [`update_taxonomy()`](https://traitecoevo.github.io/APCalign/reference/update_taxonomy.md)).
 
 - The argument identifier allows you to add a fix text string to all
   genus- and family- level names, such as identifier = "Royal NP" would
