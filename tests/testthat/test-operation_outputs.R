@@ -69,9 +69,20 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
       dplyr::arrange(original_name, taxon_ID, taxonomic_status)
   
   expect_equal(benchmarks$original_name, out1$original_name)
-  #expect_equal(benchmarks$accepted_name_usage_ID, out1$taxon_ID)
-  #todo: include test that confirms taxonomic_status in benchmarks is present (str_detect) in either out1$taxonomic_status or out1$alternative_taxonomic_status_aligned
-  
+
+  # Each name resolves to the taxon concept recorded in the benchmark, and the
+  # recorded status is either the status of that alignment or one of the
+  # alternative usages listed in `suggested_name`, e.g. "(pro parte misapplied)".
+  out1_b <- out1[match(benchmarks$original_name, out1$original_name), ]
+  expect_equal(out1_b$taxon_ID, benchmarks$accepted_name_usage_ID)
+  status_found <-
+    benchmarks$taxonomic_status == out1_b$taxonomic_status_aligned |
+    mapply(
+      function(status, name) grepl(paste0("(", status, ")"), name, fixed = TRUE),
+      benchmarks$taxonomic_status, out1_b$suggested_name, USE.NAMES = FALSE
+    )
+  expect_equal(benchmarks$original_name[!status_found], character(0))
+
   out2 <-
     create_taxonomic_update_lookup(
       benchmarks$original_name,
@@ -97,10 +108,37 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
     dplyr::mutate(number_of_collapsed_taxa = ifelse(is.na(number_of_collapsed_taxa), 1, number_of_collapsed_taxa))
   
   rows_gt_1 <- out3 %>% dplyr::filter(number_of_collapsed_taxa > 1)
-  rows_end_sp <- out3 %>% dplyr::filter(grepl("sp.", suggested_name))
+  rows_end_sp <- out3 %>% dplyr::filter(grepl(" sp. ", suggested_name, fixed = TRUE))
   rows_alt_names <- out3 %>% dplyr::filter(grepl("collapsed names:", suggested_name))
-  
-  
+
+  # What collapse_to_higher_taxon returns, as documented in update_taxonomy():
+  # the suggested and accepted names become `Genus sp.`, but the rank, the IDs
+  # and the scientific_name stay those of the most likely taxon.
+  expect_gt(nrow(rows_gt_1), 0)
+  expect_true(all(startsWith(
+    rows_gt_1$suggested_name,
+    paste(rows_gt_1$genus, "sp. [collapsed names: ")
+  )))
+  has_accepted <- !is.na(rows_gt_1$accepted_name)
+  expect_equal(rows_gt_1$accepted_name[has_accepted],
+               paste(rows_gt_1$genus, "sp.")[has_accepted])
+  expect_true(all(rows_gt_1$taxonomic_status[has_accepted] == "accepted"))
+  # when the most likely taxon is not accepted (Abutilon muticum -> Sida mutica),
+  # there is no accepted_name, and the status is that taxon's
+  expect_true(any(!has_accepted))
+  expect_false(any(rows_gt_1$taxonomic_status[!has_accepted] == "accepted"))
+  expect_false(any(rows_gt_1$taxon_rank %in% c("genus", "family")))
+  expect_equal(
+    rows_gt_1$taxon_ID,
+    out1$taxon_ID[match(rows_gt_1$original_name, out1$original_name)]
+  )
+  expect_equal(
+    rows_gt_1$update_reason,
+    ifelse(rows_gt_1$taxonomic_status_aligned == "accepted",
+           "aligned name accepted by APC",
+           "collapsed to genus due to ambiguity")
+  )
+
   expect_equal(nrow(out1), nrow(out3))
   #will be less (slightly) because `return_all` excludes misapplied and excluded taxa
   expect_equal(nrow(out2), sum(out3$number_of_collapsed_taxa)-2)
@@ -120,6 +158,25 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
   
   
   })
+
+test_that("collapse_to_higher_taxon also collapses a pro parte name with one target", {
+  # Lycopodium selago has two APC usages (pro parte misapplied, misapplied),
+  # both leading to Huperzia australiana. It is still collapsed, with
+  # number_of_collapsed_taxa 1 and its own update_reason, as documented.
+  out <- update_taxonomy(
+    align_taxa("Lycopodium selago", resources = resources, quiet = TRUE),
+    taxonomic_splits = "collapse_to_higher_taxon",
+    resources = resources, quiet = TRUE
+  )
+  expect_equal(out$accepted_name, "Huperzia sp.")
+  expect_equal(
+    out$suggested_name,
+    "Huperzia sp. [collapsed names: Huperzia australiana (pro parte misapplied) ]"
+  )
+  expect_equal(out$number_of_collapsed_taxa, 1)
+  expect_equal(out$taxon_rank, "species")
+  expect_equal(out$update_reason, out$taxonomic_status_aligned)
+})
 
 test_that("taxon name alignment matches and updates work as expected", {
 
