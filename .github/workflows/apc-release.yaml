@@ -1,0 +1,110 @@
+# Release a new dated snapshot of the APC and APNI (#315).
+#
+# Downloads the current exports from NSL, checks them against the latest
+# release (.github/scripts/apc-release.R, using the functions in R/release.R),
+# then creates a release tagged with today's date in Sydney, with
+# apc.parquet and apni.parquet attached. default_version() picks the newest
+# dated release, so a published release reaches every user straight away:
+# - checks pass: published (scheduled runs, or manual runs with `publish`);
+#   otherwise a draft.
+# - checks need review (e.g. APC lost more than 2% of its rows): a draft, and
+#   the run is marked failed so someone is notified to check and publish it.
+# - nothing has changed since the latest release: no release.
+# - checks fail: no release, and the run fails.
+# Draft releases are invisible to default_version(), which reads the public
+# releases list without authentication.
+#
+# The workflow runs monthly but releases only quarterly. GitHub disables a
+# public repo's scheduled workflows after 60 days without repository activity,
+# and its own runs don't count, so a quarterly-only schedule would be switched
+# off by any quiet quarter. Each run (the `keepalive` job) re-enables the
+# workflow through the API instead.
+
+name: APC release
+
+on:
+  schedule:
+    # Both 00:00 UTC on the 1st (morning in Sydney). The `release` job's `if`
+    # matches the first string exactly, so change both together.
+    - cron: "0 0 1 1,4,7,10 *" # quarterly: release
+    - cron: "0 0 1 2,3,5,6,8,9,11,12 *" # other months: keepalive only
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish the release if the checks pass (otherwise create a draft)"
+        type: boolean
+        default: false
+
+permissions: {}
+
+concurrency:
+  group: apc-release
+  cancel-in-progress: false
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Keep the schedule enabled
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api --method PUT "repos/${{ github.repository }}/actions/workflows/apc-release.yaml/enable"
+
+  release:
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '0 0 1 1,4,7,10 *'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          dependencies: '"hard"'
+          extra-packages: any::pkgload, any::readr
+
+      - name: Get the previous release
+        id: previous
+        run: |
+          tag=$(TZ=Australia/Sydney date +%F)
+          if gh release view "$tag" > /dev/null 2>&1; then
+            echo "::error::A release (or draft) tagged $tag already exists."
+            exit 1
+          fi
+          previous=$(gh release view --json tagName --jq .tagName)
+          gh release download "$previous" --pattern apc.parquet --pattern apni.parquet --dir previous
+          echo "Previous release: $previous"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Download and check the new release files
+        id: check
+        run: Rscript .github/scripts/apc-release.R "${{ steps.previous.outputs.tag }}" release previous
+
+      - name: Create the release
+        if: steps.check.outputs.status == 'pass' || steps.check.outputs.status == 'review'
+        env:
+          TAG: ${{ steps.previous.outputs.tag }}
+          STATUS: ${{ steps.check.outputs.status }}
+          PUBLISH: ${{ github.event_name == 'schedule' || inputs.publish }}
+        run: |
+          draft=""
+          if [ "$STATUS" = "review" ] || [ "$PUBLISH" != "true" ]; then
+            draft="--draft"
+          fi
+          gh release create "$TAG" release/apc.parquet release/apni.parquet \
+            --title "$TAG" --notes-file release/notes.md $draft
+          if [ "$STATUS" = "review" ]; then
+            echo "::error::Release $TAG needs review: it was created as a draft. Check the release notes, then publish or delete it."
+            exit 1
+          fi
