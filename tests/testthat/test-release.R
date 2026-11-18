@@ -72,6 +72,62 @@ test_that("missing values in a key column need review; an empty column fails", {
   expect_match(result$problems, "APNI column canonicalName is empty")
 })
 
+test_that("missing values already in the previous release aren't flagged again", {
+  previous <- release_tables()
+  previous$APC$taxonomicStatus[1:3] <- NA
+
+  # the same data, so nothing to release (not another draft for review)
+  expect_equal(check_release_resources(previous, previous)$status, "unchanged")
+
+  # newer data, with no more missing values than before
+  same_missing <- release_tables(modified = "2026-11-10 10:00:00")
+  same_missing$APC$taxonomicStatus[4:6] <- NA
+  expect_equal(check_release_resources(same_missing, previous)$status, "pass")
+
+  more_missing <- release_tables(modified = "2026-11-10 10:00:00")
+  more_missing$APC$taxonomicStatus[1:4] <- NA
+  result <- check_release_resources(more_missing, previous)
+  expect_equal(result$status, "review")
+  expect_match(result$problems, "4 missing values (previous release: 3)", fixed = TRUE)
+})
+
+test_that("APNI losing more than 10% of its rows needs review", {
+  previous <- release_tables(apni_rows = 100)
+  later <- "2026-11-10 10:00:00"
+
+  small <- check_release_resources(release_tables(apni_rows = 92, modified = later), previous)
+  expect_equal(small$status, "pass")
+
+  big <- check_release_resources(release_tables(apni_rows = 85, modified = later), previous)
+  expect_equal(big$status, "review")
+  expect_match(big$problems, "APNI has 85 rows, 15.0% fewer", fixed = TRUE)
+})
+
+test_that("duplicated APC taxonIDs need review", {
+  previous <- release_tables()
+  doubled <- release_tables(modified = "2026-11-10 10:00:00")
+  doubled$APC <- rbind(doubled$APC, doubled$APC)
+
+  result <- check_release_resources(doubled, previous)
+  expect_equal(result$status, "review")
+  expect_match(result$problems, "APC has 100 duplicated taxonID values (previous release: 0)", fixed = TRUE)
+})
+
+test_that("the smoke test fails when the release files are missing or can't be loaded", {
+  empty <- withr::local_tempdir()
+  expect_match(check_release_alignment(empty), "Could not find the release files")
+
+  # load_taxonomic_resources() returns NULL, with a message, when it can't load
+  # the files; the lookup then returns NULL too, which must not pass
+  path <- withr::local_tempdir()
+  tables <- release_tables()
+  nanoparquet::write_parquet(tables$APC, file.path(path, "apc.parquet"))
+  nanoparquet::write_parquet(tables$APNI, file.path(path, "apni.parquet"))
+  local_mocked_bindings(load_taxonomic_resources = function(...) NULL)
+  problems <- suppressMessages(check_release_alignment(path))
+  expect_match(problems, "no results")
+})
+
 test_that("changed columns or an empty table fail", {
   previous <- release_tables()
 
@@ -130,5 +186,5 @@ test_that("the smoke test reports names that don't align as expected", {
   file.copy(file.path(source_dir, "apni2024-10-11.parquet"), file.path(path, "apni.parquet"))
 
   problems <- check_release_alignment(path)
-  expect_true(any(grepl("^Eucalyptus regnans: expected accepted name Eucalyptus regnans", problems)))
+  expect_true(any(startsWith(problems, "Eucalyptus regnans: expected aligned to Eucalyptus regnans, accepted name Eucalyptus regnans")))
 })

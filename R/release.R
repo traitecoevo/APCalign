@@ -65,19 +65,29 @@ release_key_columns <- list(
 # lists of `APC` and `APNI` tables, as read by read_release_files().
 #
 # Returns a list with `status`, `problems` (a character vector explaining the
-# status) and the new release_summary(). `status` is the most serious of:
+# status) and the new release_summary(). `status` is the first of these that
+# applies:
 # - "fail": don't release. A table is empty, its columns (names or types)
 #   differ from the previous release, or a key column is entirely empty.
-# - "review": release as a draft, for someone to check and publish by hand.
-#   APC lost more than `max_apc_drop` of its rows, or a key column has some
-#   values missing.
 # - "unchanged": the row counts and latest `modified` time match the previous
 #   release, so there is nothing new to release.
+# - "review": release as a draft, for someone to check and publish by hand.
+#   APC lost more than `max_apc_drop` of its rows or APNI more than
+#   `max_apni_drop`, or there are more missing values in a key column, or more
+#   duplicated APC taxonIDs, than in the previous release. Missing values and
+#   duplicates count only when they increase, so a problem already in the
+#   published release isn't flagged again by every later run.
 # - "pass": release.
+#
+# APNI here holds only the names not in APC, so it shrinks a little as names
+# move into APC: by 1.4% to 5.3% between the releases of 2024-10-11 and
+# 2026-11-15, hence its looser limit.
 #' @noRd
-check_release_resources <- function(new, previous, max_apc_drop = 0.02) {
+check_release_resources <- function(new, previous, max_apc_drop = 0.02,
+                                    max_apni_drop = 0.10) {
   failures <- character(0)
   reviews <- character(0)
+  max_drop <- c(APC = max_apc_drop, APNI = max_apni_drop)
 
   for (table in c("APC", "APNI")) {
     new_table <- new[[table]]
@@ -108,51 +118,61 @@ check_release_resources <- function(new, previous, max_apc_drop = 0.02) {
     }
 
     for (column in intersect(release_key_columns[[table]], names(new_table))) {
-      values <- new_table[[column]]
-      missing <- sum(is.na(values) | values == "")
+      missing <- count_missing(new_table[[column]])
+      previous_missing <- count_missing(previous_table[[column]])
       if (missing == nrow(new_table)) {
         failures <- c(failures, paste0(table, " column ", column, " is empty."))
-      } else if (missing > 0) {
+      } else if (missing > previous_missing) {
         reviews <- c(reviews, paste0(
           table, " column ", column, " has ", format_count(missing),
-          " missing values."
+          " missing values (previous release: ", format_count(previous_missing), ")."
         ))
       }
+    }
+
+    # A partial download shows up as lost rows
+    drop <- 1 - nrow(new_table) / nrow(previous_table)
+    if (drop > max_drop[[table]]) {
+      reviews <- c(reviews, sprintf(
+        "%s has %s rows, %.1f%% fewer than the previous release (%s); more than the %.0f%% allowed.",
+        table, format_count(nrow(new_table)), 100 * drop,
+        format_count(nrow(previous_table)), 100 * max_drop[[table]]
+      ))
+    }
+  }
+
+  # A repeated download shows up as duplicated rows
+  if (nrow(new$APC) > 0 && "taxonID" %in% names(new$APC)) {
+    duplicated_ids <- sum(duplicated(new$APC$taxonID))
+    previous_duplicated <- sum(duplicated(previous$APC$taxonID))
+    if (duplicated_ids > previous_duplicated) {
+      reviews <- c(reviews, paste0(
+        "APC has ", format_count(duplicated_ids), " duplicated taxonID values",
+        " (previous release: ", format_count(previous_duplicated), ")."
+      ))
     }
   }
 
   summary <- release_summary(new)
   previous_summary <- release_summary(previous)
-
-  if (nrow(new$APC) > 0) {
-    drop <- 1 - summary$apc_rows / previous_summary$apc_rows
-    if (drop > max_apc_drop) {
-      reviews <- c(reviews, sprintf(
-        "APC has %s rows, %.1f%% fewer than the previous release (%s); more than the %.0f%% allowed.",
-        format_count(summary$apc_rows), 100 * drop,
-        format_count(previous_summary$apc_rows), 100 * max_apc_drop
-      ))
-    }
-  }
-
   unchanged <- identical(summary, previous_summary)
 
   status <- if (length(failures) > 0) {
     "fail"
-  } else if (length(reviews) > 0) {
-    "review"
   } else if (unchanged) {
     "unchanged"
+  } else if (length(reviews) > 0) {
+    "review"
   } else {
     "pass"
   }
   problems <- switch(status,
     fail = c(failures, reviews),
-    review = reviews,
     unchanged = paste0(
       "Same row counts and latest modified time (", summary$latest_modified,
       ") as the previous release."
     ),
+    review = reviews,
     pass = character(0)
   )
 
@@ -161,18 +181,29 @@ check_release_resources <- function(new, previous, max_apc_drop = 0.02) {
 
 # Names that have aligned the same way in every release since the benchmark
 # version (2024-10-11). If a new release can't reproduce this, it is broken.
+# The last two are only in APNI (so they have no accepted name), and check the
+# APNI table too.
 release_smoke_test_names <- data.frame(
   original_name = c(
     "Eucalyptus regnans", "Eucalyptus camaldulensis", "Acacia aneura",
     "Acacia dealbata", "Banksia integrifolia", "Grevillea robusta",
     "Triodia pungens",
-    "Eucalyptus regnas" # misspelt, so it needs a fuzzy match
+    "Eucalyptus regnas", # misspelt, so it needs a fuzzy match
+    "Hakea paludosa", "Viola linifolia"
+  ),
+  aligned_name = c(
+    "Eucalyptus regnans", "Eucalyptus camaldulensis", "Acacia aneura",
+    "Acacia dealbata", "Banksia integrifolia", "Grevillea robusta",
+    "Triodia pungens", "Eucalyptus regnans",
+    "Hakea paludosa", "Viola linifolia"
   ),
   accepted_name = c(
     "Eucalyptus regnans", "Eucalyptus camaldulensis", "Acacia aneura",
     "Acacia dealbata", "Banksia integrifolia", "Grevillea robusta",
-    "Triodia pungens", "Eucalyptus regnans"
-  )
+    "Triodia pungens", "Eucalyptus regnans",
+    NA, NA
+  ),
+  taxonomic_status = c(rep("accepted", 8), rep("unplaced", 2))
 )
 
 # Load the release files in `path` through load_taxonomic_resources(), as a
@@ -183,24 +214,34 @@ check_release_alignment <- function(path, version = "release-candidate") {
   # load_taxonomic_resources() reads a version's files from
   # tools::R_user_dir("APCalign") when they are there, so point that at a
   # temporary directory holding these files under the given version name.
+  # The session cache would return tables already loaded under this version
+  # name instead of reading these files, so clear it before and after.
+  cache_key <- paste0("stable_", version)
+  clear_cache_key <- function() {
+    if (exists(cache_key, envir = .pkg_cache, inherits = FALSE)) {
+      rm(list = cache_key, envir = .pkg_cache)
+    }
+  }
+  clear_cache_key()
+
   user_dir <- tempfile("apcalign-release-")
   old <- Sys.getenv("R_USER_DATA_DIR", unset = NA)
   Sys.setenv(R_USER_DATA_DIR = user_dir)
   on.exit({
     if (is.na(old)) Sys.unsetenv("R_USER_DATA_DIR") else Sys.setenv(R_USER_DATA_DIR = old)
     unlink(user_dir, recursive = TRUE)
-    cache_key <- paste0("stable_", version)
-    if (exists(cache_key, envir = .pkg_cache, inherits = FALSE)) {
-      rm(list = cache_key, envir = .pkg_cache)
-    }
+    clear_cache_key()
   }, add = TRUE)
 
   cache_dir <- tools::R_user_dir("APCalign")
   dir.create(cache_dir, recursive = TRUE)
-  file.copy(file.path(path, "apc.parquet"),
-            file.path(cache_dir, paste0("apc", version, ".parquet")))
-  file.copy(file.path(path, "apni.parquet"),
-            file.path(cache_dir, paste0("apni", version, ".parquet")))
+  copied <- file.copy(
+    file.path(path, c("apc.parquet", "apni.parquet")),
+    file.path(cache_dir, paste0(c("apc", "apni"), version, ".parquet"))
+  )
+  if (!all(copied)) {
+    return(paste0("Could not find the release files apc.parquet and apni.parquet in ", path, "."))
+  }
 
   result <- tryCatch({
     resources <- load_taxonomic_resources(version = version, quiet = TRUE)
@@ -215,14 +256,33 @@ check_release_alignment <- function(path, version = "release-candidate") {
     return(paste0("Aligning names failed: ", conditionMessage(result)))
   }
 
+  # create_taxonomic_update_lookup() returns NULL, with a message, when it
+  # couldn't load any resources; that must not count as a pass.
+  if (!is.data.frame(result) || nrow(result) == 0) {
+    return("Aligning names failed: no results, so the release files could not be loaded.")
+  }
+
+  # e.g. "aligned to Hakea paludosa, accepted name none, status unplaced"
+  describe <- function(x) {
+    sprintf("aligned to %s, accepted name %s, status %s",
+            ifelse(is.na(x$aligned_name), "none", x$aligned_name),
+            ifelse(is.na(x$accepted_name), "none", x$accepted_name),
+            ifelse(is.na(x$taxonomic_status), "none", x$taxonomic_status))
+  }
   expected <- release_smoke_test_names
-  found <- result$accepted_name[match(expected$original_name, result$original_name)]
-  wrong <- is.na(found) | found != expected$accepted_name
-  sprintf(
-    "%s: expected accepted name %s, got %s.",
-    expected$original_name[wrong], expected$accepted_name[wrong],
-    ifelse(is.na(found[wrong]), "none", found[wrong])
-  )
+  wanted <- describe(expected)
+  found <- describe(result[match(expected$original_name, result$original_name), ])
+  wrong <- found != wanted
+  sprintf("%s: expected %s; got %s.",
+          expected$original_name[wrong], wanted[wrong], found[wrong])
+}
+
+# Number of missing (NA or empty) values in a column; 0 for a column that isn't
+# there.
+#' @noRd
+count_missing <- function(values) {
+  if (is.null(values)) return(0L)
+  sum(is.na(values) | values == "")
 }
 
 # 114021 -> "114,021"

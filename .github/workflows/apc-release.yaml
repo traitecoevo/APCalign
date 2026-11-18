@@ -13,13 +13,21 @@
 # - checks fail: no release, and the run fails.
 # Draft releases are invisible to default_version(), which reads the public
 # releases list without authentication.
+#
+# The workflow runs monthly but releases only quarterly. GitHub disables a
+# public repo's scheduled workflows after 60 days without repository activity,
+# and its own runs don't count, so a quarterly-only schedule would be switched
+# off by any quiet quarter. Each run (the `keepalive` job) re-enables the
+# workflow through the API instead.
 
 name: APC release
 
 on:
   schedule:
-    # quarterly: 00:00 UTC on the 1st of Jan, Apr, Jul and Oct (morning in Sydney)
-    - cron: "0 0 1 1,4,7,10 *"
+    # Both 00:00 UTC on the 1st (morning in Sydney). The `release` job's `if`
+    # matches the first string exactly, so change both together.
+    - cron: "0 0 1 1,4,7,10 *" # quarterly: release
+    - cron: "0 0 1 2,3,5,6,8,9,11,12 *" # other months: keepalive only
   workflow_dispatch:
     inputs:
       publish:
@@ -27,17 +35,29 @@ on:
         type: boolean
         default: false
 
-permissions:
-  contents: write
+permissions: {}
 
 concurrency:
   group: apc-release
   cancel-in-progress: false
 
 jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Keep the schedule enabled
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api --method PUT "repos/${{ github.repository }}/actions/workflows/apc-release.yaml/enable"
+
   release:
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '0 0 1 1,4,7,10 *'
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    permissions:
+      contents: write
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
