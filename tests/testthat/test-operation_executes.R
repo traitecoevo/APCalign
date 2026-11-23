@@ -53,15 +53,12 @@ test_that("create_taxonomic_update_lookup() returns more/less rows as requested"
       resources = resources,
       taxonomic_splits = "collapse_to_higher_taxon",
       quiet = TRUE
-    ) %>%
-    dplyr::mutate(
-      should_collapse = ifelse(number_of_collapsed_taxa > 1, TRUE, FALSE),
-      number_of_collapsed_taxa = ifelse(is.na(number_of_collapsed_taxa), 1, number_of_collapsed_taxa)
     )
 
   expect_equal(nrow(out3), length(original_name))
   expect_equal(out3$original_name, original_name)
-  expect_equal(sum(out3$number_of_collapsed_taxa)-1, nrow(out2))
+  expect_gt(sum(!is.na(out3$number_of_collapsed_taxa)), 0)
+  expect_return_all_matches_collapsed(out2, out3)
   })
 
 test_that("align_taxa() executes - no/with fuzzy", {

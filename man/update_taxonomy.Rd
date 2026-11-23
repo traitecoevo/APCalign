@@ -24,27 +24,31 @@ names are case insensitive.}
 
 \item{taxonomic_splits}{Variable that determines what protocol to use to
 update taxon names that are ambiguous due to taxonomic splits.
-The three options are:
+A name is ambiguous when it has a "pro parte" usage in the APC and its
+usages lead to more than one taxon. An "excluded" usage (the name's taxon is
+not in Australia) does not count as a taxon. A name whose usages all lead to
+one taxon is updated to that taxon under every option, as a synonym or a
+misapplied name is, with update_reason its status (e.g. "pro parte
+misapplied"). For an ambiguous name, the three options are:
 \itemize{
 \item \code{most_likely_species}, which returns the species name in use before the
-split; alternative names are listed in square brackets in suggested_name,
-e.g. "Acacia aneura [alternative possible names: Acacia minyura (pro
-parte misapplied) | ...]"
-\item \code{return_all}, which returns all possible names, one row each
+split; the other possible taxa are listed in square brackets in
+suggested_name, each once, e.g. "Acacia aneura [alternative possible
+names: Acacia minyura (pro parte misapplied) | ...]"
+\item \code{return_all}, which returns all possible names, one row each, except
+taxa the name was (wholly) misapplied to
 \item \code{collapse_to_higher_taxon}, which declares that an ambiguous name cannot
-be assigned to one accepted species/infraspecific name. It applies to
-every species or infraspecific name with a "pro parte" usage in the APC,
-even when its usages all lead to the same taxon (number_of_collapsed_taxa
-is then 1). suggested_name becomes "Genus sp. [collapsed names: ...]",
-listing the possible names, and accepted_name becomes "Genus sp.", with
+be assigned to one accepted species/infraspecific name.
+suggested_name becomes "Genus sp. [collapsed names: ...]",
+listing each possible taxon once (number_of_collapsed_taxa of them,
+including taxa the name was misapplied to), and accepted_name becomes
+"Genus sp.", with
 taxonomic_status "accepted"; when the most likely taxon is not itself
 accepted, accepted_name is \code{NA} and taxonomic_status is that taxon's
 status. The other columns are not demoted: taxon_rank stays the rank of
 the aligned name, and taxon_ID, scientific_name and scientific_name_ID
 are those of the most likely taxon (the one \code{most_likely_species}
-returns). update_reason is "collapsed to genus due to ambiguity" when
-number_of_collapsed_taxa is more than 1 and the aligned name is not
-accepted; otherwise it is the usual reason for the aligned name.
+returns). update_reason is "collapsed to genus due to ambiguity".
 }}
 
 \item{quiet}{Logical to indicate whether to display messages while updating
@@ -99,7 +103,8 @@ details of a scientific name; available for both APC and APNI names.
 \item canonical_name: a copy of suggested_name.
 \item row_number: the row number of a specific original_name in the input.
 \item number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon",
-the number of possible taxon names that have been collapsed.
+the number of possible taxon names that have been collapsed; \code{NA} for a
+name that is not collapsed.
 \item chars_changed: for a fuzzy match, how many characters of the name were
 changed to match the reference name; \code{0} for an exact match; \code{NA} when the
 name was not aligned. Carried over from \code{\link[=align_taxa]{align_taxa()}}, where it is
