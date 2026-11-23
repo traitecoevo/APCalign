@@ -46,9 +46,13 @@ fuzzy_match <- function(txt, accepted_list,
   ## qualifier can silently slot into an unrelated word's position purely by
   ## first-letter coincidence (e.g. "acacia aff aneura" confirming against
   ## "acacia aptaneura", since "aff" and "aptaneura" both start with "a").
+  ## `txt` and the candidates are stripped text, so a token is space-delimited.
+  ## A word-boundary test would also read an "x" joined by a hyphen ("mini-x",
+  ## kept by strip_names() since #311) as a hybrid marker (#317).
   qualifier_tokens <- c("aff", "cf", "x")
+  has_token <- function(s, q) grepl(paste0("(^|\\s)", q, "($|\\s)"), s, perl = TRUE)
   txt_qualifiers <- qualifier_tokens[vapply(
-    qualifier_tokens, function(q) re_detect(txt, whole_word(q)), logical(1)
+    qualifier_tokens, function(q) has_token(txt, q), logical(1)
   )]
 
   ## extract first letter of first word
@@ -129,7 +133,7 @@ fuzzy_match <- function(txt, accepted_list,
     ## reject outright if txt carries a qualifier token ("aff"/"cf"/"x") that
     ## this candidate doesn't also carry -- see txt_qualifiers above.
     if (length(txt_qualifiers) > 0) {
-      if (!all(vapply(txt_qualifiers, function(q) re_detect(potential_match, whole_word(q)), logical(1)))) {
+      if (!all(vapply(txt_qualifiers, function(q) has_token(potential_match, q), logical(1)))) {
         return(FALSE)
       }
     }

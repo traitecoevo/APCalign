@@ -274,12 +274,3 @@ to_ascii <- function(x) {
   x[todo] <- y
   x
 }
-
-## Pattern matching `word` as a whole word. Spelled out with Unicode classes
-## because PCRE's `\\b` only knows ASCII word characters, while the ICU `\\b`
-## stringr used treats accented letters as word characters too.
-#' @noRd
-whole_word <- function(word) {
-  w <- "[\\p{L}\\p{M}\\p{Nd}\\p{Nl}\\p{Pc}\u200C\u200D]"
-  paste0("(?<!", w, ")", word, "(?!", w, ")")
-}
