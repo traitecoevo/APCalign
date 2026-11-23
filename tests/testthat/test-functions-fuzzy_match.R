@@ -56,6 +56,23 @@ test_that("fuzzy_match() rejects an affinis/hybrid qualifier masquerading as an 
   )
 })
 
+test_that("fuzzy_match() reads only a space-delimited x as a hybrid marker", {
+  # Since #311 strip_names() keeps hyphens, and an "x" joined by one ("mini-x")
+  # was read as a hybrid marker, rejecting every candidate without one (#317).
+  expect_equal(fuzzy_match("anigozanthos mini-x", "anigozanthos minix", 3, 0.2),
+               "anigozanthos minix")
+  expect_equal(fuzzy_match("anigozanthos minix", "anigozanthos mini-x", 3, 0.2),
+               "anigozanthos mini-x")
+  # Likewise "aff" and "cf" joined by a hyphen are not qualifiers
+  expect_equal(fuzzy_match("acacia aff-aneura", "acacia affaneura", 3, 0.2),
+               "acacia affaneura")
+  # A standalone qualifier, at the start, middle or end, still needs a match
+  expect_true(is.na(fuzzy_match("banksia x integrifolia", "banksia integrifolia", 3, 0.2)))
+  expect_true(is.na(fuzzy_match("banksia integrifolia x", "banksia integrifolia", 3, 0.2)))
+  expect_equal(fuzzy_match("persoonia x luciida", "persoonia x lucida", 3, 0.2),
+               "persoonia x lucida")
+})
+
 test_that("align_taxa() caps an affinis-qualified name at genus rank instead of a wrong species match", {
 
   # End-to-end version of the fuzzy_match() regression above: before the fix,
