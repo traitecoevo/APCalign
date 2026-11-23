@@ -197,7 +197,7 @@ and chars_changed; `full = TRUE` adds the others below.
 
 - number_of_collapsed_taxa: when taxonomic_splits ==
   "collapse_to_higher_taxon", the number of possible taxon names that
-  have been collapsed.
+  have been collapsed; `NA` for a name that is not collapsed.
 
 - chars_changed: for a fuzzy match, how many characters of the name were
   changed to match the reference name; `0` for an exact match; `NA` when

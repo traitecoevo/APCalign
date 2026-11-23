@@ -531,7 +531,7 @@ taxon concepts that have been split.</p>
 returns the <code>accepted_name</code> of the original taxon_concept;
 alternative names are documented in square brackets as part of the
 suggested name
-(<code>Acacia aneura [alternative possible names: Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied) | Acacia quadrimarginea (misapplied)</code>).</p></li>
+(<code>Acacia aneura [alternative possible names: Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied) | Acacia quadrimarginea (misapplied)]</code>).</p></li>
 <li><p><code>return_all</code> returns all currently accepted names that
 were split from the original taxon_concept; this leads to an increase in
 the number of rows in the output table. (Acacia aneura, Acacia minyura
@@ -543,11 +543,13 @@ appropriate and therefore that the best possible match is at the genus
 level; the <code>accepted_name</code> becomes <code>Acacia sp.</code>
 and the suggested name documents the possible species-level names in
 square brackets
-(<code>Acacia sp. [collapsed names: Acacia aneura (accepted) | Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied)]</code>).
-Only these two names change: <code>taxon_rank</code>,
-<code>taxon_ID</code> and <code>scientific_name</code> stay those of the
-most likely taxon, here <em>Acacia aneura</em> at species rank, as the
-output below shows.</p></li>
+(<code>Acacia sp. [collapsed names: Acacia aneura (accepted) | Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied) | Acacia quadrimarginea (misapplied)]</code>).
+Only names that could be more than one taxon are collapsed: a name whose
+usages all lead to one taxon is updated to it, under every option. Only
+these two names change: <code>taxon_rank</code>, <code>taxon_ID</code>
+and <code>scientific_name</code> stay those of the most likely taxon,
+here <em>Acacia aneura</em> at species rank, as the output below
+shows.</p></li>
 </ol>
 </li>
 </ul>

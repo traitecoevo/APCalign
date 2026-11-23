@@ -465,7 +465,7 @@ APNI cannot be updated*
   1.  `most_likely_species` is the default value, and returns the
       `accepted_name` of the original taxon_concept; alternative names
       are documented in square brackets as part of the suggested name
-      (`Acacia aneura [alternative possible names: Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied) | Acacia quadrimarginea (misapplied)`).
+      (`Acacia aneura [alternative possible names: Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied) | Acacia quadrimarginea (misapplied)]`).
 
   2.  `return_all` returns all currently accepted names that were split
       from the original taxon_concept; this leads to an increase in the
@@ -478,8 +478,10 @@ APNI cannot be updated*
       therefore that the best possible match is at the genus level; the
       `accepted_name` becomes `Acacia sp.` and the suggested name
       documents the possible species-level names in square brackets
-      (`Acacia sp. [collapsed names: Acacia aneura (accepted) | Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied)]`).
-      Only these two names change: `taxon_rank`, `taxon_ID` and
+      (`Acacia sp. [collapsed names: Acacia aneura (accepted) | Acacia minyura (pro parte misapplied) | Acacia paraneura (pro parte misapplied) | Acacia quadrimarginea (misapplied)]`).
+      Only names that could be more than one taxon are collapsed: a name
+      whose usages all lead to one taxon is updated to it, under every
+      option. Only these two names change: `taxon_rank`, `taxon_ID` and
       `scientific_name` stay those of the most likely taxon, here
       *Acacia aneura* at species rank, as the output below shows.
 

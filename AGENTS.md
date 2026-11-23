@@ -223,13 +223,21 @@ legitimately change matcher output, regenerate with
   names**: `accepted_name` becomes `Genus sp.` (`NA` if the most likely
   taxon is not accepted) and `suggested_name`
   `Genus sp. [collapsed names: ...]`, while `taxon_rank`, `taxon_ID` and
-  `scientific_name` stay those of the most likely taxon. It applies to
-  every name with a pro parte usage, even when all its usages lead to
-  one taxon (`number_of_collapsed_taxa` 1). This is the intended
-  behaviour (maintainer decision on \#309), documented in
+  `scientific_name` stay those of the most likely taxon. This is the
+  intended behaviour (maintainer decision on \#309), documented in
   [`update_taxonomy()`](https://traitecoevo.github.io/APCalign/reference/update_taxonomy.md)
   and pinned in `test-operation_outputs.R`; don’t “fix” the rank to
   genus.
+- **A split name is one whose usages lead to more than one taxon**
+  (maintainer decision on \#314). A name with a pro parte usage whose
+  usages all lead to one taxon (e.g. `Lycopodium selago`, pro parte
+  misapplied and misapplied to *Huperzia australiana*) is updated to
+  that taxon under every `taxonomic_splits` option, exactly as a plain
+  misapplied name is; `excluded` usages don’t count as a taxon. Pro
+  parte with one listed target means the rest of the misapplied concept
+  has no Australian taxon in the APC. Collapse lists and counts each
+  taxon once, including taxa a name was wholly misapplied to;
+  `return_all` still leaves those out.
 - **Downloaded versions in `tools::R_user_dir("APCalign")` are not
   pruned**, by decision (#309): each is about 20 MB, and users may want
   old versions for reproducibility.

@@ -2,17 +2,45 @@
 
 ## APCalign (development version)
 
+- A name with a pro parte usage in the APC is treated as a taxonomic
+  split only when its usages lead to more than one taxon. A name whose
+  usages all lead to one taxon (170 of the 1,641 pro parte names in APC
+  2024-10-11, e.g. `Lycopodium selago`, pro parte misapplied and
+  misapplied to *Huperzia australiana*) is now updated to that taxon
+  under every `taxonomic_splits` option, as a plain misapplied name
+  already was (`Huperzia selago`), with `update_reason` its status,
+  e.g. “pro parte misapplied”. `collapse_to_higher_taxon` used to
+  collapse these to genus
+  (`Huperzia sp. [collapsed names: Huperzia australiana (pro parte misapplied) ]`),
+  and `most_likely_species` added a broken list of alternatives
+  (`[alternative possible names: NA]`, or the suggested name itself). An
+  “excluded” usage (the name’s taxon is not in Australia) no longer
+  counts as a possible taxon
+  ([\#314](https://github.com/traitecoevo/APCalign/issues/314)).
+- For names that are split, the bracketed lists name each possible taxon
+  once and never list `NA`; `most_likely_species` no longer lists the
+  suggested name as its own alternative, and gives no brackets when
+  there is no alternative. `collapse_to_higher_taxon` now also lists,
+  and counts in `number_of_collapsed_taxa`, taxa a name was wholly
+  misapplied to (`Agrostis alba` was collapsed with only *A.
+  stolonifera*, not *A. gigantea*), and a collapsed accepted name has
+  `update_reason` “collapsed to genus due to ambiguity” instead of
+  “aligned name accepted by APC”. A possible taxon that is not accepted
+  is now named correctly: it was named by another name pointing to it,
+  so `Abutilon muticum` listed *Sida mutica* (and collapsed to
+  `Sida sp.`) instead of *Abutilon pannosum*, which is what `return_all`
+  and `taxon_ID` gave (4 names). The stray space before the closing
+  bracket of `[collapsed names: ...]` is gone
+  ([\#314](https://github.com/traitecoevo/APCalign/issues/314)).
 - The documentation of `taxonomic_splits = "collapse_to_higher_taxon"`
   now describes what it returns. It said no `accepted_name` is returned
   and the rank is demoted to genus. In fact `accepted_name` is
   `Genus sp.` (or `NA` when the most likely taxon is not accepted) and
   `suggested_name` `Genus sp. [collapsed names: ...]`, while
   `taxon_rank`, `taxon_ID` and `scientific_name` stay those of the most
-  likely taxon. It applies to every name with a pro parte usage,
-  including names whose usages all lead to one taxon
-  (`number_of_collapsed_taxa` 1). Output is unchanged. The docs of
-  `most_likely_species` are corrected too: the alternative names are in
-  `suggested_name`, not in a separate column.
+  likely taxon. Output is unchanged. The docs of `most_likely_species`
+  are corrected too: the alternative names are in `suggested_name`, not
+  in a separate column.
 - `LICENSE` now names Elizabeth Wenk as copyright holder, matching
   `DESCRIPTION`, and its year is 2023, the first release.
 - [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
