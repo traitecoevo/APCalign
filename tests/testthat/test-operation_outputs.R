@@ -104,9 +104,13 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
       resources = resources,
       full = TRUE, 
       quiet = TRUE) %>%
-    dplyr::arrange(original_name, taxon_ID, taxonomic_status) %>%
+    dplyr::arrange(original_name, taxon_ID, taxonomic_status)
+
+  # only a name that could be more than one taxon is collapsed (#314)
+  expect_return_all_matches_collapsed(out2, out3)
+  out3 <- out3 %>%
     dplyr::mutate(number_of_collapsed_taxa = ifelse(is.na(number_of_collapsed_taxa), 1, number_of_collapsed_taxa))
-  
+
   rows_gt_1 <- out3 %>% dplyr::filter(number_of_collapsed_taxa > 1)
   rows_end_sp <- out3 %>% dplyr::filter(grepl(" sp. ", suggested_name, fixed = TRUE))
   rows_alt_names <- out3 %>% dplyr::filter(grepl("collapsed names:", suggested_name))
@@ -123,7 +127,7 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
   expect_equal(rows_gt_1$accepted_name[has_accepted],
                paste(rows_gt_1$genus, "sp.")[has_accepted])
   expect_true(all(rows_gt_1$taxonomic_status[has_accepted] == "accepted"))
-  # when the most likely taxon is not accepted (Abutilon muticum -> Sida mutica),
+  # when the most likely taxon is not accepted (Abutilon muticum -> Abutilon pannosum, excluded),
   # there is no accepted_name, and the status is that taxon's
   expect_true(any(!has_accepted))
   expect_false(any(rows_gt_1$taxonomic_status[!has_accepted] == "accepted"))
@@ -132,16 +136,11 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
     rows_gt_1$taxon_ID,
     out1$taxon_ID[match(rows_gt_1$original_name, out1$original_name)]
   )
-  expect_equal(
-    rows_gt_1$update_reason,
-    ifelse(rows_gt_1$taxonomic_status_aligned == "accepted",
-           "aligned name accepted by APC",
-           "collapsed to genus due to ambiguity")
-  )
+  # including for an aligned name that is itself accepted
+  expect_true(any(rows_gt_1$taxonomic_status_aligned == "accepted"))
+  expect_true(all(rows_gt_1$update_reason == "collapsed to genus due to ambiguity"))
 
   expect_equal(nrow(out1), nrow(out3))
-  #will be less (slightly) because `return_all` excludes misapplied and excluded taxa
-  expect_equal(nrow(out2), sum(out3$number_of_collapsed_taxa)-2)
   expect_equal(nrow(rows_gt_1), nrow(rows_end_sp))
   expect_equal(nrow(rows_gt_1), nrow(rows_alt_names))
   
@@ -159,23 +158,48 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
   
   })
 
-test_that("collapse_to_higher_taxon also collapses a pro parte name with one target", {
+test_that("a pro parte name whose usages all lead to one taxon is updated to it (#314)", {
   # Lycopodium selago has two APC usages (pro parte misapplied, misapplied),
-  # both leading to Huperzia australiana. It is still collapsed, with
-  # number_of_collapsed_taxa 1 and its own update_reason, as documented.
-  out <- update_taxonomy(
-    align_taxa("Lycopodium selago", resources = resources, quiet = TRUE),
-    taxonomic_splits = "collapse_to_higher_taxon",
-    resources = resources, quiet = TRUE
+  # both leading to Huperzia australiana. Ceriops decandra likewise, to
+  # Ceriops pseudodecandra. Blumea hieraciifolia is pro parte misapplied to
+  # Blumea lacera and excluded (not in Australia), which is not a second taxon.
+  # Each is updated as a misapplied name is, under every option.
+  input <- c("Lycopodium selago", "Ceriops decandra", "Blumea hieraciifolia")
+  for (splits in c("most_likely_species", "collapse_to_higher_taxon", "return_all")) {
+    out <- create_taxonomic_update_lookup(
+      input, taxonomic_splits = splits, resources = resources, full = TRUE, quiet = TRUE
+    )
+    expect_equal(out$original_name, input)
+    expect_equal(out$suggested_name,
+                 c("Huperzia australiana", "Ceriops pseudodecandra", "Blumea lacera"))
+    expect_equal(out$accepted_name, out$suggested_name)
+    expect_equal(out$number_of_collapsed_taxa, rep(NA_real_, 3))
+    expect_equal(out$update_reason, rep("pro parte misapplied", 3))
+  }
+})
+
+test_that("each possible taxon of a split name is listed once (#314)", {
+  # Agrostis alba is pro parte misapplied to Agrostis stolonifera and misapplied
+  # to Agrostis gigantea: two possible taxa. Acacia acuminata is accepted and
+  # pro parte misapplied to two others.
+  input <- c("Agrostis alba", "Acacia acuminata")
+  most_likely <- create_taxonomic_update_lookup(
+    input, resources = resources, full = TRUE, quiet = TRUE
   )
-  expect_equal(out$accepted_name, "Huperzia sp.")
-  expect_equal(
-    out$suggested_name,
-    "Huperzia sp. [collapsed names: Huperzia australiana (pro parte misapplied) ]"
+  expect_equal(most_likely$suggested_name, c(
+    "Agrostis stolonifera [alternative possible names: Agrostis gigantea (misapplied)]",
+    "Acacia acuminata [alternative possible names: Acacia lasiocalyx (pro parte misapplied) | Acacia yorkrakinensis subsp. acrita (pro parte misapplied)]"
+  ))
+  collapsed <- create_taxonomic_update_lookup(
+    input, taxonomic_splits = "collapse_to_higher_taxon", resources = resources,
+    full = TRUE, quiet = TRUE
   )
-  expect_equal(out$number_of_collapsed_taxa, 1)
-  expect_equal(out$taxon_rank, "species")
-  expect_equal(out$update_reason, out$taxonomic_status_aligned)
+  expect_equal(collapsed$suggested_name, c(
+    "Agrostis sp. [collapsed names: Agrostis stolonifera (pro parte misapplied) | Agrostis gigantea (misapplied)]",
+    "Acacia sp. [collapsed names: Acacia acuminata (accepted) | Acacia lasiocalyx (pro parte misapplied) | Acacia yorkrakinensis subsp. acrita (pro parte misapplied)]"
+  ))
+  expect_equal(collapsed$number_of_collapsed_taxa, c(2, 3))
+  expect_equal(collapsed$update_reason, rep("collapsed to genus due to ambiguity", 2))
 })
 
 test_that("taxon name alignment matches and updates work as expected", {

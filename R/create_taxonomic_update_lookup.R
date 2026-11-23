@@ -135,7 +135,8 @@
 #' - canonical_name: a copy of suggested_name.
 #' - row_number: the row number of a specific original_name in the input.
 #' - number_of_collapsed_taxa: when taxonomic_splits == "collapse_to_higher_taxon",
-#'   the number of possible taxon names that have been collapsed.
+#'   the number of possible taxon names that have been collapsed; `NA` for a
+#'   name that is not collapsed.
 #' - chars_changed: for a fuzzy match, how many characters of the name were
 #'   changed to match the reference name; `0` for an exact match; `NA` when the
 #'   name was not aligned. Carried over from [align_taxa()], where it is
