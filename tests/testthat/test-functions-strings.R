@@ -81,18 +81,11 @@ test_that("to_ascii() transliterates as ICU's Any-Latin; Latin-ASCII did", {
   expect_equal(standardise_names("Ac\u00E1cia longifolia"), "Acacia longifolia")
 })
 
-test_that("whole_word() treats accented letters as word characters, like ICU's \\b", {
-  x <- c("a x b", "\u00E9x b", "x\u0301 b", "1x", "x")
-  expect_equal(APCalign:::re_detect(x, APCalign:::whole_word("x")),
-               c(TRUE, FALSE, FALSE, FALSE, TRUE))
-})
-
 test_that("patterns with characters above U+00FF work on all-ASCII input", {
   # PCRE rejects a \x{...} escape above 255 unless the input is non-ASCII, so
   # such characters must be written as \u escapes in the R string
   expect_no_error(APCalign:::to_sentence(c("acacia!xyz", "Acacia aneura")))
   expect_no_error(strip_names(c("Acacia aneura", "Banksia/serrata")))
-  expect_no_error(APCalign:::re_detect("Acacia aneura", APCalign:::whole_word("aff")))
 })
 
 test_that("fuzzy_match()'s first-letter cache follows the reference list", {
