@@ -25,11 +25,12 @@ names are case insensitive.}
 \item{taxonomic_splits}{Variable that determines what protocol to use to
 update taxon names that are ambiguous due to taxonomic splits.
 A name is ambiguous when it has a "pro parte" usage in the APC and its
-usages lead to more than one taxon. An "excluded" usage (the name's taxon is
-not in Australia) does not count as a taxon. A name whose usages all lead to
-one taxon is updated to that taxon under every option, as a synonym or a
-misapplied name is, with update_reason its status (e.g. "pro parte
-misapplied"). For an ambiguous name, the three options are:
+usages lead to more than one taxon. A taxon excluded from the APC (not in
+Australia) is never a possible taxon, and a name linked both to an excluded
+taxon and to a taxon in Australia is updated to the latter. A name whose
+usages all lead to one taxon is updated to that taxon under every option, as
+a synonym or a misapplied name is, with update_reason its status (e.g. "pro
+parte misapplied"). For an ambiguous name, the three options are:
 \itemize{
 \item \code{most_likely_species}, which returns the species name in use before the
 split; the other possible taxa are listed in square brackets in

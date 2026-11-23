@@ -34,11 +34,12 @@
 #' @param taxonomic_splits Variable that determines what protocol to use to 
 #' update taxon names that are ambiguous due to taxonomic splits. 
 #' A name is ambiguous when it has a "pro parte" usage in the APC and its
-#' usages lead to more than one taxon. An "excluded" usage (the name's taxon is
-#' not in Australia) does not count as a taxon. A name whose usages all lead to
-#' one taxon is updated to that taxon under every option, as a synonym or a
-#' misapplied name is, with update_reason its status (e.g. "pro parte
-#' misapplied"). For an ambiguous name, the three options are:
+#' usages lead to more than one taxon. A taxon excluded from the APC (not in
+#' Australia) is never a possible taxon, and a name linked both to an excluded
+#' taxon and to a taxon in Australia is updated to the latter. A name whose
+#' usages all lead to one taxon is updated to that taxon under every option, as
+#' a synonym or a misapplied name is, with update_reason its status (e.g. "pro
+#' parte misapplied"). For an ambiguous name, the three options are:
 #'   - `most_likely_species`, which returns the species name in use before the
 #'   split; the other possible taxa are listed in square brackets in
 #'   suggested_name, each once, e.g. "Acacia aneura \[alternative possible
@@ -320,6 +321,11 @@ list_possible_names <- function(names, statuses, omit = character()) {
   paste0(names[first], " (", statuses[first], ")", collapse = " | ")
 }
 
+# Whether each usage leads to a taxon excluded from the APC (not in Australia).
+leads_to_excluded_taxon <- function(accepted_name_usage_ID, resources) {
+  resources$APC$taxonomic_status[match(accepted_name_usage_ID, resources$APC$taxon_ID)] %in% "excluded"
+}
+
 # preferred order of taxonomic updates
 relevel_taxonomic_status_preferred_order <- function(taxonomic_status) {
   
@@ -507,16 +513,18 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
     #dplyr::filter(pro_parte == TRUE | taxonomic_status == "accepted") %>% # this is the filter that needs to be applied for what names gets joined in if "return_all" is true
     dplyr::mutate(
       alternative_accepted_name = resources$APC_accepted$canonical_name[match(accepted_name_usage_ID, resources$APC_accepted$accepted_name_usage_ID)],
-      ## a target that is not accepted (e.g. excluded) is named by its own taxon_ID, not by another name pointing to it
+      ## a target missing from `APC_accepted` is named by its own taxon_ID, not by another name pointing to it
       alternative_accepted_name = ifelse(is.na(alternative_accepted_name), resources$APC$canonical_name[match(accepted_name_usage_ID, resources$APC$taxon_ID)], alternative_accepted_name),
       accepted_name_2 = alternative_accepted_name
     ) %>%
     dplyr::distinct(canonical_name, alternative_accepted_name, taxonomic_status, taxon_rank, .keep_all = TRUE) %>% ## there can be multiple rows for this same combination, due to different `instances` of a name; we only maintain 1 row
-    ## a name is only ambiguous when its usages lead to more than one taxon (#314). An `excluded` usage leads to no
-    ## Australian taxon, so it is not counted. A name whose usages all lead to one taxon is updated to that taxon,
-    ## as a synonym or a misapplied name is, by the standard path below.
+    ## an excluded taxon is not in Australia, so it is never a possible taxon (#314); this also drops `excluded`
+    ## usages, which lead to the name's own excluded taxon
+    dplyr::filter(!leads_to_excluded_taxon(accepted_name_usage_ID, resources)) %>%
+    ## a name is only ambiguous when its usages lead to more than one taxon (#314). A name whose usages all lead
+    ## to one taxon is updated to that taxon, as a synonym or a misapplied name is, by the standard path below.
     dplyr::group_by(canonical_name) %>%
-    dplyr::filter(dplyr::n_distinct(accepted_name_2[taxonomic_status != "excluded"]) > 1) %>%
+    dplyr::filter(dplyr::n_distinct(accepted_name_2) > 1) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
       alternative_accepted_name = ifelse(alternative_accepted_name == canonical_name, NA, alternative_accepted_name),
@@ -546,12 +554,11 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
           paste0(accepted_name_2, " [alternative possible names: ", alternative_possible_names, "]"))
       )
   } else {
-    # `excluded` usages lead to no Australian taxon. Under `return_all`, every remaining usage becomes a row of output,
-    # and it is not appropriate for a `misapplied` usage to be returned as a `suggested_name` of its own;
-    # under `collapse_to_higher_taxon`, the taxon a name was misapplied to is one of its possible taxa.
+    # Under `return_all`, every usage becomes a row of output, and it is not appropriate for a `misapplied` usage
+    # to be returned as a `suggested_name` of its own; under `collapse_to_higher_taxon`, the taxon a name was
+    # misapplied to is one of its possible taxa.
     split_taxa_table <-
       split_taxa_table %>%
-      dplyr::filter(taxonomic_status_aligned != "excluded") %>%
       dplyr::filter(taxonomic_splits != "return_all" | taxonomic_status_aligned != "misapplied")
   }
   
@@ -590,9 +597,11 @@ update_taxonomy_APC_species_and_infraspecific_taxa <- function(data, resources, 
           species_and_infraspecific(taxon_rank)
         ) %>%
         dplyr::mutate(
-          my_order = relevel_taxonomic_status_preferred_order(taxonomic_status)
+          my_order = relevel_taxonomic_status_preferred_order(taxonomic_status),
+          excluded_taxon = leads_to_excluded_taxon(accepted_name_usage_ID, resources)
         ) %>%
-        dplyr::arrange(my_order) %>%
+        ## a usage leading to a taxon in Australia is preferred to one leading to an excluded taxon (#314)
+        dplyr::arrange(excluded_taxon, my_order) %>%
         ## due to splits there can be duplicate `canonical_name` entries, which would causes row duplication; we retain the accepted name, 
         ## or the name with the "highest priority" taxonomic_status, per `my_order` 
         dplyr::distinct(canonical_name, .keep_all = TRUE) %>%
