@@ -141,6 +141,13 @@
   the whole lookup; it now goes unmatched where it cannot be aligned.
   `fuzzy_match()` returns `NA` for text whose first word has no letter,
   and no longer errors when a word’s first letter is missing.
+- `fuzzy_match()` no longer reads an `x`, `aff` or `cf` joined to a word
+  by a hyphen (`Anigozanthos mini-x`) as a hybrid marker or affinity
+  qualifier. Since hyphens were kept
+  ([\#310](https://github.com/traitecoevo/APCalign/issues/310)), such a
+  name could not fuzzy-match the same name written without the hyphen.
+  No current APC/APNI alignment changes
+  ([\#317](https://github.com/traitecoevo/APCalign/issues/317)).
 - [`create_taxonomic_update_lookup()`](https://traitecoevo.github.io/APCalign/reference/create_taxonomic_update_lookup.md)
   now ends with a summary of what it did, unless `quiet = TRUE`: how
   many names aligned to a species or infraspecific taxon (in the APC, or
