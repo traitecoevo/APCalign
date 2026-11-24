@@ -2,29 +2,44 @@
 
 0 errors | 0 warnings | 0 notes
 
+* Local: macOS (aarch64), R 4.6.1, `R CMD check --as-cran`, online and offline
+  (no network and an empty data cache).
+* win-builder: R-devel and R-release.
+* R-hub: Linux, macOS and Windows.
+
+## Reverse dependencies
+
+There are no reverse dependencies.
+
+## URLs
+
+The README and vignette link to the Australian Plant Census and Australian
+Plant Name Index search pages at biodiversity.org.au. That site now answers
+automated requests with a bot check (HTTP 405), so a URL check may report them
+as invalid, but the pages open normally in a browser.
+
 ## Submission notes
 
-* This is a patch release (2.0.0 -> 2.0.1): bug fixes and internal cleanups
-  only, no breaking changes, no new exported functions.
+This is a minor release (2.0.1 -> 2.1.0). Nothing exported is removed; there
+are new output columns and several bug fixes.
 
-## Changes since last CRAN release (2.0.0)
+## Changes since last CRAN release (2.0.1)
 
-* `fuzzy_match()` no longer confirms a fuzzy match against a candidate that
-  drops an `aff.`/`cf.`/`x` qualifier present in the query, which previously
-  let affinis- and hybrid-qualified names resolve past their qualifier to an
-  unrelated accepted species instead of being capped at genus rank.
-* `standardise_taxon_rank()` no longer corrupts rank values that are already
-  English, or that merely contain a Latin rank term as a substring (e.g.
-  `section`/`subsection` were being mangled into `sectionn`/`subsectionn`).
-* `standardise_names()` no longer rewrites `affinis` to `aff.` when it is the
-  species epithet of an infraspecific name, which previously produced names
-  that could only ever align to genus rank.
-* Fixed malformed `aligned_reason` text for fuzzy genus-level `aff.`/`affinis`
-  matches.
-* `align_taxa(full = TRUE)` no longer leaks internal scratch columns when
-  every name is aligned before the last match step runs.
-* `native_anywhere_in_australia()` now checks for missing taxonomic resources
-  once up front, and no longer misclassifies taxa whose name contains
-  "native" (e.g. the `nativitatis` epithets).
-* Internal refactor of `match_taxa()` and de-duplication of a repeated string
-  helper; both are behaviour-preserving.
+* New `chars_changed` output column: for a fuzzy match, how many characters
+  were changed to match the reference name.
+* `create_taxonomic_update_lookup()` ends with a summary of what it did, unless
+  `quiet = TRUE`.
+* `aligned_reason` ends with the version of the APC/APNI data used instead of
+  the run date, so output is reproducible.
+* Hyphenated genus names and epithets are kept as one word.
+* Names with a pro parte usage that leads to a single taxon are updated to
+  that taxon, and taxa excluded from the APC are never returned when the name
+  also leads to a taxon in Australia.
+* Bug fixes: the `version` argument of `create_taxonomic_update_lookup()` was
+  ignored; `default_version()` failed when the GitHub API rate limit was
+  reached; the `output` file argument now works as documented; names whose
+  first words have no letter no longer stop a lookup; failed downloads no
+  longer leave a partial file in the cache.
+* Lighter dependencies: `arrow` is replaced by `nanoparquet`; `stringr`,
+  `stringi` and `purrr` are no longer imported; `readr` moves to Suggests;
+  `crayon` is replaced by `cli`.

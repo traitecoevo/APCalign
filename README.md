@@ -72,15 +72,15 @@ create_taxonomic_update_lookup(
     "Commersonia rosea"
     )
 )
-#> # A tibble: 3 × 12
+#> # A tibble: 3 × 13
 #>   original_name       aligned_name accepted_name suggested_name genus taxon_rank
 #>   <chr>               <chr>        <chr>         <chr>          <chr> <chr>     
 #> 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   
 #> 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   
 #> 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   
-#> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
+#> # ℹ 7 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
 #> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
-#> #   number_of_collapsed_taxa <dbl>
+#> #   number_of_collapsed_taxa <dbl>, chars_changed <int>
 ```
 
 You can alternatively load the taxonomic resources into memory first:
@@ -109,7 +109,7 @@ create_taxonomic_update_lookup(
     ),
   resources = tax_resources
 )
-#> # A tibble: 16 × 12
+#> # A tibble: 16 × 13
 #>    original_name      aligned_name accepted_name suggested_name genus taxon_rank
 #>    <chr>              <chr>        <chr>         <chr>          <chr> <chr>     
 #>  1 Banksia integrifo… Banksia int… Banksia inte… Banksia integ… Bank… species   
@@ -128,9 +128,9 @@ create_taxonomic_update_lookup(
 #> 14 Panicum sp. Hairy… Panicum sp.… Panicum sp. … Panicum sp. H… Pani… species   
 #> 15 Panicum sp. Hairy… Panicum sp.… Panicum sp. … Panicum sp. H… Pani… species   
 #> 16 not a species      <NA>         <NA>          <NA>           <NA>  <NA>      
-#> # ℹ 6 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
+#> # ℹ 7 more variables: taxonomic_dataset <chr>, taxonomic_status <chr>,
 #> #   scientific_name <chr>, aligned_reason <chr>, update_reason <chr>,
-#> #   number_of_collapsed_taxa <dbl>
+#> #   number_of_collapsed_taxa <dbl>, chars_changed <int>
 ```
 
 Checking for a list of species to see if they are classified as
@@ -155,10 +155,10 @@ state_diversity_counts("NSW", resources = tax_resources)
 #>   <chr>                             <chr>       <int>
 #> 1 doubtfully naturalised            NSW            95
 #> 2 formerly naturalised              NSW             8
-#> 3 native                            NSW          5982
+#> 3 native                            NSW          5986
 #> 4 native and doubtfully naturalised NSW             2
 #> 5 native and naturalised            NSW            34
-#> 6 naturalised                       NSW          1586
+#> 6 naturalised                       NSW          1587
 #> 7 presumed extinct                  NSW             9
 ```
 
@@ -198,7 +198,7 @@ synonyms_for_accepted_names(resources = tax_resources, accepted_names = names_to
 #> 1 Brassicaceae Cardamine gunnii  Cardami… Cardamine gunn… https://id.biodiversi…
 #> 2 Fabaceae     Acacia aneura     Acacia … Acacia aneura … https://id.biodiversi…
 #> 3 Proteaceae   Banksia nivea     Dryandr… Banksia nivea … https://id.biodiversi…
-#> 4 Proteaceae   Stenocarpus sinu… Cybele … Stenocarpus si… https://id.biodiversi…
+#> 4 Proteaceae   Stenocarpus sinu… Agnostu… Stenocarpus si… https://id.biodiversi…
 ```
 
 ## Cheatsheet
@@ -224,8 +224,8 @@ citation("APCalign")
 #>   Wenk E, Cornwell W, Fuchs A, Kar F, Monro A, Sauquet H, Stephens R,
 #>   Falster D (2024). "APCalign: an R package workflow and app for
 #>   aligning and updating flora names to the Australian Plant Census."
-#>   _Australian Journal of Botany_, *72*(4). R package version:
-#>   2.0.1.9000, <https://doi.org/10.1071/BT24014>.
+#>   _Australian Journal of Botany_, *72*(4). R package version: 2.1.0,
+#>   <https://doi.org/10.1071/BT24014>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -237,7 +237,7 @@ citation("APCalign")
 #>     number = {4},
 #>     year = {2024},
 #>     publisher = {CSIRO Publishing},
-#>     note = {R package version: 2.0.1.9000},
+#>     note = {R package version: 2.1.0},
 #>     url = {https://doi.org/10.1071/BT24014},
 #>   }
 ```

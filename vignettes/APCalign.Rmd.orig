@@ -93,7 +93,7 @@ For a more reproducible workflow, we recommend specifying the exact `stable` ver
 
 
 ```{r, message = FALSE, results = "hide"}
-resources <- load_taxonomic_resources(stable_or_current_data = "stable", version = "2024-10-11")
+resources <- load_taxonomic_resources(stable_or_current_data = "stable", version = "2026-11-15")
 ```
 
 
