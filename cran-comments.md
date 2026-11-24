@@ -1,22 +1,28 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 note
 
 * Local: macOS (aarch64), R 4.6.1, `R CMD check --as-cran`, online and offline
   (no network and an empty data cache).
 * win-builder: R-devel and R-release.
-* R-hub: Linux, macOS and Windows.
+* R-hub: Linux, macOS (x86_64 and arm64) and Windows, R-devel: no notes.
+
+The one NOTE, on win-builder, is about URLs:
+
+    Found the following (possibly) invalid URLs:
+      URL: https://biodiversity.org.au/nsl/services/search/names
+        Status: 405
+      URL: https://biodiversity.org.au/nsl/services/search/taxonomy
+        Status: 405
+
+These are the search pages of the Australian Plant Name Index and the
+Australian Plant Census, the data this package works with. Their site now
+answers automated requests with a bot check (HTTP 405 Method Not Allowed), but
+the pages are valid and open normally in a browser.
 
 ## Reverse dependencies
 
 There are no reverse dependencies.
-
-## URLs
-
-The README and vignette link to the Australian Plant Census and Australian
-Plant Name Index search pages at biodiversity.org.au. That site now answers
-automated requests with a bot check (HTTP 405), so a URL check may report them
-as invalid, but the pages open normally in a browser.
 
 ## Submission notes
 
