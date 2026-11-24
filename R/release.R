@@ -180,7 +180,8 @@ check_release_resources <- function(new, previous, max_apc_drop = 0.02,
 }
 
 # Names that have aligned the same way in every release since the benchmark
-# version (2024-10-11). If a new release can't reproduce this, it is broken.
+# version (2024-10-11). A new release that aligns one differently needs review:
+# it may be broken, or APC may have changed that name's taxonomy.
 # The last two are only in APNI (so they have no accepted name), and check the
 # APNI table too.
 release_smoke_test_names <- data.frame(
@@ -208,7 +209,10 @@ release_smoke_test_names <- data.frame(
 
 # Load the release files in `path` through load_taxonomic_resources(), as a
 # user would, and check the smoke-test names above align and update as
-# expected. Returns a character vector of problems (empty if none).
+# expected. Returns a list of problems (each a character vector, empty if
+# none): `fail`, the files couldn't be loaded or the names couldn't be
+# aligned at all, so they're broken; and `review`, names that align
+# differently, which may be a real taxonomic change.
 #' @noRd
 check_release_alignment <- function(path, version = "release-candidate") {
   # load_taxonomic_resources() reads a version's files from
@@ -240,7 +244,9 @@ check_release_alignment <- function(path, version = "release-candidate") {
     file.path(cache_dir, paste0(c("apc", "apni"), version, ".parquet"))
   )
   if (!all(copied)) {
-    return(paste0("Could not find the release files apc.parquet and apni.parquet in ", path, "."))
+    return(alignment_problems(fail = paste0(
+      "Could not find the release files apc.parquet and apni.parquet in ", path, "."
+    )))
   }
 
   result <- tryCatch({
@@ -253,13 +259,15 @@ check_release_alignment <- function(path, version = "release-candidate") {
   }, error = function(e) e)
 
   if (inherits(result, "error")) {
-    return(paste0("Aligning names failed: ", conditionMessage(result)))
+    return(alignment_problems(fail = paste0("Aligning names failed: ", conditionMessage(result))))
   }
 
   # create_taxonomic_update_lookup() returns NULL, with a message, when it
   # couldn't load any resources; that must not count as a pass.
   if (!is.data.frame(result) || nrow(result) == 0) {
-    return("Aligning names failed: no results, so the release files could not be loaded.")
+    return(alignment_problems(
+      fail = "Aligning names failed: no results, so the release files could not be loaded."
+    ))
   }
 
   # e.g. "aligned to Hakea paludosa, accepted name none, status unplaced"
@@ -273,8 +281,15 @@ check_release_alignment <- function(path, version = "release-candidate") {
   wanted <- describe(expected)
   found <- describe(result[match(expected$original_name, result$original_name), ])
   wrong <- found != wanted
-  sprintf("%s: expected %s; got %s.",
-          expected$original_name[wrong], wanted[wrong], found[wrong])
+  alignment_problems(review = sprintf(
+    "%s: expected %s; got %s.",
+    expected$original_name[wrong], wanted[wrong], found[wrong]
+  ))
+}
+
+#' @noRd
+alignment_problems <- function(fail = character(0), review = character(0)) {
+  list(fail = fail, review = review)
 }
 
 # Number of missing (NA or empty) values in a column; 0 for a column that isn't

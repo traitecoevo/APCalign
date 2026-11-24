@@ -115,7 +115,9 @@ test_that("duplicated APC taxonIDs need review", {
 
 test_that("the smoke test fails when the release files are missing or can't be loaded", {
   empty <- withr::local_tempdir()
-  expect_match(check_release_alignment(empty), "Could not find the release files")
+  problems <- check_release_alignment(empty)
+  expect_match(problems$fail, "Could not find the release files")
+  expect_equal(problems$review, character(0))
 
   # load_taxonomic_resources() returns NULL, with a message, when it can't load
   # the files; the lookup then returns NULL too, which must not pass
@@ -125,7 +127,7 @@ test_that("the smoke test fails when the release files are missing or can't be l
   nanoparquet::write_parquet(tables$APNI, file.path(path, "apni.parquet"))
   local_mocked_bindings(load_taxonomic_resources = function(...) NULL)
   problems <- suppressMessages(check_release_alignment(path))
-  expect_match(problems, "no results")
+  expect_match(problems$fail, "no results")
 })
 
 test_that("changed columns or an empty table fail", {
@@ -167,13 +169,13 @@ test_that("the smoke-test names align as expected with real release files", {
   file.copy(file.path(source_dir, "apc2024-10-11.parquet"), file.path(path, "apc.parquet"))
   file.copy(file.path(source_dir, "apni2024-10-11.parquet"), file.path(path, "apni.parquet"))
 
-  expect_equal(check_release_alignment(path), character(0))
+  expect_equal(check_release_alignment(path), list(fail = character(0), review = character(0)))
   # it leaves no trace: the real data directory and session cache are untouched
   expect_equal(tools::R_user_dir("APCalign"), source_dir)
   expect_false(exists("stable_release-candidate", envir = .pkg_cache))
 })
 
-test_that("the smoke test reports names that don't align as expected", {
+test_that("the smoke test reports names that don't align as expected, for review", {
   skip_if_no_resources()
   source_dir <- tools::R_user_dir("APCalign")
   skip_if_not(file.exists(file.path(source_dir, "apc2024-10-11.parquet")))
@@ -186,5 +188,6 @@ test_that("the smoke test reports names that don't align as expected", {
   file.copy(file.path(source_dir, "apni2024-10-11.parquet"), file.path(path, "apni.parquet"))
 
   problems <- check_release_alignment(path)
-  expect_true(any(startsWith(problems, "Eucalyptus regnans: expected aligned to Eucalyptus regnans, accepted name Eucalyptus regnans")))
+  expect_equal(problems$fail, character(0))
+  expect_true(any(startsWith(problems$review, "Eucalyptus regnans: expected aligned to Eucalyptus regnans, accepted name Eucalyptus regnans")))
 })

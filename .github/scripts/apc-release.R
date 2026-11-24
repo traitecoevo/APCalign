@@ -1,6 +1,6 @@
-# Run by .github/workflows/apc-release.yaml (#315): download the current APC
-# and APNI exports from NSL, check them against the previous release, and
-# write the outcome for the workflow's release step.
+# Run by .github/workflows/apc-release.yaml (#315): check the APC and APNI
+# files the workflow has just downloaded from NSL against the previous
+# release, and write the outcome for the workflow's release step.
 #
 # Usage: Rscript apc-release.R <tag> <new_dir> <previous_dir>
 #
@@ -15,22 +15,6 @@ previous_dir <- args[[3]]
 
 # helpers = FALSE: don't run tests/testthat/helper.R, which loads the test data
 pkgload::load_all(helpers = FALSE, quiet = TRUE)
-options(timeout = 1800)
-
-# NSL can be slow or briefly unavailable, so try a few times
-attempts <- 3
-for (attempt in seq_len(attempts)) {
-  ok <- tryCatch({
-    download_taxonomic_resources_for_release(path = new_dir)
-    TRUE
-  }, error = function(e) {
-    message("Download attempt ", attempt, " of ", attempts, " failed: ", conditionMessage(e))
-    FALSE
-  })
-  if (ok) break
-  if (attempt == attempts) stop("Could not download the APC and APNI exports from NSL.")
-  Sys.sleep(120)
-}
 
 # Check the files as written, so they are compared like for like with the
 # previous release's parquet files
@@ -38,11 +22,16 @@ new <- read_release_files(new_dir)
 previous <- read_release_files(previous_dir)
 result <- check_release_resources(new, previous)
 
+# Files that can't be loaded fail; names that align differently need review,
+# since APC may have changed their taxonomy
 if (result$status %in% c("pass", "review")) {
-  alignment_problems <- check_release_alignment(new_dir, version = tag)
-  if (length(alignment_problems) > 0) {
+  alignment <- check_release_alignment(new_dir, version = tag)
+  if (length(alignment$fail) > 0) {
     result$status <- "fail"
-    result$problems <- c(result$problems, alignment_problems)
+    result$problems <- c(result$problems, alignment$fail)
+  } else if (length(alignment$review) > 0) {
+    result$status <- "review"
+    result$problems <- c(result$problems, alignment$review)
   }
 }
 

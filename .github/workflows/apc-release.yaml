@@ -8,9 +8,12 @@
 # - checks pass: published (scheduled runs, or manual runs with `publish`);
 #   otherwise a draft.
 # - checks need review (e.g. APC lost more than 2% of its rows): a draft, and
-#   the run is marked failed so someone is notified to check and publish it.
+#   the run fails.
 # - nothing has changed since the latest release: no release.
-# - checks fail: no release, and the run fails.
+# - checks fail, or NSL can't be downloaded: no release, and the run fails.
+# Whenever a run fails, the `notify` job opens an issue assigned to @ehwenk,
+# which GitHub emails to @ehwenk. GitHub's own failure emails for a scheduled workflow
+# go only to whoever last edited its `cron:` lines.
 # Draft releases are invisible to default_version(), which reads the public
 # releases list without authentication.
 #
@@ -55,9 +58,13 @@ jobs:
   release:
     if: github.event_name == 'workflow_dispatch' || github.event.schedule == '0 0 1 1,4,7,10 *'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # Up to 3 download attempts of 20 minutes, plus setup and checks
+    timeout-minutes: 120
     permissions:
       contents: write
+    outputs:
+      tag: ${{ steps.previous.outputs.tag }}
+      status: ${{ steps.check.outputs.status }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -87,7 +94,22 @@ jobs:
           echo "Previous release: $previous"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
 
-      - name: Download and check the new release files
+      # NSL can be slow or briefly unavailable, so try a few times. readr
+      # downloads through curl, which has no overall time limit, so `timeout`
+      # stops an attempt that hangs and leaves time for the next one.
+      - name: Download the new release files from NSL
+        run: |
+          for attempt in 1 2 3; do
+            if timeout 20m Rscript -e 'pkgload::load_all(helpers = FALSE, quiet = TRUE); download_taxonomic_resources_for_release(path = "release")'; then
+              exit 0
+            fi
+            echo "::warning::Download attempt $attempt of 3 failed."
+            if [ "$attempt" -lt 3 ]; then sleep 120; fi
+          done
+          echo "::error::Could not download the APC and APNI exports from NSL."
+          exit 1
+
+      - name: Check the new release files
         id: check
         run: Rscript .github/scripts/apc-release.R "${{ steps.previous.outputs.tag }}" release previous
 
@@ -108,3 +130,46 @@ jobs:
             echo "::error::Release $TAG needs review: it was created as a draft. Check the release notes, then publish or delete it."
             exit 1
           fi
+
+  # Open an issue for @ehwenk when a run fails or times out. Created with
+  # GITHUB_TOKEN, so it doesn't trigger the add-to-project workflow.
+  notify:
+    needs: [keepalive, release]
+    if: always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled'))
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open an issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ needs.release.outputs.tag }}
+          STATUS: ${{ needs.release.outputs.status }}
+          RELEASE_RESULT: ${{ needs.release.result }}
+          KEEPALIVE_RESULT: ${{ needs.keepalive.result }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RELEASES_URL: ${{ github.server_url }}/${{ github.repository }}/releases
+        run: |
+          tag=${TAG:-$(TZ=Australia/Sydney date +%F)}
+          if [ "$RELEASE_RESULT" = "success" ] || [ "$RELEASE_RESULT" = "skipped" ]; then
+            title="APC release workflow: keepalive failed ($tag)"
+            body="The keepalive job failed, so GitHub may switch off this workflow's schedule. If the Actions tab shows the workflow as disabled, enable it there."
+          elif [ "$STATUS" = "review" ]; then
+            title="APC release $tag needs review"
+            body="The release checks flagged problems, so $tag was created as a draft and not published. Read the problems in the draft's release notes ($RELEASES_URL), then publish or delete the draft."
+          elif [ "$RELEASE_RESULT" = "cancelled" ]; then
+            title="APC release $tag timed out"
+            body="The release job timed out or was cancelled, so no release was made. The run's log shows how far it got."
+          else
+            title="APC release $tag failed"
+            body="No release was made. The run's summary and log say what went wrong."
+          fi
+          if [ "$KEEPALIVE_RESULT" != "success" ] && [ "$RELEASE_RESULT" != "success" ] && [ "$RELEASE_RESULT" != "skipped" ]; then
+            body="$body
+
+          The keepalive job also failed, so GitHub may switch off this workflow's schedule."
+          fi
+          gh issue create --assignee ehwenk --title "$title" --body "@ehwenk $body
+
+          Run: $RUN_URL"
