@@ -1,0 +1,53 @@
+# Check that a GitHub runner can download the NSL CSV exports that
+# read_nsl_export() reads, the "current" data and the source of each release.
+# Runners download from cloud (Azure) IP addresses, which a site's bot
+# protection may treat differently from a home or university connection. The
+# check reports, for each export, the HTTP status, the size, the first line and
+# the response headers, so a block (403, a challenge page) can be told apart
+# from an NSL outage (200 with an empty file).
+
+name: NSL export check
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/nsl-export-check.yaml"
+      - "R/load_taxonomic_resources.R"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Download the NSL exports
+        run: |
+          status=0
+          for export in taxonCsv namesCsv; do
+            url="https://biodiversity.org.au/nsl/services/export/$export"
+            result=$(curl -sS --max-time 1200 -o "$export.csv" -D "$export.headers" \
+              -w "%{http_code} %{size_download} %{time_total}" "$url") || result="curl-failed 0 0"
+            read -r code size seconds <<< "$result"
+            first_line=$(head -n 1 "$export.csv" 2>/dev/null | cut -c 1-200)
+            {
+              echo "### $export: HTTP $code, $size bytes, ${seconds}s"
+              echo '```'
+              echo "First line: $first_line"
+              grep -iv '^set-cookie' "$export.headers" 2>/dev/null
+              echo '```'
+            } | tee -a "$GITHUB_STEP_SUMMARY"
+            if [ "$code" != "200" ]; then
+              echo "::error::$export: HTTP $code (blocked or unavailable)"
+              status=1
+            elif [ "$size" -lt 1000000 ]; then
+              echo "::error::$export: only $size bytes (an empty export, or a web page instead of the CSV)"
+              status=1
+            elif ! grep -q canonicalName <<< "$first_line"; then
+              echo "::error::$export: the first line is not the CSV header"
+              status=1
+            fi
+          done
+          exit $status

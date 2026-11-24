@@ -399,7 +399,7 @@ dataset_access_function <-
       rlang::check_installed("readr", reason = "to download the current APC/APNI CSV exports.")
       return(tryCatch(
         list(APC = read_nsl_export("APC"), APNI = read_nsl_export("APNI")),
-        error = function(e) rlang::abort("Taxonomic resources not currently available, try again later")
+        error = function(e) rlang::abort("Taxonomic resources not currently available, try again later", parent = e)
       ))
     }
 
@@ -419,14 +419,12 @@ read_nsl_export <- function(dataset = c("APC", "APNI")) {
     modified = readr::col_datetime(format = "")
   )
   if (dataset == "APC") {
-    url <- "https://biodiversity.org.au/nsl/services/export/taxonCsv"
     types <- c(list(
       .default = readr::col_character(),
       proParte = readr::col_logical(),
       taxonRankSortOrder = readr::col_double()
     ), timestamps)
   } else {
-    url <- "https://biodiversity.org.au/nsl/services/export/namesCsv"
     types <- c(list(
       .default = readr::col_character(),
       autonym = readr::col_logical(),
@@ -441,7 +439,37 @@ read_nsl_export <- function(dataset = c("APC", "APNI")) {
     ), timestamps)
   }
 
-  readr::read_csv(url, col_types = do.call(readr::cols, types))
+  # A missing column is reported below, so silence readr's warning about it
+  data <- withCallingHandlers(
+    readr::read_csv(nsl_export_url(dataset), col_types = do.call(readr::cols, types)),
+    warning = function(w) {
+      if (grepl("named parsers don't match", conditionMessage(w), fixed = TRUE)) {
+        invokeRestart("muffleWarning")
+      }
+    }
+  )
+
+  # NSL sometimes answers with an empty file (HTTP 200, no body), and a proxy or
+  # bot blocker could answer with a web page instead. Without these checks the
+  # error surfaces later, as an obscure one about a missing column.
+  if (nrow(data) == 0) {
+    rlang::abort(paste0("NSL returned an empty ", dataset, " export: no rows."))
+  }
+  missing <- setdiff(names(types), c(".default", names(data)))
+  if (length(missing) > 0) {
+    rlang::abort(paste0(
+      "NSL's ", dataset, " export is missing expected columns: ",
+      paste(missing, collapse = ", "), "."
+    ))
+  }
+  data
+}
+
+# The URL of an NSL CSV export (a function, so tests can replace it).
+#' @noRd
+nsl_export_url <- function(dataset) {
+  file <- c(APC = "taxonCsv", APNI = "namesCsv")[[dataset]]
+  paste0("https://biodiversity.org.au/nsl/services/export/", file)
 }
 
 #' Get the default version for stable data
