@@ -54,6 +54,7 @@ utils::globalVariables(
     "chars_changed",
     "checked",
     "cleaned_name",
+    "excluded_taxon",
     "family",
     "family_accepted",
     "fuzzy_match_genus",
