@@ -5,15 +5,15 @@
 # check reports, for each export, the HTTP status, the size, the first line and
 # the response headers, so a block (403, a challenge page) can be told apart
 # from an NSL outage (200 with an empty file).
+#
+# Run by hand only: as of 2026-11-24, NSL's firewall blocks GitHub runners
+# (HTTP 405, x-amzn-waf-action: captcha), so on pull requests it would fail
+# every time. Re-run it when the firewall or the release setup changes.
 
 name: NSL export check
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - ".github/workflows/nsl-export-check.yaml"
-      - "R/load_taxonomic_resources.R"
 
 permissions:
   contents: read
