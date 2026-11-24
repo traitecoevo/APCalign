@@ -127,9 +127,8 @@ test_that("taxon name splits and complex taxonomic status values work as expecte
   expect_equal(rows_gt_1$accepted_name[has_accepted],
                paste(rows_gt_1$genus, "sp.")[has_accepted])
   expect_true(all(rows_gt_1$taxonomic_status[has_accepted] == "accepted"))
-  # when the most likely taxon is not accepted (Abutilon muticum -> Abutilon pannosum, excluded),
-  # there is no accepted_name, and the status is that taxon's
-  expect_true(any(!has_accepted))
+  # when the most likely taxon is not accepted, there is no accepted_name, and
+  # the status is that taxon's (no such name since excluded taxa were dropped, #314)
   expect_false(any(rows_gt_1$taxonomic_status[!has_accepted] == "accepted"))
   expect_false(any(rows_gt_1$taxon_rank %in% c("genus", "family")))
   expect_equal(
@@ -175,6 +174,23 @@ test_that("a pro parte name whose usages all lead to one taxon is updated to it 
     expect_equal(out$accepted_name, out$suggested_name)
     expect_equal(out$number_of_collapsed_taxa, rep(NA_real_, 3))
     expect_equal(out$update_reason, rep("pro parte misapplied", 3))
+  }
+})
+
+test_that("an excluded taxon is never returned when a taxon in Australia is possible (#314)", {
+  # Abutilon muticum (pro parte) is a taxonomic synonym of the excluded Abutilon
+  # pannosum and pro parte misapplied to Abutilon guineense. Cassia corymbosa
+  # (not pro parte) is a synonym of the excluded Senna corymbosa and misapplied
+  # to Senna septemtrionalis. Solanum scabrum is only excluded, and stays so.
+  input <- c("Abutilon muticum", "Cassia corymbosa", "Solanum scabrum")
+  for (splits in c("most_likely_species", "collapse_to_higher_taxon", "return_all")) {
+    out <- create_taxonomic_update_lookup(
+      input, taxonomic_splits = splits, resources = resources, full = TRUE, quiet = TRUE
+    )
+    expect_equal(out$suggested_name,
+                 c("Abutilon guineense", "Senna septemtrionalis", "Solanum scabrum"))
+    expect_equal(out$taxonomic_status, c("accepted", "accepted", "excluded"))
+    expect_equal(out$update_reason, c("pro parte misapplied", "misapplied", "excluded"))
   }
 })
 
