@@ -276,14 +276,13 @@ University](https://www.westernsydney.edu.au/), [Botanic Gardens of
 Sydney](https://www.botanicgardens.org.au/), [the University of
 Melbourne](https://www.unimelb.edu.au/), the [Atlas of Living
 Australia](https://www.ala.org.au/), and the Australian Government
-[Department of Climate Change, Energy, the Environment and
-Water](https://www.dcceew.gov.au) — and from our [advisory board, data
-contributors, and past
+Department of Climate Change, Energy, the Environment and Water — and
+from our [advisory board, data contributors, and past
 partners](https://austraits.org/team/team-partners.html).
 
 AusTraits is a co-investment partnership with the [Australian Research
 Data Commons](https://ardc.edu.au/) (ARDC) through the Planet Research
 Data Commons ([DOI:
 10.3565/nyk4-4r91](https://doi.org/10.3565/nyk4-4r91)). The ARDC is
-enabled by the Australian Government’s [National Collaborative Research
-Infrastructure Strategy](https://www.education.gov.au/ncris) (NCRIS).
+enabled by the Australian Government’s National Collaborative Research
+Infrastructure Strategy (NCRIS).
