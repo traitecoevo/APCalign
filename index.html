@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="index.html">APCalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,15 +96,15 @@
 <span>    <span class="st">"Commersonia rosea"</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 3 × 12</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 13</span></span>
 <span><span class="co">#&gt;   original_name       aligned_name accepted_name suggested_name genus taxon_rank</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;     </span></span>
 <span><span class="co">#&gt; 1 Banksia integrifol… Banksia int… Banksia inte… Banksia integ… Bank… species   </span></span>
 <span><span class="co">#&gt; 2 Acacia longifolia   Acacia long… Acacia longi… Acacia longif… Acac… species   </span></span>
 <span><span class="co">#&gt; 3 Commersonia rosea   Commersonia… Androcalva r… Androcalva ro… Andr… species   </span></span>
-<span><span class="co">#&gt; # ℹ 6 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; # ℹ 7 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; #   number_of_collapsed_taxa &lt;dbl&gt;, chars_changed &lt;int&gt;</span></span></code></pre></div>
 <p>You can alternatively load the taxonomic resources into memory first:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tax_resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -130,7 +130,7 @@
 <span>    <span class="op">)</span>,</span>
 <span>  resources <span class="op">=</span> <span class="va">tax_resources</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 16 × 12</span></span>
+<span><span class="co">#&gt; # A tibble: 16 × 13</span></span>
 <span><span class="co">#&gt;    original_name      aligned_name accepted_name suggested_name genus taxon_rank</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;              &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;     </span></span>
 <span><span class="co">#&gt;  1 Banksia integrifo… Banksia int… Banksia inte… Banksia integ… Bank… species   </span></span>
@@ -149,9 +149,9 @@
 <span><span class="co">#&gt; 14 Panicum sp. Hairy… Panicum sp.… Panicum sp. … Panicum sp. H… Pani… species   </span></span>
 <span><span class="co">#&gt; 15 Panicum sp. Hairy… Panicum sp.… Panicum sp. … Panicum sp. H… Pani… species   </span></span>
 <span><span class="co">#&gt; 16 not a species      &lt;NA&gt;         &lt;NA&gt;          &lt;NA&gt;           &lt;NA&gt;  &lt;NA&gt;      </span></span>
-<span><span class="co">#&gt; # ℹ 6 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; # ℹ 7 more variables: taxonomic_dataset &lt;chr&gt;, taxonomic_status &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; #   number_of_collapsed_taxa &lt;dbl&gt;, chars_changed &lt;int&gt;</span></span></code></pre></div>
 <p>Checking for a list of species to see if they are classified as Australian natives:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/native_anywhere_in_australia.html">native_anywhere_in_australia</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Eucalyptus globulus"</span>,<span class="st">"Pinus radiata"</span><span class="op">)</span>, resources <span class="op">=</span> <span class="va">tax_resources</span><span class="op">)</span></span>
@@ -168,10 +168,10 @@
 <span><span class="co">#&gt;   &lt;chr&gt;                             &lt;chr&gt;       &lt;int&gt;</span></span>
 <span><span class="co">#&gt; 1 doubtfully naturalised            NSW            95</span></span>
 <span><span class="co">#&gt; 2 formerly naturalised              NSW             8</span></span>
-<span><span class="co">#&gt; 3 native                            NSW          5982</span></span>
+<span><span class="co">#&gt; 3 native                            NSW          5986</span></span>
 <span><span class="co">#&gt; 4 native and doubtfully naturalised NSW             2</span></span>
 <span><span class="co">#&gt; 5 native and naturalised            NSW            34</span></span>
-<span><span class="co">#&gt; 6 naturalised                       NSW          1586</span></span>
+<span><span class="co">#&gt; 6 naturalised                       NSW          1587</span></span>
 <span><span class="co">#&gt; 7 presumed extinct                  NSW             9</span></span></code></pre></div>
 <p>The related function <code><a href="reference/create_species_state_origin_matrix.html">create_species_state_origin_matrix()</a></code> generates a table for all taxa in Australia, indicating their distribution and establishment means, by state.</p>
 <p>Getting a family lookup table for genera from the specified taxonomy:</p>
@@ -202,7 +202,7 @@
 <span><span class="co">#&gt; 1 Brassicaceae Cardamine gunnii  Cardami… Cardamine gunn… https://id.biodiversi…</span></span>
 <span><span class="co">#&gt; 2 Fabaceae     Acacia aneura     Acacia … Acacia aneura … https://id.biodiversi…</span></span>
 <span><span class="co">#&gt; 3 Proteaceae   Banksia nivea     Dryandr… Banksia nivea … https://id.biodiversi…</span></span>
-<span><span class="co">#&gt; 4 Proteaceae   Stenocarpus sinu… Cybele … Stenocarpus si… https://id.biodiversi…</span></span></code></pre></div>
+<span><span class="co">#&gt; 4 Proteaceae   Stenocarpus sinu… Agnostu… Stenocarpus si… https://id.biodiversi…</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="cheatsheet">Cheatsheet<a class="anchor" aria-label="anchor" href="#cheatsheet"></a>
@@ -225,8 +225,8 @@
 <span><span class="co">#&gt;   Wenk E, Cornwell W, Fuchs A, Kar F, Monro A, Sauquet H, Stephens R,</span></span>
 <span><span class="co">#&gt;   Falster D (2024). "APCalign: an R package workflow and app for</span></span>
 <span><span class="co">#&gt;   aligning and updating flora names to the Australian Plant Census."</span></span>
-<span><span class="co">#&gt;   _Australian Journal of Botany_, *72*(4). R package version:</span></span>
-<span><span class="co">#&gt;   2.0.1.9000, &lt;https://doi.org/10.1071/BT24014&gt;.</span></span>
+<span><span class="co">#&gt;   _Australian Journal of Botany_, *72*(4). R package version: 2.1.0,</span></span>
+<span><span class="co">#&gt;   &lt;https://doi.org/10.1071/BT24014&gt;.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; A BibTeX entry for LaTeX users is</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -238,7 +238,7 @@
 <span><span class="co">#&gt;     number = {4},</span></span>
 <span><span class="co">#&gt;     year = {2024},</span></span>
 <span><span class="co">#&gt;     publisher = {CSIRO Publishing},</span></span>
-<span><span class="co">#&gt;     note = {R package version: 2.0.1.9000},</span></span>
+<span><span class="co">#&gt;     note = {R package version: 2.1.0},</span></span>
 <span><span class="co">#&gt;     url = {https://doi.org/10.1071/BT24014},</span></span>
 <span><span class="co">#&gt;   }</span></span></code></pre></div>
 </div>

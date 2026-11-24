@@ -1,6 +1,6 @@
 # Changelog
 
-## APCalign (development version)
+## APCalign 2.1.0
 
 - A name with a pro parte usage in the APC is treated as a taxonomic
   split only when its usages lead to more than one taxon. A name whose

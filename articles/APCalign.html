@@ -19,7 +19,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">APCalign</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -153,7 +153,7 @@ and how they are stored.</p>
 <p>For a more reproducible workflow, we recommend specifying the exact
 <code>stable</code> version you want to use.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>stable_or_current_data <span class="op">=</span> <span class="st">"stable"</span>, version <span class="op">=</span> <span class="st">"2024-10-11"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">resources</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_taxonomic_resources.html">load_taxonomic_resources</a></span><span class="op">(</span>stable_or_current_data <span class="op">=</span> <span class="st">"stable"</span>, version <span class="op">=</span> <span class="st">"2026-11-15"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="align-and-update-plant-taxon-names">Align and update plant taxon names<a class="anchor" aria-label="anchor" href="#align-and-update-plant-taxon-names"></a>
@@ -182,18 +182,18 @@ updating with ‘APCalign’</a></p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">species</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/create_taxonomic_update_lookup.html">create_taxonomic_update_lookup</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Checking alignments of 121 taxa</span></span>
-<span><span class="co">#&gt;   -&gt; of these 112 names have a perfect match to an accepted scientific name in the APC, and 6 names have a perfect match to a synonym in the APC.</span></span>
+<span><span class="co">#&gt;   -&gt; of these 113 names have a perfect match to an accepted scientific name in the APC, and 6 names have a perfect match to a synonym in the APC.</span></span>
 <span><span class="co">#&gt;       Alignments being sought for remaining names.</span></span>
 <span><span class="co">#&gt; Summary of 121 names:</span></span>
-<span><span class="co">#&gt;   -&gt; 120 aligned to a species or infraspecific taxon (119 in the APC, 1 in the APNI only)</span></span>
+<span><span class="co">#&gt;   -&gt; 120 aligned to a species or infraspecific taxon (120 in the APC, 0 in the APNI only)</span></span>
 <span><span class="co">#&gt;   -&gt; 1 aligned only to a genus and 0 only to a family</span></span>
 <span><span class="co">#&gt;   -&gt; 0 could not be aligned</span></span>
 <span><span class="co">#&gt;   -&gt; 4 aligned names were updated to a different name (e.g. a synonym to its accepted name, or an outdated genus to the current one)</span></span>
-<span><span class="co">#&gt;   -&gt; 13 names could refer to more than one currently accepted taxon. With `taxonomic_splits = "most_likely_species"`, `suggested_name` gives the most likely species and lists the alternatives in square brackets.</span></span>
+<span><span class="co">#&gt;   -&gt; 14 names could refer to more than one currently accepted taxon. With `taxonomic_splits = "most_likely_species"`, `suggested_name` gives the most likely species and lists the alternatives in square brackets.</span></span>
 <span></span>
 <span><span class="va">updated_gbif_names</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 129 × 12</span></span>
+<span><span class="co">#&gt; # A tibble: 129 × 13</span></span>
 <span><span class="co">#&gt;   original_name           aligned_name  accepted_name suggested_name genus taxon_rank taxonomic_dataset taxonomic_status</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;                   &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;             &lt;chr&gt;           </span></span>
 <span><span class="co">#&gt; 1 Tetratheca ciliata      Tetratheca c… Tetratheca c… Tetratheca ci… Tetr… species    APC               accepted        </span></span>
@@ -203,7 +203,8 @@ updating with ‘APCalign’</a></p>
 <span><span class="co">#&gt; 5 Lepidosperma laterale   Lepidosperma… Lepidosperma… Lepidosperma … Lepi… species    APC               accepted        </span></span>
 <span><span class="co">#&gt; 6 Enneapogon polyphyllus  Enneapogon p… Enneapogon p… Enneapogon po… Enne… species    APC               accepted        </span></span>
 <span><span class="co">#&gt; # ℹ 123 more rows</span></span>
-<span><span class="co">#&gt; # ℹ 4 more variables: scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; # ℹ 5 more variables: scientific_name &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, number_of_collapsed_taxa &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   chars_changed &lt;int&gt;</span></span></code></pre></div>
 <p>The <code>original_name</code> is the taxon name used in your
 original data. The <code>aligned_name</code> is the taxon name we used
 to link with the APC to identify any synonyms. The
@@ -250,7 +251,7 @@ statistics just for species using
 <!-- The formal definitions of the various established status can be found at https://neobiota.pensoft.net/article/113013/  -->
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">status_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">family</span>, <span class="va">species</span>, <span class="va">ACT</span><span class="op">:</span><span class="va">WA</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 30,565 × 10</span></span>
+<span><span class="co">#&gt; # A tibble: 31,074 × 10</span></span>
 <span><span class="co">#&gt;    family      species                                           ACT         NSW     NT    Qld   SA    Tas   Vic   WA   </span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;                                             &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
 <span><span class="co">#&gt;  1 Acanthaceae Acanthus ebracteatus                              not present not pr… nati… nati… not … not … not … nati…</span></span>
@@ -273,7 +274,7 @@ statistics just for species using
 <span><span class="co">#&gt; 18 Acanthaceae Avicennia marina subsp. marina                    not present not pr… not … not … nati… not … not … nati…</span></span>
 <span><span class="co">#&gt; 19 Acanthaceae Barleria cristata                                 not present not pr… not … natu… not … not … not … not …</span></span>
 <span><span class="co">#&gt; 20 Acanthaceae Barleria lupulina                                 not present not pr… natu… natu… not … not … not … natu…</span></span>
-<span><span class="co">#&gt; # ℹ 30,545 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # ℹ 31,054 more rows</span></span></code></pre></div>
 <p>You can also obtain the breakdown of species by established status
 for a particular state/territory using
 <code><a href="../reference/state_diversity_counts.html">state_diversity_counts()</a></code></p>
@@ -282,13 +283,13 @@ for a particular state/territory using
 <span><span class="co">#&gt; # A tibble: 7 × 3</span></span>
 <span><span class="co">#&gt;   origin                            state num_species</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;                             &lt;chr&gt;       &lt;int&gt;</span></span>
-<span><span class="co">#&gt; 1 doubtfully naturalised            NSW            93</span></span>
+<span><span class="co">#&gt; 1 doubtfully naturalised            NSW            95</span></span>
 <span><span class="co">#&gt; 2 formerly naturalised              NSW             8</span></span>
-<span><span class="co">#&gt; 3 native                            NSW          5968</span></span>
+<span><span class="co">#&gt; 3 native                            NSW          5986</span></span>
 <span><span class="co">#&gt; 4 native and doubtfully naturalised NSW             2</span></span>
 <span><span class="co">#&gt; 5 native and naturalised            NSW            34</span></span>
-<span><span class="co">#&gt; 6 naturalised                       NSW          1580</span></span>
-<span><span class="co">#&gt; 7 presumed extinct                  NSW             8</span></span></code></pre></div>
+<span><span class="co">#&gt; 6 naturalised                       NSW          1587</span></span>
+<span><span class="co">#&gt; 7 presumed extinct                  NSW             9</span></span></code></pre></div>
 <p>Using the established status data and state/territory information, we
 can check if a plant taxa is a native using
 <code><a href="../reference/native_anywhere_in_australia.html">native_anywhere_in_australia()</a></code></p>
@@ -301,9 +302,9 @@ can check if a plant taxa is a native using
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">suggested_name</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># Extracting this APC accepted name</span></span>
 <span>  <span class="fu"><a href="../reference/native_anywhere_in_australia.html">native_anywhere_in_australia</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 2</span></span>
-<span><span class="co">#&gt;   species           native_anywhere_in_aus</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt;                 </span></span>
-<span><span class="co">#&gt; 1 Carex breviculmis native</span></span></code></pre></div>
+<span><span class="co">#&gt;   species             native_anywhere_in_aus</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;                 </span></span>
+<span><span class="co">#&gt; 1 Sclerolaena birchii native</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="closer-look">Closer look at name standardisation with ‘APCalign’<a class="anchor" aria-label="anchor" href="#closer-look"></a>
@@ -372,20 +373,20 @@ match amongst names documented by the APC and APNI.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">species</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/align_taxa.html">align_taxa</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Checking alignments of 121 taxa</span></span>
-<span><span class="co">#&gt;   -&gt; of these 112 names have a perfect match to an accepted scientific name in the APC, and 6 names have a perfect match to a synonym in the APC.</span></span>
+<span><span class="co">#&gt;   -&gt; of these 113 names have a perfect match to an accepted scientific name in the APC, and 6 names have a perfect match to a synonym in the APC.</span></span>
 <span><span class="co">#&gt;       Alignments being sought for remaining names.</span></span>
 <span></span>
 <span><span class="va">aligned_gbif_taxa</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 129 × 7</span></span>
-<span><span class="co">#&gt;   original_name           cleaned_name           aligned_name taxonomic_dataset taxon_rank aligned_reason alignment_code</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                   &lt;chr&gt;                  &lt;chr&gt;        &lt;chr&gt;             &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;         </span></span>
-<span><span class="co">#&gt; 1 Tetratheca ciliata      Tetratheca ciliata     Tetratheca … APC               species    Exact match o… match_01c_acc…</span></span>
-<span><span class="co">#&gt; 2 Peganum harmala         Peganum harmala        Peganum har… APC               species    Exact match o… match_01c_acc…</span></span>
-<span><span class="co">#&gt; 3 Calotis multicaulis     Calotis multicaulis    Calotis mul… APC               species    Exact match o… match_01c_acc…</span></span>
-<span><span class="co">#&gt; 4 Leptospermum trinervium Leptospermum trinervi… Leptospermu… APC               species    Exact match o… match_01c_acc…</span></span>
-<span><span class="co">#&gt; 5 Lepidosperma laterale   Lepidosperma laterale  Lepidosperm… APC               species    Exact match o… match_01c_acc…</span></span>
-<span><span class="co">#&gt; 6 Enneapogon polyphyllus  Enneapogon polyphyllus Enneapogon … APC               species    Exact match o… match_01c_acc…</span></span>
+<span><span class="co">#&gt; # A tibble: 129 × 8</span></span>
+<span><span class="co">#&gt;   original_name       cleaned_name aligned_name taxonomic_dataset taxon_rank aligned_reason alignment_code chars_changed</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt;             &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;                  &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1 Tetratheca ciliata  Tetratheca … Tetratheca … APC               species    Exact match o… match_01c_acc…             0</span></span>
+<span><span class="co">#&gt; 2 Peganum harmala     Peganum har… Peganum har… APC               species    Exact match o… match_01c_acc…             0</span></span>
+<span><span class="co">#&gt; 3 Calotis multicaulis Calotis mul… Calotis mul… APC               species    Exact match o… match_01c_acc…             0</span></span>
+<span><span class="co">#&gt; 4 Leptospermum trine… Leptospermu… Leptospermu… APC               species    Exact match o… match_01c_acc…             0</span></span>
+<span><span class="co">#&gt; 5 Lepidosperma later… Lepidosperm… Lepidosperm… APC               species    Exact match o… match_01c_acc…             0</span></span>
+<span><span class="co">#&gt; 6 Enneapogon polyphy… Enneapogon … Enneapogon … APC               species    Exact match o… match_01c_acc…             0</span></span>
 <span><span class="co">#&gt; # ℹ 123 more rows</span></span></code></pre></div>
 <p>For every <code>aligned_name</code>, <code><a href="../reference/align_taxa.html">align_taxa()</a></code> will
 provide a <code>aligned_reason</code> which you can review as a table of
@@ -397,15 +398,14 @@ counts:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">aligned_reason</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/tabyl.html" class="external-link">tabyl</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span><span class="op">)</span> </span>
-<span><span class="co">#&gt; # A tibble: 6 × 4</span></span>
+<span><span class="co">#&gt; # A tibble: 5 × 4</span></span>
 <span><span class="co">#&gt;   `pull(aligned_gbif_taxa, aligned_reason)`                                                      n percent valid_percent</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;                                                                                      &lt;int&gt;   &lt;dbl&gt;         &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 Exact match of taxon name to an APC-accepted canonical name once punctuation and filler w…   118 0.915         0.929  </span></span>
+<span><span class="co">#&gt; 1 Exact match of taxon name to an APC-accepted canonical name once punctuation and filler w…   119 0.922         0.937  </span></span>
 <span><span class="co">#&gt; 2 Exact match of taxon name to an APC-known canonical name once punctuation and filler word…     6 0.0465        0.0472 </span></span>
-<span><span class="co">#&gt; 3 Exact match of taxon name to an APNI-listed canonical name once punctuation and filler wo…     1 0.00775       0.00787</span></span>
-<span><span class="co">#&gt; 4 Exact match of the first two words of the taxon name to an APC-accepted canonical name (A…     1 0.00775       0.00787</span></span>
-<span><span class="co">#&gt; 5 Exact match of the first word of the taxon name to an APC-accepted genus (APC/APNI versio…     1 0.00775       0.00787</span></span>
-<span><span class="co">#&gt; 6 &lt;NA&gt;                                                                                           2 0.0155       NA</span></span></code></pre></div>
+<span><span class="co">#&gt; 3 Exact match of the first two words of the taxon name to an APC-accepted canonical name (A…     1 0.00775       0.00787</span></span>
+<span><span class="co">#&gt; 4 Exact match of the first word of the taxon name to an APC-accepted genus (APC/APNI versio…     1 0.00775       0.00787</span></span>
+<span><span class="co">#&gt; 5 &lt;NA&gt;                                                                                           2 0.0155       NA</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="fuzzy-match">Configuring matching precision and aligned output<a class="anchor" aria-label="anchor" href="#fuzzy-match"></a>
 </h4>
@@ -453,7 +453,7 @@ APC-accepted names.</p>
 <span></span>
 <span><span class="va">updated_gbif_taxa</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 129 × 21</span></span>
+<span><span class="co">#&gt; # A tibble: 129 × 22</span></span>
 <span><span class="co">#&gt;   original_name     aligned_name accepted_name suggested_name genus family taxon_rank taxonomic_dataset taxonomic_status</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;             &lt;chr&gt;           </span></span>
 <span><span class="co">#&gt; 1 Tetratheca cilia… Tetratheca … Tetratheca c… Tetratheca ci… Tetr… Elaeo… species    APC               accepted        </span></span>
@@ -463,9 +463,9 @@ APC-accepted names.</p>
 <span><span class="co">#&gt; 5 Lepidosperma lat… Lepidosperm… Lepidosperma… Lepidosperma … Lepi… Cyper… species    APC               accepted        </span></span>
 <span><span class="co">#&gt; 6 Enneapogon polyp… Enneapogon … Enneapogon p… Enneapogon po… Enne… Poace… species    APC               accepted        </span></span>
 <span><span class="co">#&gt; # ℹ 123 more rows</span></span>
-<span><span class="co">#&gt; # ℹ 12 more variables: taxonomic_status_aligned &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; # ℹ 13 more variables: taxonomic_status_aligned &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   taxon_distribution &lt;chr&gt;, scientific_name &lt;chr&gt;, taxon_ID &lt;chr&gt;, taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   canonical_name &lt;chr&gt;, row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; #   canonical_name &lt;chr&gt;, row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;, chars_changed &lt;int&gt;</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="taxonomic-resources-used-for-updating-names">Taxonomic resources used for updating names<a class="anchor" aria-label="anchor" href="#taxonomic-resources-used-for-updating-names"></a>
 </h4>
@@ -560,39 +560,39 @@ shows.</p></li>
 <span>  <span class="fu"><a href="../reference/update_taxonomy.html">update_taxonomy</a></span><span class="op">(</span>taxonomic_splits <span class="op">=</span> <span class="st">"most_likely_species"</span>, </span>
 <span>                  resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span>  <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">original_name</span> <span class="op">==</span> <span class="st">"Acacia aneura"</span><span class="op">)</span>  <span class="co"># Subsetting Acacia aneura as an example </span></span>
-<span><span class="co">#&gt; # A tibble: 1 × 21</span></span>
+<span><span class="co">#&gt; # A tibble: 1 × 22</span></span>
 <span><span class="co">#&gt;   original_name aligned_name  accepted_name suggested_name    genus family taxon_rank taxonomic_dataset taxonomic_status</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;             &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;             &lt;chr&gt;           </span></span>
 <span><span class="co">#&gt; 1 Acacia aneura Acacia aneura Acacia aneura Acacia aneura [a… Acac… Fabac… species    APC               accepted        </span></span>
-<span><span class="co">#&gt; # ℹ 12 more variables: taxonomic_status_aligned &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; # ℹ 13 more variables: taxonomic_status_aligned &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   taxon_distribution &lt;chr&gt;, scientific_name &lt;chr&gt;, taxon_ID &lt;chr&gt;, taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   canonical_name &lt;chr&gt;, row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; #   canonical_name &lt;chr&gt;, row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;, chars_changed &lt;int&gt;</span></span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aligned_gbif_taxa</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/update_taxonomy.html">update_taxonomy</a></span><span class="op">(</span>taxonomic_splits <span class="op">=</span> <span class="st">"return_all"</span>,</span>
 <span>                  resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span>  <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">original_name</span> <span class="op">==</span> <span class="st">"Acacia aneura"</span><span class="op">)</span> <span class="co"># Subsetting Acacia aneura as an example</span></span>
-<span><span class="co">#&gt; # A tibble: 3 × 21</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 22</span></span>
 <span><span class="co">#&gt;   original_name aligned_name  accepted_name    suggested_name genus family taxon_rank taxonomic_dataset taxonomic_status</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;            &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;             &lt;chr&gt;           </span></span>
 <span><span class="co">#&gt; 1 Acacia aneura Acacia aneura Acacia aneura    Acacia aneura  Acac… Fabac… species    APC               accepted        </span></span>
-<span><span class="co">#&gt; 2 Acacia aneura Acacia aneura Acacia minyura   Acacia minyura Acac… Fabac… species    APC               accepted        </span></span>
-<span><span class="co">#&gt; 3 Acacia aneura Acacia aneura Acacia paraneura Acacia parane… Acac… Fabac… species    APC               accepted        </span></span>
-<span><span class="co">#&gt; # ℹ 12 more variables: taxonomic_status_aligned &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; 2 Acacia aneura Acacia aneura Acacia paraneura Acacia parane… Acac… Fabac… species    APC               accepted        </span></span>
+<span><span class="co">#&gt; 3 Acacia aneura Acacia aneura Acacia minyura   Acacia minyura Acac… Fabac… species    APC               accepted        </span></span>
+<span><span class="co">#&gt; # ℹ 13 more variables: taxonomic_status_aligned &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   taxon_distribution &lt;chr&gt;, scientific_name &lt;chr&gt;, taxon_ID &lt;chr&gt;, taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   canonical_name &lt;chr&gt;, row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; #   canonical_name &lt;chr&gt;, row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;, chars_changed &lt;int&gt;</span></span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aligned_gbif_taxa</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/update_taxonomy.html">update_taxonomy</a></span><span class="op">(</span>taxonomic_splits <span class="op">=</span> <span class="st">"collapse_to_higher_taxon"</span>,</span>
 <span>                  resources <span class="op">=</span> <span class="va">resources</span><span class="op">)</span>  <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">original_name</span> <span class="op">==</span> <span class="st">"Acacia aneura"</span><span class="op">)</span> <span class="co"># Subsetting Acacia aneura as an example</span></span>
-<span><span class="co">#&gt; # A tibble: 1 × 21</span></span>
+<span><span class="co">#&gt; # A tibble: 1 × 22</span></span>
 <span><span class="co">#&gt;   original_name aligned_name  accepted_name suggested_name    genus family taxon_rank taxonomic_dataset taxonomic_status</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;             &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;             &lt;chr&gt;           </span></span>
 <span><span class="co">#&gt; 1 Acacia aneura Acacia aneura Acacia sp.    Acacia sp. [coll… Acac… Fabac… species    APC               accepted        </span></span>
-<span><span class="co">#&gt; # ℹ 12 more variables: taxonomic_status_aligned &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; # ℹ 13 more variables: taxonomic_status_aligned &lt;chr&gt;, aligned_reason &lt;chr&gt;, update_reason &lt;chr&gt;, subclass &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   taxon_distribution &lt;chr&gt;, scientific_name &lt;chr&gt;, taxon_ID &lt;chr&gt;, taxon_ID_genus &lt;chr&gt;, scientific_name_ID &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   canonical_name &lt;chr&gt;, row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; #   canonical_name &lt;chr&gt;, row_number &lt;dbl&gt;, number_of_collapsed_taxa &lt;dbl&gt;, chars_changed &lt;int&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -615,9 +615,9 @@ efficiently search the literature.</p>
 <span><span class="co">#&gt; # A tibble: 4 × 5</span></span>
 <span><span class="co">#&gt;   family       accepted_name        synonyms                                      scientific_name accepted_name_usage_ID</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;        &lt;chr&gt;                &lt;chr&gt;                                         &lt;chr&gt;           &lt;chr&gt;                 </span></span>
-<span><span class="co">#&gt; 1 Brassicaceae Cardamine gunnii     Cardamine hirsuta var. heterophylla (taxonom… Cardamine gunn… https://id.biodiversi…</span></span>
+<span><span class="co">#&gt; 1 Brassicaceae Cardamine gunnii     Cardamine hirsuta var. debilis (taxonomic sy… Cardamine gunn… https://id.biodiversi…</span></span>
 <span><span class="co">#&gt; 2 Fabaceae     Acacia aneura        Acacia aneura var. intermedia (taxonomic syn… Acacia aneura … https://id.biodiversi…</span></span>
-<span><span class="co">#&gt; 3 Proteaceae   Banksia nivea        Dryandra nivea var. venosa (taxonomic synony… Banksia nivea … https://id.biodiversi…</span></span>
+<span><span class="co">#&gt; 3 Proteaceae   Banksia nivea        Dryandra nivea var. adscendens (taxonomic sy… Banksia nivea … https://id.biodiversi…</span></span>
 <span><span class="co">#&gt; 4 Proteaceae   Stenocarpus sinuatus Agnostus sinuatus (taxonomic synonym); Agnos… Stenocarpus si… https://id.biodiversi…</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/synonyms_for_accepted_names.html">synonyms_for_accepted_names</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="va">resources</span>, accepted_names <span class="op">=</span> <span class="va">names_to_check</span>, collapse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
