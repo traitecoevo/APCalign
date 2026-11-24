@@ -4,7 +4,7 @@
 
 - A name with a pro parte usage in the APC is treated as a taxonomic
   split only when its usages lead to more than one taxon. A name whose
-  usages all lead to one taxon (170 of the 1,641 pro parte names in APC
+  usages all lead to one taxon (176 of the 1,641 pro parte names in APC
   2024-10-11, e.g. `Lycopodium selago`, pro parte misapplied and
   misapplied to *Huperzia australiana*) is now updated to that taxon
   under every `taxonomic_splits` option, as a plain misapplied name
@@ -13,9 +13,14 @@
   collapse these to genus
   (`Huperzia sp. [collapsed names: Huperzia australiana (pro parte misapplied) ]`),
   and `most_likely_species` added a broken list of alternatives
-  (`[alternative possible names: NA]`, or the suggested name itself). An
-  “excluded” usage (the name’s taxon is not in Australia) no longer
-  counts as a possible taxon
+  (`[alternative possible names: NA]`, or the suggested name itself). A
+  taxon excluded from the APC (not in Australia) is never a possible
+  taxon, and a name linked both to an excluded taxon and to a taxon in
+  Australia (241 names, pro parte or not) is updated to the latter:
+  `Abutilon muticum` to *Abutilon guineense*, not the excluded *Abutilon
+  pannosum*, and `Cassia corymbosa` to *Senna septemtrionalis*, not the
+  excluded *Senna corymbosa*. A name linked only to excluded taxa is
+  unchanged
   ([\#314](https://github.com/traitecoevo/APCalign/issues/314)).
 - For names that are split, the bracketed lists name each possible taxon
   once and never list `NA`; `most_likely_species` no longer lists the
@@ -25,12 +30,11 @@
   misapplied to (`Agrostis alba` was collapsed with only *A.
   stolonifera*, not *A. gigantea*), and a collapsed accepted name has
   `update_reason` “collapsed to genus due to ambiguity” instead of
-  “aligned name accepted by APC”. A possible taxon that is not accepted
-  is now named correctly: it was named by another name pointing to it,
-  so `Abutilon muticum` listed *Sida mutica* (and collapsed to
-  `Sida sp.`) instead of *Abutilon pannosum*, which is what `return_all`
-  and `taxon_ID` gave (4 names). The stray space before the closing
-  bracket of `[collapsed names: ...]` is gone
+  “aligned name accepted by APC”. A possible taxon missing from
+  `APC_accepted` is now named by its own `taxon_ID`, not by another name
+  pointing to it: `Taraxacum officinale` listed *Taraxacum* sect.
+  *Ruderalia* instead of sect. *Taraxacum*. The stray space before the
+  closing bracket of `[collapsed names: ...]` is gone
   ([\#314](https://github.com/traitecoevo/APCalign/issues/314)).
 - The documentation of `taxonomic_splits = "collapse_to_higher_taxon"`
   now describes what it returns. It said no `accepted_name` is returned

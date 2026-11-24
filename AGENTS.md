@@ -233,7 +233,11 @@ legitimately change matcher output, regenerate with
   usages all lead to one taxon (e.g. `Lycopodium selago`, pro parte
   misapplied and misapplied to *Huperzia australiana*) is updated to
   that taxon under every `taxonomic_splits` option, exactly as a plain
-  misapplied name is; `excluded` usages don’t count as a taxon. Pro
+  misapplied name is; an excluded taxon (not in Australia) never counts
+  as a possible taxon or appears in a list, and a name linked both to an
+  excluded taxon and to a taxon in Australia is updated to the latter on
+  every path (`leads_to_excluded_taxon()`). Names linked only to
+  excluded taxa still return the excluded name; that is undecided. Pro
   parte with one listed target means the rest of the misapplied concept
   has no Australian taxon in the APC. Collapse lists and counts each
   taxon once, including taxa a name was wholly misapplied to;
