@@ -1,0 +1,175 @@
+# Release a new dated snapshot of the APC and APNI (#315).
+#
+# Downloads the current exports from NSL, checks them against the latest
+# release (.github/scripts/apc-release.R, using the functions in R/release.R),
+# then creates a release tagged with today's date in Sydney, with
+# apc.parquet and apni.parquet attached. default_version() picks the newest
+# dated release, so a published release reaches every user straight away:
+# - checks pass: published (scheduled runs, or manual runs with `publish`);
+#   otherwise a draft.
+# - checks need review (e.g. APC lost more than 2% of its rows): a draft, and
+#   the run fails.
+# - nothing has changed since the latest release: no release.
+# - checks fail, or NSL can't be downloaded: no release, and the run fails.
+# Whenever a run fails, the `notify` job opens an issue assigned to @ehwenk,
+# which GitHub emails to @ehwenk. GitHub's own failure emails for a scheduled workflow
+# go only to whoever last edited its `cron:` lines.
+# Draft releases are invisible to default_version(), which reads the public
+# releases list without authentication.
+#
+# The workflow runs monthly but releases only quarterly. GitHub disables a
+# public repo's scheduled workflows after 60 days without repository activity,
+# and its own runs don't count, so a quarterly-only schedule would be switched
+# off by any quiet quarter. Each run (the `keepalive` job) re-enables the
+# workflow through the API instead.
+
+name: APC release
+
+on:
+  schedule:
+    # Both 00:00 UTC on the 1st (morning in Sydney). The `release` job's `if`
+    # matches the first string exactly, so change both together.
+    - cron: "0 0 1 1,4,7,10 *" # quarterly: release
+    - cron: "0 0 1 2,3,5,6,8,9,11,12 *" # other months: keepalive only
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish the release if the checks pass (otherwise create a draft)"
+        type: boolean
+        default: false
+
+permissions: {}
+
+concurrency:
+  group: apc-release
+  cancel-in-progress: false
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Keep the schedule enabled
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api --method PUT "repos/${{ github.repository }}/actions/workflows/apc-release.yaml/enable"
+
+  release:
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '0 0 1 1,4,7,10 *'
+    runs-on: ubuntu-latest
+    # Up to 3 download attempts of 20 minutes, plus setup and checks
+    timeout-minutes: 120
+    permissions:
+      contents: write
+    outputs:
+      tag: ${{ steps.previous.outputs.tag }}
+      status: ${{ steps.check.outputs.status }}
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          dependencies: '"hard"'
+          extra-packages: any::pkgload, any::readr
+
+      - name: Get the previous release
+        id: previous
+        run: |
+          tag=$(TZ=Australia/Sydney date +%F)
+          if gh release view "$tag" > /dev/null 2>&1; then
+            echo "::error::A release (or draft) tagged $tag already exists."
+            exit 1
+          fi
+          previous=$(gh release view --json tagName --jq .tagName)
+          gh release download "$previous" --pattern apc.parquet --pattern apni.parquet --dir previous
+          echo "Previous release: $previous"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      # NSL can be slow or briefly unavailable, so try a few times. readr
+      # downloads through curl, which has no overall time limit, so `timeout`
+      # stops an attempt that hangs and leaves time for the next one.
+      - name: Download the new release files from NSL
+        run: |
+          for attempt in 1 2 3; do
+            if timeout 20m Rscript -e 'pkgload::load_all(helpers = FALSE, quiet = TRUE); download_taxonomic_resources_for_release(path = "release")'; then
+              exit 0
+            fi
+            echo "::warning::Download attempt $attempt of 3 failed."
+            if [ "$attempt" -lt 3 ]; then sleep 120; fi
+          done
+          echo "::error::Could not download the APC and APNI exports from NSL."
+          exit 1
+
+      - name: Check the new release files
+        id: check
+        run: Rscript .github/scripts/apc-release.R "${{ steps.previous.outputs.tag }}" release previous
+
+      - name: Create the release
+        if: steps.check.outputs.status == 'pass' || steps.check.outputs.status == 'review'
+        env:
+          TAG: ${{ steps.previous.outputs.tag }}
+          STATUS: ${{ steps.check.outputs.status }}
+          PUBLISH: ${{ github.event_name == 'schedule' || inputs.publish }}
+        run: |
+          draft=""
+          if [ "$STATUS" = "review" ] || [ "$PUBLISH" != "true" ]; then
+            draft="--draft"
+          fi
+          gh release create "$TAG" release/apc.parquet release/apni.parquet \
+            --title "$TAG" --notes-file release/notes.md $draft
+          if [ "$STATUS" = "review" ]; then
+            echo "::error::Release $TAG needs review: it was created as a draft. Check the release notes, then publish or delete it."
+            exit 1
+          fi
+
+  # Open an issue for @ehwenk when a run fails or times out. Created with
+  # GITHUB_TOKEN, so it doesn't trigger the add-to-project workflow.
+  notify:
+    needs: [keepalive, release]
+    if: always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled'))
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open an issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ needs.release.outputs.tag }}
+          STATUS: ${{ needs.release.outputs.status }}
+          RELEASE_RESULT: ${{ needs.release.result }}
+          KEEPALIVE_RESULT: ${{ needs.keepalive.result }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RELEASES_URL: ${{ github.server_url }}/${{ github.repository }}/releases
+        run: |
+          tag=${TAG:-$(TZ=Australia/Sydney date +%F)}
+          if [ "$RELEASE_RESULT" = "success" ] || [ "$RELEASE_RESULT" = "skipped" ]; then
+            title="APC release workflow: keepalive failed ($tag)"
+            body="The keepalive job failed, so GitHub may switch off this workflow's schedule. If the Actions tab shows the workflow as disabled, enable it there."
+          elif [ "$STATUS" = "review" ]; then
+            title="APC release $tag needs review"
+            body="The release checks flagged problems, so $tag was created as a draft and not published. Read the problems in the draft's release notes ($RELEASES_URL), then publish or delete the draft."
+          elif [ "$RELEASE_RESULT" = "cancelled" ]; then
+            title="APC release $tag timed out"
+            body="The release job timed out or was cancelled, so no release was made. The run's log shows how far it got."
+          else
+            title="APC release $tag failed"
+            body="No release was made. The run's summary and log say what went wrong."
+          fi
+          if [ "$KEEPALIVE_RESULT" != "success" ] && [ "$RELEASE_RESULT" != "success" ] && [ "$RELEASE_RESULT" != "skipped" ]; then
+            body="$body
+
+          The keepalive job also failed, so GitHub may switch off this workflow's schedule."
+          fi
+          gh issue create --assignee ehwenk --title "$title" --body "@ehwenk $body
+
+          Run: $RUN_URL"
